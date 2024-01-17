@@ -24,5 +24,7 @@
 
 ### 240117 학습내용
 - 아이디어 회의
-- 목업 제작
 - 프로젝트 기본 세팅 (라이브러리 추가 및 권한 등 기본 세팅)
+- 목업 제작  
+![image](/uploads/0e3c0cca16473d10d1bea84d4a119895/image.png)
+![image__1_](/uploads/e208a97f52ecf5adff462c4c425e6212/image__1_.png)
