@@ -1,5 +1,5 @@
 # 목차
-- [2024년 01월 15일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/edit/master/namhyemi/README.md?ref_type=heads#L8)
+- [2024년 01월 15일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/tree/master/namhyemi?ref_type=heads#anchor-20240115)
 - [2024년 01월 16일 회고](#)
 - [2024년 01월 17일 회고](#)
 
@@ -40,3 +40,11 @@
 ### ERD
 ![20240118_ERD](/uploads/0cb7984f9994fcd216627caa49124a11/20240118_ERD.PNG)
 
+
+##2024.01.19
+### 기능 명세서
+요구사항 명세서와 달리 개발 초점에 맞춰서 명세서를 작성해야 하는데, 어떤 형식으로 완성해야하는지 아직 협의 단계
+
+### ERD
+![20240119_ERD](/uploads/5c74946973d83dd8ef75062cb418a299/20240119_ERD.PNG)
+컨설팅 후기를 담기 위해서 1대1 관계나 FK를 지우기 위해서 고민해봤지만, 그러자니 진행이 느려 우선은 완성을 목적으로 진행
