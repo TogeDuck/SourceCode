@@ -1,9 +1,16 @@
 # 목차
-- [2024년 01월 15일 회고](# 2024.01.15)
-- [2024년 01월 16일 회고](# 2024.01.16)
-- [2024년 01월 17일 회고](# 2024.01.17)
-
-
+- [2024년 01월 15일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240115
+)
+- [2024년 01월 16일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240116
+)
+- [2024년 01월 18일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240118
+)
+- [2024년 01월 19일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240119
+)
+- [2024년 01월 22일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240122
+)
+- [2024년 01월 23일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240123
+)
 
 ## 2024.01.15 
 ### 프로젝트 기획 및 와이어프레임
@@ -59,3 +66,20 @@
 
 ### API 명세서
 ![20240122_API명세서](/uploads/072610077b536c64eb863f338109e9b9/20240122_API명세서.PNG)
+
+
+## 2024.01.23
+### WBS
+![20240123_WBS](/uploads/a4e63b3c284e340ec3ee279bc6493ef5/image.png)
+
+### ERD
+![20240123_ERD](/uploads/019a4295ec6064a8f6904915f9d8eb63/image.png)
+
+### API 명세서
+![20240123_API명세서](/uploads/ad103f8f88700df1bea8c7fa4f933cc2/image.png)
+
+### 팀미팅
+회의록 작성 (노션)
+![20240123_팀미팅](/uploads/28ddda586caff1be144d9095cdca0a28/image.png)
+
+
