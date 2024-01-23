@@ -67,3 +67,4 @@
 - 일정표 작성
 - 안드로이드 지도 관련 테스트
 - 컨설턴트님과 회의
+![image](/uploads/390888cc3cececbdb2233835977a0e1f/image.png)
