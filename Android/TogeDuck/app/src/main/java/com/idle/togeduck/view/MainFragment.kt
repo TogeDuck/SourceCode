@@ -1,4 +1,4 @@
-package com.idle.togeduck
+package com.idle.togeduck.view
 
 import android.os.Bundle
 import android.view.LayoutInflater

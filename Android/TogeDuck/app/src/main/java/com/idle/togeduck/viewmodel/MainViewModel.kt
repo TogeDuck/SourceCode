@@ -1,4 +1,4 @@
-package com.idle.togeduck
+package com.idle.togeduck.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
