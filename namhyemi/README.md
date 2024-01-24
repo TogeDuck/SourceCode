@@ -11,6 +11,8 @@
 )
 - [2024년 01월 23일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240123
 )
+- [2024년 01월 24일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240124
+)
 
 ## 2024.01.15 
 ### 프로젝트 기획 및 와이어프레임
@@ -83,3 +85,6 @@
 ![20240123_팀미팅](/uploads/28ddda586caff1be144d9095cdca0a28/image.png)
 
 
+## 2024.01.24
+### EC2 기초 설정
+### Gerrit 환경 설정 (GitLab 연동) 
