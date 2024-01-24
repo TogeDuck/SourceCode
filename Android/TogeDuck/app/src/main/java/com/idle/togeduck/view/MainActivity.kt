@@ -1,4 +1,4 @@
-package com.idle.togeduck
+package com.idle.togeduck.view
 
 import android.app.Activity
 import android.os.Build
