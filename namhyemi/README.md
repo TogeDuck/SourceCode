@@ -87,4 +87,7 @@
 
 ## 2024.01.24
 ### EC2 기초 설정
+putty 를 통해서 EC2 환경 설정
+
 ### Gerrit 환경 설정 (GitLab 연동) 
+EC2 서버에 있는 Gerrit 기본 설정과 GitLab Repository 연동
