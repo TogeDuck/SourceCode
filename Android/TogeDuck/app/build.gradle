@@ -1,0 +1,106 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.22'
+}
+
+android {
+    namespace 'com.idle.togeduck'
+    compileSdk 34
+
+    // naver map api 관련 설정
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    def naver_map_client_secret = properties.getProperty('naver_map_client_secret')
+
+    defaultConfig {
+        applicationId "com.idle.togeduck"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // naver map api 관련 설정
+        manifestPlaceholders["naver_map_client_secret"] = naver_map_client_secret
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    def nav_version = "2.7.6"
+    def hilt_version = "2.48"
+
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Google Play 서비스의 최적의 위치 반환 구현체
+    implementation "com.google.android.gms:play-services-location:21.0.1"
+
+    // Navigation (화면 이동 관련 라이브러리)
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    // Hilt (DI 라이브러리)
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+
+    // Glide (이미지 처리 라이브러리)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    // okhttp3
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // Retrofit2
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // kotlinx-serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+
+    // Retrofit2 Converter
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.4.0")
+
+    // Preferences Datastore (앱 로컬 간단 저장소)
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // 권한 체크 라이브러리 Normal, Coroutine
+    implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
+    implementation 'io.github.ParkSangGwon:tedpermission-coroutine:3.3.0'
+
+    // 네이버 지도 SDK
+    implementation 'com.naver.maps:map-sdk:3.17.0'
+
+    // 네이버지도용 클러스터링 라이브러리
+    implementation 'io.github.ParkSangGwon:tedclustering-naver:1.0.2'
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
+}
