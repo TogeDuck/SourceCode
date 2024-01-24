@@ -8,13 +8,14 @@
     tools:context=".view.JichanFragment">
 
     <TextView
-        android:layout_height="wrap_content"
+        android:id="@+id/text_view"
         android:layout_width="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:text="테스트 색상"
+        android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="지찬"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
