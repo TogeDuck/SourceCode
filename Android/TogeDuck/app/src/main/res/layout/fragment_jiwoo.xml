@@ -7,14 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".view.JiwooFragment">
 
-    <TextView
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/jiwoo_btn"
         android:layout_width="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:text="테스트"
+        android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="지우"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
