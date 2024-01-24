@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentJiwooBinding
 import com.idle.togeduck.databinding.FragmentMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +27,12 @@ class JiwooFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+//        binding.jiwoo_btn.setOnClickListener {
+//
+//        }
+
+
     }
 
     override fun onDestroyView() {
