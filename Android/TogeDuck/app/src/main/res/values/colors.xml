@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--  bts 테마  -->
+    <color name="bts_main_100">#FFCC53F0</color>
+    <color name="bts_main_200">#C93FF3</color>
+    <color name="bts_main_300">#C429F3</color>
+    <color name="bts_main_400">#BD10F1</color>
 </resources>
