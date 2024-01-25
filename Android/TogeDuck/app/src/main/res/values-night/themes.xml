@@ -4,6 +4,10 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
 
+        <item name="android:textColorHighlight">@color/bts_main_100</item>
+        <item name="colorAccent">@color/bts_main_200</item>
+        <item name="colorControlActivated">@color/bts_main_200</item>
+
         <!--    상태바 투명하게 하는 설정    -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
