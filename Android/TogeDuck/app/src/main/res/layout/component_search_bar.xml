@@ -5,22 +5,22 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        tools:text="텍스트를 입력하세요"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf=""
-        />
-    
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+<!--    <EditText-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        tools:text="텍스트를 입력하세요"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf=""-->
+<!--        />-->
 
-    
+<!--    <ImageButton-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        tools:src="@drawable/ic_launcher_foreground"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        />-->
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
