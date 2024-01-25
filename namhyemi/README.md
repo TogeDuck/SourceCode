@@ -74,8 +74,8 @@
 ![20240123_API명세서](/uploads/ad103f8f88700df1bea8c7fa4f933cc2/image.png)
 
 ### 팀미팅
-회의록 작성 (노션)
 ![20240123_팀미팅](/uploads/28ddda586caff1be144d9095cdca0a28/image.png)
+회의록 작성 (노션)
 
 
 ## 2024.01.24
