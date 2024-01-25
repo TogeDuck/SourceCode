@@ -36,7 +36,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn3.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_jichanFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
         }
     }
 

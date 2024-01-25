@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bts_main_100"
+    android:paddingHorizontal="@dimen/padding_large"
+    android:paddingVertical="@dimen/padding_xlarge"
+    tools:context=".view.FavoriteSettingFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title"
+            android:textSize="@dimen/title_medium"
+            android:textColor="@color/bts_main_200"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            />
+
+        <include
+            android:id="@+id/csb"
+            layout="@layout/component_search_bar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_medium"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_search_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_favorite"
+                android:textColor="@color/bts_main_200"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/margin_xsmall"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_my_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_my_favorite"/>
+
+            <TextView
+                android:id="@+id/tv_idol_search_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_result"
+                android:textColor="@color/bts_main_200"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_xsmall"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_idol_search_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:spanCount="4"
+                tools:itemCount="100"
+                tools:listitem="@layout/item_idol_search_result"
+                android:gravity="center"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
