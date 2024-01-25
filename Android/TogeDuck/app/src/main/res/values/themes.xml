@@ -18,6 +18,6 @@
     </style>
     <style name="RoundCornerBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="background">@drawable/rounded</item>
-<!--        <item name="android:background">@android:color/transparent</item>-->
+        <item name="android:background">@android:color/transparent</item>
     </style>
 </resources>
