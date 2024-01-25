@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TogeDuck</string>
+    <string name="input_text">검색어를 입력하세요</string>
+    <string name="title">최애를 알려주세요!</string>
+    <string name="my_favorite">나의 최애</string>
+    <string name="search_result">검색 결과</string>
 </resources>

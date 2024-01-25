@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_mainFragment_to_jichanFragment"
             app:destination="@id/jichanFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_FavoriteSettingFragment"
+            app:destination="@id/FavoriteSettingFragment" />
     </fragment>
 
     <fragment
@@ -40,6 +43,13 @@
         android:name="com.idle.togeduck.view.JichanFragment"
         android:label="jichan_fragment"
         tools:layout="@layout/fragment_jichan" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/FavoriteSettingFragment"
+        android:name="com.idle.togeduck.view.FavoriteSettingFragment"
+        android:label="favorite_setting_fragment"
+        tools:layout="@layout/fragment_favorite_setting" >
     </fragment>
 
 </navigation>

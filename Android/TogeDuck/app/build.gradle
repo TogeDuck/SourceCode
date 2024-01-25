@@ -72,6 +72,7 @@ dependencies {
 
     // Glide (이미지 처리 라이브러리)
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
     // okhttp3
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
