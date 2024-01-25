@@ -50,3 +50,9 @@
 <240124 학습내용>
 1. 안드로이드 프로젝트 세팅
 2. bottom sheet 개발
+
+---
+
+<240125 학습내용>
+1. FrameLayout 학습
+2. bottom sheet 화면 제작
