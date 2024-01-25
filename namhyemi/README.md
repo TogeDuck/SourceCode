@@ -1,18 +1,11 @@
 # 목차
-- [2024년 01월 15일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240115
-)
-- [2024년 01월 16일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240116
-)
-- [2024년 01월 18일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240118
-)
-- [2024년 01월 19일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240119
-)
-- [2024년 01월 22일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240122
-)
-- [2024년 01월 23일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240123
-)
-- [2024년 01월 24일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240124
-)
+- [2024년 01월 15일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240115)
+- [2024년 01월 16일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240116)
+- [2024년 01월 18일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240118)
+- [2024년 01월 19일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240119)
+- [2024년 01월 22일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240122)
+- [2024년 01월 23일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240123)
+- [2024년 01월 24일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240124)
 
 ## 2024.01.15 
 ### 프로젝트 기획 및 와이어프레임
@@ -91,3 +84,12 @@ putty 를 통해서 EC2 환경 설정
 
 ### Gerrit 환경 설정 (GitLab 연동) 
 EC2 서버에 있는 Gerrit 기본 설정과 GitLab Repository 연동
+
+
+## 2024.01.25
+### 중간 발표 자료 작성
+중간 발표에 사용될 기획 배경, 기획 내용 작성
+
+### Spring Boot 환경 세팅
+개발을 위한 전반적인 구조 설계 세팅
+
