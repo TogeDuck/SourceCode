@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_mainFragment_to_FavoriteSettingFragment"
             app:destination="@id/FavoriteSettingFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_bottomAppbarFragment"
+            app:destination="@id/bottomAppbarFragment" />
     </fragment>
 
     <fragment
@@ -51,5 +54,14 @@
         android:label="favorite_setting_fragment"
         tools:layout="@layout/fragment_favorite_setting" >
     </fragment>
+
+
+    <fragment
+        android:id="@+id/bottomAppbarFragment"
+        android:name="com.idle.togeduck.view.BottomAppbarFragment"
+        android:label="bottom_appbar_fragment"
+        tools:layout="@layout/fragment_bottom_appbar">
+    </fragment>
+
 
 </navigation>
