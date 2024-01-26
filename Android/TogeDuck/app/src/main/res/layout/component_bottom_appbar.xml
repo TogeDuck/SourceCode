@@ -73,44 +73,6 @@
             app:layout_constraintRight_toRightOf="@id/fab_myrecord"
             app:tint="@color/bts_main_400"
             />
-
-        <Button android:background="@drawable/style_circle_bottom_appbar"
-            android:visibility="invisible"
-            android:id="@+id/button_quest"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/fab_quest"
-            app:layout_constraintRight_toRightOf="@id/fab_quest"
-            />
-
-        <Button android:background="@drawable/style_circle_bottom_appbar"
-            android:visibility="invisible"
-            android:id="@+id/button_list"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/fab_list"
-            app:layout_constraintRight_toRightOf="@id/fab_list"
-            />
-        <Button android:background="@drawable/style_circle_bottom_appbar"
-            android:visibility="invisible"
-            android:id="@+id/button_chat"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/fab_chat"
-            app:layout_constraintRight_toRightOf="@id/fab_chat"
-            />
-        <Button android:background="@drawable/style_circle_bottom_appbar"
-            android:visibility="invisible"
-            android:id="@+id/button_myrecord"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/fab_myrecord"
-            app:layout_constraintRight_toRightOf="@id/fab_myrecord"
-            />
         <TextView
             android:id="@+id/text_quest"
             android:layout_width="wrap_content"
@@ -161,6 +123,8 @@
             android:elevation="5dp"
             android:gravity="center"
             android:orientation="vertical"
+            android:clickable="true"
+            android:visibility="invisible"
             >
             <ImageView
                 android:layout_width="50dp"
@@ -179,6 +143,8 @@
             android:elevation="5dp"
             android:gravity="center"
             android:orientation="vertical"
+            android:clickable="true"
+            android:visibility="invisible"
             >
             <ImageView
                 android:layout_width="40dp"
@@ -197,6 +163,8 @@
             android:elevation="5dp"
             android:gravity="center"
             android:orientation="vertical"
+            android:clickable="true"
+            android:visibility="invisible"
             >
             <ImageView
                 android:layout_width="40dp"
@@ -215,6 +183,8 @@
             android:elevation="5dp"
             android:gravity="center"
             android:orientation="vertical"
+            android:clickable="true"
+            android:visibility="invisible"
             >
             <ImageView
                 android:layout_width="50dp"

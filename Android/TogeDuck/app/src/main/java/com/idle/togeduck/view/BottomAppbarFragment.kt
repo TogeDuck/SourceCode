@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,8 +34,16 @@ class BottomAppbarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var buttonQuest = componentBinding.buttonQuest
 
+        val fabQuest: LinearLayout = componentBinding.fabQuest
+        val fabList: LinearLayout = componentBinding.fabList
+        val fabChat: LinearLayout = componentBinding.fabChat
+        val fabMyrecord: LinearLayout = componentBinding.fabMyrecord
+
+        fabQuest.setOnClickListener { handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord)) }
+        fabList.setOnClickListener { handleButtonClick(fabList, listOf(fabQuest,fabChat,fabMyrecord)) }
+        fabChat.setOnClickListener { handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord)) }
+        fabMyrecord.setOnClickListener { handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat)) }
     }
 
     override fun onDestroyView() {
@@ -43,16 +52,14 @@ class BottomAppbarFragment : Fragment() {
         _componentBinding = null
     }
 
-    private fun handleFabClick(
-        clickedFab: FloatingActionButton,
-        hideList: List<FloatingActionButton>
+    private fun handleButtonClick(
+        showFab: LinearLayout,
+        hideList: List<LinearLayout>
     ) {
-        // 클릭된 버튼 이외의 버튼 숨기기
+        println("buttonclicked")
         for (fab in hideList) {
-            fab.visibility = View.GONE
+            fab.visibility = View.INVISIBLE
         }
-
-        // 클릭된 버튼 보이기
-        clickedFab.visibility = View.VISIBLE
+        showFab.visibility = View.VISIBLE
     }
 }
