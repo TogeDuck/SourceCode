@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BaseResponse<T>{
+public class BaseResponse<T> {
 	private int code;
 	private String message;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
