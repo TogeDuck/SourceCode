@@ -1,13 +1,11 @@
-package com.idle.togeduck.global.base;
+package com.idle.togeduck.global.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class ErrorResponse {
 	private int code;
 	private String message;
 }

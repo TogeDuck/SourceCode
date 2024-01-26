@@ -1,15 +1,15 @@
-package com.idle.togeduck.global.base;
+package com.idle.togeduck.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class BaseResponse<T> extends Response{
+public class BaseResponse<T>{
+	private int code;
+	private String message;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private T data;
 }
