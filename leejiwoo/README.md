@@ -56,3 +56,9 @@
 <240125 학습내용>
 1. FrameLayout 학습
 2. bottom sheet 화면 제작
+
+---
+
+<240126 학습내용>
+1. 깃 브런치 학습
+2. bottom sheet 디자인 
