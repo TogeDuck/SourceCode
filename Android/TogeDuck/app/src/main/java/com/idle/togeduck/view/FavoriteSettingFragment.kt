@@ -1,5 +1,7 @@
 package com.idle.togeduck.view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -86,6 +88,8 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
             idolSearchResultAdapter.submitList(list.toList())
         }
 
+        val animationTime = 300L
+
         CoroutineScope(myContext).launch {
             // 메모 검색시 검색어 변경이 0.35초 동안 없을시 검색 실행
             launch {
@@ -94,14 +98,29 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
                     .onEach { text ->
                         // 클리어버튼 및 검색결과 없음 뷰 visibility 설정
                         if (text.isNullOrBlank()) {
-                            binding.llSearchResult.visibility = View.GONE
-                        } else {
-                            binding.llSearchResult.visibility = View.VISIBLE
+                            binding.llSearchResult.animate()
+                                .alpha(0f)
+                                .setDuration(animationTime)
+                                .setListener(object : AnimatorListenerAdapter() {
+                                    override fun onAnimationEnd(animation: Animator) {
+                                        binding.llSearchResult.visibility = View.GONE
+                                    }
+                                })
                         }
                     }
                     .debounce(350)
                     .onEach { text ->
                         // api 호출
+                        if (!text.isNullOrBlank()) {
+                            binding.llSearchResult.apply {
+                                alpha = 0f
+                                visibility = View.VISIBLE
+                                animate()
+                                    .alpha(1f)
+                                    .setDuration(animationTime)
+                                    .setListener(null)
+                            }
+                        }
                     }
                     .launchIn(this)
             }
