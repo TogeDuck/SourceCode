@@ -12,6 +12,7 @@
     app:behavior_fitToContents="false"
     app:behavior_hideable="false"
     app:behavior_peekHeight="50dp"
+    app:behavior_expandedOffset="60dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <ImageView
@@ -21,6 +22,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_bottom_sheet_drag_handle"
         app:tint="@color/bs_handle_gray" />
+
     <!--   bottom sheet content   -->
     <TextView
         android:layout_width="wrap_content"
