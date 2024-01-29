@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentJiwooBinding
@@ -27,33 +30,23 @@ class JiwooFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var sheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottom_sheet))
-
-
-        // 추후 활용 ..
-        sheetBehavior.setBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        })
+        binding.bsFragmentJiwoo.setOnClickListener {
+            val modalBottomSheet = ModalBottomSheet()
+            modalBottomSheet.setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheetRoundedTheme)
+            modalBottomSheet.show(childFragmentManager, ModalBottomSheet.TAG)
+        }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }
+
+
+
+
+
