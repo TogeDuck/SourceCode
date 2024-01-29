@@ -1,4 +1,4 @@
-package com.idle.togeduck.view.recyclerview.favorite_setting
+package com.idle.togeduck.view.favorite_setting
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
@@ -10,6 +10,7 @@ import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemMyFavoriteBinding
 import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.Theme
+import com.idle.togeduck.view.favorite_setting.IMyFavorite
 
 class MyFavoriteViewHolder(
     binding: ItemMyFavoriteBinding,
@@ -33,7 +34,8 @@ class MyFavoriteViewHolder(
         imgImageView.background = circleDrawable
 
         val allCornerDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_5) as GradientDrawable
-        circleDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
+        allCornerDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
+        allCornerDrawable.alpha = (255 * 0.4).toInt()
         idolMyFavoriteLinearLayout.background = allCornerDrawable
 
         Glide
@@ -47,7 +49,7 @@ class MyFavoriteViewHolder(
             .into(imgImageView)
 
         nameTextView.text = favoriteIdol.name
-        nameTextView.setTextColor(Theme.theme.main500)
+        nameTextView.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
 
         removeBtn.setColorFilter(ContextCompat.getColor(context, Theme.theme.main500))
     }

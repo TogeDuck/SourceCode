@@ -1,4 +1,4 @@
-package com.idle.togeduck.view.recyclerview.favorite_setting
+package com.idle.togeduck.view.favorite_setting
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemIdolSearchResultBinding
 import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.TogeDuckDiffUtil
+import com.idle.togeduck.view.favorite_setting.IIdolSearchResult
+import com.idle.togeduck.view.favorite_setting.IdolSearchResultViewHolder
 
 class IdolSearchResultAdapter(
     private var iIdolSearchResult: IIdolSearchResult,

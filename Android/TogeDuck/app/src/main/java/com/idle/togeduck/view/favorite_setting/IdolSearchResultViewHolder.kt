@@ -1,17 +1,16 @@
-package com.idle.togeduck.view.recyclerview.favorite_setting
+package com.idle.togeduck.view.favorite_setting
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.view.View
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Glide.init
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemIdolSearchResultBinding
 import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.Theme
+import com.idle.togeduck.view.favorite_setting.IIdolSearchResult
 
 class IdolSearchResultViewHolder(
     binding: ItemIdolSearchResultBinding,
@@ -44,7 +43,7 @@ class IdolSearchResultViewHolder(
             .into(imgImageView)
 
         nameTextView.text = favoriteIdol.name
-        nameTextView.setTextColor(Theme.theme.main500)
+        nameTextView.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
     }
 
     override fun onClick(view: View?) {
