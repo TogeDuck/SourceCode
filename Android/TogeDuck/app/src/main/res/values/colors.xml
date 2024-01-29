@@ -2,15 +2,45 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#FA9F44</color>
+    <color name="red">#E55D5F</color>
+    <color name="green">#2A716B</color>
+    <color name="blue">#7D5CDE</color>
 
     <color name="white_transparent">#81FFFFFF</color>
     <color name="edit_text_cursor">#7E5DDE</color>
 
     <!--  bts 테마  -->
-    <color name="bts_main_100">#BEAEEF</color>
-    <color name="bts_main_200">#7E5DDE</color>
-    <color name="bts_main_300">#C429F3</color>
-    <color name="bts_main_400">#BD10F1</color>
+    <color name="bts_main100">#F9F7FC</color>
+    <color name="bts_main200">#EDE7F6</color>
+    <color name="bts_main300">#D1C4E9</color>
+    <color name="bts_main400">#B098DB</color>
+    <color name="bts_main500">#9575CD</color>
+    <color name="bts_main500_trans90">#E69575CD</color>
+    <color name="bts_main500_trans20">#339575CD</color>
+    <color name="bts_sub100">#F9F7FC</color>
+    <color name="bts_sub200">#EDE7F6</color>
+    <color name="bts_sub300">#D1C4E9</color>
+    <color name="bts_sub400">#B098DB</color>
+    <color name="bts_sub500">#9575CD</color>
+    <color name="bts_sub500_trans90">#E69575CD</color>
+    <color name="bts_sub500_trans20">#339575CD</color>
+
+    <!--  seventeen 테마  -->
+    <color name="seventeen_main100">#E9EEF6</color>
+    <color name="seventeen_main200">#D3DCED</color>
+    <color name="seventeen_main300">#BECBE3</color>
+    <color name="seventeen_main400">#A8B9DA</color>
+    <color name="seventeen_main500">#92A8D1</color>
+    <color name="seventeen_main500_trans90">#E692A8D1</color>
+    <color name="seventeen_main500_trans20">#3392A8D1</color>
+    <color name="seventeen_sub100">#FDF4F4</color>
+    <color name="seventeen_sub200">#FCEAE9</color>
+    <color name="seventeen_sub300">#FADFDF</color>
+    <color name="seventeen_sub400">#F9D5D4</color>
+    <color name="seventeen_sub500">#F7CAC9</color>
+    <color name="seventeen_sub500_trans90">#E6F7CAC9</color>
+    <color name="seventeen_sub500_trans20">#33F7CAC9</color>
 
     <!--  bottom-sheet 색  -->
     <color name="bs_main">#F8F7FC</color>
