@@ -1,5 +1,6 @@
 package com.idle.togeduck.view
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,13 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.FragmentBottomAppbarBinding
+import com.idle.togeduck.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.log
 
@@ -36,16 +41,9 @@ class BottomAppbarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val fabQuest: LinearLayout = componentBinding.fabQuest
-        val fabList: LinearLayout = componentBinding.fabList
-        val fabChat: LinearLayout = componentBinding.fabChat
-        val fabMyrecord: LinearLayout = componentBinding.fabMyrecord
-
-        componentBinding.buttonQuest.setOnClickListener { handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord)) }
-        componentBinding.buttonList.setOnClickListener { handleButtonClick(fabList, listOf(fabQuest,fabChat,fabMyrecord)) }
-        componentBinding.buttonChat.setOnClickListener { handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord)) }
-        componentBinding.buttonMyrecord.setOnClickListener { handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat)) }
+        setUpBackgroundRoundCorner()
+        setUpBackgroundButtonIcon()
+        setUpFloatingButton()
     }
 
     override fun onDestroyView() {
@@ -63,5 +61,43 @@ class BottomAppbarFragment : Fragment() {
             fab.visibility = View.INVISIBLE
         }
         showFab.visibility = View.VISIBLE
+    }
+
+    private fun setUpBackgroundRoundCorner(){
+        // Bottom Appbar Background
+        val upperRoundCorner = ContextCompat.getDrawable(requireContext(), R.drawable.shape_upper_round_25) as GradientDrawable
+        upperRoundCorner.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
+        val background: ConstraintLayout = componentBinding.navBackground
+        background.background = upperRoundCorner
+    }
+
+    private fun setUpBackgroundButtonIcon(){
+        // Normal Buttons : Icons (Main 500)
+        val icQuest: ImageView = componentBinding.icQuest
+        val icList: ImageView = componentBinding.icList
+        val icChat: ImageView = componentBinding.icChat
+        val icMyrecord: ImageView = componentBinding.icMyrecord
+        val icons: List<ImageView> = listOf(icQuest, icList, icChat, icMyrecord)
+        for (icon in icons){
+            icon.setColorFilter(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        }
+    }
+
+    private fun setUpFloatingButton(){
+        // Floating Buttons : Buttons (Main 500)
+        val fabQuest: LinearLayout = componentBinding.fabQuest
+        val fabList: LinearLayout = componentBinding.fabList
+        val fabChat: LinearLayout = componentBinding.fabChat
+        val fabMyrecord: LinearLayout = componentBinding.fabMyrecord
+        val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        circle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        val fabs: List<LinearLayout> = listOf(fabQuest,fabList,fabChat,fabMyrecord)
+        for(fab in fabs){
+            fab.background = circle;
+        }
+        componentBinding.buttonQuest.setOnClickListener { handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord)) }
+        componentBinding.buttonList.setOnClickListener { handleButtonClick(fabList, listOf(fabQuest,fabChat,fabMyrecord)) }
+        componentBinding.buttonChat.setOnClickListener { handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord)) }
+        componentBinding.buttonMyrecord.setOnClickListener { handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat)) }
     }
 }

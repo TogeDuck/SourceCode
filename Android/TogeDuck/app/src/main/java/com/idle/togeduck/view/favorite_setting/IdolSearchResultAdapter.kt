@@ -18,7 +18,7 @@ class IdolSearchResultAdapter(
     }
 
     override fun onBindViewHolder(holder: IdolSearchResultViewHolder, position: Int) {
-        holder.binding(getItem(position))
+//        holder.binding(getItem(position))
     }
 
 }

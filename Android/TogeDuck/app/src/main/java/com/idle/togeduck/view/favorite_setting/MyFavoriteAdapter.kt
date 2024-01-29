@@ -14,7 +14,7 @@ class MyFavoriteAdapter(private var iMyFavorite: IMyFavorite) : ListAdapter<Favo
     }
 
     override fun onBindViewHolder(holder: MyFavoriteViewHolder, position: Int) {
-       holder.bind(getItem(position))
+//       holder.bind(getItem(position))
     }
 
 }
