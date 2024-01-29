@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="m_text_view_font_style" parent="@android:style/Widget.DeviceDefault.TextView">
+        <item name="android:fontFamily">@font/togeduck_font_family</item>
+    </style>
+
+    <style name="m_edit_text_font_style" parent="@android:style/Widget.DeviceDefault.EditText">
+        <item name="android:fontFamily">@font/togeduck_font_family</item>
+    </style>
+
+</resources>

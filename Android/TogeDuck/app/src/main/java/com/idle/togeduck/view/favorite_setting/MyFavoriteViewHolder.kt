@@ -1,10 +1,15 @@
 package com.idle.togeduck.view.recyclerview.favorite_setting
 
+import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemMyFavoriteBinding
 import com.idle.togeduck.model.FavoriteIdol
+import com.idle.togeduck.util.Theme
 
 class MyFavoriteViewHolder(
     binding: ItemMyFavoriteBinding,
@@ -20,7 +25,17 @@ class MyFavoriteViewHolder(
         idolMyFavoriteLinearLayout.setOnClickListener(this)
     }
 
-    fun bind(favoriteIdol: FavoriteIdol) {
+    fun bind(favoriteIdol: FavoriteIdol, context: Context) {
+        val circleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
+
+        circleDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
+        circleDrawable.setStroke(2, ContextCompat.getColor(context, Theme.theme.main500))
+        imgImageView.background = circleDrawable
+
+        val allCornerDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_5) as GradientDrawable
+        circleDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
+        idolMyFavoriteLinearLayout.background = allCornerDrawable
+
         Glide
             .with(imgImageView)
             .load(favoriteIdol.imgUrl)
@@ -32,6 +47,9 @@ class MyFavoriteViewHolder(
             .into(imgImageView)
 
         nameTextView.text = favoriteIdol.name
+        nameTextView.setTextColor(Theme.theme.main500)
+
+        removeBtn.setColorFilter(ContextCompat.getColor(context, Theme.theme.main500))
     }
 
     override fun onClick(view: View?) {
