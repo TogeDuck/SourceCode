@@ -9,7 +9,8 @@ import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class IdolSearchResultAdapter(
-    private var iIdolSearchResult: IIdolSearchResult
+    private var iIdolSearchResult: IIdolSearchResult,
+    private val context: Context
 )
     : ListAdapter<FavoriteIdol, IdolSearchResultViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IdolSearchResultViewHolder {
@@ -18,7 +19,7 @@ class IdolSearchResultAdapter(
     }
 
     override fun onBindViewHolder(holder: IdolSearchResultViewHolder, position: Int) {
-//        holder.binding(getItem(position))
+        holder.binding(getItem(position), context)
     }
 
 }
