@@ -21,13 +21,19 @@
             app:destination="@id/jichanFragment" />
         <action
             android:id="@+id/action_mainFragment_to_FavoriteSettingFragment"
-            app:destination="@id/FavoriteSettingFragment" />
+            app:destination="@id/favoriteSettingFragment" />
         <action
             android:id="@+id/action_mainFragment_to_bottomAppbarFragment"
             app:destination="@id/bottomAppbarFragment" />
         <action
             android:id="@+id/action_mainFragment_to_BottomSheetFragment"
-            app:destination="@id/BottomSheetFragment" />
+            app:destination="@id/bottomSheetFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_TopAppbarFragment"
+            app:destination="@id/topAppbarFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
 
     </fragment>
 
@@ -53,7 +59,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/FavoriteSettingFragment"
+        android:id="@+id/favoriteSettingFragment"
         android:name="com.idle.togeduck.view.FavoriteSettingFragment"
         android:label="favorite_setting_fragment"
         tools:layout="@layout/fragment_favorite_setting" >
@@ -68,12 +74,24 @@
     </fragment>
 
     <fragment
-        android:id="@+id/BottomSheetFragment"
+        android:id="@+id/bottomSheetFragment"
         android:name="com.idle.togeduck.view.BottomSheetFragment"
         android:label="bottom_sheet_fragment"
         tools:layout="@layout/fragment_bottom_sheet">
     </fragment>
 
 
+    <fragment
+        android:id="@+id/topAppbarFragment"
+        android:name="com.idle.togeduck.view.TopAppbarFragment"
+        android:label="top_appbar_fragment"
+        tools:layout="@layout/fragment_top_appbar">
+    </fragment>
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.idle.togeduck.view.MapFragment"
+        android:label="map_fragment"
+        tools:layout="@layout/fragment_map" />
 
 </navigation>

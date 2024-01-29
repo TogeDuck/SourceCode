@@ -27,6 +27,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btn0.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
+        }
+
         binding.btn1.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_bottomAppbarFragment)
         }
