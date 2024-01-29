@@ -32,7 +32,7 @@ class JichanFragment : Fragment() {
 
         Theme.theme = TogeDuckColor.BTS
 
-        binding.textView.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.color_main_100))
+        binding.textView.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
     }
 
     override fun onDestroyView() {
