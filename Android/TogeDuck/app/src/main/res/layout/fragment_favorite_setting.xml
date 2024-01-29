@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bts_main_100">
+    android:layout_height="match_parent" >
 
     <ImageView
         android:layout_width="110dp"
@@ -49,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title"
                 android:textAlignment="center"
-                android:textColor="@color/bts_main_200"
                 android:textSize="@dimen/title_medium"
                 android:textStyle="bold" />
 
@@ -74,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_xsmall"
                     android:text="@string/my_favorite"
-                    android:textColor="@color/bts_main_200"
+                    android:textSize="@dimen/body_medium"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -93,7 +91,7 @@
                     android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginBottom="@dimen/margin_xsmall"
                     android:text="@string/search_result"
-                    android:textColor="@color/bts_main_200"
+                    android:textSize="@dimen/body_medium"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
