@@ -75,6 +75,7 @@
                     android:layout_marginBottom="@dimen/margin_xsmall"
                     android:text="@string/my_favorite"
                     android:textColor="@color/bts_main_200"
+                    android:textSize="@dimen/body_medium"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -94,6 +95,7 @@
                     android:layout_marginBottom="@dimen/margin_xsmall"
                     android:text="@string/search_result"
                     android:textColor="@color/bts_main_200"
+                    android:textSize="@dimen/body_medium"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
