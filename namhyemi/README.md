@@ -8,6 +8,7 @@
 - [2024년 01월 24일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240124)
 - [2024년 01월 25일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240125)
 - [2024년 01월 26일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240126)
+- [2024년 01월 26일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240129)
 
 
 
@@ -104,3 +105,9 @@ EC2 서버에 있는 Gerrit 기본 설정과 GitLab Repository 연동
 ### 중간 발표 평가
 
 ### Git Branch 공유
+
+
+## 2024.01.29
+### JPA 학습
+
+### API 개발 (연예인 조회)
