@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat.animate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +24,7 @@ import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentSearchBarBinding
 import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
+import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.view.recyclerview.favorite_setting.IIdolSearchResult
 import com.idle.togeduck.view.recyclerview.favorite_setting.IMyFavorite
@@ -69,12 +71,10 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
         super.onViewCreated(view, savedInstanceState)
 
         setRecyclerview()
+        setTheme()
 
-        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.circle_shape) as GradientDrawable
-        drawable.setStroke(2, ContextCompat.getColor(requireContext(), R.color.seventeen_main500))
-
-        searchBarBinding.etSearch.setOnKeyListener { view, keyCode, _ ->
-            hideKeyboard(view, keyCode)
+        searchBarBinding.etSearch.setOnKeyListener { mView, keyCode, _ ->
+            hideKeyboard(mView, keyCode)
         }
 
         favoriteSettingViewModel.favoriteIdolList.observe(viewLifecycleOwner) { list ->
@@ -170,6 +170,27 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
             return true
         }
         return false
+    }
+
+    private fun setTheme() {
+        binding.tvTitle.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        binding.tvMyFavorite.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        binding.tvIdolSearchResult.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        circleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
+        circleDrawable.setStroke(2, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        searchBarBinding.ibSearch.background = circleDrawable
+        searchBarBinding.ibSearch.setColorFilter(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        val squareCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
+        squareCircleDrawable.setStroke(2, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        searchBarBinding.etSearch.background = squareCircleDrawable
+        searchBarBinding.etSearch.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
     }
 
     override fun onDestroyView() {

@@ -8,32 +8,32 @@
     <com.idle.togeduck.util.ClearFocusEditText
         android:id="@+id/et_search"
         android:layout_width="0dp"
-        android:layout_height="@dimen/btn_medium"
+        android:layout_height="@dimen/circle_xsmall"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ib_search"
         android:hint="@string/input_text"
-        android:background="@drawable/circle_square_shape"
-        android:textSize="@dimen/body_medium"
-        android:paddingVertical="@dimen/padding_xxsmall"
-        android:paddingHorizontal="@dimen/padding_small"
-        android:layout_marginEnd="@dimen/padding_small"
+        android:background="@drawable/shape_square_circle"
+        android:textSize="@dimen/large"
+        android:paddingVertical="2dp"
+        android:paddingHorizontal="5dp"
+        android:layout_marginEnd="5dp"
         android:maxLines="1"
-        android:textCursorDrawable="@drawable/edit_text_cursor"
+        android:textCursorDrawable="@drawable/shape_cursor"
         android:inputType="text"
         />
 
     <ImageButton
         android:id="@+id/ib_search"
-        android:layout_width="@dimen/btn_medium"
-        android:layout_height="@dimen/btn_medium"
+        android:layout_width="@dimen/circle_xsmall"
+        android:layout_height="@dimen/circle_xsmall"
         app:layout_constraintStart_toEndOf="@id/et_search"
         app:layout_constraintTop_toTopOf="@id/et_search"
         app:layout_constraintBottom_toBottomOf="@id/et_search"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/search"
-        android:background="@drawable/circle_shape"
+        android:src="@drawable/ic_search_bottom_appbar"
+        android:background="@drawable/shape_circle"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
