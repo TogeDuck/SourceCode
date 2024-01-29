@@ -30,6 +30,7 @@ class BottomSheetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         var sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)
 
         // BottomSheetBehavior state에 따른 이벤트 추후 추가
