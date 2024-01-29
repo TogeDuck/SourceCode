@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="@id/et_search"
         app:layout_constraintBottom_toBottomOf="@id/et_search"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/search"
+        android:src="@drawable/ic_search_bottom_appbar"
         app:tint="@color/bts_main_200"
         android:background="@drawable/circle_shape"
         />

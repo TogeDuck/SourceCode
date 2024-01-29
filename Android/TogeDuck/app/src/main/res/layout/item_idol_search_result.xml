@@ -15,7 +15,7 @@
         android:id="@+id/iv_img"
         android:layout_width="@dimen/my_favorite_icon"
         android:layout_height="@dimen/my_favorite_icon"
-        android:src="@drawable/person"
+        android:src="@drawable/ic_person"
         android:background="@drawable/circle_shape"
         android:padding="@dimen/padding_xxsmall"
         />
