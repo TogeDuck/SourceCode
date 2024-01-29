@@ -1,7 +1,6 @@
 package com.idle.togeduck.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.FragmentBottomAppbarBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.log
 
 @AndroidEntryPoint
 class BottomAppbarFragment : Fragment() {
@@ -42,10 +40,10 @@ class BottomAppbarFragment : Fragment() {
         val fabChat: LinearLayout = componentBinding.fabChat
         val fabMyrecord: LinearLayout = componentBinding.fabMyrecord
 
-        componentBinding.buttonQuest.setOnClickListener { handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord)) }
-        componentBinding.buttonList.setOnClickListener { handleButtonClick(fabList, listOf(fabQuest,fabChat,fabMyrecord)) }
-        componentBinding.buttonChat.setOnClickListener { handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord)) }
-        componentBinding.buttonMyrecord.setOnClickListener { handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat)) }
+        fabQuest.setOnClickListener { handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord)) }
+        fabList.setOnClickListener { handleButtonClick(fabList, listOf(fabQuest,fabChat,fabMyrecord)) }
+        fabChat.setOnClickListener { handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord)) }
+        fabMyrecord.setOnClickListener { handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat)) }
     }
 
     override fun onDestroyView() {
@@ -54,11 +52,11 @@ class BottomAppbarFragment : Fragment() {
         _componentBinding = null
     }
 
-    private fun handleButtonClick (
+    private fun handleButtonClick(
         showFab: LinearLayout,
         hideList: List<LinearLayout>
     ) {
-        Log.d("검증", "buttonclick func")
+        println("buttonclicked")
         for (fab in hideList) {
             fab.visibility = View.INVISIBLE
         }

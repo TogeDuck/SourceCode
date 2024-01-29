@@ -28,7 +28,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btn1.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_bottomAppbarFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_ahyoungFragment)
         }
 
         binding.btn2.setOnClickListener {
