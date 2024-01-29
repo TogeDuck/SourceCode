@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -43,6 +44,7 @@ class BottomAppbarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpBackgroundRoundCorner()
         setUpBackgroundButtonIcon()
+        setUpBottomText()
         setUpFloatingButton()
     }
 
@@ -81,6 +83,21 @@ class BottomAppbarFragment : Fragment() {
         for (icon in icons){
             icon.setColorFilter(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         }
+    }
+
+    private fun setUpBottomText(){
+        val textQuest: TextView = componentBinding.textQuest
+        val textList: TextView = componentBinding.textList
+        val textChat: TextView = componentBinding.textChat
+        val textMyRecord: TextView = componentBinding.textMyrecord
+        val texts: List<TextView> = listOf(textQuest, textList, textChat, textMyRecord)
+        for (text in texts){
+            text.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        }
+        textQuest.setText("Quest")
+        textList.setText("List")
+        textChat.setText("MyQuest")
+        textMyRecord.setText("MyRecord")
     }
 
     private fun setUpFloatingButton(){
