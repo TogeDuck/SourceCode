@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:text="뷔"
         android:textSize="@dimen/body_small"
-        android:textColor="@color/bts_main_200"
         android:layout_marginTop="@dimen/margin_xxsmall"
         />
 

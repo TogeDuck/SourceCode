@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
 import com.idle.togeduck.databinding.FragmentBottomSheetBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,8 +30,28 @@ class BottomSheetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var sheet = componentBinding.bottomSheet
+        var sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)
 
+        // BottomSheetBehavior state에 따른 이벤트 추후 추가
+        sheetBehavior.setBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
     }
 
     override fun onDestroyView() {

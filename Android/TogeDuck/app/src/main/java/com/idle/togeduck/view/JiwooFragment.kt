@@ -27,29 +27,6 @@ class JiwooFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var sheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottom_sheet))
-
-
-        // 추후 활용 ..
-        sheetBehavior.setBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        })
     }
 
     override fun onDestroyView() {

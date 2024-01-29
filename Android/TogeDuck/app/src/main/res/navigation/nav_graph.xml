@@ -25,6 +25,10 @@
         <action
             android:id="@+id/action_mainFragment_to_bottomAppbarFragment"
             app:destination="@id/bottomAppbarFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_BottomSheetFragment"
+            app:destination="@id/BottomSheetFragment" />
+
     </fragment>
 
     <fragment
@@ -62,6 +66,14 @@
         android:label="bottom_appbar_fragment"
         tools:layout="@layout/fragment_bottom_appbar">
     </fragment>
+
+    <fragment
+        android:id="@+id/BottomSheetFragment"
+        android:name="com.idle.togeduck.view.BottomSheetFragment"
+        android:label="bottom_sheet_fragment"
+        tools:layout="@layout/fragment_bottom_sheet">
+    </fragment>
+
 
 
 </navigation>
