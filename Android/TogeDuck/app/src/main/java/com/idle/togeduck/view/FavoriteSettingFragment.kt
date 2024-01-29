@@ -53,8 +53,8 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     private val myJob = Job()
     private val myContext get() = Dispatchers.Main + myJob
 
-    private val myFavoriteAdapter = MyFavoriteAdapter(this)
-    private val idolSearchResultAdapter = IdolSearchResultAdapter(this)
+    private lateinit var myFavoriteAdapter: MyFavoriteAdapter
+    private lateinit var idolSearchResultAdapter: IdolSearchResultAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -132,6 +132,9 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     }
 
     private fun setRecyclerview() {
+        myFavoriteAdapter = MyFavoriteAdapter(this, requireContext())
+        idolSearchResultAdapter = IdolSearchResultAdapter(this, requireContext())
+
         binding.rvMyFavorite.apply {
             addItemDecoration(TogeDuckItemDecoration(5, 15))
             adapter = myFavoriteAdapter

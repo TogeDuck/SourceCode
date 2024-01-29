@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title"
                 android:textAlignment="center"
-                android:textSize="@dimen/title_large"
+                android:textSize="@dimen/text_title_medium"
                 android:textStyle="bold" />
 
             <include
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="@string/my_favorite"
-                    android:textSize="@dimen/large"
+                    android:textSize="@dimen/text_large"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -92,7 +92,7 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/search_result"
-                    android:textSize="@dimen/large"
+                    android:textSize="@dimen/text_large"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
