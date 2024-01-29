@@ -1,4 +1,4 @@
-package com.idle.togeduck.view.recyclerview.favorite_setting
+package com.idle.togeduck.view.favorite_setting
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.idle.togeduck.view.recyclerview.favorite_setting
+package com.idle.togeduck.view.favorite_setting
 
 interface IMyFavorite {
     fun myFavoriteRemoveBtnClicked(position: Int)

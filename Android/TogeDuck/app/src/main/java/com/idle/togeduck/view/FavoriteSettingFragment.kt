@@ -3,8 +3,8 @@ package com.idle.togeduck.view
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,23 +13,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat.animate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentSearchBarBinding
 import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
-import com.idle.togeduck.view.recyclerview.favorite_setting.IIdolSearchResult
-import com.idle.togeduck.view.recyclerview.favorite_setting.IMyFavorite
-import com.idle.togeduck.view.recyclerview.favorite_setting.IdolSearchResultAdapter
-import com.idle.togeduck.view.recyclerview.favorite_setting.MyFavoriteAdapter
+import com.idle.togeduck.view.favorite_setting.IIdolSearchResult
+import com.idle.togeduck.view.favorite_setting.IMyFavorite
+import com.idle.togeduck.view.favorite_setting.IdolSearchResultAdapter
+import com.idle.togeduck.view.favorite_setting.MyFavoriteAdapter
 import com.idle.togeduck.viewmodel.FavoriteSettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -175,25 +173,29 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
         return false
     }
 
+
     private fun setTheme() {
+        binding.flFavoriteSetting.background = ContextCompat.getDrawable(requireContext(), Theme.theme.main300)
         binding.tvTitle.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.tvMyFavorite.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.tvIdolSearchResult.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
         val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
-        circleDrawable.setStroke(2, ContextCompat.getColor(requireContext(), Theme.theme.main500))
-
-        searchBarBinding.ibSearch.background = circleDrawable
-        searchBarBinding.ibSearch.setColorFilter(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        circleDrawable.setStroke(4, ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
         val squareCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
         squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
-        squareCircleDrawable.setStroke(2, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        squareCircleDrawable.setStroke(4, ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
+        val cursorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
+        cursorDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        @RequiresApi(Build.VERSION_CODES.Q)
+        searchBarBinding.etSearch.textCursorDrawable = cursorDrawable
         searchBarBinding.etSearch.background = squareCircleDrawable
         searchBarBinding.etSearch.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
-
+        searchBarBinding.etSearch.setHintTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
     }
 
     override fun onDestroyView() {

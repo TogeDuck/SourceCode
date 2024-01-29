@@ -3,6 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_favorite_setting"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -29,7 +30,7 @@
         android:id="@+id/cl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="80dp"
+        android:paddingHorizontal="50dp"
         android:paddingVertical="150dp"
         tools:context=".view.FavoriteSettingFragment">
 
@@ -56,7 +57,7 @@
                 layout="@layout/component_search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp" />
+                android:layout_marginTop="30dp" />
 
             <LinearLayout
                 android:id="@+id/ll_search_result"
