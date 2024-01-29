@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="title_large"></dimen>
-    <dimen name="title_medium">25sp</dimen>
-    <dimen name="title_small"></dimen>
-    <dimen name="body_large"></dimen>
-    <dimen name="body_medium">16sp</dimen>
-    <dimen name="body_small">12sp</dimen>
-    <dimen name="body_xsmall"></dimen>
+    <dimen name="extra_small">6sp</dimen>
+    <dimen name="small">8sp</dimen>
+    <dimen name="medium">10sp</dimen>
+    <dimen name="large">12sp</dimen>
+    <dimen name="extra_large">14sp</dimen>
+    <dimen name="title">16sp</dimen>
+    <dimen name="title_large">30sp</dimen>
 
-    <dimen name="btn_medium">40dp</dimen>
+    <dimen name="circle_xsmall">40dp</dimen>
+    <dimen name="circle_small">60dp</dimen>
+    <dimen name="circle_medium">80dp</dimen>
+    <dimen name="circle_large">100dp</dimen>
+    <dimen name="circle_xlarge">120dp</dimen>
 
-    <dimen name="padding_xxsmall">2dp</dimen>
-    <dimen name="padding_xsmall">5dp</dimen>
-    <dimen name="padding_small">10dp</dimen>
-    <dimen name="padding_medium">30dp</dimen>
-    <dimen name="padding_large">50dp</dimen>
-    <dimen name="padding_xlarge">140dp</dimen>
-    <dimen name="padding_xxlarge">200dp</dimen>
-
-    <dimen name="margin_xxsmall">2dp</dimen>
-    <dimen name="margin_xsmall">5dp</dimen>
-    <dimen name="margin_small">10dp</dimen>
-    <dimen name="margin_medium">30dp</dimen>
-    <dimen name="margin_large">50dp</dimen>
-    <dimen name="margin_xlarge">150dp</dimen>
-    <dimen name="margin_xxlarge">200dp</dimen>
-
-    <dimen name="my_favorite_icon">80dp</dimen>
-    <dimen name="remove_btn">15dp</dimen>
 </resources>
