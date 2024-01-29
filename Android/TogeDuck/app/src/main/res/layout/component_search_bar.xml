@@ -14,8 +14,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ib_search"
         android:hint="@string/input_text"
-        android:textColor="@color/bts_main_200"
-        android:textColorHint="@color/bts_main_200"
         android:background="@drawable/circle_square_shape"
         android:textSize="@dimen/body_medium"
         android:paddingVertical="@dimen/padding_xxsmall"
@@ -35,7 +33,6 @@
         app:layout_constraintBottom_toBottomOf="@id/et_search"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/search"
-        app:tint="@color/bts_main_200"
         android:background="@drawable/circle_shape"
         />
 
