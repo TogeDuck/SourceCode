@@ -4,4 +4,6 @@
     <string name="title">최애를 알려주세요!</string>
     <string name="my_favorite">나의 최애</string>
     <string name="search_result">검색 결과</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
