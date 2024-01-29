@@ -7,8 +7,14 @@
     <color name="green">#2A716B</color>
     <color name="blue">#7D5CDE</color>
 
+    <color name="gray_bg">#E5E5E5</color>
+    <color name="gray_text">#666666</color>
     <color name="white_transparent">#81FFFFFF</color>
     <color name="edit_text_cursor">#7E5DDE</color>
+
+    <!--  bottom-sheet 색  -->
+    <color name="bs_main">#F8F7FC</color>
+    <color name="bs_handle_gray">#D9D9D9</color>
 
     <!--  bts 테마  -->
     <color name="bts_main100">#F9F7FC</color>
@@ -42,7 +48,5 @@
     <color name="seventeen_sub500_trans90">#E6F7CAC9</color>
     <color name="seventeen_sub500_trans20">#33F7CAC9</color>
 
-    <!--  bottom-sheet 색  -->
-    <color name="bs_main">#F8F7FC</color>
-    <color name="bs_handle_gray">#D9D9D9</color>
+
 </resources>

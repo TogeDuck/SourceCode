@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:background="@drawable/rounded_bottom_sheet_main"
+    android:background="@drawable/shape_upper_round_40"
     android:elevation="15dp"
     android:orientation="vertical"
     app:behavior_fitToContents="false"
