@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -68,6 +69,9 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
         super.onViewCreated(view, savedInstanceState)
 
         setRecyclerview()
+
+        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.circle_shape) as GradientDrawable
+        drawable.setStroke(2, ContextCompat.getColor(requireContext(), R.color.seventeen_main500))
 
         searchBarBinding.etSearch.setOnKeyListener { view, keyCode, _ ->
             hideKeyboard(view, keyCode)
