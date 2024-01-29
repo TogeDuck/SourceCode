@@ -6,6 +6,7 @@
     app:layout_constraintRight_toRightOf="parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="10dp"
+    android:id="@+id/item_quest_share"
     >
 
     <ImageView
@@ -22,22 +23,26 @@
         />
     <TextView
         android:id="@+id/share_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="이대휘 포카 나눔합니다"
         app:layout_constraintTop_toTopOf="@id/share_image"
         app:layout_constraintLeft_toRightOf="@id/share_image"
+        app:layout_constraintRight_toLeftOf="@id/share_timer"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
         />
     <TextView
         android:id="@+id/share_content"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="카페 코드의 주석 작은 테이블 위에 올려뒀어요 \n 다들 즐거운 덕질 되세요"
+        android:layout_marginRight="5dp"
+        android:text="카페 코드의 주석 작은 테이블 위에 올려뒀어요. 다들 즐거운 덕질 되세요"
         app:layout_constraintTop_toBottomOf="@id/share_title"
         app:layout_constraintLeft_toLeftOf="@id/share_title"
+        app:layout_constraintRight_toLeftOf="@id/share_timer"
         />
     <ImageView
         android:id="@+id/share_timer"
