@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_mainFragment_to_eventListFragment"
             app:destination="@+id/eventListFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_questRecruitFragment"
+            app:destination="@id/questRecruitFragment" />
 
     </fragment>
 
@@ -109,5 +112,10 @@
         android:name="com.idle.togeduck.view.EventListFragment"
         android:label="event_list_fragment"
         tools:layout="@layout/fragment_event_list"/>
+    <fragment
+        android:id="@+id/questRecruitFragment"
+        android:name="com.idle.togeduck.view.QuestRecruitFragment"
+        android:label="quest_recruit_fragment"
+        tools:layout="@layout/fragment_quest_recruit" />
 
 </navigation>

@@ -19,7 +19,7 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn3.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_questRecruitFragment)
         }
     }
 
