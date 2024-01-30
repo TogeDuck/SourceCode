@@ -36,7 +36,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn2.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_jiwooFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_eventListFragment)
         }
 
         binding.btn3.setOnClickListener {
