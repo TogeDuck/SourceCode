@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_mainFragment_to_questShareFragment"
             app:destination="@id/questShareFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_eventListFragment"
+            app:destination="@+id/eventListFragment" />
 
     </fragment>
 
@@ -101,5 +104,10 @@
         android:name="com.idle.togeduck.view.QuestShareFragment"
         android:label="quest_share_fragment"
         tools:layout="@layout/fragment_quest_share"/>
+    <fragment
+        android:id="@+id/eventListFragment"
+        android:name="com.idle.togeduck.view.EventListFragment"
+        android:label="event_list_fragment"
+        tools:layout="@layout/fragment_event_list"/>
 
 </navigation>
