@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -14,19 +13,27 @@
         android:layout_height="match_parent"
         android:name="com.naver.maps.map.MapFragment" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            android:id="@+id/bs_fragment"
-            layout="@layout/component_bottom_sheet" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <include
-        layout="@layout/component_bottom_appbar"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_top_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:name="com.idle.togeduck.view.TopAppbarFragment"
+        />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_bottom_sheet"
+        android:name="com.idle.togeduck.view.BottomSheetFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_bottom_appbar"
+        android:name="com.idle.togeduck.view.BottomAppbarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        />
 
 </FrameLayout>

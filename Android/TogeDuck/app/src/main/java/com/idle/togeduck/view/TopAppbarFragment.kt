@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
+import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
+import com.idle.togeduck.util.DpPxUtil.dpToPx
 
 class TopAppbarFragment : Fragment() {
     private var _binding: FragmentTopAppbarBinding? = null
@@ -31,34 +33,20 @@ class TopAppbarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val statusDp = getStatusBarHeight(requireContext())
+        val statusDp = getStatusBarHeightToDp(requireContext())
 
         Log.d("로그", "TopAppbarFragment - onViewCreated() 호출됨 ${statusDp}")
 
-        topAppbarBinding.llTopAppbar.setPadding(dpToPx(20), dpToPx(statusDp), dpToPx(20), dpToPx(10))
+        topAppbarBinding.llTopAppbar.setPadding(
+            dpToPx(20, requireContext()),
+            dpToPx(statusDp, requireContext()),
+            dpToPx(20, requireContext()),
+            dpToPx(10, requireContext())
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    @SuppressLint("InternalInsetResource", "DiscouragedApi")
-    fun getStatusBarHeight(context: Context) : Int {
-        var statusBarHeight = 0
-        val resourceId: Int = context.resources.getIdentifier("status_bar_height", "dimen", "android")
-
-        if (resourceId > 0) statusBarHeight = context.resources.getDimensionPixelSize(resourceId)
-
-        return pxTodp(statusBarHeight, context).toInt()
-    }
-
-    fun pxTodp(px: Int, context: Context): Float {
-        return px / context.resources.displayMetrics.density
-    }
-
-    fun dpToPx(dp: Int): Int {
-        val scale = resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
     }
 }
