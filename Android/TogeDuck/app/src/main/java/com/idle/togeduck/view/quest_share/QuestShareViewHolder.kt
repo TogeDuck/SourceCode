@@ -38,14 +38,14 @@ class QuestShareViewHolder (
 
     // 데이터 객체를 매개변수로 받아서 해당 데이터로 뷰 컴포넌트 업데이트
     fun binding(questShare: QuestShare, context: Context) {
-        val roundSmall = ContextCompat.getDrawable(context, R.drawable.shape_all_round_5) as GradientDrawable
-        val roundLarge = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable
+        val roundSmall = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
+        val roundLarge = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         roundSmall.setColor(ContextCompat.getColor(context, Theme.theme.main500)) // 추후 변경
         roundLarge.setColor(ContextCompat.getColor(context, Theme.theme.main200))
         image.background = roundSmall
         questShareLayout.background = roundLarge
-//        title.setText(questShare.title)
-//        title.setText(questShare.content)
+        title.setText(questShare.title)
+        title.setText(questShare.content)
     }
 
     override fun onClick(v: View?) {

@@ -25,7 +25,7 @@ class QuestShareListAdapter (
     // 매개변수 : 인터페이스 객체 -> 터치 콜백, context -> 안드로이드 시스템에서 어플리케이션 환경에 대한 정보 제공
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestShareViewHolder {
-        val binding = ItemQuestShareBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ItemQuestShareBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return QuestShareViewHolder(binding, iquestDetail)
     }
 
