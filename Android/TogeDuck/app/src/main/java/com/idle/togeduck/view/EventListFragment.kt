@@ -1,25 +1,44 @@
 package com.idle.togeduck.view
 
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.R
 
 import com.idle.togeduck.databinding.FragmentEventListBinding
 import com.idle.togeduck.model.Event
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.view.event_list.EventInfo
 import com.idle.togeduck.view.event_list.EventInfoAdapter
+import com.idle.togeduck.viewmodel.EventListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class EventListFragment : Fragment(), EventInfo {
     private var _binding: FragmentEventListBinding? = null
     private val binding get() = _binding!!
+
+    private val eventListViewModel: EventListViewModel by activityViewModels()
+
+    private lateinit var todayEventInfoAdapter: EventInfoAdapter
+    private lateinit var upcomingEventInfoAdapter: EventInfoAdapter
+    private lateinit var pastEventInfoAdapter: EventInfoAdapter
+
+    private var todayEventsList: MutableList<Event?> = mutableListOf()
+    private var upcomingEventsList: MutableList<Event?> = mutableListOf()
+    private var pastEventsList: MutableList<Event?> = mutableListOf()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,68 +49,100 @@ class EventListFragment : Fragment(), EventInfo {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setTheme()
         setRecyclerview()
+
     }
 
     private fun setRecyclerview() {
-        val rvToday = binding.rvEventToday
-        val rvUpcoming = binding.rvEventUpcoming
-        val rvPast = binding.rvEventPast
-        val AdapterToday = EventInfoAdapter(this, requireContext())
-        val AdapterUpcoming = EventInfoAdapter(this, requireContext())
-        val AdapterPast = EventInfoAdapter(this, requireContext())
+        todayEventInfoAdapter = EventInfoAdapter(this, requireContext())
+        upcomingEventInfoAdapter = EventInfoAdapter(this, requireContext())
+        pastEventInfoAdapter = EventInfoAdapter(this, requireContext())
 
-        rvToday.adapter = AdapterToday
-        rvToday.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvEventToday.apply {
+            adapter = todayEventInfoAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
 
-        rvUpcoming.adapter = AdapterUpcoming
-        rvUpcoming.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        setUpcomingColor()
+        binding.rvEventUpcoming.apply {
+            adapter = upcomingEventInfoAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
 
-        rvPast.adapter = AdapterPast
-        rvPast.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
-        AdapterToday.submitList(tempDataToday())
-        AdapterUpcoming.submitList(tempDataUpcoming())
-        AdapterPast.submitList(tempDataPast())
+        binding.rvEventPast.apply {
+            adapter = pastEventInfoAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
     }
 
-    private fun setUpcomingColor(){
-        //todo. 색상 지정하기
-    }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setTheme() {
         binding.today.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
+        binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
+
+        val todayColor = ContextCompat.getColor(requireContext(),Theme.theme.sub500)
+        val upComingColor = ContextCompat.getColor(requireContext(),Theme.theme.sub100)
+        val pastColor = ContextCompat.getColor(requireContext(), R.color.gray_bg)
+
+        divideDataByPeriod()
+
+        //더미데이터 넣기
+        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
+            todayEventInfoAdapter.submitList(todayEventsList)
+        }
+        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
+            upcomingEventInfoAdapter.submitList(upcomingEventsList)
+        }
+        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
+            pastEventInfoAdapter.submitList(pastEventsList)
+        }
+
+        //날짜 별 색상 지정..
+        val todayEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+//        binding.rvEventToday.background = todayEventDrawable
+        todayEventDrawable.setColor(todayColor)
+//
+//        val upComingEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+//        binding.rvEventUpcoming.background = upComingEventDrawable
+//        upComingEventDrawable.setColor(upComingColor)
+//
+//        val pastEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+//        binding.rvEventPast.background = pastEventDrawable
+//        pastEventDrawable.setColor(pastColor)
+
     }
 
-    private fun tempDataToday(): List<Event> {
-        val data1 = Event("imageUrl1", "cafe1", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data2 = Event("imageUrl2", "cafe2", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data3 = Event("imageUrl3", "cafe3", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data4 = Event("imageUrl4", "cafe4", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data5 = Event("imageUrl5", "cafe5", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data6 = Event("imageUrl6", "cafe6", "event1", "2024.01.02 ~ 2024.01.06", true)
-        return listOf(data1,data2,data3,data4,data5,data6)
-    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun divideDataByPeriod() {
+        //전체 이벤트 데이터 가져오기
+        var tempDataList = eventListViewModel.eventList.value
 
-    private fun tempDataUpcoming(): List<Event> {
-        val data7 = Event("imageUrl7", "cafe7", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data8 = Event("imageUrl8", "cafe8", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data9 = Event("imageUrl9", "cafe9", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data10 = Event("imageUrl10", "cafe10", "event1", "2024.01.02 ~ 2024.01.06", true)
-        return listOf(data7,data8,data9,data10)
-    }
+        //유저가 선택한 날짜
+        var dateStart = LocalDate.parse("2024-01-04")
+        var dateEnd = LocalDate.parse("2024-01-05")
 
-    private fun tempDataPast(): List<Event> {
-        val data11 = Event("imageUrl11", "cafe11", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data12 = Event("imageUrl2", "cafe12", "event1", "2024.01.02 ~ 2024.01.06", true)
-        val data13 = Event("imageUrl3", "cafe13", "event1", "2024.01.02 ~ 2024.01.06", true)
-        return listOf(data11,data12,data13)
+        //이벤트 기간에 따라 맞는 리스트에 추가
+        if (tempDataList != null) {
+            for(event in tempDataList){
+                val periodSplit = event.eventPeriod.split(" ~ ")
+                val start = LocalDate.parse(periodSplit[0], DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                val end = LocalDate.parse(periodSplit[1], DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+
+                val addToList = when {
+                    dateEnd.isBefore(start) -> upcomingEventsList.add(event)
+                    dateStart.isAfter(end) -> pastEventsList.add(event)
+                    else -> todayEventsList.add(event)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -99,4 +150,3 @@ class EventListFragment : Fragment(), EventInfo {
         _binding = null
     }
 }
-
