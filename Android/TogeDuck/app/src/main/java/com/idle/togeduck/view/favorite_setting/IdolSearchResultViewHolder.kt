@@ -14,7 +14,7 @@ import com.idle.togeduck.view.favorite_setting.IIdolSearchResult
 
 class IdolSearchResultViewHolder(
     binding: ItemIdolSearchResultBinding,
-    private var iIdolSearchResult: IIdolSearchResult,
+    private val iIdolSearchResult: IIdolSearchResult,
 ) : RecyclerView.ViewHolder(binding.root),
     View.OnClickListener {
     private val idolSearchResultLinearLayout = binding.llIdolSearchResult

@@ -13,8 +13,7 @@ import com.idle.togeduck.view.favorite_setting.IdolSearchResultViewHolder
 class IdolSearchResultAdapter(
     private var iIdolSearchResult: IIdolSearchResult,
     private val context: Context
-)
-    : ListAdapter<FavoriteIdol, IdolSearchResultViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
+) : ListAdapter<FavoriteIdol, IdolSearchResultViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IdolSearchResultViewHolder {
         val binding = ItemIdolSearchResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return IdolSearchResultViewHolder(binding, iIdolSearchResult)
