@@ -47,7 +47,7 @@ class TopAppbarFragment : Fragment() {
 
         topAppbarBinding.llTopAppbar.setPadding(
             dpToPx(20, requireContext()),
-            dpToPx(statusDp, requireContext()),
+            dpToPx(statusDp + 5, requireContext()),
             dpToPx(20, requireContext()),
             dpToPx(10, requireContext())
         )
@@ -95,6 +95,11 @@ class TopAppbarFragment : Fragment() {
         searchBarBinding.etSearch.setHintTextColor(getColor(requireContext(), Theme.theme.main500))
 
         topAppbarBinding.tvDate.setTextColor(getColor(requireContext(), Theme.theme.main500))
+
+        val allRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_5) as GradientDrawable
+        allRoundDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
+        allRoundDrawable.setStroke(0, getColor(requireContext(), Theme.theme.main500))
+        topAppbarBinding.tvDate.background = allRoundDrawable
     }
 
     override fun onDestroyView() {
