@@ -15,7 +15,8 @@ public enum ErrorCode {
 	TOKEN_NOT_EXISTS(404, "USER-004", "토큰이 존재하지 않는 경우"),
 	EVENT_NOT_FOUND(404, "EVENT-001", "이벤트를 찾을 수 없는 경우"),
 	REVIEW_NOT_FOUND(404, "REVIEW-001", "리뷰를 찾을 수 없는 경우"),
-	DATA_CANT_SAVE(404, "S3-001", "데이터 저장에 실패 - 필드값 확인 OR 연관 엔티티 확인");
+	DATA_CANT_SAVE(404, "S3-001", "데이터 저장에 실패 - 필드값 확인 OR 연관 엔티티 확인"),
+	SHARE_NOT_FOUND(404, "SHARE-001", "이벤트를 찾을 수 없는 경우");
 
 	private final int status;
 	private final String code;
