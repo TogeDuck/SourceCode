@@ -11,6 +11,7 @@ import com.idle.togeduck.domain.chat.entity.Trade;
 import com.idle.togeduck.domain.chat.repository.TradeRepository;
 import com.idle.togeduck.domain.event.entity.Event;
 import com.idle.togeduck.domain.event.repository.EventRepository;
+import com.idle.togeduck.domain.event.service.S3Service;
 import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.global.response.BaseException;
 import com.idle.togeduck.global.response.ErrorCode;
@@ -24,6 +25,7 @@ public class TradeService {
 
 	private final TradeRepository tradeRepository;
 	private final EventRepository eventRepository;
+	private final S3Service s3Service;
 
 	public Slice<TradeResponseDto> getTradeList(Long eventId, Pageable pageable) {
 		return tradeRepository.findSliceByEventId(eventId, pageable);
@@ -44,11 +46,12 @@ public class TradeService {
 	public void createTrade(Long eventId, User user, MultipartFile image, String content, int duration) {
 		Event event = eventRepository.findById(eventId)
 			.orElseThrow(() -> new BaseException(ErrorCode.EVENT_NOT_FOUND));
+		String imagePath = s3Service.saveFile(image);
 
 		Trade trade = Trade.builder()
 			.event(event)
 			.user(user)
-			.image(image.getOriginalFilename())
+			.image(imagePath)
 			.content(content)
 			.duration(duration)
 			.build();
@@ -60,13 +63,16 @@ public class TradeService {
 	public void updateTrade(Long tradeId, User user, MultipartFile image, String content, int duration) {
 		Trade trade = tradeRepository.findById(tradeId)
 			.orElseThrow(() -> new BaseException(ErrorCode.TRADE_NOT_FOUND));
-		trade.updateTrade(image.getOriginalFilename(), content, duration);
+		s3Service.deleteFile(trade.getImage());
+		String imagePath = s3Service.saveFile(image);
+		trade.updateTrade(imagePath, content, duration);
 	}
 
 	@Transactional
 	public void deleteTrade(Long tradeId, User user) {
 		Trade trade = tradeRepository.findById(tradeId)
 			.orElseThrow(() -> new BaseException(ErrorCode.TRADE_NOT_FOUND));
+		s3Service.deleteFile(trade.getImage());
 		tradeRepository.delete(trade);
 	}
 
