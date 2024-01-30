@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
 import com.idle.togeduck.databinding.FragmentBottomSheetBinding
+import com.idle.togeduck.util.CalcStatusBarSize
+import com.idle.togeduck.util.DpPxUtil.dpToPx
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,8 +31,11 @@ class BottomSheetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val statusDp = CalcStatusBarSize.getStatusBarHeightToDp(requireContext())
 
         val sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)
+
+        sheetBehavior.expandedOffset = dpToPx(statusDp + 5, requireContext())
 
         // TODO. BottomSheetBehavior state에 따른 이벤트 추후 추가
         sheetBehavior.addBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){

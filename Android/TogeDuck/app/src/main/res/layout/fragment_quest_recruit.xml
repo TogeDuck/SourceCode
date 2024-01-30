@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.JichanFragment"
-    >
+    android:layout_height="match_parent" >
 
     <LinearLayout
-        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
-            android:text="Jichan 프래그먼트"
+            android:id="@+id/tv_current_recruit"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="현재 진행 중인 모집"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_current_recruit"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
 </ScrollView>
+
