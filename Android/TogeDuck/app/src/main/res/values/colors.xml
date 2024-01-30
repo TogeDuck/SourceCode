@@ -17,17 +17,17 @@
     <color name="bs_handle_gray">#D9D9D9</color>
 
     <!--  bts 테마  -->
-    <color name="bts_main100">#F9F7FC</color>
-    <color name="bts_main200">#EDE7F6</color>
-    <color name="bts_main300">#D1C4E9</color>
-    <color name="bts_main400">#B098DB</color>
+    <color name="bts_main100">#EAE3F5</color>
+    <color name="bts_main200">#D5C8EB</color>
+    <color name="bts_main300">#BFACE1</color>
+    <color name="bts_main400">#AA91D7</color>
     <color name="bts_main500">#9575CD</color>
     <color name="bts_main500_trans90">#E69575CD</color>
     <color name="bts_main500_trans20">#339575CD</color>
-    <color name="bts_sub100">#F9F7FC</color>
-    <color name="bts_sub200">#EDE7F6</color>
-    <color name="bts_sub300">#D1C4E9</color>
-    <color name="bts_sub400">#B098DB</color>
+    <color name="bts_sub100">#EAE3F5</color>
+    <color name="bts_sub200">#D5C8EB</color>
+    <color name="bts_sub300">#BFACE1</color>
+    <color name="bts_sub400">#AA91D7</color>
     <color name="bts_sub500">#9575CD</color>
     <color name="bts_sub500_trans90">#E69575CD</color>
     <color name="bts_sub500_trans20">#339575CD</color>
@@ -47,6 +47,22 @@
     <color name="seventeen_sub500">#F7CAC9</color>
     <color name="seventeen_sub500_trans90">#E6F7CAC9</color>
     <color name="seventeen_sub500_trans20">#33F7CAC9</color>
+
+    <!--  blackpink 테마  -->
+    <color name="blackpink_main100">#E8E8E8</color>
+    <color name="blackpink_main200">#C4C4C4</color>
+    <color name="blackpink_main300">#A1A1A1</color>
+    <color name="blackpink_main400">#737373</color>
+    <color name="blackpink_main500">#444444</color>
+    <color name="blackpink_main500_trans90">#E6444444</color>
+    <color name="blackpink_main500_trans20">#33444444</color>
+    <color name="blackpink_sub100">#FDE5EC</color>
+    <color name="blackpink_sub200">#FCE2E9</color>
+    <color name="blackpink_sub300">#FAD5DD</color>
+    <color name="blackpink_sub400">#F9C6D2</color>
+    <color name="blackpink_sub500">#F7B8C7</color>
+    <color name="blackpink_sub500_trans90">#E6F7B8C7</color>
+    <color name="blackpink_sub500_trans20">#33F7B8C7</color>
 
 
 </resources>

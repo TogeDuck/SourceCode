@@ -2,6 +2,7 @@ package com.idle.togeduck.view.quest_share
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,7 @@ class QuestShareViewHolder (
     private val title = binding.shareTitle
     private val content = binding.shareContent
     private val time = binding.shareTimer
+    private val timeText = binding.timerText
 
     // 클래스 초기화 블럭
     // Layout에 OnClickListener 설정
@@ -38,18 +40,27 @@ class QuestShareViewHolder (
 
     // 데이터 객체를 매개변수로 받아서 해당 데이터로 뷰 컴포넌트 업데이트
     fun binding(questShare: QuestShare, context: Context) {
-        val roundSmall = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
-        val roundLarge = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
-        val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
-        roundSmall.setColor(ContextCompat.getColor(context, Theme.theme.main500)) // 추후 변경
-        roundLarge.setColor(ContextCompat.getColor(context, Theme.theme.main200))
-        image.background = roundSmall
-        questShareLayout.background = roundLarge
-        title.setText(questShare.title)
-        content.setText(questShare.content)
+        setTheme(questShare, context)
     }
 
     override fun onClick(v: View?) {
-        TODO("Not yet implemented")
+        Log.d("클릭","clicked")
+    }
+
+    private fun setTheme(questShare: QuestShare, context: Context) {
+        val roundSmall = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
+        val roundLarge = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
+        val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
+        roundSmall.setColor(ContextCompat.getColor(context, Theme.theme.sub500)) // 추후 변경
+        roundLarge.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
+        circle.setColor(ContextCompat.getColor(context, Theme.theme.sub500))
+        circle.setStroke(0,0)
+        image.background = roundSmall
+        questShareLayout.background = roundLarge
+        time.background = circle
+
+        title.setText(questShare.title)
+        content.setText(questShare.content)
+        timeText.setText(questShare.time.toString())
     }
 }

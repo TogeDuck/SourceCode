@@ -49,5 +49,21 @@ enum class TogeDuckColor(
         R.color.seventeen_sub500,
         R.color.seventeen_sub500_trans20,
         R.color.seventeen_sub500_trans90,
+    ),
+    BLACKPINK(
+        R.color.blackpink_main100,
+        R.color.blackpink_main200,
+        R.color.blackpink_main300,
+        R.color.blackpink_main400,
+        R.color.blackpink_main500,
+        R.color.blackpink_main500_trans20,
+        R.color.blackpink_main500_trans90,
+        R.color.blackpink_sub100,
+        R.color.blackpink_sub200,
+        R.color.blackpink_sub300,
+        R.color.blackpink_sub400,
+        R.color.blackpink_sub500,
+        R.color.blackpink_sub500_trans20,
+        R.color.blackpink_sub500_trans90,
     )
 }

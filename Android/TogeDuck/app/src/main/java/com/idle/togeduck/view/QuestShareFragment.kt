@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.FragmentBottomAppbarBinding
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
 import com.idle.togeduck.model.QuestShare
+import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.view.quest_share.IQuestShareDetail
 import com.idle.togeduck.view.quest_share.QuestShareListAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +38,9 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         recycleView.adapter = questShareAdapter
         recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
 
+        // 간격 설정
+        recycleView.addItemDecoration(TogeDuckItemDecoration(15,0))
+
         // Dummy Data
         questShareAdapter.submitList(dummyData())
     }
@@ -46,14 +51,22 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     }
 
     private fun dummyData(): List<QuestShare> {
-        val share1 = QuestShare("title1", "content1", "", 100)
-        val share2 = QuestShare("title2", "content2", "", 100)
-        val share3 = QuestShare("title3", "content3", "", 100)
-        val share4 = QuestShare("title4", "content4", "", 100)
-        val share5 = QuestShare("title5", "content5", "", 100)
+        val share1 = QuestShare("title1", "ddddddd", "", 100)
+        val share2 = QuestShare("title2", "conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjfconkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2lksjdflksjdlfksjdlfkjsdlkfjtent2", "", 100)
+        val share3 = QuestShare("title3", "ss", "", 100)
+        val share4 = QuestShare("title4", "consdfweopfiwpeofiposidfpoisdpofispdofispodfipsodifpsodifpsodifposdifpsodifposdtent3", "", 100)
+        val share5 = QuestShare("title5", "consdfweopfiwpeofiposidfpoisdpofispdofispodfipsodifpsodifpsodifposdifpsodifposdtent3", "", 100)
         val share6 = QuestShare("title6", "content6", "", 100)
-        val share7 = QuestShare("title7", "content7", "", 100)
+        val share7 = QuestShare("title7", "consdfweopfiwpeofiposidfpoisdpofispdofispodfipsodifpsodifpsodifposdifpsodifposdtent3", "", 100)
         val share8 = QuestShare("title8", "content8", "", 100)
-        return listOf(share1, share2, share3, share4, share5, share6, share7, share8)
+        val share9 = QuestShare("title1", "conssefsdfsadfasdfasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfastent1", "", 100)
+        val share10 = QuestShare("title2", "conkwjefoisodpisjdlkjlvkjslkdjflskdjflskdjflksjdflksjdlfksjdlfkjsdlkfjtent2", "", 100)
+        val share11 = QuestShare("title3", "ss", "", 100)
+        val share12 = QuestShare("title4", "consdfweopfiwpeofiposidfpoisdpofispdofispodfipsodifpsodifpsodifposdifpsodifposdtent3", "", 100)
+        val share13 = QuestShare("title5", "consdfweopfiwpeofiposidfpoisdpofispdofispodfipsodifpsodifpsodifposdifpsodifposdtent3", "", 100)
+        val share14 = QuestShare("title6", "content6", "", 100)
+        val share15 = QuestShare("title7", "consdfweopfiwpeofiposidfpoisdpofispdofispodfipsodifpsodifpsodifposdifpsodifposdtent3", "", 100)
+        val share16 = QuestShare("title8", "content8", "", 100)
+        return listOf(share1, share2, share3, share4, share5, share6, share7, share8, share9, share10, share11, share12, share13, share14, share15, share16)
     }
 }
