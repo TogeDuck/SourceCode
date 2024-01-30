@@ -28,4 +28,8 @@ public class User extends BaseEntity {
 
 	private String socialId;
 
+	public void updateUser(String socialId, SocialType socialType) {
+		this.socialId = socialId;
+		this.socialType = socialType;
+	}
 }
