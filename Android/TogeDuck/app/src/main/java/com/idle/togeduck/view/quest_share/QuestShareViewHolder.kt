@@ -44,7 +44,11 @@ class QuestShareViewHolder (
     }
 
     override fun onClick(v: View?) {
-        Log.d("클릭","clicked")
+        when(v){
+            questShareLayout -> {
+                questDetail.myQuestShareClicked(bindingAdapterPosition)
+            }
+        }
     }
 
     private fun setTheme(questShare: QuestShare, context: Context) {

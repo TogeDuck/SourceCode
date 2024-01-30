@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
+    android:layout_height="80dp"
     tools:background="@color/bts_main300"
     app:layout_constraintBottom_toBottomOf="parent"
     >
@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nav_background"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_gravity="bottom"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearlayout"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="80dp"
         android:layout_gravity="bottom"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
@@ -72,8 +72,8 @@
 
         <Button
             android:id="@+id/button_quest"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:background="#00ff0000"
             app:layout_constraintTop_toTopOf="@id/fab_quest"
             app:layout_constraintBottom_toBottomOf="@id/fab_quest"
@@ -83,8 +83,8 @@
 
         <Button
             android:id="@+id/button_list"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:background="#00ff0000"
             app:layout_constraintTop_toTopOf="@id/fab_list"
             app:layout_constraintBottom_toBottomOf="@id/fab_list"
@@ -93,8 +93,8 @@
             />
         <Button
             android:id="@+id/button_chat"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:background="#00ff0000"
             app:layout_constraintTop_toTopOf="@id/fab_chat"
             app:layout_constraintBottom_toBottomOf="@id/fab_chat"
@@ -103,8 +103,8 @@
             />
         <Button
             android:id="@+id/button_myrecord"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:background="#00ff0000"
             app:layout_constraintTop_toTopOf="@id/fab_myrecord"
             app:layout_constraintBottom_toBottomOf="@id/fab_myrecord"
@@ -119,7 +119,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_quest"
             app:layout_constraintRight_toRightOf="@id/fab_quest"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="20dp"
             android:textSize="@dimen/text_small"
             />
         <TextView
@@ -129,7 +129,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_list"
             app:layout_constraintRight_toRightOf="@id/fab_list"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="20dp"
             android:textSize="@dimen/text_small"
             />
         <TextView
@@ -139,7 +139,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_chat"
             app:layout_constraintRight_toRightOf="@id/fab_chat"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="20dp"
             android:textSize="@dimen/text_small"
             />
         <TextView
@@ -149,15 +149,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_myrecord"
             app:layout_constraintRight_toRightOf="@id/fab_myrecord"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="20dp"
             android:textSize="@dimen/text_small"
             />
 
         <!--    FLoating Buttons    -->
         <LinearLayout
             android:id="@+id/fab_quest"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/fab_list"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -165,7 +165,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="13dp"
             >
             <ImageView
                 android:layout_width="50dp"
@@ -176,8 +176,8 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/fab_list"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             app:layout_constraintLeft_toRightOf="@id/fab_quest"
             app:layout_constraintRight_toLeftOf="@id/fab_chat"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -185,7 +185,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="13dp"
             >
             <ImageView
                 android:layout_width="40dp"
@@ -195,8 +195,8 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/fab_chat"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             app:layout_constraintLeft_toRightOf="@id/fab_list"
             app:layout_constraintRight_toLeftOf="@id/fab_myrecord"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -204,7 +204,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="13dp"
             >
             <ImageView
                 android:layout_width="40dp"
@@ -214,8 +214,8 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/fab_myrecord"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             app:layout_constraintLeft_toRightOf="@id/fab_chat"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -223,7 +223,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="invisible"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="13dp"
             >
             <ImageView
                 android:layout_width="50dp"

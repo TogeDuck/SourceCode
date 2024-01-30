@@ -1,15 +1,15 @@
 package com.idle.togeduck.view
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
-import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
-import com.idle.togeduck.databinding.FragmentBottomAppbarBinding
+import com.idle.togeduck.databinding.DialogQuestShareBinding
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
 import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.TogeDuckItemDecoration
@@ -68,5 +68,35 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         val share15 = QuestShare("title7", "consdfweopfiwpeofiposidfpoisdpofispdofispodfipsodifpsodifpsodifposdifpsodifposdtent3", "", 100)
         val share16 = QuestShare("title8", "content8", "", 100)
         return listOf(share1, share2, share3, share4, share5, share6, share7, share8, share9, share10, share11, share12, share13, share14, share15, share16)
+    }
+
+    override fun myQuestShareClicked(position: Int) {
+        showDialog(dummyData().get(position))
+    }
+
+    fun showDialog(questShare: QuestShare) {
+        // 다이얼로그 뷰 바인딩 인스턴스 생성
+        val dialogBinding = DialogQuestShareBinding.inflate(layoutInflater)
+
+        // 다이얼로그 빌더 생성
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+
+        // 다이얼로그 내용 설정
+
+        dialogBinding.dialogQuestShareTitle.setText(questShare.title)
+        dialogBinding.dialogQuestShareContent.setText(questShare.content)
+
+        // 뷰를 다이얼로그에 설정
+        dialogBuilder.setView(dialogBinding.root)
+
+        // 확인 버튼 추가
+        dialogBuilder.setPositiveButton("확인") { dialog, which ->
+            // 확인 버튼을 누른 후 수행할 작업
+            dialog.dismiss() // 다이얼로그 닫기
+        }
+
+        // 다이얼로그 생성 및 표시
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
     }
 }
