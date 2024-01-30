@@ -10,6 +10,7 @@ import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemMyFavoriteBinding
 import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.Theme
+import com.idle.togeduck.util.toAlpha
 import com.idle.togeduck.view.favorite_setting.IMyFavorite
 
 class MyFavoriteViewHolder(
@@ -35,7 +36,7 @@ class MyFavoriteViewHolder(
 
         val allCornerDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_5) as GradientDrawable
         allCornerDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
-        allCornerDrawable.alpha = (255 * 0.4).toInt()
+        allCornerDrawable.alpha = 0.4.toAlpha()
         idolMyFavoriteLinearLayout.background = allCornerDrawable
 
         Glide

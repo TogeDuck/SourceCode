@@ -16,11 +16,12 @@
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <ImageView
-        android:layout_width="70dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_bottom_sheet_drag_handle"
+        android:layout_marginTop="10dp"
         app:tint="@color/bs_handle_gray" />
 
     <!--   bottom sheet content   -->
