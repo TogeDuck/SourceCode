@@ -13,7 +13,7 @@ class MyFavoriteAdapter(
     private val context: Context
 ) : ListAdapter<FavoriteIdol, MyFavoriteViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyFavoriteViewHolder {
-        val binding = ItemMyFavoriteBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ItemMyFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyFavoriteViewHolder(binding, iMyFavorite)
     }
 
