@@ -44,8 +44,8 @@ class QuestShareViewHolder (
         roundLarge.setColor(ContextCompat.getColor(context, Theme.theme.main200))
         image.background = roundSmall
         questShareLayout.background = roundLarge
-        title.setText(questShare.title)
-        title.setText(questShare.content)
+//        title.setText(questShare.title)
+//        title.setText(questShare.content)
     }
 
     override fun onClick(v: View?) {

@@ -5,11 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".view.BottomAppbarFragment">
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/test_quest_share_recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bts_main300"
+        android:name="com.idle.togeduck.view.QuestShareFragment"
         />
 
     <include
