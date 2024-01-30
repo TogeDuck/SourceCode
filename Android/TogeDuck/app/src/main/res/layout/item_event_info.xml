@@ -14,7 +14,7 @@
     >
     <!-- 이벤트 포스터 이미지 -->
     <ImageView
-        android:id="@+id/poster_img_url"
+        android:id="@+id/poster_img"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginEnd="10dp"

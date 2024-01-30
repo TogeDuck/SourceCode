@@ -1,6 +1,7 @@
 package com.idle.togeduck.util
 
 import androidx.recyclerview.widget.DiffUtil
+import com.idle.togeduck.model.Event
 import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.model.QuestShare
 
@@ -46,6 +47,16 @@ object TogeDuckDiffUtil {
         }
         // 두 아이템의 내용이 동일한지 비교
         override fun areContentsTheSame(oldItem: QuestShare, newItem: QuestShare): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val eventUtilItemCallback = object: DiffUtil.ItemCallback<Event>(){
+        override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {
             return oldItem == newItem
         }
     }
