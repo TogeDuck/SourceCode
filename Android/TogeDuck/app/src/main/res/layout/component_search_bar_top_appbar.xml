@@ -12,12 +12,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ib_search"
+        app:layout_constraintEnd_toStartOf="@id/iv_search"
         android:hint="@string/input_text"
         android:background="@drawable/shape_square_circle"
         android:textSize="@dimen/text_large"
         android:paddingVertical="2dp"
-        android:paddingStart="10dp"
+        android:paddingHorizontal="15dp"
         android:layout_marginEnd="10dp"
         android:maxLines="1"
         android:textCursorDrawable="@drawable/shape_cursor"
@@ -25,7 +25,7 @@
         tools:ignore="RtlSymmetry" />
 
     <ImageView
-        android:id="@+id/ib_search"
+        android:id="@+id/iv_search"
         android:layout_width="@dimen/circle_xxsmall"
         android:layout_height="@dimen/circle_xxsmall"
         app:layout_constraintStart_toEndOf="@id/et_search"

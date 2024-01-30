@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
 import com.idle.togeduck.databinding.FragmentBottomSheetBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,10 +30,10 @@ class BottomSheetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)
+        val sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)
 
-        // BottomSheetBehavior state에 따른 이벤트 추후 추가
-        sheetBehavior.setBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){
+        // TODO. BottomSheetBehavior state에 따른 이벤트 추후 추가
+        sheetBehavior.addBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
