@@ -12,7 +12,11 @@ public enum ErrorCode {
 	DUPLICATE_LOGIN_ID(400, "USER-001", "계정명이 중복된 경우"),
 	UNAUTHORIZED(401, "USER-002", "인증에 실패한 경우"),
 	USER_NOT_FOUND(404, "USER-003", "유저를 찾을 수 없는 경우"),
-	TOKEN_NOT_EXISTS(404, "USER-004", "토큰이 존재하지 않는 경우");
+	TOKEN_NOT_EXISTS(404, "USER-004", "토큰이 존재하지 않는 경우"),
+
+	EVENT_NOT_FOUND(404, "EVENT-001", "이벤트를 찾을 수 없는 경우"),
+
+	TRADE_NOT_FOUND(404, "TRADE-001", "교환을 찾을 수 없는 경우");
 
 	private final int status;
 	private final String code;
