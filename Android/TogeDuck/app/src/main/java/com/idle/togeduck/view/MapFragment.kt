@@ -49,6 +49,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initFragment()
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         val permissionListener = object : PermissionListener {
@@ -67,7 +69,26 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         requestPermission(permissionListener)
         initMapView()
+    }
 
+    private fun initFragment() {
+        childFragmentManager.beginTransaction()
+            .add(R.id.fragment_top_appbar, TopAppbarFragment())
+            .setReorderingAllowed(true)
+            .addToBackStack(null)
+            .commit()
+
+        childFragmentManager.beginTransaction()
+            .add(R.id.fragment_bottom_sheet, BottomSheetFragment())
+            .setReorderingAllowed(true)
+            .addToBackStack(null)
+            .commit()
+
+        childFragmentManager.beginTransaction()
+            .add(R.id.fragment_bottom_appbar, BottomAppbarFragment())
+            .setReorderingAllowed(true)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onMapReady(naverMap: NaverMap) {

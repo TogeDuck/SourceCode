@@ -11,7 +11,7 @@
     android:orientation="vertical"
     app:behavior_fitToContents="false"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="50dp"
+    app:behavior_peekHeight="100dp"
     app:behavior_expandedOffset="60dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
