@@ -30,7 +30,7 @@ class EventInfoViewHolder(
     fun bind(event: Event, context: Context){
         val eventDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable
 
-        eventDrawable.setColor(ContextCompat.getColor(context,Theme.theme.main400))
+        eventDrawable.setColor(ContextCompat.getColor(context,Theme.theme.sub400))
         EventLinearLayout.background = eventDrawable
 
         Glide
