@@ -50,12 +50,18 @@ class EventListFragment : Fragment(), EventInfo {
 
         rvUpcoming.adapter = AdapterUpcoming
         rvUpcoming.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        setUpcomingColor()
 
         rvPast.adapter = AdapterPast
         rvPast.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        AdapterUpcoming.submitList(tempDataUpcoming())
+
         AdapterToday.submitList(tempDataToday())
-        AdapterUpcoming.submitList(tempDataPast())
+        AdapterUpcoming.submitList(tempDataUpcoming())
+        AdapterPast.submitList(tempDataPast())
+    }
+
+    private fun setUpcomingColor(){
+        //todo. 색상 지정하기
     }
 
     private fun setTheme() {
@@ -92,6 +98,5 @@ class EventListFragment : Fragment(), EventInfo {
         super.onDestroyView()
         _binding = null
     }
-
 }
 
