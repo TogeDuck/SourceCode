@@ -40,12 +40,13 @@ class QuestShareViewHolder (
     fun binding(questShare: QuestShare, context: Context) {
         val roundSmall = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         val roundLarge = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
+        val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         roundSmall.setColor(ContextCompat.getColor(context, Theme.theme.main500)) // 추후 변경
         roundLarge.setColor(ContextCompat.getColor(context, Theme.theme.main200))
         image.background = roundSmall
         questShareLayout.background = roundLarge
         title.setText(questShare.title)
-        title.setText(questShare.content)
+        content.setText(questShare.content)
     }
 
     override fun onClick(v: View?) {
