@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn3.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_questRecruitFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
         }
     }
 

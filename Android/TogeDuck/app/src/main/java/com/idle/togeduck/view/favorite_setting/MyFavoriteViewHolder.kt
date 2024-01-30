@@ -45,10 +45,10 @@ class MyFavoriteViewHolder(
             .with(imgImageView)
             .load(favoriteIdol.imgUrl)
             .thumbnail(
-                Glide.with(imgImageView).load(favoriteIdol.imgUrl).override(10, 10)
+                Glide.with(imgImageView).load(favoriteIdol.imgUrl).override(50, 50)
             )
             .circleCrop()
-            .override(200, 200)
+            .override(500, 500)
             .into(imgImageView)
 
         nameTextView.text = favoriteIdol.name
