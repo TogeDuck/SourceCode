@@ -1,9 +1,9 @@
 package com.idle.togeduck.domain.celebrity.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.idle.togeduck.domain.celebrity.entity.Celebrity;
 
-public interface CelebrityRepository { // extends JpaRepository<Celebrity, Long>
-	List<Celebrity> findAllCelebrity(String name, String nickname);
+public interface CelebrityRepository extends JpaRepository<Celebrity, Long>, CelebrityRepositoryCustom {
+
 }

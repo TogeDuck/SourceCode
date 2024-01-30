@@ -7,6 +7,7 @@ import com.idle.togeduck.domain.event.entity.Team;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Celebrity extends BaseEntity {
@@ -35,15 +37,7 @@ public class Celebrity extends BaseEntity {
 
 	private LocalDate birthday;
 
-	// @ManyToOne(fetch = FetchType.LAZY)
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "team_id")
 	private Team team;
-
-	@Builder
-	public Celebrity(String name, String nickname, LocalDate birthday) {
-		this.name = name;
-		this.nickname = nickname;
-		this.birthday = birthday;
-	}
 }

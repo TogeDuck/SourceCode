@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class CelebrityRequestDto {
-	private String celebrityName;
-	private String celebrityNickname;
-	private String celebrityTeamName;
+	private String name;
+	private String nickname;
+	private String teamName;
 }

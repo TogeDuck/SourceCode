@@ -24,7 +24,4 @@ public class Team extends BaseEntity {
 	private String name;
 
 	private String color;
-
-	// @OneToMany(mappedBy = "Celebrity")
-	// private List<Celebrity> celebrity = new ArrayList<>();
 }
