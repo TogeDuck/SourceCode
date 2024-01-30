@@ -2,6 +2,7 @@ package com.idle.togeduck.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.idle.togeduck.model.FavoriteIdol
+import com.idle.togeduck.model.QuestShare
 
 object TogeDuckDiffUtil {
     class DiffUtilCallback(
@@ -35,6 +36,17 @@ object TogeDuckDiffUtil {
         override fun areContentsTheSame(oldItem: FavoriteIdol, newItem: FavoriteIdol): Boolean {
             return oldItem == newItem
         }
+    }
 
+    val questShareDiffUtilCallback = object : DiffUtil.ItemCallback<QuestShare>(){
+        // ListAdapter가 아이템 리스트에서 어떤 변경 사항이 발생했는지 판단, 최소한의 업데이트 수행
+        // 두 아이템이 동일한지 비교
+        override fun areItemsTheSame(oldItem: QuestShare, newItem: QuestShare): Boolean {
+            return oldItem == newItem
+        }
+        // 두 아이템의 내용이 동일한지 비교
+        override fun areContentsTheSame(oldItem: QuestShare, newItem: QuestShare): Boolean {
+            return oldItem == newItem
+        }
     }
 }

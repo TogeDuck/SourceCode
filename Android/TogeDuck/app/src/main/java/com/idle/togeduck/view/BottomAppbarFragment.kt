@@ -46,6 +46,12 @@ class BottomAppbarFragment : Fragment() {
         setUpBackgroundButtonIcon()
         setUpBottomText()
         setUpFloatingButton()
+
+        // Quest Share Test
+        val questShare = QuestShareFragment()
+        val transaction = childFragmentManager.beginTransaction()
+        transaction.replace(R.id.test_quest_share_recycle, questShare)
+        transaction.commit()
     }
 
     override fun onDestroyView() {
@@ -118,3 +124,4 @@ class BottomAppbarFragment : Fragment() {
         componentBinding.buttonMyrecord.setOnClickListener { handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat)) }
     }
 }
+

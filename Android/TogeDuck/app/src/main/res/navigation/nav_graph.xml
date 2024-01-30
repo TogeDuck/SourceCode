@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_mainFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_questShareFragment"
+            app:destination="@id/questShareFragment" />
 
     </fragment>
 
@@ -93,5 +96,10 @@
         android:name="com.idle.togeduck.view.MapFragment"
         android:label="map_fragment"
         tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/questShareFragment"
+        android:name="com.idle.togeduck.view.QuestShareFragment"
+        android:label="quest_share_fragment"
+        tools:layout="@layout/fragment_quest_share"/>
 
 </navigation>
