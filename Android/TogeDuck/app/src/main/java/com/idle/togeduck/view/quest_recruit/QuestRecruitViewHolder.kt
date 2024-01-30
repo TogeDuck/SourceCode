@@ -42,16 +42,30 @@ class QuestRecruitViewHolder(
             R.drawable.common_cupcake9,
         )
 
+        val whiteCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
+        whiteCircleDrawable.setColor(getColor(context, R.color.white))
+        whiteCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
+        ivMainIcon.background = whiteCircleDrawable
         ivMainIcon.setImageDrawable(ContextCompat.getDrawable(context, list.random()))
+
         tvTitle.text = questRecruit.title
 
         val greenCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         greenCircleDrawable.setColor(getColor(context, R.color.green))
+        greenCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
         tvEnter.background = greenCircleDrawable
+        tvEnter.setTextColor(getColor(context, R.color.white))
 
         val squareCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable
         squareCircleDrawable.setColor(getColor(context, Theme.theme.sub200))
+        squareCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
         mainLayout.background = squareCircleDrawable
+
+        val main500CircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
+        main500CircleDrawable.setColor(getColor(context, Theme.theme.sub500))
+        main500CircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
+        cmTimer.background = main500CircleDrawable
+        cmTimer.setTextColor(getColor(context, R.color.white))
 
         tvPersonCnt.text = questRecruit.content
     }

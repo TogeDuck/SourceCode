@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestRecruitBinding
 import com.idle.togeduck.model.QuestShare
+import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
+import com.idle.togeduck.util.getColor
 import com.idle.togeduck.view.quest_recruit.IQuestRecruit
 import com.idle.togeduck.view.quest_recruit.QuestRecruitAdapter
 
@@ -46,6 +48,7 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
         super.onViewCreated(view, savedInstanceState)
 
         setRecyclerview()
+        setTheme()
 
         questRecruitAdapter.submitList(tempList)
     }
@@ -60,6 +63,10 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
                     .apply { stackFromEnd = true }
         }
+    }
+
+    private fun setTheme() {
+        binding.tvCurrentRecruit.setTextColor(getColor(requireContext(), Theme.theme.main500))
     }
 
     override fun onDestroyView() {
