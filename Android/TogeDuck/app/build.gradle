@@ -100,6 +100,9 @@ dependencies {
 
     // 네이버지도용 클러스터링 라이브러리
     implementation 'io.github.ParkSangGwon:tedclustering-naver:1.0.2'
+
+    // ViewPager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 }
 
 // Allow references to generated code
