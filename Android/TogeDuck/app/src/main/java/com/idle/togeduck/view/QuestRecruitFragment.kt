@@ -13,7 +13,9 @@ import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.view.quest_recruit.IQuestRecruit
 import com.idle.togeduck.view.quest_recruit.QuestRecruitAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class QuestRecruitFragment : Fragment(), IQuestRecruit {
     private var _binding: FragmentQuestRecruitBinding? = null
     private val binding get() = _binding!!

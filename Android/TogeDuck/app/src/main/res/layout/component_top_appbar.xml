@@ -10,7 +10,9 @@
     android:paddingHorizontal="20dp"
     android:paddingTop="35dp"
     android:paddingBottom="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true" >
 
     <TextView
         android:id="@+id/tv_title"

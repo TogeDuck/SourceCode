@@ -18,7 +18,9 @@ import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TopAppbarFragment : Fragment() {
     private var _binding: FragmentTopAppbarBinding? = null
     private val binding get() = _binding!!
