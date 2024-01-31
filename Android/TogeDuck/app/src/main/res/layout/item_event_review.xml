@@ -2,21 +2,22 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/shape_square_circle"
     android:paddingVertical="7dp"
-    android:paddingHorizontal="5dp"
+    android:paddingHorizontal="10dp"
     android:elevation="5dp"
     tools:backgroundTint="@color/bts_main300">
 
     <ImageView
+        android:id="@+id/review_user_img"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@drawable/shape_circle"
         android:src="@drawable/ic_person"
-        android:layout_marginStart="10dp"/>
+        android:layout_marginStart="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,7 +25,14 @@
         android:text="포스터도 많고 굿즈도 예뻐요 !!"
         android:textSize="@dimen/text_large"
         android:layout_gravity="center"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="10dp"/>
+
+    <!-- 이미지 있으면 보이고 아니면 안보이게 -->
+    <ImageView
+        android:id="@+id/review_img"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_event_poster"/>
 
 
 </LinearLayout>

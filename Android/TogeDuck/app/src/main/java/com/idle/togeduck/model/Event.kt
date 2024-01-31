@@ -5,5 +5,6 @@ data class Event(
     val cafeName: String,
     val eventName: String,
     val eventPeriod: String,
-    var bookmarkBtn: Boolean
+    var bookmarkBtn: Boolean,
+    var visited: Boolean
 )
