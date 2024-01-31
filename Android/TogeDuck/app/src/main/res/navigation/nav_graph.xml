@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_mainFragment_to_myRecordFragment"
             app:destination="@id/myRecordFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_questExchangeFragment"
+            app:destination="@id/questExchangeFragment"/>
 
     </fragment>
 
@@ -110,6 +113,12 @@
         android:name="com.idle.togeduck.view.QuestShareFragment"
         android:label="quest_share_fragment"
         tools:layout="@layout/fragment_quest_share"/>
+    <fragment
+        android:id="@+id/questExchangeFragment"
+        android:name="com.idle.togeduck.view.QuestExchangeFragment"
+        android:label="quest_exchange_fragment"
+        tools:layout="@layout/fragment_quest_exchange">
+    </fragment>
     <fragment
         android:id="@+id/eventListFragment"
         android:name="com.idle.togeduck.view.EventListFragment"

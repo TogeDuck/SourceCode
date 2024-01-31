@@ -32,7 +32,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn1.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_questShareFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_questExchangeFragment)
         }
 
         binding.btn2.setOnClickListener {
