@@ -30,7 +30,6 @@ import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
 import com.idle.togeduck.databinding.FragmentMapBinding
-import com.idle.togeduck.util.CalcStatusBarSize
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.Theme
@@ -64,7 +63,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // OnBackPressedCallback (뒤로가기 기능) 객체 선언
     private lateinit var backPressedCallback: OnBackPressedCallback
 
-    private lateinit var pagerAdapter: MapPagerAdapter
+    private lateinit var mapPagerAdapter: MapPagerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,14 +103,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pagerAdapter = MapPagerAdapter(this)
-        componentBottomSheetBinding.viewPager.adapter = pagerAdapter
-        componentBottomSheetBinding.viewPager.isUserInputEnabled = false
-
+        initViewPager()
         initChildFragment()
+        setPermissionListener()
+        initMapView()
+        setBottomSheet()
+        setUpBackgroundRoundCorner()
+        setUpBackgroundButtonIcon()
+        setUpBottomText()
+        setUpFloatingButton()
+    }
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
+    private fun setPermissionListener() {
         val permissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
                 Log.d("로그", "MainFragment - onPermissionGranted() 호출됨")
@@ -127,12 +130,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         requestPermission(permissionListener)
-        initMapView()
-        setBottomSheet()
-        setUpBackgroundRoundCorner()
-        setUpBackgroundButtonIcon()
-        setUpBottomText()
-        setUpFloatingButton()
+    }
+
+    private fun initViewPager() {
+        mapPagerAdapter = MapPagerAdapter(this)
+        componentBottomSheetBinding.viewPager.adapter = mapPagerAdapter
+        componentBottomSheetBinding.viewPager.isUserInputEnabled = false
     }
 
     private fun initChildFragment() {
@@ -205,6 +208,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         var currentLocation: Location?
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 currentLocation = location
@@ -324,6 +328,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         componentBottomAppbarBinding.buttonQuest.setOnClickListener {
+            componentBottomSheetBinding.viewPager.setCurrentItem(0, false)
             handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonList.setOnClickListener {
