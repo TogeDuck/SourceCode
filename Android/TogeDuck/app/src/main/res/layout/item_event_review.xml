@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/shape_square_circle"
+    android:paddingVertical="7dp"
+    android:paddingHorizontal="5dp"
+    android:elevation="5dp"
+    tools:backgroundTint="@color/bts_main300">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/shape_circle"
+        android:src="@drawable/ic_person"
+        android:layout_marginStart="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="포스터도 많고 굿즈도 예뻐요 !!"
+        android:textSize="@dimen/text_large"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"/>
+
+
+</LinearLayout>
