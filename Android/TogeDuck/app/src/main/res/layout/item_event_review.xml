@@ -18,6 +18,8 @@
         android:layout_height="30dp"
         android:background="@drawable/shape_circle"
         android:src="@drawable/ic_person"
+        android:scaleType="center"
+        tools:backgroundTint="@color/black"
         android:layout_marginStart="5dp"/>
 
     <TextView

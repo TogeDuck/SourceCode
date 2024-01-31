@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- 크기 수정 -->
+    <!-- 삭제 !!!!!? -->
+
     <ImageView
         android:id="@+id/event_poster_detail"
         android:layout_width="match_parent"
@@ -72,7 +73,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/common_cupcake5_empty" />
+                    android:src="@drawable/common_cupcake5" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -95,7 +96,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/common_cupcake5_empty" />
+                    android:src="@drawable/common_cupcake8" />
 
                 <TextView
                     android:layout_width="wrap_content"
