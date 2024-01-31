@@ -23,7 +23,7 @@ class QuestRecruitViewHolder(
     private val ivPersonIcon = binding.ivPersonIcon
     private val tvPersonCnt = binding.tvPersonCnt
     private val tvEnter = binding.tvEnter
-    private val cmTimer = binding.cmTimer
+    private val tvTimer = binding.tvTimer
 
     val list = listOf(
         R.drawable.common_cupcake1,
@@ -69,8 +69,8 @@ class QuestRecruitViewHolder(
         val main500CircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         main500CircleDrawable.setColor(getColor(context, Theme.theme.sub500))
         main500CircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
-        cmTimer.background = main500CircleDrawable
-        cmTimer.setTextColor(getColor(context, R.color.white))
+        tvTimer.background = main500CircleDrawable
+        tvTimer.setTextColor(getColor(context, R.color.white))
     }
 
     override fun onClick(view: View?) {

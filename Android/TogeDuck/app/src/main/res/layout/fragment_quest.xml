@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.QuestFragment">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:baselineAligned="false" >
+
+        <LinearLayout
+            android:id="@+id/ll_exchange"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/yellow"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:paddingVertical="7dp">
+
+            <ImageView
+                android:id="@+id/iv_exchange"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_exchange"
+                android:layout_marginEnd="5dp"
+                app:tint="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tv_exchange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="교환"
+                android:textSize="@dimen/text_extra_large"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/red"
+            android:gravity="center"
+            android:layout_marginEnd="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_share"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_share"
+                android:layout_marginEnd="5dp"
+                app:tint="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tv_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="나눔"
+                android:textSize="@dimen/text_extra_large"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_recruit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/green"
+            android:gravity="center"
+            android:layout_marginEnd="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_recruit"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_recruit"
+                android:layout_marginEnd="5dp"
+                app:tint="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tv_recruit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="모집"
+                android:textSize="@dimen/text_extra_large"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_talk"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/blue"
+            android:layout_marginEnd="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_talk"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_exchange"
+                android:layout_marginEnd="5dp"
+                app:tint="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tv_talk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="잡담"
+                android:textSize="@dimen/text_extra_large"
+                android:textColor="@color/white"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

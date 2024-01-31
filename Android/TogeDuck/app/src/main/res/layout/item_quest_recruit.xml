@@ -84,11 +84,12 @@
         />
 
     <TextView
-        android:id="@+id/cm_timer"
+        android:id="@+id/tv_timer"
         android:layout_width="@dimen/circle_xsmall"
         android:layout_height="@dimen/circle_xsmall"
         android:gravity="center"
         android:background="@drawable/shape_circle"
+        android:text="00:00"
         android:textSize="@dimen/text_large"
         />
 
