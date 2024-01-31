@@ -1,21 +1,13 @@
 package com.idle.togeduck.view
 
-import android.app.AlertDialog
-import android.content.Context
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.idle.togeduck.R
-import com.idle.togeduck.databinding.DialogQuestShareBinding
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
 import com.idle.togeduck.model.QuestShare
-import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.view.quest_share.IQuestShareDetail
 import com.idle.togeduck.view.quest_share.QuestShareDialog
@@ -80,30 +72,8 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     }
 
     fun showDialog(questShare: QuestShare) {
-
-        val dialog = QuestShareDialog(requireActivity() as AppCompatActivity)
-        dialog.show(questShare)
-
-        /*// 다이얼로그 뷰 바인딩 인스턴스 생성
-        val dialogBinding = DialogQuestShareBinding.inflate(layoutInflater)
-
-        // 다이얼로그 빌더 생성
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        dialogBuilder.setView(dialogBinding.root)
-
-        // Shape Setup
-        val roundCorner = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_10) as GradientDrawable
-        dialogBinding.dialogQuestShare.background = roundCorner
-        dialogBinding.dialogQuestShareTitleContainer.setBackgroundColor(Theme.theme.main300)
-        dialogBinding.dialogQuestShare.setBackgroundColor(Theme.theme.sub200)
-
-        // Data Insert
-        dialogBinding.dialogQuestShareTitle.setText(questShare.title)
-        dialogBinding.dialogQuestShareContent.setText(questShare.content)
-
-        // 다이얼로그 생성 및 표시
-        val questShareDetailDialog = dialogBuilder.create()
-        questShareDetailDialog.setCanceledOnTouchOutside(true)
-        questShareDetailDialog.show()*/
+        val dialog = QuestShareDialog(questShare)
+        val fragmentManager = childFragmentManager
+        dialog.show(fragmentManager, "QuestShareDialog")
     }
 }
