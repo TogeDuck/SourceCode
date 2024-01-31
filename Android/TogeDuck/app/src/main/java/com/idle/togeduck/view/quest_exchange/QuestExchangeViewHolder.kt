@@ -31,11 +31,11 @@ class QuestExchangeViewHolder (
     }
 
     override fun onClick(v: View?) {
-        when(v){
-            questExchangeLayout -> {
-                questExchangeDetail.myQuestExchangeClicked(bindingAdapterPosition)
-            }
-        }
+//        when(v){
+//            questExchangeLayout -> {
+//                questExchangeDetail.myQuestExchangeClicked(bindingAdapterPosition)
+//            }
+//        }
     }
 
     private fun setTheme(questExchange: QuestExchange, context: Context) {
@@ -55,6 +55,6 @@ class QuestExchangeViewHolder (
         timerContainer.background = rectangleCircle
 
         title.setText(questExchange.title)
-        timerText.setText(questExchange.time)
+        timerText.setText(questExchange.time.toString())
     }
 }
