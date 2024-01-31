@@ -54,6 +54,10 @@ dependencies {
     //AWS S3 사용
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+    // P6Spy 의존성 추가
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
+
 }
 
 tasks.named('test') {
