@@ -2,6 +2,7 @@ package com.idle.togeduck.view
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -10,21 +11,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.view.marginBottom
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.R
+import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
+import com.idle.togeduck.databinding.ComponentBottomSheetBinding
 import com.idle.togeduck.databinding.FragmentMapBinding
+import com.idle.togeduck.util.CalcStatusBarSize
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
-import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx
 import com.idle.togeduck.util.DpPxUtil.dpToPx
+import com.idle.togeduck.util.Theme
+import com.idle.togeduck.view.map.MapPagerAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -32,13 +42,16 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
-import com.naver.maps.map.widget.ZoomControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
+    private var _componentBottomSheetBinding: ComponentBottomSheetBinding? = null
+    private val componentBottomSheetBinding get() = _componentBottomSheetBinding!!
+    private var _componentBottomAppbarBinding: ComponentBottomAppbarBinding? = null
+    private val componentBottomAppbarBinding get() = _componentBottomAppbarBinding!!
 
     private lateinit var naverMap: NaverMap
 
@@ -51,12 +64,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // OnBackPressedCallback (뒤로가기 기능) 객체 선언
     private lateinit var backPressedCallback: OnBackPressedCallback
 
+    private lateinit var pagerAdapter: MapPagerAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
+        _componentBottomSheetBinding = binding.bsFragment
+        _componentBottomAppbarBinding = binding.appbar
 
         // OnBackPressedCallback (익명 클래스) 객체 생성
         backPressedCallback = object : OnBackPressedCallback(true) {
@@ -87,7 +104,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initFragment()
+        pagerAdapter = MapPagerAdapter(this)
+        componentBottomSheetBinding.viewPager.adapter = pagerAdapter
+        componentBottomSheetBinding.viewPager.isUserInputEnabled = false
+
+        initChildFragment()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
@@ -107,26 +128,48 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         requestPermission(permissionListener)
         initMapView()
+        setBottomSheet()
+        setUpBackgroundRoundCorner()
+        setUpBackgroundButtonIcon()
+        setUpBottomText()
+        setUpFloatingButton()
     }
 
-    private fun initFragment() {
+    private fun initChildFragment() {
         childFragmentManager.beginTransaction()
             .add(R.id.fragment_top_appbar, TopAppbarFragment())
             .setReorderingAllowed(true)
             .addToBackStack(null)
             .commit()
+    }
+    
+    private fun setBottomSheet() {
+        val statusDp = getStatusBarHeightToDp(requireContext())
 
-        childFragmentManager.beginTransaction()
-            .add(R.id.fragment_bottom_sheet, BottomSheetFragment())
-            .setReorderingAllowed(true)
-            .addToBackStack(null)
-            .commit()
+        val sheetBehavior = BottomSheetBehavior.from(componentBottomSheetBinding.bottomSheet)
 
-        childFragmentManager.beginTransaction()
-            .add(R.id.fragment_bottom_appbar, BottomAppbarFragment())
-            .setReorderingAllowed(true)
-            .addToBackStack(null)
-            .commit()
+        sheetBehavior.expandedOffset = dpToPx(statusDp + 5, requireContext())
+
+        // TODO. BottomSheetBehavior state에 따른 이벤트 추후 추가
+        sheetBehavior.addBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
     }
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -220,9 +263,87 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+
+    private fun handleButtonClick (
+        showFab: LinearLayout,
+        hideList: List<LinearLayout>
+    ) {
+        Log.d("검증", "buttonclick func")
+        for (fab in hideList) {
+            fab.visibility = View.INVISIBLE
+        }
+        showFab.visibility = View.VISIBLE
+    }
+
+    private fun setUpBackgroundRoundCorner(){
+        // Bottom Appbar Background
+        val upperRoundCorner = ContextCompat.getDrawable(requireContext(), R.drawable.shape_upper_round_25) as GradientDrawable
+        upperRoundCorner.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
+        val background: ConstraintLayout = componentBottomAppbarBinding.navBackground
+        background.background = upperRoundCorner
+    }
+
+    private fun setUpBackgroundButtonIcon(){
+        // Normal Buttons : Icons (Main 500)
+        val icQuest: ImageView = componentBottomAppbarBinding.icQuest
+        val icList: ImageView = componentBottomAppbarBinding.icList
+        val icChat: ImageView = componentBottomAppbarBinding.icChat
+        val icMyrecord: ImageView = componentBottomAppbarBinding.icMyrecord
+        val icons: List<ImageView> = listOf(icQuest, icList, icChat, icMyrecord)
+        for (icon in icons){
+            icon.setColorFilter(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        }
+    }
+
+    private fun setUpBottomText(){
+        val textQuest: TextView = componentBottomAppbarBinding.textQuest
+        val textList: TextView = componentBottomAppbarBinding.textList
+        val textChat: TextView = componentBottomAppbarBinding.textChat
+        val textMyRecord: TextView = componentBottomAppbarBinding.textMyrecord
+        val texts: List<TextView> = listOf(textQuest, textList, textChat, textMyRecord)
+        for (text in texts){
+            text.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        }
+        textQuest.setText("Quest")
+        textList.setText("List")
+        textChat.setText("MyQuest")
+        textMyRecord.setText("MyRecord")
+    }
+
+    private fun setUpFloatingButton(){
+        // Floating Buttons : Buttons (Main 500)
+        val fabQuest: LinearLayout = componentBottomAppbarBinding.fabQuest
+        val fabList: LinearLayout = componentBottomAppbarBinding.fabList
+        val fabChat: LinearLayout = componentBottomAppbarBinding.fabChat
+        val fabMyrecord: LinearLayout = componentBottomAppbarBinding.fabMyrecord
+        val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        circle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        val fabs: List<LinearLayout> = listOf(fabQuest,fabList,fabChat,fabMyrecord)
+        for(fab in fabs){
+            fab.background = circle;
+        }
+
+        componentBottomAppbarBinding.buttonQuest.setOnClickListener {
+            handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord))
+        }
+        componentBottomAppbarBinding.buttonList.setOnClickListener {
+            componentBottomSheetBinding.viewPager.setCurrentItem(1, false)
+            handleButtonClick(fabList, listOf(fabQuest,fabChat,fabMyrecord))
+        }
+        componentBottomAppbarBinding.buttonChat.setOnClickListener {
+            handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord))
+        }
+        componentBottomAppbarBinding.buttonMyrecord.setOnClickListener {
+            componentBottomSheetBinding.viewPager.setCurrentItem(3, false)
+            handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat))
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        _componentBottomAppbarBinding = null
+        _componentBottomAppbarBinding = null
         backPressedCallback.remove()
     }
 
