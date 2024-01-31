@@ -11,6 +11,7 @@ import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
 import com.idle.togeduck.model.QuestExchange
 import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.TogeDuckItemDecoration
+import com.idle.togeduck.view.quest_exchange.GirdLayoutItemDecoration
 import com.idle.togeduck.view.quest_exchange.IQuestExchangeDetail
 import com.idle.togeduck.view.quest_exchange.QuestExchangeAdapter
 import com.idle.togeduck.view.quest_share.QuestShareDialog
@@ -43,9 +44,9 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         val questExchangeRecycleView = binding.questExchangeRecycle
         val questExchangeAdapter = QuestExchangeAdapter(this, requireContext())
         questExchangeRecycleView.adapter = questExchangeAdapter
-        questExchangeRecycleView.layoutManager = GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, true)
+        questExchangeRecycleView.layoutManager = GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
         // 간격 설정
-        questExchangeRecycleView.addItemDecoration(TogeDuckItemDecoration(5,15))
+        questExchangeRecycleView.addItemDecoration(GirdLayoutItemDecoration(20))
         // Dummy Data
         questExchangeAdapter.submitList(questExchangeDummyData())
     }
