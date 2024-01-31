@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="현재 진행 중인 모집"
+            android:layout_marginBottom="5dp"
             />
 
         <androidx.recyclerview.widget.RecyclerView

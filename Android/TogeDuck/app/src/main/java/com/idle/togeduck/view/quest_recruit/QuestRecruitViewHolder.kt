@@ -25,30 +25,35 @@ class QuestRecruitViewHolder(
     private val tvEnter = binding.tvEnter
     private val cmTimer = binding.cmTimer
 
+    val list = listOf(
+        R.drawable.common_cupcake1,
+        R.drawable.common_cupcake2,
+        R.drawable.common_cupcake3,
+        R.drawable.common_cupcake4,
+        R.drawable.common_cupcake5,
+        R.drawable.common_cupcake6,
+        R.drawable.common_cupcake7,
+        R.drawable.common_cupcake8,
+        R.drawable.common_cupcake9,
+    )
+
     init {
         tvEnter.setOnClickListener(this)
     }
 
     fun bind(questRecruit: QuestShare, context: Context) {
-        val list = listOf(
-            R.drawable.common_cupcake1,
-            R.drawable.common_cupcake2,
-            R.drawable.common_cupcake3,
-            R.drawable.common_cupcake4,
-            R.drawable.common_cupcake5,
-            R.drawable.common_cupcake6,
-            R.drawable.common_cupcake7,
-            R.drawable.common_cupcake8,
-            R.drawable.common_cupcake9,
-        )
+        setTheme(context)
 
+        tvTitle.text = questRecruit.title
+        tvPersonCnt.text = questRecruit.content
+    }
+
+    private fun setTheme(context: Context) {
         val whiteCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         whiteCircleDrawable.setColor(getColor(context, R.color.white))
         whiteCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
         ivMainIcon.background = whiteCircleDrawable
         ivMainIcon.setImageDrawable(ContextCompat.getDrawable(context, list.random()))
-
-        tvTitle.text = questRecruit.title
 
         val greenCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         greenCircleDrawable.setColor(getColor(context, R.color.green))
@@ -66,8 +71,6 @@ class QuestRecruitViewHolder(
         main500CircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
         cmTimer.background = main500CircleDrawable
         cmTimer.setTextColor(getColor(context, R.color.white))
-
-        tvPersonCnt.text = questRecruit.content
     }
 
     override fun onClick(view: View?) {

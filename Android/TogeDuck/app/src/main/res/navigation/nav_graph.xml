@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_mainFragment_to_questRecruitFragment"
             app:destination="@id/questRecruitFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_myRecordFragment"
+            app:destination="@id/myRecordFragment" />
 
     </fragment>
 
@@ -117,5 +120,10 @@
         android:name="com.idle.togeduck.view.QuestRecruitFragment"
         android:label="quest_recruit_fragment"
         tools:layout="@layout/fragment_quest_recruit" />
+    <fragment
+        android:id="@+id/myRecordFragment"
+        android:name="com.idle.togeduck.view.MyRecordFragment"
+        android:label="my_record_fragment"
+        tools:layout="@layout/fragment_my_record" />
 
 </navigation>

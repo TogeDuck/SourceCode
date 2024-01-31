@@ -83,11 +83,10 @@
         android:layout_marginEnd="10dp"
         />
 
-    <Chronometer
+    <TextView
         android:id="@+id/cm_timer"
         android:layout_width="@dimen/circle_xsmall"
         android:layout_height="@dimen/circle_xsmall"
-        android:countDown="true"
         android:gravity="center"
         android:background="@drawable/shape_circle"
         android:textSize="@dimen/text_large"
