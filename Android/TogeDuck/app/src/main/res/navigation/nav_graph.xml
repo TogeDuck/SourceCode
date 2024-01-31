@@ -135,4 +135,10 @@
         android:label="my_record_fragment"
         tools:layout="@layout/fragment_my_record" />
 
+<!--    <fragment-->
+<!--        android:id="@+id/eventDetailFragment"-->
+<!--        android:name="com.idle.togeduck.view.EventDetailFragment"-->
+<!--        android:label="event_detail_fragment"-->
+<!--        tools:layout="-->
+
 </navigation>
