@@ -7,10 +7,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
 cloud:
   aws:
     credentials:
@@ -23,4 +23,7 @@ cloud:
       auto: false
     stack:
       auto: false
-
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
