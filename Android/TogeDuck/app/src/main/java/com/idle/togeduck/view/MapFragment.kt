@@ -5,12 +5,15 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -19,6 +22,9 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentMapBinding
+import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
+import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx
+import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -26,7 +32,10 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.widget.ZoomControlView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -121,6 +130,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(naverMap: NaverMap) {
+        val statusBarDp = getStatusBarHeightToDp(requireContext())
+
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
@@ -131,6 +142,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.isIndoorEnabled = true
 
         val uiSettings = naverMap.uiSettings
+
+        uiSettings.logoGravity = Gravity.TOP
+        uiSettings.setLogoMargin(dpToPx(10, requireContext()), dpToPx(115 + statusBarDp, requireContext()), 0, 0)
 
         uiSettings.isZoomControlEnabled = false
         uiSettings.isCompassEnabled = false
@@ -191,6 +205,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         mapFragment.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
+        mapFragment.getMapAsync {
+            val statusBarDp = getStatusBarHeightToDp(requireContext())
+
+            val locationBtn = binding.locationBtn
+            val layoutParams = locationBtn.layoutParams as FrameLayout.LayoutParams
+
+            layoutParams.marginStart = dpToPx(8, requireContext())
+            layoutParams.topMargin = dpToPx(135 + statusBarDp, requireContext())
+
+            locationBtn.layoutParams = layoutParams
+            locationBtn.map = naverMap
+        }
     }
 
     override fun onDestroyView() {

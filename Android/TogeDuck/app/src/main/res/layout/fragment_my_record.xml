@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/green"
+    tools:context=".view.MyRecordFragment"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/iv_cup_cake"
+                android:layout_width="@dimen/circle_small"
+                android:layout_height="@dimen/circle_small"
+                android:src="@drawable/common_cupcake8"
+                android:padding="5dp"
+                />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_my_cake_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="나의 케잌"
+                    android:textSize="@dimen/text_large"
+                    android:textColor="@color/gray_text"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_my_cake_cnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="01개"
+                    android:textSize="@dimen/text_title_large"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginEnd="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/tv_my_theme_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/shape_circle"
+                    android:text="엑스디너리 히어로즈"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="1sp"
+                    android:maxLines="1"
+                    android:layout_marginBottom="5dp"
+                    tools:targetApi="o" />
+
+                <TextView
+                    android:id="@+id/tv_my_theme_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="나의 테마"
+                    android:textSize="@dimen/text_large" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                >
+
+                <ImageView
+                    android:id="@+id/iv_theme_draw"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/common_duck"
+                    android:background="@drawable/shape_circle"
+                    android:padding="5dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_theme_draw_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="테마 뽑기"
+                    android:textSize="@dimen/text_large" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_visited"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지금까지 방문한 카페"
+            android:layout_marginBottom="5dp"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_my_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_my_record"
+            />
+
+    </LinearLayout>
+
+</ScrollView>
+

@@ -20,5 +20,4 @@ class QuestRecruitAdapter(
     override fun onBindViewHolder(holder: QuestRecruitViewHolder, position: Int) {
         holder.bind(getItem(position), context)
     }
-
 }
