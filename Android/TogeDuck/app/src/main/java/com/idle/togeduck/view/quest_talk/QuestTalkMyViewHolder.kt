@@ -16,7 +16,6 @@ class QuestTalkMyViewHolder (
 ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener{
     private val questTalkLayout = binding.itemQuestTalkMy
     private val questTalkIconContainer = binding.questTalkMyIconContainer
-    private val questTalkUser = binding.questTalkMyUser
     private val questTalkContent = binding.questTalkMyContent
 
     init {
@@ -36,15 +35,14 @@ class QuestTalkMyViewHolder (
     }
 
     private fun setTheme(questTalk: QuestTalk, context: Context) {
-        val squareCircle = ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable
+        val roundSquare = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable
         val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
-        squareCircle.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
-        squareCircle.setStroke(0,0)
-        circle.setColor(ContextCompat.getColor(context, Theme.theme.sub500))
+        roundSquare.setColor(ContextCompat.getColor(context, Theme.theme.main200))
+        roundSquare.setStroke(0,0)
+        circle.setColor(ContextCompat.getColor(context, Theme.theme.main500))
         circle.setStroke(0,0)
-        questTalkLayout.background = squareCircle
+        questTalkContent.background = roundSquare
         questTalkIconContainer.background = circle
-        questTalkUser.setText(questTalk.user)
         questTalkContent.setText(questTalk.content)
     }
 }
