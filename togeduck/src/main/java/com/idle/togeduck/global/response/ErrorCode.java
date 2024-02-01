@@ -18,8 +18,9 @@ public enum ErrorCode {
 	DATA_CANT_SAVE(404, "S3-001", "데이터 저장에 실패 - 필드값 확인 OR 연관 엔티티 확인"),
 	SHARE_NOT_FOUND(404, "SHARE-001", "이벤트를 찾을 수 없는 경우"),
 	TRADE_NOT_FOUND(404, "TRADE-001", "교환을 찾을 수 없는 경우"),
-	PARTY_NOT_FOUND(404, "PARTY-001", "모집을 찾을 수 없는 경우");
+	PARTY_NOT_FOUND(404, "PARTY-001", "모집을 찾을 수 없는 경우"),
 
+	STAR_NOT_FOUND(404, "STAR-001", "해당 즐겨찾기가 없습니다");
 	private final int status;
 	private final String code;
 	private final String message;
