@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemEventInfoBinding
-import com.idle.togeduck.model.Event
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class EventInfoAdapter(

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemQuestShareBinding
-import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class QuestShareListAdapter (

@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentEventReviewInputBinding
 import com.idle.togeduck.databinding.FragmentEventDetailBinding
-import com.idle.togeduck.model.Event
-import com.idle.togeduck.model.Review
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor

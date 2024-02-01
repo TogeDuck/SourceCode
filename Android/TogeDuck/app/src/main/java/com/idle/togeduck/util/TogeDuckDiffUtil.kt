@@ -1,12 +1,6 @@
 package com.idle.togeduck.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.idle.togeduck.model.Event
-import com.idle.togeduck.model.FavoriteIdol
-import com.idle.togeduck.model.QuestExchange
-import com.idle.togeduck.model.QuestShare
-import com.idle.togeduck.model.QuestTalk
-import com.idle.togeduck.model.Review
 
 object TogeDuckDiffUtil {
     class DiffUtilCallback(

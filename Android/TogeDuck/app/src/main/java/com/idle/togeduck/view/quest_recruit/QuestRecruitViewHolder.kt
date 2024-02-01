@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestRecruitBinding
-import com.idle.togeduck.model.QuestRecruit
-import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.getColor
 

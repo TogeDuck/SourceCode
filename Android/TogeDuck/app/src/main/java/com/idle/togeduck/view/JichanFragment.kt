@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentJichanBinding
-import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.CalcStatusBarSize
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx
 import com.idle.togeduck.util.Theme

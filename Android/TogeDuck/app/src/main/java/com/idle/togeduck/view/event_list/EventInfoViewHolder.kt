@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemEventInfoBinding
-import com.idle.togeduck.model.Event
 
 class EventInfoViewHolder(
     binding: ItemEventInfoBinding,

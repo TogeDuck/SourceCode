@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
-import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.view.quest_share.IQuestShareDetail
 import com.idle.togeduck.view.quest_share.QuestShareDialog

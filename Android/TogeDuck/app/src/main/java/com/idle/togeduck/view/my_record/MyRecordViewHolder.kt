@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide.get
 import com.bumptech.glide.Glide.init
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemMyRecordBinding
-import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.getColor
 

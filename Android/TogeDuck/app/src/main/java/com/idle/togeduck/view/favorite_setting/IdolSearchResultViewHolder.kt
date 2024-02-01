@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemIdolSearchResultBinding
-import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.view.favorite_setting.IIdolSearchResult
 

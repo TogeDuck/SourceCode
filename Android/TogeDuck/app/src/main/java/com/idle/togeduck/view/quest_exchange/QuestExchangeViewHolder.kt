@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestExchangeBinding
-import com.idle.togeduck.model.QuestExchange
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.ScreenSize
 import com.idle.togeduck.util.Theme

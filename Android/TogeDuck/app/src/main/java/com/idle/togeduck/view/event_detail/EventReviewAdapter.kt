@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemEventReviewBinding
-import com.idle.togeduck.model.Review
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class EventReviewAdapter(

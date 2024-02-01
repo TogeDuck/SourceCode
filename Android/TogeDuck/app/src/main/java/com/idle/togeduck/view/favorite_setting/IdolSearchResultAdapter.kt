@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemIdolSearchResultBinding
-import com.idle.togeduck.model.FavoriteIdol
 import com.idle.togeduck.util.TogeDuckDiffUtil
 import com.idle.togeduck.view.favorite_setting.IIdolSearchResult
 import com.idle.togeduck.view.favorite_setting.IdolSearchResultViewHolder

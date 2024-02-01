@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.idle.togeduck.databinding.ItemQuestTalkBinding
 import com.idle.togeduck.databinding.ItemQuestTalkMyBinding
-import com.idle.togeduck.model.QuestTalk
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class QuestTalkAdapter (

@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentMyRecordBinding
-import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor

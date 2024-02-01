@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.DialogQuestShareBinding
-import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.Theme
 
 

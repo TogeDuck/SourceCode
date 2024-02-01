@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 
 import com.idle.togeduck.databinding.FragmentEventListBinding
-import com.idle.togeduck.model.Event
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.view.event_list.EventInfo
 import com.idle.togeduck.view.event_list.EventInfoAdapter

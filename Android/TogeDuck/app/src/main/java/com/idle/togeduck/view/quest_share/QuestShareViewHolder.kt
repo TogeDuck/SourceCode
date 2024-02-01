@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestShareBinding
-import com.idle.togeduck.model.QuestShare
 import com.idle.togeduck.util.Theme
 
 class QuestShareViewHolder (

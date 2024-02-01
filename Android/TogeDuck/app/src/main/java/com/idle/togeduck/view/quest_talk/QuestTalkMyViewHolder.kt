@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestTalkMyBinding
-import com.idle.togeduck.model.QuestTalk
 import com.idle.togeduck.util.Theme
 
 class QuestTalkMyViewHolder (
