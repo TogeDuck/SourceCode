@@ -21,8 +21,7 @@ class MapPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
             0 -> QuestFragment()
             1 -> EventListFragment()
             2 -> EventListFragment()
-            3 -> MyRecordFragment()
-            else -> EventListFragment()
+            else -> MyRecordFragment()
         }
     }
 

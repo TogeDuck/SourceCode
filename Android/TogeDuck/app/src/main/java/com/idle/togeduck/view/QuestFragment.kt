@@ -127,7 +127,7 @@ class QuestFragment : Fragment() {
         onTalkClicked(false)
     }
 
-    fun onExchangeClicked(selected: Boolean) {
+    private fun onExchangeClicked(selected: Boolean) {
         if (selected) {
             binding.llExchange.background = yellowPickDrawable
             binding.ivExchange.setColorFilter(getColor(requireContext(), R.color.white))
@@ -139,7 +139,7 @@ class QuestFragment : Fragment() {
         }
     }
 
-    fun onShareClicked(selected: Boolean) {
+    private fun onShareClicked(selected: Boolean) {
         if (selected) {
             binding.llShare.background = redPickDrawable
             binding.ivShare.setColorFilter(getColor(requireContext(), R.color.white))
@@ -151,7 +151,7 @@ class QuestFragment : Fragment() {
         }
     }
 
-    fun onRecruitClicked(selected: Boolean) {
+    private fun onRecruitClicked(selected: Boolean) {
         if (selected) {
             binding.llRecruit.background = greenPickDrawable
             binding.ivRecruit.setColorFilter(getColor(requireContext(), R.color.white))
@@ -163,7 +163,7 @@ class QuestFragment : Fragment() {
         }
     }
 
-    fun onTalkClicked(selected: Boolean) {
+    private fun onTalkClicked(selected: Boolean) {
         if (selected) {
             binding.llTalk.background = bluePickDrawable
             binding.ivTalk.setColorFilter(getColor(requireContext(), R.color.white))

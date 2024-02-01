@@ -11,8 +11,10 @@
     android:orientation="vertical"
     app:behavior_fitToContents="false"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="105dp"
-    app:layout_behavior="@string/bottom_sheet_behavior">
+    app:behavior_peekHeight="1053dp"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    android:paddingBottom="105dp"
+    >
 
     <ImageView
         android:layout_width="40dp"
@@ -29,7 +31,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="40dp"
-        android:paddingBottom="105dp"
         android:paddingHorizontal="20dp"
         />
 </FrameLayout>
