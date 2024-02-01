@@ -6,8 +6,24 @@ spring:
     password: 1234
   jpa:
     hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+      ddl-auto: validate
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAT23F3XWNRKCFWFQZ
+      secret-key: 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
+    s3:
+      bucket: togeduck
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true

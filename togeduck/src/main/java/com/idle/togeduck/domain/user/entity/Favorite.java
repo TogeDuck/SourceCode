@@ -2,7 +2,6 @@ package com.idle.togeduck.domain.user.entity;
 
 import com.idle.togeduck.domain.BaseEntity;
 import com.idle.togeduck.domain.celebrity.entity.Celebrity;
-import com.idle.togeduck.domain.user.entity.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,11 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Favorite extends BaseEntity {
@@ -34,4 +35,9 @@ public class Favorite extends BaseEntity {
 	@JoinColumn(name = "celebrity_id")
 	private Celebrity celebrity;
 
+	private Integer delCheck;
+
+	public void updateFavorite(Integer delCheck) {
+		this.delCheck = delCheck;
+	}
 }
