@@ -17,7 +17,7 @@ interface EventRepository {
 class DefaultEventRepository @Inject constructor(
     private val eventService: EventService,
 ) : EventRepository {
-    override suspend fun getEventList(
+    override suspend fun getEventist(
         celebrityId: Int,
         startDate: LocalDate,
         endDate: LocalDate,
