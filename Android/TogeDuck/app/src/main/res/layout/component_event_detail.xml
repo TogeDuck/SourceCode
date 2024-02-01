@@ -28,23 +28,22 @@
             android:orientation="vertical"
             android:paddingVertical="5dp">
 
-            <!-- 글씨 크기 다 작은 느낌? -->
             <TextView
                 android:id="@+id/cafe_name_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="카페 코그"
                 android:textSize="@dimen/text_title_medium"
+                android:textStyle="bold"
                 android:textColor="@color/gray_text"/>
 
             <TextView
                 android:id="@+id/event_name_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="5dp"
                 android:text="이대휘 생일카페"
-                android:textSize="@dimen/text_small"
+                android:textSize="@dimen/text_title_small"
                 android:textColor="@color/gray_text"/>
 
             <TextView
@@ -52,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2024/01/01 ~ 2024/01/12"
-                android:textSize="@dimen/text_medium"
+                android:textSize="@dimen/text_title_small"
                 android:textColor="@color/gray_text"/>
         </LinearLayout>
 
@@ -81,7 +80,8 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:text="방문"
-                    android:textSize="@dimen/text_small"
+                    android:textSize="@dimen/text_large"
+                    android:textStyle="bold"
                     android:textColor="@color/gray_text"/>
             </LinearLayout>
 
@@ -104,7 +104,8 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:text="즐겨찾기"
-                    android:textSize="@dimen/text_small"
+                    android:textSize="@dimen/text_large"
+                    android:textStyle="bold"
                     android:textColor="@color/gray_text"/>
             </LinearLayout>
         </LinearLayout>

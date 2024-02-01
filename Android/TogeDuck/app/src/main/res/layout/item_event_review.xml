@@ -32,15 +32,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
             android:text="포스터도 많고 굿즈도 예뻐요sdfsfsfdssdfsfsf !!"
             android:textSize="@dimen/text_large" />
 
-        <!-- 이미지 있으면 보이고 아니면 안보이게 -->
+        <!-- 이미지 있으면 visible -->
         <ImageView
             android:id="@+id/review_img"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:src="@drawable/ic_event_poster" />
     </LinearLayout>
 
