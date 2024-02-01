@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_mainFragment_to_eventDetailFragment"
             app:destination="@+id/eventDetailFragment"/>
+        <action
+            android:id="@+id/action_mainFragment_to_questTalkFragment"
+            app:destination="@id/questTalkFragment" />
     </fragment>
 
     <fragment
@@ -119,5 +122,11 @@
         android:name="com.idle.togeduck.view.EventDetailFragment"
         android:label="event_detail_fragment"
         tools:layout="@layout/fragment_event_detail"/>
+    <fragment
+        android:id="@+id/questTalkFragment"
+        android:name="com.idle.togeduck.view.QuestTalkFragment"
+        android:label="quest_talk_fragment"
+        tools:layout="@layout/fragment_quest_talk">
+    </fragment>
 
 </navigation>
