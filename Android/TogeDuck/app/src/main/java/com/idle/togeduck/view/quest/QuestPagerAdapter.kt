@@ -9,8 +9,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.idle.togeduck.R
 import com.idle.togeduck.view.EventListFragment
 import com.idle.togeduck.view.MyRecordFragment
+import com.idle.togeduck.view.QuestExchangeFragment
 import com.idle.togeduck.view.QuestRecruitFragment
 import com.idle.togeduck.view.QuestShareFragment
+import com.idle.togeduck.view.QuestTalkFragment
 
 class QuestPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int {
@@ -19,11 +21,10 @@ class QuestPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> QuestShareFragment()
+            0 -> QuestExchangeFragment()
             1 -> QuestShareFragment()
             2 -> QuestRecruitFragment()
-            3 -> QuestRecruitFragment()
-            else -> QuestRecruitFragment()
+            else -> QuestTalkFragment()
         }
     }
 

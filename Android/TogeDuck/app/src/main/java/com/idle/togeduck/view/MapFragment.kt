@@ -172,7 +172,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         if (halfOffset != sheetBehavior.calculateSlideOffset()) halfOffset = sheetBehavior.calculateSlideOffset()
 
                         setHalfExpandedPadding()
-                        prevOffset =  sheetBehavior.calculateSlideOffset()
+                        prevOffset =  halfOffset
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         prevOffset = 1.0f
@@ -188,6 +188,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                Log.d("로그", "${halfOffset} / ${slideOffset}")
                 if (prevOffset < slideOffset && slideOffset > halfOffset) setExpandedPadding()
             }
         })
@@ -237,19 +238,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
-                currentLocation = location
-                // 현재 위치 아이콘 표시
-                naverMap.locationOverlay.run {
-                    isVisible = true
-                    position = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
-                }
+                if (location != null) {
+                    currentLocation = location
+                    // 현재 위치 아이콘 표시
+                    naverMap.locationOverlay.run {
+                        isVisible = true
+                        position = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
+                    }
 
-                // 지도 중심 카메라 이동
-                naverMap.moveCamera(
-                    CameraUpdate.scrollTo(
-                        LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
+                    // 지도 중심 카메라 이동
+                    naverMap.moveCamera(
+                        CameraUpdate.scrollTo(
+                            LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
+                        )
                     )
-                )
+                }
             }
     }
 

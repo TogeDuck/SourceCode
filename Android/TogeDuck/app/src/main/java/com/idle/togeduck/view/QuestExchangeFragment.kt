@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
 import com.idle.togeduck.model.QuestExchange
 import com.idle.togeduck.model.QuestShare
+import com.idle.togeduck.util.ScreenSize
+import com.idle.togeduck.util.ScreenSize.widthDp
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.view.quest_exchange.GirdLayoutItemDecoration
 import com.idle.togeduck.view.quest_exchange.IQuestExchangeDetail
@@ -41,10 +43,16 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
     }
 
     private fun questExchangeRecycleView(){
+        var spanCount = 1
+
+        while (widthDp / (spanCount + 1) >= 110) {
+            spanCount++
+        }
+
         val questExchangeRecycleView = binding.questExchangeRecycle
-        val questExchangeAdapter = QuestExchangeAdapter(this, requireContext())
+        val questExchangeAdapter = QuestExchangeAdapter(this, requireContext(), spanCount)
         questExchangeRecycleView.adapter = questExchangeAdapter
-        questExchangeRecycleView.layoutManager = GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
+        questExchangeRecycleView.layoutManager = GridLayoutManager(requireContext(), spanCount, LinearLayoutManager.VERTICAL, false)
         // 간격 설정
         questExchangeRecycleView.addItemDecoration(GirdLayoutItemDecoration(20))
         // Dummy Data
