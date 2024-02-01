@@ -3,9 +3,9 @@ package com.idle.togeduck.model.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EventList(
+data class EventListResponse(
     val status: Int,
     val message: String,
-    val today: List<Event>,
-    val later: List<Event>
+    val today: List<EventResponse>,
+    val later: List<EventResponse>
 )

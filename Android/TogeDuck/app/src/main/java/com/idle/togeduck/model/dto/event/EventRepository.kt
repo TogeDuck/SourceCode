@@ -1,9 +1,8 @@
 package com.idle.togeduck.model.dto.event
 
-import com.idle.togeduck.model.dto.EventList
+import com.idle.togeduck.model.dto.EventListResponse
 import kotlinx.datetime.LocalDate
 import retrofit2.Response
-import retrofit2.http.Query
 import javax.inject.Inject
 
 interface EventRepository {
@@ -11,17 +10,17 @@ interface EventRepository {
         celebrityId: Int,
         startDate: LocalDate,
         endDate: LocalDate,
-    ): Response<EventList>
+    ): Response<EventListResponse>
 }
 
 class DefaultEventRepository @Inject constructor(
     private val eventService: EventService,
 ) : EventRepository {
-    override suspend fun getEventList(
+    override suspend fun getEventist(
         celebrityId: Int,
         startDate: LocalDate,
         endDate: LocalDate,
-    ): Response<EventList> {
+    ): Response<EventListResponse> {
         return eventService.getEventList(celebrityId, startDate, endDate)
     }
 

@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Event(
+data class EventResponse(
     @SerialName("event_id") val eventId: Long,
     @SerialName("url") val imgUrl: String,
     val name: String,
@@ -17,6 +17,6 @@ data class Event(
     val endDate: LocalDate,
     val latitude: Double,
     val longitude: Double,
-    var isStar: Boolean,
-    var isVisited: Boolean
+    var isStar: Boolean = false,
+    var isVisited: Boolean = false
 )
