@@ -1,9 +1,11 @@
 package com.idle.togeduck.view.quest_exchange
 
 import android.graphics.Rect
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.idle.togeduck.util.DpPxUtil.dpToPx
 
 class GirdLayoutItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
@@ -16,13 +18,13 @@ class GirdLayoutItemDecoration(private val spacing: Int) : RecyclerView.ItemDeco
         val spanCount = (parent.layoutManager as GridLayoutManager).spanCount
         val spacingBetweenItems = spacing * (spanCount - 1) / spanCount
 
-        if (position % spanCount == 0) {
-            outRect.left = spacing
-            outRect.right = spacingBetweenItems
-        } else {
-            outRect.left = spacingBetweenItems
-            outRect.right = spacing
-        }
+//        if (position % spanCount == 0) {
+//            outRect.left = spacing
+//            outRect.right = spacingBetweenItems
+//        } else {
+//            outRect.left = spacingBetweenItems
+//            outRect.right = spacing
+//        }
 
         outRect.bottom = spacing
     }
