@@ -348,6 +348,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val fabMyrecord: LinearLayout = componentBottomAppbarBinding.fabMyrecord
         val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        circle.setStroke(0,0)
+
         val fabs: List<LinearLayout> = listOf(fabQuest,fabList,fabChat,fabMyrecord)
         for(fab in fabs){
             fab.background = circle;
