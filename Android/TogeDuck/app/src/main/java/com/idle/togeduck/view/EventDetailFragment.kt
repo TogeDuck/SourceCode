@@ -89,7 +89,7 @@ class EventDetailFragment : Fragment(), EventReview{
         Review("리뷰1", "리뷰이미지url1"),
         Review("리뷰2dsklfjkdjlksjfopwdkfw", "리뷰이미지url2"),
         Review("리뷰3", "리뷰이미지url3"),
-        Review("리뷰4asflknwpofqfq", "리뷰이미지url4"),
+        Review("리뷰4asflknwpofqfqdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "리뷰이미지url4"),
         Review("리뷰5", "리뷰이미지url5"),
         Review("리뷰asdkfjklwfnpqivbnq6", "리뷰이미지url6"),
         Review("리뷰7asdff", "리뷰이미지url7"),

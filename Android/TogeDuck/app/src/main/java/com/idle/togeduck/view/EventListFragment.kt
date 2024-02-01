@@ -109,14 +109,6 @@ class EventListFragment : Fragment(), EventInfo {
         val todayEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
 //        binding.rvEventToday.background = todayEventDrawable
         todayEventDrawable.setColor(todayColor)
-//
-//        val upComingEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
-//        binding.rvEventUpcoming.background = upComingEventDrawable
-//        upComingEventDrawable.setColor(upComingColor)
-//
-//        val pastEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
-//        binding.rvEventPast.background = pastEventDrawable
-//        pastEventDrawable.setColor(pastColor)
 
     }
 
