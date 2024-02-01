@@ -2,10 +2,13 @@ package com.idle.togeduck.domain.event.service;
 
 import static com.idle.togeduck.global.response.ErrorCode.*;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idle.togeduck.domain.event.dto.ReviewResponseDto;
 import com.idle.togeduck.domain.event.entity.Event;
 import com.idle.togeduck.domain.event.entity.Review;
 import com.idle.togeduck.domain.event.repository.EventRepository;
@@ -24,6 +27,10 @@ public class ReviewService {
 	private final UserRepository userRepository;
 	private final EventRepository eventRepository;
 	private final S3Service s3Service;
+
+	public Slice<ReviewResponseDto> getReviewList(Long eventId, Long userId, Pageable pageable) {
+		return reviewRepository.findSliceByEventId(eventId, userId, pageable);
+	}
 
 	@Transactional
 	public void saveReview(Long eventId, Long userId, String content, MultipartFile image) {
@@ -50,4 +57,5 @@ public class ReviewService {
 
 		reviewRepository.delete(review);
 	}
+
 }
