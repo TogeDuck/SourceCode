@@ -22,4 +22,9 @@ class EventViewModel @Inject constructor(
             eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun getEventList2() {
+        eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())
+    }
 }
