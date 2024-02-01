@@ -26,20 +26,6 @@ class MyRecordFragment : Fragment(), IMyRecord {
 
     private lateinit var myRecordAdapter: MyRecordAdapter
 
-    private val tempList = listOf(
-        QuestShare("2024/01/31", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/30", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/29", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/28", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/27", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/26", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/25", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/24", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/23", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/22", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/21", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-        QuestShare("2024/01/20", "방탄소년단 뷔 생일 카페를 투어했어요!", "https://search.pstatic.net/common?type=b&size=144&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2F74%2F202212051555381451.png", 0),
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +42,7 @@ class MyRecordFragment : Fragment(), IMyRecord {
         setRecyclerView()
         setTheme()
 
-        myRecordAdapter.submitList(tempList)
+//        myRecordAdapter.submitList(tempList)
     }
 
     private fun setRecyclerView() {

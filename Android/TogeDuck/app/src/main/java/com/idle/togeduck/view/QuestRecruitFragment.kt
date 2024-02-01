@@ -22,20 +22,6 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
 
     private lateinit var questRecruitAdapter: QuestRecruitAdapter
 
-    private val tempList = listOf(
-        QuestShare("OO카페 가실 분~", "02/05", "", 0),
-        QuestShare("XX카페 가실 분~", "03/06", "", 0),
-        QuestShare("ㅁㅁ카페 가실 분~", "05/07", "", 0),
-        QuestShare("OO카페 가실 분~", "02/05", "", 0),
-        QuestShare("XX카페 가실 분~", "03/06", "", 0),
-        QuestShare("ㅁㅁ카페 가실 분~", "05/07", "", 0),
-        QuestShare("OO카페 가실 분~", "02/05", "", 0),
-        QuestShare("XX카페 가실 분~", "03/06", "", 0),
-        QuestShare("ㅁㅁ카페 가실 분~", "05/07", "", 0),
-        QuestShare("OO카페 가실 분~", "02/05", "", 0),
-        QuestShare("XX카페 가실 분~", "03/06", "", 0),
-        QuestShare("ㅁㅁ카페 가실 분~", "05/07", "", 0),
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +38,7 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
         setRecyclerview()
         setTheme()
 
-        questRecruitAdapter.submitList(tempList)
+//        questRecruitAdapter.submitList(tempList)
     }
 
     private fun setRecyclerview() {

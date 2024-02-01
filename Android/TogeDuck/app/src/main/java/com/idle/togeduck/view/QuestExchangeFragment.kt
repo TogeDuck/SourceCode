@@ -56,47 +56,11 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         // 간격 설정
         questExchangeRecycleView.addItemDecoration(GirdLayoutItemDecoration(20))
         // Dummy Data
-        questExchangeAdapter.submitList(questExchangeDummyData())
-    }
-
-    private fun questExchangeDummyData(): List<QuestExchange> {
-        val exchange1 = QuestExchange("title","",100)
-        val exchange2 = QuestExchange("title","",100)
-        val exchange3 = QuestExchange("title","",100)
-        val exchange4 = QuestExchange("title","",100)
-        val exchange5 = QuestExchange("title","",100)
-        val exchange6 = QuestExchange("title","",100)
-        val exchange7 = QuestExchange("title","",100)
-        val exchange8 = QuestExchange("title","",100)
-        val exchange9 = QuestExchange("title","",100)
-        val exchange10 = QuestExchange("title","",100)
-        val exchange11 = QuestExchange("title","",100)
-        val exchange12 = QuestExchange("title","",100)
-        val exchange13 = QuestExchange("title","",100)
-        val exchange14 = QuestExchange("title","",100)
-        val exchange15 = QuestExchange("title","",100)
-        val exchange16 = QuestExchange("title","",100)
-
-        return listOf(exchange1,
-            exchange2,
-            exchange3,
-            exchange4,
-            exchange5,
-            exchange6,
-            exchange7,
-            exchange8,
-            exchange9,
-            exchange10,
-            exchange11,
-            exchange12,
-            exchange13,
-            exchange14,
-            exchange15,
-            exchange16)
+//        questExchangeAdapter.submitList(questExchangeDummyData())
     }
 
     override fun myQuestExchangeClicked(position: Int) {
-        showQuestExchangeDetailDialog(questExchangeDummyData().get(position))
+//        showQuestExchangeDetailDialog(questExchangeDummyData().get(position))
     }
 
     fun showQuestExchangeDetailDialog(questExchange: QuestExchange){

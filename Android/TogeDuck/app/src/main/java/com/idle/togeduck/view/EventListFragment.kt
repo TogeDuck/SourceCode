@@ -44,7 +44,7 @@ class EventListFragment : Fragment(), EventInfo {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEventListBinding.inflate(inflater, container, false)
         return binding.root
     }
