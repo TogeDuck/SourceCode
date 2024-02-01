@@ -17,6 +17,6 @@ data class Event(
     val endDate: LocalDate,
     val latitude: Double,
     val longitude: Double,
-    var isStar: Boolean,
-    var isVisited: Boolean
+    var isStar: Boolean = false,
+    var isVisited: Boolean = false
 )
