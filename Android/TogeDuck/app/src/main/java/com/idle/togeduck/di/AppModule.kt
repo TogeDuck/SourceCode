@@ -1,5 +1,8 @@
 package com.idle.togeduck.di
 
+import com.idle.togeduck.model.dto.event.DefaultEventRepository
+import com.idle.togeduck.model.dto.event.EventRepository
+import com.idle.togeduck.model.dto.event.EventService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -53,6 +56,18 @@ object AppModule {
             .addConverterFactory(Json.asConverterFactory(contentType))
             .client(okHttpClient)
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideEventService(retrofit: Retrofit) : EventService {
+        return retrofit.create(EventService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideEventRepository(eventService: EventService) : EventRepository {
+        return DefaultEventRepository(eventService)
     }
 }
 

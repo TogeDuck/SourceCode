@@ -1,25 +1,12 @@
 package com.idle.togeduck.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentJichanBinding
-import com.idle.togeduck.util.CalcStatusBarSize
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx
-import com.idle.togeduck.util.Theme
-import com.idle.togeduck.util.TogeDuckColor
-import com.idle.togeduck.util.TogeDuckItemDecoration
-import com.idle.togeduck.view.favorite_setting.IMyFavorite
-import com.idle.togeduck.view.favorite_setting.IdolSearchResultAdapter
-import com.idle.togeduck.view.favorite_setting.MyFavoriteAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

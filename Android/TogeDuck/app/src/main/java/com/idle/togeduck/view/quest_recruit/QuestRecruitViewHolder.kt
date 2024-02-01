@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestRecruitBinding
 import com.idle.togeduck.util.Theme

@@ -11,7 +11,6 @@ import com.idle.togeduck.databinding.ItemMyFavoriteBinding
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
-import com.idle.togeduck.view.favorite_setting.IMyFavorite
 
 class MyFavoriteViewHolder(
     binding: ItemMyFavoriteBinding,

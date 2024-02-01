@@ -1,14 +1,12 @@
 package com.idle.togeduck.view.event_list
 
 import android.content.Context
-import com.idle.togeduck.util.Theme
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemEventInfoBinding
 
