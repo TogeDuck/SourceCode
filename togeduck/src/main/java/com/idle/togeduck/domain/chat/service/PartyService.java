@@ -8,8 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.idle.togeduck.domain.chat.dto.PartyResponseDto;
+import com.idle.togeduck.domain.chat.entity.Chat;
+import com.idle.togeduck.domain.chat.entity.Message;
 import com.idle.togeduck.domain.chat.entity.Party;
+import com.idle.togeduck.domain.chat.entity.UserChat;
+import com.idle.togeduck.domain.chat.repository.ChatRepository;
+import com.idle.togeduck.domain.chat.repository.MessageRepository;
 import com.idle.togeduck.domain.chat.repository.PartyRepository;
+import com.idle.togeduck.domain.chat.repository.UserChatRepository;
 import com.idle.togeduck.domain.event.entity.Event;
 import com.idle.togeduck.domain.event.repository.EventRepository;
 import com.idle.togeduck.domain.user.entity.User;
@@ -24,7 +30,10 @@ import lombok.RequiredArgsConstructor;
 public class PartyService {
 
 	private final PartyRepository partyRepository;
+	private final ChatRepository chatRepository;
 	private final EventRepository eventRepository;
+	private final UserChatRepository userChatRepository;
+	private final MessageRepository messageRepository;
 
 	public Slice<PartyResponseDto> getPartyList(Long eventId, Pageable pageable) {
 		return partyRepository.findPartyListByEventId(eventId, pageable);
@@ -37,6 +46,7 @@ public class PartyService {
 		Event destination = eventRepository.findById(destinationId)
 			.orElseThrow(() -> new BaseException(ErrorCode.EVENT_NOT_FOUND));
 
+		//파티 생성
 		Party party = Party.builder()
 			.event(event)
 			.destination(destination)
@@ -48,6 +58,30 @@ public class PartyService {
 			.build();
 
 		partyRepository.save(party);
+
+		//채팅방 생성
+		Chat chat = Chat.builder()
+			.quest(party)
+			.maximum(maximum)
+			.duration(duration)
+			.expiredAt(LocalDateTime.now().plusMinutes(duration))
+			.build();
+		chatRepository.save(chat);
+
+		//채팅방 참여
+		UserChat userChat = UserChat.builder()
+			.chat(chat)
+			.user(user)
+			.build();
+		userChatRepository.save(userChat);
+
+		//채팅방 참여 메세지 저장.
+		Message m = Message.builder()
+			.userChat(userChat)
+			.content("파티가 생성되었습니다.")
+			.build();
+
+		messageRepository.save(m);
 	}
 
 	@Transactional
