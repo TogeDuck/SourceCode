@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Talk extends Chat {
+public class Talk extends Quest {
 
 	private String name;
 }
