@@ -33,18 +33,20 @@ public class StarService {
 	public AllEventResponseDto getEvents(Long userId) {
 
 		List<EventResponseDto> allEvents = starRepository.findEventListByUserId(userId);
+		List<EventResponseDto> past = new ArrayList<>();
 		List<EventResponseDto> today = new ArrayList<>();
 		List<EventResponseDto> later = new ArrayList<>();
 
 		LocalDate cur = LocalDate.now();
 		for (EventResponseDto dto : allEvents) {
 			if (dto.endDate().isBefore(cur)) {
+				past.add(dto);
 				continue;
 			}
 			(dto.startDate().isBefore(cur) ? today : later).add(dto);
 		}
 
-		return new AllEventResponseDto(today, later);
+		return new AllEventResponseDto(past, today, later);
 	}
 
 	@Transactional
@@ -61,8 +63,7 @@ public class StarService {
 
 	@Transactional
 	public void deleteStar(Long likeId, Long userId) {
-		Star star = starRepository.findByIdAndUserId(likeId, userId)
-			.orElseThrow(() -> new BaseException(STAR_NOT_FOUND));
+		Star star = starRepository.findById(likeId).orElseThrow(() -> new BaseException(STAR_NOT_FOUND));
 
 		starRepository.delete(star);
 	}
