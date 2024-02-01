@@ -13,16 +13,16 @@
         android:background="@drawable/shape_circle"
         android:padding="5dp"
         android:src="@drawable/ic_plus"
-        app:layout_constraintBottom_toBottomOf="@+id/et_search"
+        app:layout_constraintBottom_toBottomOf="@+id/et_review_input"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/et_search"
-        app:layout_constraintEnd_toStartOf="@+id/et_search"
+        app:layout_constraintTop_toTopOf="@+id/et_review_input"
+        app:layout_constraintEnd_toStartOf="@+id/et_review_input"
         app:layout_constraintVertical_bias="0.0"
         tools:backgroundTint="@color/bts_main500"
         tools:ignore="MissingConstraints" />
 
     <com.idle.togeduck.util.ClearFocusEditText
-        android:id="@+id/et_search"
+        android:id="@+id/et_review_input"
         android:layout_width="0dp"
         android:layout_height="@dimen/circle_xsmall"
         android:background="@drawable/shape_square_circle"
@@ -52,9 +52,9 @@
         android:text="등록"
         android:textSize="@dimen/text_title_small"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/et_search"
+        app:layout_constraintBottom_toBottomOf="@+id/et_review_input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_search"
-        app:layout_constraintTop_toTopOf="@+id/et_search"
+        app:layout_constraintStart_toEndOf="@+id/et_review_input"
+        app:layout_constraintTop_toTopOf="@+id/et_review_input"
         tools:backgroundTint="@color/bts_main500" />
 </androidx.constraintlayout.widget.ConstraintLayout>

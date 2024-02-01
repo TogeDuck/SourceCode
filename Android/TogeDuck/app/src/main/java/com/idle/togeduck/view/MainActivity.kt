@@ -2,11 +2,13 @@ package com.idle.togeduck.view
 
 import android.app.Activity
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.idle.togeduck.databinding.ActivityMainBinding
+import com.idle.togeduck.util.ScreenSize.heightDp
+import com.idle.togeduck.util.ScreenSize.heightPx
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,8 +20,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        this.setStatusBarTransparent()
+        val displayMetrics = resources.displayMetrics
+        heightPx = displayMetrics.heightPixels
+        heightDp = (displayMetrics.heightPixels / displayMetrics.density).toInt()
 
+        this.setStatusBarTransparent()
     }
 
     // 상태바 투명하게 하는 기능

@@ -1,6 +1,7 @@
 package com.idle.togeduck.view
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
@@ -10,6 +11,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.ScaleAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -32,6 +35,7 @@ import com.idle.togeduck.databinding.ComponentBottomSheetBinding
 import com.idle.togeduck.databinding.FragmentMapBinding
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
+import com.idle.togeduck.util.ScreenSize.heightPx
 import com.idle.togeduck.util.Theme
 import com.idle.togeduck.view.map.MapPagerAdapter
 import com.naver.maps.geometry.LatLng
@@ -64,6 +68,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var backPressedCallback: OnBackPressedCallback
 
     private lateinit var mapPagerAdapter: MapPagerAdapter
+
+    private var prevOffset = 0.0f
+    private var halfOffset = 0.5f
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -136,6 +143,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapPagerAdapter = MapPagerAdapter(this)
         componentBottomSheetBinding.viewPager.adapter = mapPagerAdapter
         componentBottomSheetBinding.viewPager.isUserInputEnabled = false
+
+        setHalfExpandedPadding()
     }
 
     private fun initChildFragment() {
@@ -159,9 +168,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                     }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        if (halfOffset != sheetBehavior.calculateSlideOffset()) halfOffset = sheetBehavior.calculateSlideOffset()
+
+                        setHalfExpandedPadding()
+                        prevOffset =  sheetBehavior.calculateSlideOffset()
+                    }
                     BottomSheetBehavior.STATE_EXPANDED -> {
+                        prevOffset = 1.0f
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
+                        prevOffset = 0.0f
                     }
                     BottomSheetBehavior.STATE_DRAGGING -> {
                     }
@@ -171,8 +188,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (prevOffset < slideOffset && slideOffset > halfOffset) setExpandedPadding()
             }
         })
+    }
+
+    private fun setHalfExpandedPadding() {
+        binding.bsFragment.bottomSheet.setPadding(0,0, 0, dpToPx(90, requireContext()) + heightPx / 2)
+    }
+
+    private fun setExpandedPadding() {
+        binding.bsFragment.bottomSheet.setPadding(0,0, 0, dpToPx(105, requireContext()))
     }
 
     override fun onMapReady(naverMap: NaverMap) {
