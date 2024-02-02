@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FavoriteRequest (
-    val celcbrityId: Long
+    val celebrityId: Long
 )

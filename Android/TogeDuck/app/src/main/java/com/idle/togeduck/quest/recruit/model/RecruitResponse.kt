@@ -20,3 +20,15 @@ data class RecruitResponse(
     var isMine: Boolean
 )
 
+data class Recruit(
+     val chatId: Long,
+    val title: String,
+    val destination: String,
+    val maximum: Int,
+    var duration: Int,
+    var current: Int,
+    val createdAt: LocalDateTime,
+    val expiredAt: LocalDateTime,
+    var isMine: Boolean
+)
+fun RecruitResponse.recruitResponseToRecruit() = Recruit(chatId, title, destination, maximum, duration, current, createdAt, expiredAt, isMine)

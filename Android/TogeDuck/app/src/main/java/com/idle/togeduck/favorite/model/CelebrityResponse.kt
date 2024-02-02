@@ -12,3 +12,15 @@ data class CelebrityResponse (
     val image: String,
     val teamName: String
 )
+
+data class Celebrity (
+    val id: Long,
+    val name: String,
+    val nickname: String,
+    val birthday: LocalDate,
+    val image: String,
+    val teamName: String
+)
+
+fun CelebrityResponse.celebrityResponseToCelebrity() = Celebrity(id, name, nickname, birthday, image, teamName)
+fun Celebrity.celebrityToFavoriteRequest() = FavoriteRequest(id)
