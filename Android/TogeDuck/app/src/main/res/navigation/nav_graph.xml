@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.idle.togeduck.view.MainFragment"
+        android:name="com.idle.togeduck.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/fragment_main" >
         <action
@@ -53,78 +53,78 @@
 
     <fragment
         android:id="@+id/ahyoungFragment"
-        android:name="com.idle.togeduck.view.AhyoungFragment"
+        android:name="com.idle.togeduck.test.AhyoungFragment"
         android:label="ahyoung_fragment"
         tools:layout="@layout/fragment_ahyoung" >
     </fragment>
 
     <fragment
         android:id="@+id/jiwooFragment"
-        android:name="com.idle.togeduck.view.JiwooFragment"
+        android:name="com.idle.togeduck.test.JiwooFragment"
         android:label="jiwoo_fragment"
         tools:layout="@layout/fragment_jiwoo" >
     </fragment>
 
     <fragment
         android:id="@+id/jichanFragment"
-        android:name="com.idle.togeduck.view.JichanFragment"
+        android:name="com.idle.togeduck.test.JichanFragment"
         android:label="jichan_fragment"
         tools:layout="@layout/fragment_jichan" >
     </fragment>
 
     <fragment
         android:id="@+id/favoriteSettingFragment"
-        android:name="com.idle.togeduck.view.FavoriteSettingFragment"
+        android:name="com.idle.togeduck.favorite.view.FavoriteSettingFragment"
         android:label="favorite_setting_fragment"
         tools:layout="@layout/fragment_favorite_setting" >
     </fragment>
 
     <fragment
         android:id="@+id/topAppbarFragment"
-        android:name="com.idle.togeduck.view.TopAppbarFragment"
+        android:name="com.idle.togeduck.main_map.view.TopAppbarFragment"
         android:label="top_appbar_fragment"
         tools:layout="@layout/fragment_top_appbar">
     </fragment>
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.idle.togeduck.view.MapFragment"
+        android:name="com.idle.togeduck.main_map.view.MapFragment"
         android:label="map_fragment"
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/questShareFragment"
-        android:name="com.idle.togeduck.view.QuestShareFragment"
+        android:name="com.idle.togeduck.quest.share.view.QuestShareFragment"
         android:label="quest_share_fragment"
         tools:layout="@layout/fragment_quest_share"/>
     <fragment
         android:id="@+id/questExchangeFragment"
-        android:name="com.idle.togeduck.view.QuestExchangeFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.QuestExchangeFragment"
         android:label="quest_exchange_fragment"
         tools:layout="@layout/fragment_quest_exchange">
     </fragment>
     <fragment
         android:id="@+id/eventListFragment"
-        android:name="com.idle.togeduck.view.EventListFragment"
+        android:name="com.idle.togeduck.event.view.list.EventListFragment"
         android:label="event_list_fragment"
         tools:layout="@layout/fragment_event_list"/>
     <fragment
         android:id="@+id/questRecruitFragment"
-        android:name="com.idle.togeduck.view.QuestRecruitFragment"
+        android:name="com.idle.togeduck.quest.recruit.view.QuestRecruitFragment"
         android:label="quest_recruit_fragment"
         tools:layout="@layout/fragment_quest_recruit" />
     <fragment
         android:id="@+id/myRecordFragment"
-        android:name="com.idle.togeduck.view.MyRecordFragment"
+        android:name="com.idle.togeduck.my_record.view.MyRecordFragment"
         android:label="my_record_fragment"
         tools:layout="@layout/fragment_my_record" />
     <fragment
         android:id="@+id/eventDetailFragment"
-        android:name="com.idle.togeduck.view.EventDetailFragment"
+        android:name="com.idle.togeduck.event.view.detail.EventDetailFragment"
         android:label="event_detail_fragment"
         tools:layout="@layout/fragment_event_detail"/>
     <fragment
         android:id="@+id/questTalkFragment"
-        android:name="com.idle.togeduck.view.QuestTalkFragment"
+        android:name="com.idle.togeduck.quest.talk.view.QuestTalkFragment"
         android:label="quest_talk_fragment"
         tools:layout="@layout/fragment_quest_talk">
     </fragment>

@@ -1,8 +1,8 @@
 package com.idle.togeduck.di
 
-import com.idle.togeduck.model.dto.event.DefaultEventRepository
-import com.idle.togeduck.model.dto.event.EventRepository
-import com.idle.togeduck.model.dto.event.EventService
+import com.idle.togeduck.event.model.DefaultEventRepository
+import com.idle.togeduck.event.model.EventRepository
+import com.idle.togeduck.event.model.EventService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides

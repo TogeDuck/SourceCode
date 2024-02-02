@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".view.QuestTalkFragment">
+        tools:context=".quest.talk.view.QuestTalkFragment">
 
         <TextView
             android:id="@+id/quest_talk_main_title"

@@ -10,7 +10,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:background="@color/blackpink_main300"
-    tools:context=".view.QuestExchangeFragment">
+    tools:context=".quest.exchange.view.QuestExchangeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/quest_exchange_recycle"
