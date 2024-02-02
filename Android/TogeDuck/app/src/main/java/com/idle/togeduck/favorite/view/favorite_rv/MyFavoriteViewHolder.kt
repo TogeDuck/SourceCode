@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemMyFavoriteBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
 
@@ -26,7 +27,7 @@ class MyFavoriteViewHolder(
         idolMyFavoriteLinearLayout.setOnClickListener(this)
     }
 
-    fun bind(favoriteIdol: FavoriteIdol, context: Context) {
+    fun bind(celebrity: Celebrity, context: Context) {
         val circleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
 
         circleDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
@@ -41,15 +42,15 @@ class MyFavoriteViewHolder(
 
         Glide
             .with(imgImageView)
-            .load(favoriteIdol.imgUrl)
+            .load(celebrity.image)
             .thumbnail(
-                Glide.with(imgImageView).load(favoriteIdol.imgUrl).override(50, 50)
+                Glide.with(imgImageView).load(celebrity.image).override(50, 50)
             )
             .circleCrop()
             .override(500, 500)
             .into(imgImageView)
 
-        nameTextView.text = favoriteIdol.name
+        nameTextView.text = celebrity.name
         nameTextView.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
 
         removeBtn.setColorFilter(ContextCompat.getColor(context, Theme.theme.main500))

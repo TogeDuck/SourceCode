@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemIdolSearchResultBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.favorite.model.Celebrity
 
 class IdolSearchResultViewHolder(
     binding: ItemIdolSearchResultBinding,
@@ -23,7 +24,7 @@ class IdolSearchResultViewHolder(
         idolSearchResultLinearLayout.setOnClickListener(this)
     }
 
-    fun binding(favoriteIdol: FavoriteIdol, context: Context) {
+    fun binding(celebrity: Celebrity, context: Context) {
         val drawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
 
         drawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
@@ -32,15 +33,15 @@ class IdolSearchResultViewHolder(
 
         Glide
             .with(imgImageView)
-            .load(favoriteIdol.imgUrl)
+            .load(celebrity.image)
             .thumbnail(
-                Glide.with(imgImageView).load(favoriteIdol.imgUrl).override(50, 50)
+                Glide.with(imgImageView).load(celebrity.image).override(50, 50)
             )
             .circleCrop()
             .override(500, 500)
             .into(imgImageView)
 
-        nameTextView.text = favoriteIdol.name
+        nameTextView.text = celebrity.name
         nameTextView.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
     }
 

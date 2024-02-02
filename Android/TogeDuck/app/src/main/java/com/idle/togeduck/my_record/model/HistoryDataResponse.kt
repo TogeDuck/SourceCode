@@ -13,3 +13,12 @@ data class HistoryDataResponse(
     val date: LocalDate,
     val route: String
 )
+
+data class HistoryData(
+    val historyId: Int,
+    val historyName: String,
+    val date: LocalDate,
+    val route: String
+)
+
+fun HistoryDataResponse.toHistoryData() = HistoryData(historyId, historyName, date, route)
