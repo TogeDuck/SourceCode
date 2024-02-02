@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
 import com.idle.togeduck.common.ScreenSize.widthDp
+import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.view.exchange_rv.GirdLayoutItemDecoration
 import com.idle.togeduck.quest.exchange.view.exchange_rv.IQuestExchangeDetail
 import com.idle.togeduck.quest.exchange.view.exchange_rv.QuestExchangeAdapter
@@ -59,9 +60,9 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
 //        showQuestExchangeDetailDialog(questExchangeDummyData().get(position))
     }
 
-    fun showQuestExchangeDetailDialog(questExchange: QuestExchange){
-        val dialog = QuestShareDialog(QuestShare("title", "content","",100))
+    fun showQuestExchangeDetailDialog(questExchange: Exchange){
+//        val dialog = QuestShareDialog(Exchange("title", "content","",100))
         val fragmentManager = childFragmentManager
-        dialog.show(fragmentManager, "QuestShareDialog")
+//        dialog.show(fragmentManager, "QuestShareDialog")
     }
 }
