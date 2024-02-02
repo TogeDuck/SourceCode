@@ -1,9 +1,9 @@
 package com.idle.togeduck.quest.recruit.model
 
-import kotlinx.serialization.Contextual
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
 
 @Serializable
 data class RecruitResponse(
@@ -13,9 +13,10 @@ data class RecruitResponse(
     val maximum: Int,
     var duration: Int,
     var current: Int,
-    @Contextual
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
     val createdAt: LocalDateTime,
-    @Contextual
-    val expiredAt: LocalDateTime
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
+    val expiredAt: LocalDateTime,
+    var isMine: Boolean
 )
 
