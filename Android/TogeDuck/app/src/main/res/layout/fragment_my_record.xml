@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@color/green"
-    tools:context=".view.MyRecordFragment"
+    tools:context=".my_record.view.MyRecordFragment"
     >
 
     <LinearLayout
