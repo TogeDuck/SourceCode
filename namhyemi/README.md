@@ -8,8 +8,12 @@
 - [2024년 01월 24일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240124)
 - [2024년 01월 25일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240125)
 - [2024년 01월 26일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240126)
-- [2024년 01월 26일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240129)
+- [2024년 01월 29일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240129)
+- [2024년 01월 30일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240130)
+- [2024년 01월 31일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240131)
 
+- [2024년 02월 01일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240201)
+- [2024년 02월 02일 회고](https://lab.ssafy.com/s10-webmobile4-sub2/S10P12A301/-/blob/master/namhyemi/README.md#anchor-20240202)
 
 
 ## 2024.01.15 
@@ -48,7 +52,7 @@
 ![20240118_ERD](/uploads/0cb7984f9994fcd216627caa49124a11/20240118_ERD.PNG)
 
 
-##2024.01.19
+## 2024.01.19
 ### 기능 명세서
 요구사항 명세서와 달리 개발 초점에 맞춰서 명세서를 작성해야 하는데, 어떤 형식으로 완성해야하는지 아직 협의 단계
 
@@ -111,3 +115,21 @@ EC2 서버에 있는 Gerrit 기본 설정과 GitLab Repository 연동
 ### JPA 학습
 
 ### API 개발 (연예인 조회)
+
+
+
+## 2024.01.30
+### 연예인 조회 API 
+
+
+
+## 2024.01.31
+### 관심 연예인 CRUD API 
+
+
+## 2024.02.01
+### JWT, Security 학습
+
+
+## 2024.02.02
+### JWT, Security 셋팅
