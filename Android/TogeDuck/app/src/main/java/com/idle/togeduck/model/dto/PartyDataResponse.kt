@@ -3,12 +3,12 @@ package com.idle.togeduck.model.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PartyData(
-    val content: List<Party>,
-    val pageable: Pageable,
+data class PartyDataResponse(
+    val content: List<PartyResponse>,
+    val pageable: PageableResponse,
     val size: Int,
     val number: Int,
-    val sort: Sort,
+    val sort: SortResponse,
     val first: Boolean,
     val last: Boolean,
     val numberOfElements: Int,

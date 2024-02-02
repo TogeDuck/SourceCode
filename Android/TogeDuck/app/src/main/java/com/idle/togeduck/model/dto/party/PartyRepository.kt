@@ -1,6 +1,6 @@
 package com.idle.togeduck.model.dto.party
 
-import com.idle.togeduck.model.dto.PartyList
+import com.idle.togeduck.model.dto.PartyListResponse
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -8,7 +8,7 @@ interface PartyRepository {
     suspend fun getPartyList(
         page: Int,
         size: Int,
-    ): Response<PartyList>
+    ): Response<PartyListResponse>
 }
 
 class DefaultPartyRepository @Inject constructor(
@@ -17,7 +17,7 @@ class DefaultPartyRepository @Inject constructor(
     override suspend fun getPartyList(
         page: Int,
         size: Int
-    ): Response<PartyList> {
+    ): Response<PartyListResponse> {
         return partyService.getPartyList(page, size)
     }
 }

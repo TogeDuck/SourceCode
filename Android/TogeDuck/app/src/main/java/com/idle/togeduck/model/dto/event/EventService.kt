@@ -1,6 +1,6 @@
 package com.idle.togeduck.model.dto.event
 
-import com.idle.togeduck.model.dto.EventList
+import com.idle.togeduck.model.dto.EventListResponse
 import kotlinx.datetime.LocalDate
 import retrofit2.Response
 import retrofit2.http.GET
@@ -13,6 +13,6 @@ interface EventService {
         @Query("celebrity-id") celebrityId: Int,
         @Query("start-date") startDate: LocalDate,
         @Query("end-date") endDate: LocalDate
-    ): Response<EventList>
+    ): Response<EventListResponse>
 
 }

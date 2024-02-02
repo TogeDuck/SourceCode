@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class Party(
+data class PartyResponse(
     @SerialName("id") val chatId: Long,
     val title: String,
     val destination: String,

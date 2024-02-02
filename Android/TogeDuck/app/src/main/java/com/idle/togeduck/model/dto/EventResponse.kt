@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Event(
+data class EventResponse(
     @SerialName("event_id") val eventId: Long,
     @SerialName("url") val imgUrl: String,
     val name: String,
