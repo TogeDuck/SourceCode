@@ -15,12 +15,11 @@ interface EventRepository {
 class DefaultEventRepository @Inject constructor(
     private val eventService: EventService,
 ) : EventRepository {
-    override suspend fun getEventist(
+    override suspend fun getEventList(
         celebrityId: Int,
         startDate: LocalDate,
         endDate: LocalDate,
     ): Response<EventListResponse> {
         return eventService.getEventList(celebrityId, startDate, endDate)
     }
-
 }

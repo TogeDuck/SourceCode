@@ -3,6 +3,9 @@ package com.idle.togeduck.di
 import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.EventRepository
 import com.idle.togeduck.event.model.EventService
+import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
+import com.idle.togeduck.quest.exchange.model.ExchangeRepository
+import com.idle.togeduck.quest.exchange.model.ExchangeService
 import com.idle.togeduck.quest.share.model.DefaultShareRepository
 import com.idle.togeduck.quest.share.model.ShareRepository
 import com.idle.togeduck.quest.share.model.ShareService
@@ -84,6 +87,18 @@ object AppModule {
     @Provides
     fun provideShareRepository(shareService: ShareService) :ShareRepository {
         return DefaultShareRepository(shareService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideExchangeService(retrofit: Retrofit) : ExchangeService {
+        return retrofit.create(ExchangeService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideExchangeRepository(exchangeService: ExchangeService) : ExchangeRepository {
+        return DefaultExchangeRepository(exchangeService)
     }
 }
 
