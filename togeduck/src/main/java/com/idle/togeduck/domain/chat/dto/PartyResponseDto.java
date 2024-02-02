@@ -10,6 +10,7 @@ public record PartyResponseDto(
 	int duration,
 	Long current,
 	LocalDateTime createdAt,
-	LocalDateTime expiredAt
+	LocalDateTime expiredAt,
+	boolean isMine
 ) {
 }

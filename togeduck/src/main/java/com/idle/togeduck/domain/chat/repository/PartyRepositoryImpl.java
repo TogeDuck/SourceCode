@@ -1,8 +1,9 @@
 package com.idle.togeduck.domain.chat.repository;
 
+import static com.idle.togeduck.domain.chat.entity.QChat.*;
 import static com.idle.togeduck.domain.chat.entity.QParty.*;
 import static com.idle.togeduck.domain.chat.entity.QUserChat.*;
-import static com.idle.togeduck.domain.event.entity.QEvent.*;
+import static com.idle.togeduck.domain.event.entity.QCafe.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,18 +28,27 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Slice<PartyResponseDto> findPartyListByEventId(Long eventId, Pageable pageable) {
+	public Slice<PartyResponseDto> findPartyListByEventId(Long userId, Long eventId, Pageable pageable) {
 
 		List<PartyResponseDto> fetch = queryFactory
-			.select(Projections.constructor(PartyResponseDto.class, party.id, party.title, party.destination.name,
-				party.maximum, party.duration,
+			.select(Projections.constructor(PartyResponseDto.class,
+				party.id,
+				party.title,
+				party.destination.cafe.name,
+				party.maximum,
+				party.duration,
 				JPAExpressions.select(userChat.count())
 					.from(userChat)
-					.where(userChat.chat.id.eq(party.id),
+					.where(userChat.chat.id.eq(
+							JPAExpressions.select(chat.id)
+								.from(chat)
+								.where(chat.quest.id.eq(party.id))),
 						userChat.deleted.eq(false)),
-				party.createdAt, party.expiredAt))
+				party.createdAt,
+				party.expiredAt,
+				party.user.id.eq(userId)))
 			.from(party)
-			.leftJoin(party.destination, event)
+			.leftJoin(party.destination.cafe, cafe)
 			.where(party.event.id.eq(eventId), isActivated(LocalDateTime.now()))
 			.orderBy(party.createdAt.desc())
 			.offset(pageable.getOffset())

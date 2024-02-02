@@ -34,7 +34,7 @@ public class TradeController {
 		@PathVariable Long eventId,
 		Pageable pageable) {
 		return ResponseEntity.ok(
-			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTradeList(eventId, pageable)));
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTradeList(1L, eventId, pageable)));
 	}
 
 	@GetMapping("/{eventId}/trades/{tradeId}")
@@ -42,7 +42,16 @@ public class TradeController {
 		@PathVariable Long eventId,
 		@PathVariable Long tradeId) {
 		return ResponseEntity.ok(
-			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTrade(tradeId)));
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTrade(1L, tradeId)));
+	}
+
+	@GetMapping("/{eventId}/trades/mytrades")
+	public ResponseEntity<BaseResponse<Slice<TradeResponseDto>>> getMyTrades(
+		@PathVariable Long eventId,
+		Pageable pageable
+	) {
+		return ResponseEntity.ok(
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getMyTradeList(1L, eventId, pageable)));
 	}
 
 	@PostMapping("/{eventId}/trades")
