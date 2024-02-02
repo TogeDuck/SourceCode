@@ -6,6 +6,9 @@ import com.idle.togeduck.event.model.EventService
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
+import com.idle.togeduck.quest.recruit.model.DefaultRecruitRepository
+import com.idle.togeduck.quest.recruit.model.RecruitRepository
+import com.idle.togeduck.quest.recruit.model.RecruitService
 import com.idle.togeduck.quest.share.model.DefaultShareRepository
 import com.idle.togeduck.quest.share.model.ShareRepository
 import com.idle.togeduck.quest.share.model.ShareService
@@ -99,6 +102,18 @@ object AppModule {
     @Provides
     fun provideExchangeRepository(exchangeService: ExchangeService) : ExchangeRepository {
         return DefaultExchangeRepository(exchangeService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRecruitService(retrofit: Retrofit) : RecruitService {
+        return retrofit.create(RecruitService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRecruitRepository(recruitService: RecruitService) : RecruitRepository {
+        return DefaultRecruitRepository(recruitService)
     }
 }
 
