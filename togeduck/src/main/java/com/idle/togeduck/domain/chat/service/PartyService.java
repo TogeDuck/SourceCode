@@ -36,7 +36,7 @@ public class PartyService {
 	private final MessageRepository messageRepository;
 
 	public Slice<PartyResponseDto> getPartyList(Long eventId, Pageable pageable) {
-		return partyRepository.findPartyListByEventId(eventId, pageable);
+		return partyRepository.findPartyListByEventId(1L, eventId, pageable);
 	}
 
 	@Transactional

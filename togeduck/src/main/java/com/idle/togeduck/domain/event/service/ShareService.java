@@ -27,8 +27,8 @@ public class ShareService {
 	private final UserRepository userRepository;
 	private final ShareRepository shareRepository;
 
-	public Slice<ShareRespondDto> getShareList(Long eventId, Pageable pageable) {
-		return shareRepository.findSliceByEventId(eventId, pageable);
+	public Slice<ShareRespondDto> getShareList(Long userId, Long eventId, Pageable pageable) {
+		return shareRepository.findSliceByEventId(userId, eventId, pageable);
 	}
 
 	@Transactional
