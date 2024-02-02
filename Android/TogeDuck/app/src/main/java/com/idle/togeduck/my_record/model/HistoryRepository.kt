@@ -7,17 +7,17 @@ import javax.inject.Inject
 interface HistoryRepository {
 
     suspend fun getHistoryList(
-        celebrityId: Int
+        historyRequest: HistoryRequest
     ): Response<HistoryListResponse>
 
     suspend fun getHistory(
         historyId: Int,
-        celebrityId: Int
+        historyRequest: HistoryRequest
     ): Response<HistoryTourListResponse>
 
     suspend fun updateHistory(
         historyId: Int,
-        historyName: String
+        historyNameRequest: HistoryNameRequest
     ): Response<DefaultResponse>
 
     suspend fun deleteHistory(
@@ -25,29 +25,28 @@ interface HistoryRepository {
     ): Response<DefaultResponse>
 }
 
-
 class DefaultHistoryRepository @Inject constructor(
     private val historyService: HistoryService,
 ) : HistoryRepository {
 
     override suspend fun getHistoryList(
-        celebrityId: Int
+        historyRequest: HistoryRequest
     ): Response<HistoryListResponse> {
-        return historyService.getHistoryList(celebrityId)
+        return historyService.getHistoryList(historyRequest)
     }
 
     override suspend fun getHistory(
         historyId: Int,
-        celebrityId: Int
+        historyRequest: HistoryRequest
     ): Response<HistoryTourListResponse> {
-        return historyService.getHistory(historyId, celebrityId)
+        return historyService.getHistory(historyId, historyRequest)
     }
 
     override suspend fun updateHistory(
         historyId: Int,
-        historyName: String
+        historyNameRequest: HistoryNameRequest
     ): Response<DefaultResponse> {
-        return historyService.updateHistory(historyId, historyName)
+        return historyService.updateHistory(historyId, historyNameRequest)
     }
 
     override suspend fun deleteHistory(
