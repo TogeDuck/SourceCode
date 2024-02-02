@@ -7,8 +7,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
+import com.idle.togeduck.common.RandomCupcake
 import com.idle.togeduck.databinding.ItemMyRecordBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.my_record.model.HistoryData
+import com.idle.togeduck.my_record.model.HistoryDataResponse
 import com.idle.togeduck.util.getColor
 
 class MyRecordViewHolder(
@@ -24,21 +27,12 @@ class MyRecordViewHolder(
         mainLayout.setOnClickListener(this)
     }
 
-    fun bind(questRecruit: QuestShare, context: Context) {
+    fun bind(historyData: HistoryData, context: Context) {
         setTheme(context)
 
-        tvDate.text = questRecruit.title
-        tvMyRecord.text = questRecruit.content
-
-        Glide
-            .with(ivMyRecordMainImg)
-            .load(questRecruit.imgUrl)
-            .thumbnail(
-                Glide.with(ivMyRecordMainImg).load(questRecruit.imgUrl).override(50, 50)
-            )
-            .circleCrop()
-            .override(500, 500)
-            .into(ivMyRecordMainImg)
+        tvDate.text = historyData.date.toString()
+        tvMyRecord.text = historyData.historyName
+        ivMyRecordMainImg.setImageDrawable(ContextCompat.getDrawable(context, RandomCupcake.getImage()))
     }
 
     private fun setTheme(context: Context) {

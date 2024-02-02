@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemMyFavoriteBinding
+import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class MyFavoriteAdapter(
     private var iMyFavorite: IMyFavorite,
     private val context: Context
-) : ListAdapter<FavoriteIdol, MyFavoriteViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
+) : ListAdapter<Celebrity, MyFavoriteViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyFavoriteViewHolder {
         val binding = ItemMyFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyFavoriteViewHolder(binding, iMyFavorite)

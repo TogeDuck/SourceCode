@@ -26,4 +26,5 @@ object TogeDuckDiffUtil {
         override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
     }
 
+
 }

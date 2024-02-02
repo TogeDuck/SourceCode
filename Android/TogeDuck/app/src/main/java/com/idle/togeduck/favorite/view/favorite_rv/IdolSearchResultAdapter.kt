@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemIdolSearchResultBinding
+import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class IdolSearchResultAdapter(
     private var iIdolSearchResult: IIdolSearchResult,
     private val context: Context
-) : ListAdapter<FavoriteIdol, IdolSearchResultViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
+) : ListAdapter<Celebrity, IdolSearchResultViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IdolSearchResultViewHolder {
         val binding = ItemIdolSearchResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return IdolSearchResultViewHolder(binding, iIdolSearchResult)
