@@ -1,12 +1,10 @@
 package com.idle.togeduck.quest.recruit.model
 
 import com.idle.togeduck.common.model.DefaultResponse
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -15,6 +13,7 @@ import retrofit2.http.Query
 interface RecruitService {
     @GET("events/{event_id}/parties")
     suspend fun getRecruitList(
+        @Path("event_id") eventId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<RecruitListResponse>

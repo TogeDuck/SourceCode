@@ -2,12 +2,11 @@ package com.idle.togeduck.quest.recruit.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Path
 import javax.inject.Inject
 
 interface RecruitRepository {
     suspend fun getRecruitList(
+        eventId: Int,
         page: Int,
         size: Int,
     ): Response<RecruitListResponse>
@@ -34,10 +33,11 @@ class DefaultRecruitRepository @Inject constructor(
     private val recruitService: RecruitService,
 ) : RecruitRepository {
     override suspend fun getRecruitList(
+        eventId: Int,
         page: Int,
         size: Int
     ): Response<RecruitListResponse> {
-        return recruitService.getRecruitList(page, size)
+        return recruitService.getRecruitList(eventId, page, size)
     }
 
     override suspend fun createRecruit(
