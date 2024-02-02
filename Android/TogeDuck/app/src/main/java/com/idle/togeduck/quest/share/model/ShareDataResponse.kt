@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ShareDataResponse (
-    val content: List<Share>,
+    val content: List<ShareResponse>,
     val pageable: PageableResponse,
     val size: Int,
     val number: Int,

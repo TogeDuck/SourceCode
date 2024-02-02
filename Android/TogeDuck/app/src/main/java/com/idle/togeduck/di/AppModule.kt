@@ -3,6 +3,9 @@ package com.idle.togeduck.di
 import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.EventRepository
 import com.idle.togeduck.event.model.EventService
+import com.idle.togeduck.quest.share.model.DefaultShareRepository
+import com.idle.togeduck.quest.share.model.ShareRepository
+import com.idle.togeduck.quest.share.model.ShareService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -14,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.create
 import java.lang.reflect.Type
 import javax.inject.Singleton
 
@@ -68,6 +72,18 @@ object AppModule {
     @Provides
     fun provideEventRepository(eventService: EventService) : EventRepository {
         return DefaultEventRepository(eventService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideShareService(retrofit: Retrofit) :ShareService {
+        return retrofit.create(ShareService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideShareRepository(shareService: ShareService) :ShareRepository {
+        return DefaultShareRepository(shareService)
     }
 }
 
