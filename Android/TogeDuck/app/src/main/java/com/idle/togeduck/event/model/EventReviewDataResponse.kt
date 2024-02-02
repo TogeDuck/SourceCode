@@ -20,3 +20,33 @@ data class EventReviewDataResponse(
     val numberOfElements: Int,
     val empty: Boolean
 )
+
+data class EventReviewData(
+    val reviewId: Int,
+    val content: String,
+    val isMine: Boolean,
+    val reviewImageUrl: String,
+    val pageable: PageableResponse,
+    val size: Int,
+    val number: Int,
+    val sort: SortResponse,
+    val first: Boolean,
+    val last: Boolean,
+    val numberOfElements: Int,
+    val empty: Boolean
+)
+
+fun EventReviewDataResponse.toEventReviewData() = EventReviewData(
+    reviewId,
+    content,
+    isMine,
+    reviewImageUrl,
+    pageable,
+    size,
+    number,
+    sort,
+    first,
+    last,
+    numberOfElements,
+    empty
+)
