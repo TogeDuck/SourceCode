@@ -9,7 +9,7 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.PropertySourceFactory;
 
-public class YamlPropertySourceFactory implements PropertySourceFactory {
+public class YamlPropertySourceFactory implements PropertySourceFactory { // yml 은 property 처럼 사용하기 위한 클래스
 
 	@Override
 	public PropertySource<?> createPropertySource(String name, EncodedResource encodedResource)

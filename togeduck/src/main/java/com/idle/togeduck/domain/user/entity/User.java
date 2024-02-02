@@ -26,6 +26,9 @@ public class User extends BaseEntity {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
+	private Authority authority;
+
+	@Enumerated(EnumType.STRING)
 	private SocialType socialType;
 
 	private String socialId;
