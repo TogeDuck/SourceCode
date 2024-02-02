@@ -13,7 +13,7 @@ interface FavoriteRepository {
     ): Response<DefaultResponse>
 }
 
-class DefaultFavoriteRespository @Inject constructor(
+class DefaultFavoriteRepository @Inject constructor(
     private val favoriteService: FavoriteService
 ): FavoriteRepository{
     override suspend fun getFavorites(): Response<FavoriteListResponse> {

@@ -9,7 +9,7 @@ interface CelebrityRepository {
     ): Response<CelebrityListResponse>
 }
 
-class DefaultCelebrityRespotitory @Inject constructor(
+class DefaultCelebrityRepository @Inject constructor(
     private val celebrityService: CelebrityService
 ): CelebrityRepository {
     override suspend fun getCelebrities(
