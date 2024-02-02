@@ -32,7 +32,10 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
 		List<PartyResponseDto> fetch = queryFactory
 			.select(Projections.constructor(PartyResponseDto.class, party.id, party.title, party.destination.name,
 				party.maximum, party.duration,
-				JPAExpressions.select(userChat.count()).from(userChat).where(userChat.chat.id.eq(party.id)),
+				JPAExpressions.select(userChat.count())
+					.from(userChat)
+					.where(userChat.chat.id.eq(party.id),
+						userChat.deleted.eq(false)),
 				party.createdAt, party.expiredAt))
 			.from(party)
 			.leftJoin(party.destination, event)
