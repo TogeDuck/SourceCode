@@ -3,7 +3,9 @@ package com.idle.togeduck.util
 import androidx.recyclerview.widget.DiffUtil
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.my_record.model.HistoryData
+import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.recruit.model.Recruit
+import com.idle.togeduck.quest.share.model.Share
 import java.util.Objects
 
 object TogeDuckDiffUtil {
@@ -56,6 +58,26 @@ object TogeDuckDiffUtil {
         }
 
         override fun areContentsTheSame(oldItem: Celebrity, newItem: Celebrity): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val exchangeDiffUtilCallback = object: DiffUtil.ItemCallback<Exchange>() {
+        override fun areItemsTheSame(oldItem: Exchange, newItem: Exchange): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Exchange, newItem: Exchange): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val shareDiffUtilCallback = object: DiffUtil.ItemCallback<Share>() {
+        override fun areItemsTheSame(oldItem: Share, newItem: Share): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Share, newItem: Share): Boolean {
             return oldItem == newItem
         }
     }
