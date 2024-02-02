@@ -11,7 +11,7 @@ import com.idle.togeduck.util.TogeDuckDiffUtil
 class MyRecordAdapter(
     private var iMyRecord: IMyRecord,
     private val context: Context
-) : ListAdapter<HistoryData, MyRecordViewHolder>(TogeDuckDiffUtil.questShareDiffUtilCallback) {
+) : ListAdapter<HistoryData, MyRecordViewHolder>(TogeDuckDiffUtil.historyDataDiffUtilCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyRecordViewHolder {
         val binding = ItemMyRecordBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return  MyRecordViewHolder(binding, iMyRecord)

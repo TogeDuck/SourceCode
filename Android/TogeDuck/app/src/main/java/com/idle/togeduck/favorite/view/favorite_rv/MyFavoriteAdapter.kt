@@ -11,7 +11,7 @@ import com.idle.togeduck.util.TogeDuckDiffUtil
 class MyFavoriteAdapter(
     private var iMyFavorite: IMyFavorite,
     private val context: Context
-) : ListAdapter<Celebrity, MyFavoriteViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
+) : ListAdapter<Celebrity, MyFavoriteViewHolder>(TogeDuckDiffUtil.celebrityDiffUtilCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyFavoriteViewHolder {
         val binding = ItemMyFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyFavoriteViewHolder(binding, iMyFavorite)

@@ -11,7 +11,7 @@ import com.idle.togeduck.util.TogeDuckDiffUtil
 class IdolSearchResultAdapter(
     private var iIdolSearchResult: IIdolSearchResult,
     private val context: Context
-) : ListAdapter<Celebrity, IdolSearchResultViewHolder>(TogeDuckDiffUtil.favoriteIdolDiffUtilItemCallback) {
+) : ListAdapter<Celebrity, IdolSearchResultViewHolder>(TogeDuckDiffUtil.celebrityDiffUtilCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IdolSearchResultViewHolder {
         val binding = ItemIdolSearchResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return IdolSearchResultViewHolder(binding, iIdolSearchResult)

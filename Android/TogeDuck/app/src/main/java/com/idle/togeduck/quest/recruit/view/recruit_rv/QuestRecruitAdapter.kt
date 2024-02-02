@@ -11,7 +11,7 @@ import com.idle.togeduck.util.TogeDuckDiffUtil
 class QuestRecruitAdapter(
     private var iQuestRecruit: IQuestRecruit,
     private val context: Context
-) : ListAdapter<Recruit, QuestRecruitViewHolder>(TogeDuckDiffUtil.questShareDiffUtilCallback) {
+) : ListAdapter<Recruit, QuestRecruitViewHolder>(TogeDuckDiffUtil.recruitDiffUtilCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestRecruitViewHolder {
         val binding = ItemQuestRecruitBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return QuestRecruitViewHolder(binding, iQuestRecruit)
