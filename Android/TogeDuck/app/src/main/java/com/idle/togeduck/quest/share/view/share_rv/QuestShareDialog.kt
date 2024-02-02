@@ -12,9 +12,10 @@ import androidx.fragment.app.DialogFragment
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.DialogQuestShareBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.quest.share.model.Share
 
 
-class QuestShareDialog(questShare: QuestShare) : DialogFragment() {
+class QuestShareDialog(questShare: Share) : DialogFragment() {
 
     private var _binding: DialogQuestShareBinding? = null
     private val binding get() = _binding!!

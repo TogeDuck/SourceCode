@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
+import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.share.view.share_rv.IQuestShareDetail
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareDialog
@@ -50,7 +51,7 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
 //        showDialog(dummyData().get(position))
     }
 
-    fun showDialog(questShare: QuestShare) {
+    fun showDialog(questShare: Share) {
         val dialog = QuestShareDialog(questShare)
         val fragmentManager = childFragmentManager
         dialog.show(fragmentManager, "QuestShareDialog")
