@@ -21,8 +21,9 @@ public enum ErrorCode {
 	USERCHAT_NOT_FOUND(404, "USERCHAT-001", "참여기록을 찾을 수 없는 경우"),
 	PARTY_NOT_FOUND(404, "PARTY-001", "모집을 찾을 수 없는 경우"),
 	CHAT_NOT_FOUND(404, "CHAT-001", "퀘스트을 찾을 수 없는 경우"),
-	CHAT_FULL(400, "PARTY-001", "파티가 꽉 찬 경우");
-
+	CHAT_FULL(400, "PARTY-001", "파티가 꽉 찬 경우"),
+	STAR_NOT_FOUND(404, "STAR-001", "해당 즐겨찾기가 없습니다"),
+	CELEBRITY_NOT_FOUND(404, "CELEBRITY-001", "연예인을 찾을 수 없는 경우");
 	private final int status;
 	private final String code;
 	private final String message;

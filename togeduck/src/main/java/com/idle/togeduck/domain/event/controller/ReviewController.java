@@ -1,8 +1,10 @@
 package com.idle.togeduck.domain.event.controller;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewController {
 	private final ReviewService reviewService;
+
+	@GetMapping("/{eventId}")
+	public ResponseEntity<BaseResponse<?>> getReviewList(@PathVariable Long eventId, Long userId, Pageable pageable) {
+		return ResponseEntity.ok(
+			new BaseResponse<>(HttpStatus.OK.value(), "리뷰를 불러왔습니다",
+				reviewService.getReviewList(eventId, userId, pageable)));
+	}
 
 	@PostMapping("/{eventId}/reviews")
 	public ResponseEntity<BaseResponse<?>> saveReview(@PathVariable Long eventId, Long userId,

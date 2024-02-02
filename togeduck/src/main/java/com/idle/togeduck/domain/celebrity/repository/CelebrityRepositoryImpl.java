@@ -23,6 +23,19 @@ public class CelebrityRepositoryImpl implements CelebrityRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
+	public CelebrityResponseDto findCelebrity(Long id) {
+		Celebrity celeb = jpaQueryFactory
+			.selectFrom(celebrity)
+			.where(celebrity.id.eq(id))
+			.join(celebrity.team, team).fetchJoin()
+			.fetchOne();
+
+		return new CelebrityResponseDto(celeb.getId(), celeb.getName(), celeb.getNickname(),
+			celeb.getBirthday(),
+			celeb.getImage(), celeb.getTeam().getName(), celeb.getTeam().getColor());
+	}
+
+	@Override
 	public List<CelebrityResponseDto> findAllCelebrity(String name, String nickname, String teamName) {
 		List<Celebrity> celebrities = jpaQueryFactory
 			.selectFrom(celebrity)
