@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class PartyListResponse(
     val code: Int,
     val message: String,
-    val data: List<PartyData>
+    val data: List<PartyDataResponse>
 )

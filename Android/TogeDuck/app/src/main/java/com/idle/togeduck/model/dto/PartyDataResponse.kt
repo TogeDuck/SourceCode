@@ -3,7 +3,7 @@ package com.idle.togeduck.model.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PartyData(
+data class PartyDataResponse(
     val content: List<PartyResponse>,
     val pageable: PageableResponse,
     val size: Int,
