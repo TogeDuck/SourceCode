@@ -8,12 +8,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EventListViewModel @Inject constructor() : ViewModel() {
-    private val _eventList = MutableLiveData<MutableList<Event>>()
-    val eventList: LiveData<MutableList<Event>>
-        get() = _eventList
-
-    init {
-
-    }
-
+//    private val _eventList = MutableLiveData<MutableList<Event>>()
+//    val eventList: LiveData<MutableList<Event>>
+//        get() = _eventList
+//
+//    init {
+//
+//    }
 }
