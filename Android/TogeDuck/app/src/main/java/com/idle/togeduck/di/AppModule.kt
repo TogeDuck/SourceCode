@@ -3,12 +3,6 @@ package com.idle.togeduck.di
 import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.EventRepository
 import com.idle.togeduck.event.model.EventService
-import com.idle.togeduck.favorite.model.CelebrityRepository
-import com.idle.togeduck.favorite.model.CelebrityService
-import com.idle.togeduck.favorite.model.DefaultCelebrityRespotitory
-import com.idle.togeduck.favorite.model.DefaultFavoriteRespository
-import com.idle.togeduck.favorite.model.FavoriteRepository
-import com.idle.togeduck.favorite.model.FavoriteService
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
@@ -120,30 +114,6 @@ object AppModule {
     @Provides
     fun provideRecruitRepository(recruitService: RecruitService) : RecruitRepository {
         return DefaultRecruitRepository(recruitService)
-    }
-
-    @Singleton
-    @Provides
-    fun provideFavoriteService(retrofit: Retrofit) : FavoriteService {
-        return retrofit.create(FavoriteService::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun provideFavoriteRepository(favoriteService: FavoriteService) : FavoriteRepository {
-        return DefaultFavoriteRespository(favoriteService)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCelebrityService(retrofit: Retrofit) : CelebrityService {
-        return retrofit.create(CelebrityService::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCelebrityRepository(celebrityService: CelebrityService) : CelebrityRepository {
-        return DefaultCelebrityRespotitory(celebrityService)
     }
 }
 
