@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.idle.togeduck.databinding.ItemQuestTalkBinding
 import com.idle.togeduck.databinding.ItemQuestTalkMyBinding
+import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class QuestTalkAdapter (
     private val iQuestTalkDetail: IQuestTalkDetail,
     private val context: Context,
-) :ListAdapter<QuestTalk, RecyclerView.ViewHolder>(TogeDuckDiffUtil.questTalkDiffUtilCallback) {
+) :ListAdapter<Talk, RecyclerView.ViewHolder>(TogeDuckDiffUtil.talkDiffUtilCallback) {
     companion object {
         private const val VIEW_TYPE_NORMAL = 1
         private const val VIEW_TYPE_MY = 2
@@ -21,7 +22,7 @@ class QuestTalkAdapter (
     override fun getItemViewType(position: Int): Int {
         val questTalkItem = getItem(position)
         if (questTalkItem != null) {
-            if (questTalkItem.user == "익명의 오리너구리") {
+            if (questTalkItem.userId == 123) {
                 return VIEW_TYPE_MY
             } else {
                 return VIEW_TYPE_NORMAL

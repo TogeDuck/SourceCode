@@ -6,6 +6,7 @@ import com.idle.togeduck.my_record.model.HistoryData
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.recruit.model.Recruit
 import com.idle.togeduck.quest.share.model.Share
+import com.idle.togeduck.quest.talk.model.Talk
 import java.util.Objects
 
 object TogeDuckDiffUtil {
@@ -78,6 +79,16 @@ object TogeDuckDiffUtil {
         }
 
         override fun areContentsTheSame(oldItem: Share, newItem: Share): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val talkDiffUtilCallback = object: DiffUtil.ItemCallback<Talk>() {
+        override fun areItemsTheSame(oldItem: Talk, newItem: Talk): Boolean {
+            return oldItem.chatId == newItem.chatId
+        }
+
+        override fun areContentsTheSame(oldItem: Talk, newItem: Talk): Boolean {
             return oldItem == newItem
         }
     }

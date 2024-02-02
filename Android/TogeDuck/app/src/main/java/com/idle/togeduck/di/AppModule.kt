@@ -15,6 +15,10 @@ import com.idle.togeduck.quest.recruit.model.RecruitService
 import com.idle.togeduck.quest.share.model.DefaultShareRepository
 import com.idle.togeduck.quest.share.model.ShareRepository
 import com.idle.togeduck.quest.share.model.ShareService
+import com.idle.togeduck.quest.talk.model.DefaultTalkRepository
+import com.idle.togeduck.quest.talk.model.Talk
+import com.idle.togeduck.quest.talk.model.TalkRepository
+import com.idle.togeduck.quest.talk.model.TalkService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -129,6 +133,18 @@ object AppModule {
     @Provides
     fun provideHistoryRepository(historyService: HistoryService) : HistoryRepository {
         return DefaultHistoryRepository(historyService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTalkService(retrofit: Retrofit) : TalkService {
+        return retrofit.create(TalkService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTalkRepository(talkService: TalkService) : TalkRepository {
+        return DefaultTalkRepository(talkService)
     }
 }
 
