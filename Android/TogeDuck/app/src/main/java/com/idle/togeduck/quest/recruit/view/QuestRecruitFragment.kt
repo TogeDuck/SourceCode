@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestRecruitBinding
-import com.idle.togeduck.util.Theme
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.quest.recruit.view.recruit_rv.IQuestRecruit

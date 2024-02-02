@@ -1,4 +1,4 @@
-package com.idle.togeduck.util
+package com.idle.togeduck.common
 
 // 테마 설정값
 object Theme {

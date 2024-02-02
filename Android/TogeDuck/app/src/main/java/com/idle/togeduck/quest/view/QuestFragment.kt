@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestBinding
-import com.idle.togeduck.util.Theme
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.quest.view.quest_rv.QuestPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint

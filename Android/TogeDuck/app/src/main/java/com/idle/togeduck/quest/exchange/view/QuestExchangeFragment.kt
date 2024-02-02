@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
-import com.idle.togeduck.util.ScreenSize.widthDp
+import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.quest.exchange.view.exchange_rv.GirdLayoutItemDecoration
 import com.idle.togeduck.quest.exchange.view.exchange_rv.IQuestExchangeDetail
 import com.idle.togeduck.quest.exchange.view.exchange_rv.QuestExchangeAdapter

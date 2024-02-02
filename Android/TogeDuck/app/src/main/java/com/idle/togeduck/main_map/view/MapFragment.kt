@@ -32,8 +32,8 @@ import com.idle.togeduck.databinding.ComponentBottomSheetBinding
 import com.idle.togeduck.databinding.FragmentMapBinding
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
-import com.idle.togeduck.util.ScreenSize.heightPx
-import com.idle.togeduck.util.Theme
+import com.idle.togeduck.common.ScreenSize.heightPx
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate

@@ -15,7 +15,7 @@ import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
-import com.idle.togeduck.util.Theme
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint

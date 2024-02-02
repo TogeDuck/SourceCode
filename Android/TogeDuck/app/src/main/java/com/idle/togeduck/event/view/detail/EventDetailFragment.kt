@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentEventReviewInputBinding
 import com.idle.togeduck.databinding.FragmentEventDetailBinding
-import com.idle.togeduck.util.Theme
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.event.view.detail.detail_rv.EventReview
@@ -61,7 +61,7 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private fun setTheme(){
         binding.cafeNameDetail.setTextColor(getColor(requireContext(), Theme.theme.main500))
-        binding.reviewTitle.setTextColor(getColor(requireContext(),Theme.theme.main500))
+        binding.reviewTitle.setTextColor(getColor(requireContext(), Theme.theme.main500))
 
         val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
@@ -69,7 +69,7 @@ class EventDetailFragment : Fragment(), EventReview {
 
         val inputDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
         inputDrawable.setColor(getColor(requireContext(), R.color.white))
-        inputDrawable.setStroke(4, getColor(requireContext(),Theme.theme.sub500))
+        inputDrawable.setStroke(4, getColor(requireContext(), Theme.theme.sub500))
         eventReviewInputBinding.etReviewInput.background = inputDrawable
 
         val registDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable

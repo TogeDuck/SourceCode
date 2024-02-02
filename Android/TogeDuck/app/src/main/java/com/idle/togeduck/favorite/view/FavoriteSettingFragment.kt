@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentSearchBarBinding
 import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
-import com.idle.togeduck.util.Theme
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.favorite.view.favorite_rv.IIdolSearchResult
 import com.idle.togeduck.favorite.view.favorite_rv.IMyFavorite

@@ -1,4 +1,4 @@
-package com.idle.togeduck.util
+package com.idle.togeduck.common
 
 object ScreenSize {
     var heightDp = 0

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 
 import com.idle.togeduck.databinding.FragmentEventListBinding
-import com.idle.togeduck.util.Theme
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
@@ -87,8 +87,8 @@ class EventListFragment : Fragment(), EventInfo {
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
         binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
 
-        val todayColor = ContextCompat.getColor(requireContext(),Theme.theme.sub500)
-        val upComingColor = ContextCompat.getColor(requireContext(),Theme.theme.sub100)
+        val todayColor = ContextCompat.getColor(requireContext(), Theme.theme.sub500)
+        val upComingColor = ContextCompat.getColor(requireContext(), Theme.theme.sub100)
         val pastColor = ContextCompat.getColor(requireContext(), R.color.gray_bg)
 
         divideDataByPeriod()
