@@ -11,6 +11,7 @@ import com.idle.togeduck.databinding.ItemQuestExchangeBinding
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.quest.exchange.model.Exchange
 
 class QuestExchangeViewHolder(
     binding: ItemQuestExchangeBinding,
@@ -19,8 +20,6 @@ class QuestExchangeViewHolder(
 
     private val questExchangeLayout = binding.questExchangeItem
     private val image = binding.questExchangeImage
-    private val titleContainer = binding.questExchangeTitleContainer
-    private val title = binding.questExchangeTitle
     private val timerContainer = binding.questExchangeTimerContainer
     private val timerText = binding.questExchangeTimerText
 
@@ -28,7 +27,7 @@ class QuestExchangeViewHolder(
         questExchangeLayout.setOnClickListener(this)
     }
 
-    fun binding(questExchange: QuestExchange, context: Context, spanCount: Int) {
+    fun binding(questExchange: Exchange, context: Context, spanCount: Int) {
         setTheme(questExchange, context)
         setWidth(context, spanCount)
     }
@@ -49,26 +48,20 @@ class QuestExchangeViewHolder(
 //        }
     }
 
-    private fun setTheme(questExchange: QuestExchange, context: Context) {
+    private fun setTheme(questExchange: Exchange, context: Context) {
         val roundSmall =
             ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         val rectangleCircle =
             ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable
-        val upperRound =
-            ContextCompat.getDrawable(context, R.drawable.shape_upper_round_10) as GradientDrawable
         roundSmall.setStroke(0, 0)
         rectangleCircle.setStroke(0, 0)
         rectangleCircle.setColor(ContextCompat.getColor(context, Theme.theme.sub500))
-        upperRound.setStroke(0, 0)
-        upperRound.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
 
         questExchangeLayout.background = roundSmall
         image.background = roundSmall
         image.setBackgroundColor(ContextCompat.getColor(context, Theme.theme.sub200))
-        titleContainer.background = upperRound
         timerContainer.background = rectangleCircle
 
-        title.setText(questExchange.title)
-        timerText.setText(questExchange.time.toString())
+        timerText.setText(questExchange.duration.toString()) // 추후 수정
     }
 }

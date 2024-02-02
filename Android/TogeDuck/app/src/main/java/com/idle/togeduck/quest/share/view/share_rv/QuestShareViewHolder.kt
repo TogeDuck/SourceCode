@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestShareBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.quest.share.model.Share
 
 class QuestShareViewHolder (
     binding: ItemQuestShareBinding,
@@ -37,7 +38,7 @@ class QuestShareViewHolder (
     }
 
     // 데이터 객체를 매개변수로 받아서 해당 데이터로 뷰 컴포넌트 업데이트
-    fun binding(questShare: QuestShare, context: Context) {
+    fun binding(questShare: Share, context: Context) {
         setTheme(questShare, context)
     }
 
@@ -49,7 +50,7 @@ class QuestShareViewHolder (
         }
     }
 
-    private fun setTheme(questShare: QuestShare, context: Context) {
+    private fun setTheme(questShare: Share, context: Context) {
         val roundSmall = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         val roundLarge = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
@@ -63,6 +64,6 @@ class QuestShareViewHolder (
 
         title.setText(questShare.title)
         content.setText(questShare.content)
-        timeText.setText(questShare.time.toString())
+        timeText.setText(questShare.duration.toString())
     }
 }
