@@ -28,16 +28,11 @@ class EventListFragment : Fragment(), EventInfo {
     private var _binding: FragmentEventListBinding? = null
     private val binding get() = _binding!!
 
-    private val eventListViewModel: EventListViewModel by activityViewModels()
+//    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     private lateinit var todayEventInfoAdapter: EventInfoAdapter
     private lateinit var upcomingEventInfoAdapter: EventInfoAdapter
     private lateinit var pastEventInfoAdapter: EventInfoAdapter
-
-    private var todayEventsList: MutableList<Event?> = mutableListOf()
-    private var upcomingEventsList: MutableList<Event?> = mutableListOf()
-    private var pastEventsList: MutableList<Event?> = mutableListOf()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +49,6 @@ class EventListFragment : Fragment(), EventInfo {
 
         setTheme()
         setRecyclerview()
-
     }
 
     private fun setRecyclerview() {
@@ -86,54 +80,6 @@ class EventListFragment : Fragment(), EventInfo {
         binding.today.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
         binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
-
-        val todayColor = ContextCompat.getColor(requireContext(), Theme.theme.sub500)
-        val upComingColor = ContextCompat.getColor(requireContext(), Theme.theme.sub100)
-        val pastColor = ContextCompat.getColor(requireContext(), R.color.gray_bg)
-
-        divideDataByPeriod()
-
-        //더미데이터 넣기
-        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
-            todayEventInfoAdapter.submitList(todayEventsList)
-        }
-        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
-            upcomingEventInfoAdapter.submitList(upcomingEventsList)
-        }
-        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
-            pastEventInfoAdapter.submitList(pastEventsList)
-        }
-
-        //날짜 별 색상 지정..
-        val todayEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
-//        binding.rvEventToday.background = todayEventDrawable
-        todayEventDrawable.setColor(todayColor)
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun divideDataByPeriod() {
-        //전체 이벤트 데이터 가져오기
-        var tempDataList = eventListViewModel.eventList.value
-
-        //유저가 선택한 날짜
-        var dateStart = LocalDate.parse("2024-01-04")
-        var dateEnd = LocalDate.parse("2024-01-05")
-
-        //이벤트 기간에 따라 맞는 리스트에 추가
-        if (tempDataList != null) {
-            for(event in tempDataList){
-                val periodSplit = event.eventPeriod.split(" ~ ")
-                val start = LocalDate.parse(periodSplit[0], DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                val end = LocalDate.parse(periodSplit[1], DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-
-                val addToList = when {
-                    dateEnd.isBefore(start) -> upcomingEventsList.add(event)
-                    dateStart.isAfter(end) -> pastEventsList.add(event)
-                    else -> todayEventsList.add(event)
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
