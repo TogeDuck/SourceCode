@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemEventReviewBinding
+import com.idle.togeduck.event.model.EventReviewData
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class EventReviewAdapter(
     private var eventReview: EventReview,
     private val context: Context
-) : ListAdapter<Review, EventReviewViewHolder> (TogeDuckDiffUtil.reviewDiffUtilCallback){
+) : ListAdapter<EventReviewData, EventReviewViewHolder> (TogeDuckDiffUtil.reviewDiffUtilCallback){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventReviewViewHolder {
         val binding = ItemEventReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return EventReviewViewHolder(binding, eventReview)
@@ -19,5 +20,4 @@ class EventReviewAdapter(
     override fun onBindViewHolder(holder: EventReviewViewHolder, position: Int) {
         holder.bind(getItem(position), context)
     }
-
 }

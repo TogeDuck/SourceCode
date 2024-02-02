@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemEventReviewBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.event.model.EventReviewData
 
 class EventReviewViewHolder (
     binding: ItemEventReviewBinding,
@@ -23,7 +24,7 @@ class EventReviewViewHolder (
         eventReviewLayout.setOnClickListener(this)
     }
 
-    fun bind(review: Review, context: Context){
+    fun bind(review: EventReviewData, context: Context){
         val drawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         drawable.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
         drawable.setStroke(0, Theme.theme.sub200)
@@ -36,6 +37,7 @@ class EventReviewViewHolder (
 
         reviewText.text = review.content
         reviewText.setTextColor(ContextCompat.getColor(context, R.color.black))
+
 
         //todo.이미지 추가 (Glide) - reviewImg 처리
         //todo. 이미지 null이 아니면 visibility = visible null이면 반대

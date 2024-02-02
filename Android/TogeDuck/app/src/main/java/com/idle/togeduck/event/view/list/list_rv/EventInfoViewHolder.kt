@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemEventInfoBinding
+import com.idle.togeduck.event.model.Event
+import kotlinx.datetime.LocalDate
 
 class EventInfoViewHolder(
     binding: ItemEventInfoBinding,
@@ -32,14 +34,15 @@ class EventInfoViewHolder(
         val eventDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable
 
         EventLinearLayout.background = eventDrawable
-        cafeName.text = event.cafeName
-        eventName.text = event.eventName
-        eventPeriod.text = event.eventPeriod
-
-
+        cafeName.text = event.name
+        eventName.text = event.description
+        eventPeriod.text = makeDateToString(event.startDate, event.endDate)
         //Todo.이미지 추후 처리
     }
 
+    fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
+        return startDate.toString()+" ~ "+endDate.toString()
+    }
 
     override fun onClick(v: View?) {
     }

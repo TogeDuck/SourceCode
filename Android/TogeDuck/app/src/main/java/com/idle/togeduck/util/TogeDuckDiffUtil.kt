@@ -1,11 +1,14 @@
 package com.idle.togeduck.util
 
 import androidx.recyclerview.widget.DiffUtil
+import com.idle.togeduck.event.model.Event
+import com.idle.togeduck.event.model.EventReviewData
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.my_record.model.HistoryData
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.recruit.model.Recruit
 import com.idle.togeduck.quest.share.model.Share
+import com.idle.togeduck.quest.talk.model.Talk
 import java.util.Objects
 
 object TogeDuckDiffUtil {
@@ -78,6 +81,36 @@ object TogeDuckDiffUtil {
         }
 
         override fun areContentsTheSame(oldItem: Share, newItem: Share): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val talkDiffUtilCallback = object: DiffUtil.ItemCallback<Talk>() {
+        override fun areItemsTheSame(oldItem: Talk, newItem: Talk): Boolean {
+            return oldItem.chatId == newItem.chatId
+        }
+
+        override fun areContentsTheSame(oldItem: Talk, newItem: Talk): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val reviewDiffUtilCallback = object: DiffUtil.ItemCallback<EventReviewData>() {
+        override fun areItemsTheSame(oldItem: EventReviewData, newItem: EventReviewData): Boolean {
+            return oldItem.reviewId == newItem.reviewId
+        }
+
+        override fun areContentsTheSame(oldItem: EventReviewData, newItem: EventReviewData): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val eventDiffUtilCallback = object: DiffUtil.ItemCallback<Event>() {
+        override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
+            return oldItem.eventId == newItem.eventId
+        }
+
+        override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {
             return oldItem == newItem
         }
     }
