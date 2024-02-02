@@ -11,7 +11,7 @@ class QuestExchangeAdapter (
     private val iQuestExchangeDetail: IQuestExchangeDetail,
     private val context: Context,
     private val spanCount: Int
-) :ListAdapter<QuestExchange, QuestExchangeViewHolder>(TogeDuckDiffUtil.questExchangeDiffUtilCallback){
+) : ListAdapter<QuestExchange, QuestExchangeViewHolder>(TogeDuckDiffUtil.questExchangeDiffUtilCallback){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestExchangeViewHolder {
         val binding = ItemQuestExchangeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return QuestExchangeViewHolder(binding, iQuestExchangeDetail)

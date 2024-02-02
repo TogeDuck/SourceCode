@@ -13,5 +13,18 @@ data class ExchangeResponse(
     val duration: Int,
     @Serializable(with = LocalDateTimeIso8601Serializer::class)
     val createdAt: LocalDateTime,
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
+    val expiredAt: LocalDateTime,
     val isMine: Boolean
 )
+
+data class Exchange(
+    val id: Int,
+    val content: String,
+    val image: String,
+    val duration: Int,
+    val createdAt: LocalDateTime,
+    val isMine: Boolean
+)
+
+fun ExchangeResponse.toExchange() = Exchange(id, content, image, duration, createdAt, isMine)

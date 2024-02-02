@@ -7,3 +7,10 @@ import kotlinx.serialization.Serializable
 data class LikeEventRequest(
     @SerialName("event_id") val eventId: Int
 )
+
+
+data class LikeEvent(
+    val eventId: Int
+)
+
+fun LikeEvent.toLikeEventRequest() = LikeEventRequest(eventId)

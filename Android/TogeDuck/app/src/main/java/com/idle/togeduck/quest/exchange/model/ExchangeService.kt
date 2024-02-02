@@ -2,6 +2,7 @@ package com.idle.togeduck.quest.exchange.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
