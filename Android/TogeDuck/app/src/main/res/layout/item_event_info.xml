@@ -59,7 +59,7 @@
 
     <!-- 즐겨찾기 -->
     <ImageView
-        android:id="@+id/bookmark_btn"
+        android:id="@+id/isStar_btn"
         android:layout_width="70dp"
         android:layout_height="50dp"
         android:src="@drawable/common_cupcake8"

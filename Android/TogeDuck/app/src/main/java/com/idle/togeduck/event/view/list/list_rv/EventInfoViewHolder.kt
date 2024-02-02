@@ -23,6 +23,7 @@ class EventInfoViewHolder(
     private val cafeName = binding.cafeName
     private val eventName = binding.eventName
     private val eventPeriod = binding.eventPeriod
+    private var isStarImg = binding.isStarBtn
 
     init {
         EventLinearLayout.setOnClickListener(this)
@@ -37,7 +38,9 @@ class EventInfoViewHolder(
         cafeName.text = event.name
         eventName.text = event.description
         eventPeriod.text = makeDateToString(event.startDate, event.endDate)
+
         //Todo.이미지 추후 처리
+        //포스터, 즐겨찾기
     }
 
     fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{

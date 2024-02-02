@@ -3,6 +3,12 @@ package com.idle.togeduck.di
 import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.EventRepository
 import com.idle.togeduck.event.model.EventService
+import com.idle.togeduck.favorite.model.CelebrityRepository
+import com.idle.togeduck.favorite.model.CelebrityService
+import com.idle.togeduck.favorite.model.DefaultCelebrityRepository
+import com.idle.togeduck.favorite.model.DefaultFavoriteRepository
+import com.idle.togeduck.favorite.model.FavoriteRepository
+import com.idle.togeduck.favorite.model.FavoriteService
 import com.idle.togeduck.my_record.model.DefaultHistoryRepository
 import com.idle.togeduck.my_record.model.HistoryRepository
 import com.idle.togeduck.my_record.model.HistoryService
@@ -37,7 +43,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    private const val BASE_URL = ""
+    private const val BASE_URL = "https://780db32a-5548-4d0d-804a-c0f8a2799ab0.mock.pstmn.io"
 
     @Singleton
     @Provides
@@ -145,6 +151,30 @@ object AppModule {
     @Provides
     fun provideTalkRepository(talkService: TalkService) : TalkRepository {
         return DefaultTalkRepository(talkService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCelebrityService(retrofit: Retrofit) : CelebrityService {
+        return retrofit.create(CelebrityService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCelebrityRepository(celebrityService: CelebrityService) : CelebrityRepository {
+        return DefaultCelebrityRepository(celebrityService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFavoriteService(retrofit: Retrofit) : FavoriteService {
+        return retrofit.create(FavoriteService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFavoriteRepository(favoriteService: FavoriteService) : FavoriteRepository {
+        return DefaultFavoriteRepository(favoriteService)
     }
 }
 
