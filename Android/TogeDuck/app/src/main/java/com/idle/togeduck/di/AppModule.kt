@@ -3,6 +3,9 @@ package com.idle.togeduck.di
 import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.EventRepository
 import com.idle.togeduck.event.model.EventService
+import com.idle.togeduck.my_record.model.DefaultHistoryRepository
+import com.idle.togeduck.my_record.model.HistoryRepository
+import com.idle.togeduck.my_record.model.HistoryService
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
@@ -114,6 +117,18 @@ object AppModule {
     @Provides
     fun provideRecruitRepository(recruitService: RecruitService) : RecruitRepository {
         return DefaultRecruitRepository(recruitService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideHistoryService(retrofit: Retrofit) : HistoryService {
+        return retrofit.create(HistoryService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideHistoryRepository(historyService: HistoryService) : HistoryRepository {
+        return DefaultHistoryRepository(historyService)
     }
 }
 

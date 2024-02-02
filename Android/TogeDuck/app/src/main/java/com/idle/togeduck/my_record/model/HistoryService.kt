@@ -11,19 +11,19 @@ import retrofit2.http.Path
 interface HistoryService {
     @GET("users/history")
     suspend fun getHistoryList(
-        @Body celebrity_id: Int
+        @Body historyRequest: HistoryRequest
     ): Response<HistoryListResponse>
 
     @GET("users/history/{history_id}")
     suspend fun getHistory(
         @Path("history_id") historyId: Int,
-        @Body celebrity_id: Int
+        @Body historyRequest: HistoryRequest
     ): Response<HistoryTourListResponse>
 
     @PATCH("users/history/{history_id}")
     suspend fun updateHistory(
         @Path("history_id") historyId: Int,
-        @Body history_name: String
+        @Body historyNameRequest: HistoryNameRequest
     ): Response<DefaultResponse>
 
     @DELETE("users/history/{history_id}")
