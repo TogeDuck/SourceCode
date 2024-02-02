@@ -1,12 +1,15 @@
 package com.idle.togeduck.quest.exchange.model
 
 import com.idle.togeduck.common.model.DefaultResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -31,17 +34,23 @@ interface ExchangeService {
         @Query("size") size: Int
     ) : Response<ExchangeListResponse>
 
+    @Multipart
     @POST("events/{event_id}/trades")
     suspend fun postExchange(
         @Path("event_id") eventId: Int,
-        @Body postExchangeRequest: PostExchangeRequest
+        @Part image: MultipartBody.Part,
+        @Part content: String,
+        @Part duration: Int
     ) : Response<DefaultResponse>
 
+    @Multipart
     @PATCH("events/{event_id}/trades/{trade_id}")
     suspend fun updateExchange(
         @Path("event_id") eventId: Int,
         @Path("trade_id") tradeId: Int,
-        @Body updateExchangeRequest: UpdateExchangeRequest
+        @Part image: MultipartBody.Part,
+        @Part content: String,
+        @Part duration: Int
     ) : Response<DefaultResponse>
 
     @DELETE("events/{event_id}/trades/{trade_id}")

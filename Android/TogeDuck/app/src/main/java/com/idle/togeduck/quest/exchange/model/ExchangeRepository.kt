@@ -1,7 +1,13 @@
 package com.idle.togeduck.quest.exchange.model
 
 import com.idle.togeduck.common.model.DefaultResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
+import retrofit2.http.Multipart
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Path
 import javax.inject.Inject
 
 interface ExchangeRepository {
@@ -24,13 +30,17 @@ interface ExchangeRepository {
 
     suspend fun postExchange(
         eventId: Int,
-        postExchangeRequest: PostExchangeRequest
+        image: MultipartBody.Part,
+        content: String,
+        duration: Int
     ) : Response<DefaultResponse>
 
     suspend fun updateExchange(
         eventId: Int,
         tradeId: Int,
-        updateExchangeRequest: UpdateExchangeRequest
+        image: MultipartBody.Part,
+        content: String,
+        duration: Int
     ) : Response<DefaultResponse>
 
     suspend fun deleteExchange(
@@ -82,17 +92,21 @@ class DefaultExchangeRepository @Inject constructor(
 
     override suspend fun postExchange(
         eventId: Int,
-        postExchangeRequest: PostExchangeRequest,
+        image: MultipartBody.Part,
+        content: String,
+        duration: Int,
     ): Response<DefaultResponse> {
-        return exchangeService.postExchange(eventId, postExchangeRequest)
+        return exchangeService.postExchange(eventId, image, content, duration)
     }
 
     override suspend fun updateExchange(
         eventId: Int,
         tradeId: Int,
-        updateExchangeRequest: UpdateExchangeRequest,
+        image: MultipartBody.Part,
+        content: String,
+        duration: Int,
     ): Response<DefaultResponse> {
-        return exchangeService.updateExchange(eventId, tradeId, updateExchangeRequest)
+        return exchangeService.updateExchange(eventId, tradeId, image, content, duration)
     }
 
     override suspend fun deleteExchange(eventId: Int, tradeId: Int): Response<DefaultResponse> {

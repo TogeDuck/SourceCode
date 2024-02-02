@@ -3,9 +3,8 @@ package com.idle.togeduck.event.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EventListResponse(
+data class EventLikesListResponse(
     val code: Int,
     val message: String,
-    val today: List<EventResponse>,
-    val later: List<EventResponse>
+    val data: EventLikesDataResponse
 )
