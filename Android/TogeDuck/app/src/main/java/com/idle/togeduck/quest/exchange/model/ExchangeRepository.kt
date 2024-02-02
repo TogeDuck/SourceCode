@@ -12,31 +12,31 @@ import javax.inject.Inject
 
 interface ExchangeRepository {
     suspend fun getExchangeList(
-        eventId: Int,
+        eventId: Long,
         page: Int,
         size: Int,
     ): Response<ExchangeListResponse>
 
     suspend fun getExchangeDetail(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ) : Response<ExchangeDetailResponse>
 
     suspend fun getMyExchangeList(
-        eventId: Int,
+        eventId: Long,
         page: Int,
         size: Int
     ) : Response<ExchangeListResponse>
 
     suspend fun postExchange(
-        eventId: Int,
+        eventId: Long,
         image: MultipartBody.Part,
         content: String,
         duration: Int
     ) : Response<DefaultResponse>
 
     suspend fun updateExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
         image: MultipartBody.Part,
         content: String,
@@ -44,22 +44,22 @@ interface ExchangeRepository {
     ) : Response<DefaultResponse>
 
     suspend fun deleteExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ) : Response<DefaultResponse>
 
     suspend fun requestExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ) : Response<DefaultResponse>
 
     suspend fun requestAcceptExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ) : Response<DefaultResponse>
 
     suspend fun requestRejectExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ) : Response<DefaultResponse>
 }
@@ -68,7 +68,7 @@ class DefaultExchangeRepository @Inject constructor(
     private val exchangeService: ExchangeService
 ) : ExchangeRepository {
     override suspend fun getExchangeList(
-        eventId: Int,
+        eventId: Long,
         page: Int,
         size: Int,
     ): Response<ExchangeListResponse> {
@@ -76,14 +76,14 @@ class DefaultExchangeRepository @Inject constructor(
     }
 
     override suspend fun getExchangeDetail(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ): Response<ExchangeDetailResponse> {
         return exchangeService.getExchangeDetail(eventId, tradeId)
     }
 
     override suspend fun getMyExchangeList(
-        eventId: Int,
+        eventId: Long,
         page: Int,
         size: Int,
     ): Response<ExchangeListResponse> {
@@ -91,7 +91,7 @@ class DefaultExchangeRepository @Inject constructor(
     }
 
     override suspend fun postExchange(
-        eventId: Int,
+        eventId: Long,
         image: MultipartBody.Part,
         content: String,
         duration: Int,
@@ -100,7 +100,7 @@ class DefaultExchangeRepository @Inject constructor(
     }
 
     override suspend fun updateExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
         image: MultipartBody.Part,
         content: String,
@@ -109,23 +109,23 @@ class DefaultExchangeRepository @Inject constructor(
         return exchangeService.updateExchange(eventId, tradeId, image, content, duration)
     }
 
-    override suspend fun deleteExchange(eventId: Int, tradeId: Int): Response<DefaultResponse> {
+    override suspend fun deleteExchange(eventId: Long, tradeId: Int): Response<DefaultResponse> {
         return exchangeService.deleteExchange(eventId, tradeId)
     }
 
-    override suspend fun requestExchange(eventId: Int, tradeId: Int): Response<DefaultResponse> {
+    override suspend fun requestExchange(eventId: Long, tradeId: Int): Response<DefaultResponse> {
         return exchangeService.requestExchange(eventId, tradeId)
     }
 
     override suspend fun requestAcceptExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ): Response<DefaultResponse> {
         return exchangeService.requestAcceptExchange(eventId, tradeId)
     }
 
     override suspend fun requestRejectExchange(
-        eventId: Int,
+        eventId: Long,
         tradeId: Int,
     ): Response<DefaultResponse> {
         return exchangeService.requestRejectExchange(eventId, tradeId)

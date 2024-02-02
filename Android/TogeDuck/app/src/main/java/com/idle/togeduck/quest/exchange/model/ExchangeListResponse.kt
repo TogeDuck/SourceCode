@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class ExchangeListResponse(
     val code: Int,
     val message: String,
-    val data: List<ExchangeDataResponse>
+    val data: ExchangeDataResponse
 )

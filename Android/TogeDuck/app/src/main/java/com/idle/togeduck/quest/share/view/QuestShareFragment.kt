@@ -5,19 +5,27 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
+import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.share.view.share_rv.IQuestShareDetail
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareDialog
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class QuestShareFragment : Fragment(), IQuestShareDetail {
     private var _binding: FragmentQuestShareBinding? = null
     private val binding get() = _binding!!
+    val shareViewModel: ShareViewModel by activityViewModels()
+//    val eventViewModel: EventViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,8 +46,12 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         // 간격 설정
         recycleView.addItemDecoration(TogeDuckItemDecoration(15,0))
 
-        // Dummy Data
-//        questShareAdapter.submitList(dummyData())
+        shareViewModel.shareList.observe(viewLifecycleOwner) {list ->
+            questShareAdapter.submitList(list)
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            shareViewModel.getShareList(0,1,10000)
+        }
     }
 
     override fun onDestroyView() {
