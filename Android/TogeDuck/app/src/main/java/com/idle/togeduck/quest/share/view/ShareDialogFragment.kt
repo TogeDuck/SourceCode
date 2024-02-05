@@ -3,7 +3,6 @@ package com.idle.togeduck.quest.share.view
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,18 +14,17 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.circleCrop
 import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
-import com.idle.togeduck.databinding.DialogQuestShareTestBinding
+import com.idle.togeduck.databinding.DialogQuestShareBinding
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.util.DpPxUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ShareDialogFragment : DialogFragment() {
-    private var _binding: DialogQuestShareTestBinding? = null
+    private var _binding: DialogQuestShareBinding? = null
     private val binding get() = _binding!!
 
     val shareViewModel: ShareViewModel by activityViewModels()
@@ -50,7 +48,7 @@ class ShareDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DialogQuestShareTestBinding.inflate(inflater, container, false)
+        _binding = DialogQuestShareBinding.inflate(inflater, container, false)
         return binding.root
     }
 

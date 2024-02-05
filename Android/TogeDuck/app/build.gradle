@@ -103,6 +103,9 @@ dependencies {
 
     // ViewPager2
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // 캘린더뷰
+    implementation 'com.kizitonwose.calendar:view:2.4.1'
 }
 
 // Allow references to generated code

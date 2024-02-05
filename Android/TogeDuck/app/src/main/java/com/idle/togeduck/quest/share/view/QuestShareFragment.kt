@@ -21,7 +21,6 @@ import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.share.view.share_rv.IQuestShareDetail
-import com.idle.togeduck.quest.share.view.share_rv.QuestShareDialog
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareListAdapter
 import com.idle.togeduck.util.DpPxUtil
 import dagger.hilt.android.AndroidEntryPoint

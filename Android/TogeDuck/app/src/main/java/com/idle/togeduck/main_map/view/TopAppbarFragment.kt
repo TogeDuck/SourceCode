@@ -45,6 +45,16 @@ class TopAppbarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setPadding()
+        setTheme()
+
+        topAppbarBinding.ivCalendar.setOnClickListener {
+
+        }
+    }
+
+    private fun setPadding() {
         val statusDp = getStatusBarHeightToDp(requireContext())
 
         topAppbarBinding.llTopAppbar.setPadding(
@@ -53,8 +63,6 @@ class TopAppbarFragment : Fragment() {
             dpToPx(20, requireContext()),
             dpToPx(10, requireContext())
         )
-
-        setTheme()
     }
 
     private fun setTheme() {
