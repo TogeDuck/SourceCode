@@ -78,28 +78,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         _componentBottomSheetBinding = binding.bsFragment
         _componentBottomAppbarBinding = binding.appbar
 
-        // OnBackPressedCallback (익명 클래스) 객체 생성
-        backPressedCallback = object : OnBackPressedCallback(true) {
-            // 뒤로가기 했을 때 실행되는 기능
-            var backWait: Long = 0
-            override fun handleOnBackPressed() {
-                if (System.currentTimeMillis() - backWait >= 2000) {
-                    backWait = System.currentTimeMillis()
-                    Toast.makeText(
-                        context, "뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    findNavController().navigate(R.id.mainFragment)
-                }
-            }
-        }
-
-        // 액티비티의 BackPressedDispatcher에 여기서 만든 callback 객체를 등록
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            backPressedCallback
-        )
+        addBackPressedCallback()
 
         return binding.root
     }
@@ -116,6 +95,35 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpBackgroundButtonIcon()
         setUpBottomText()
         setUpFloatingButton()
+    }
+
+    private fun addBackPressedCallback() {
+        // OnBackPressedCallback (익명 클래스) 객체 생성
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            // 뒤로가기 했을 때 실행되는 기능
+            override fun handleOnBackPressed() {
+                if (componentBottomSheetBinding.viewPager.currentItem == 4) {
+                    changeViewPagerPage(3)
+                } else {
+                    var backWait: Long = 0
+                    if (System.currentTimeMillis() - backWait >= 2000) {
+                        backWait = System.currentTimeMillis()
+                        Toast.makeText(
+                            context, "뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        findNavController().navigate(R.id.mainFragment)
+                    }
+                }
+            }
+        }
+
+        // 액티비티의 BackPressedDispatcher에 여기서 만든 callback 객체를 등록
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     private fun setPermissionListener() {
@@ -142,6 +150,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         componentBottomSheetBinding.viewPager.isUserInputEnabled = false
 
         setHalfExpandedPadding()
+    }
+
+    fun changeViewPagerPage(pageIdx: Int) {
+        componentBottomSheetBinding.viewPager.setCurrentItem(pageIdx, true)
     }
 
     private fun initChildFragment() {

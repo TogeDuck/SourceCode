@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class TalkListResponse(
     val code: Int,
     val message: String,
-    val data: List<TalkDataResponse>
+    val data: TalkDataResponse
 )

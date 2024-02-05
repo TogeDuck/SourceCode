@@ -3,12 +3,13 @@ package com.idle.togeduck.main_map.view.map_rv
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.idle.togeduck.event.view.list.EventListFragment
-import com.idle.togeduck.my_record.view.MyRecordFragment
+import com.idle.togeduck.history.view.HistoryDetailFragment
+import com.idle.togeduck.history.view.HistoryFragment
 import com.idle.togeduck.quest.view.QuestFragment
 
 class MapPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int {
-        return 4
+        return 5
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -16,8 +17,8 @@ class MapPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
             0 -> QuestFragment()
             1 -> EventListFragment()
             2 -> EventListFragment()
-            else -> MyRecordFragment()
+            3 -> HistoryFragment()
+            else -> HistoryDetailFragment()
         }
     }
-
 }

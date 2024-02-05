@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.idle.togeduck.R
+import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.databinding.ComponentSearchBarBinding
 import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
 import com.idle.togeduck.common.Theme
@@ -129,11 +131,17 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     }
 
     private fun setRecyclerview() {
+        var spanCount = 1
+
+        while ((ScreenSize.widthDp - 100) / (spanCount + 1) >= 90) {
+            spanCount++
+        }
+
         myFavoriteAdapter = MyFavoriteAdapter(this, requireContext())
-        idolSearchResultAdapter = IdolSearchResultAdapter(this, requireContext())
+        idolSearchResultAdapter = IdolSearchResultAdapter(this, requireContext(), spanCount)
 
         binding.rvMyFavorite.apply {
-            addItemDecoration(TogeDuckItemDecoration(5, 15))
+            addItemDecoration(TogeDuckItemDecoration(5, 10))
             adapter = myFavoriteAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true)
@@ -144,7 +152,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
             addItemDecoration(TogeDuckItemDecoration(5, 5))
             adapter = idolSearchResultAdapter
             layoutManager =
-                GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
+                GridLayoutManager(requireContext(), spanCount, GridLayoutManager.VERTICAL, false)
         }
     }
 

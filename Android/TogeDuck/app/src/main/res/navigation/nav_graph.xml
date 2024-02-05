@@ -38,8 +38,8 @@
             android:id="@+id/action_mainFragment_to_questRecruitFragment"
             app:destination="@id/questRecruitFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_myRecordFragment"
-            app:destination="@id/myRecordFragment" />
+            android:id="@+id/action_mainFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
         <action
             android:id="@+id/action_mainFragment_to_questExchangeFragment"
             app:destination="@id/questExchangeFragment"/>
@@ -113,10 +113,10 @@
         android:label="quest_recruit_fragment"
         tools:layout="@layout/fragment_quest_recruit" />
     <fragment
-        android:id="@+id/myRecordFragment"
-        android:name="com.idle.togeduck.my_record.view.MyRecordFragment"
-        android:label="my_record_fragment"
-        tools:layout="@layout/fragment_my_record" />
+        android:id="@+id/historyFragment"
+        android:name="com.idle.togeduck.history.view.HistoryFragment"
+        android:label="history_fragment"
+        tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/eventDetailFragment"
         android:name="com.idle.togeduck.event.view.detail.EventDetailFragment"

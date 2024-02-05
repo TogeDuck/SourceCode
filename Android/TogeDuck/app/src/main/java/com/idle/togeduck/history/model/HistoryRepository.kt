@@ -1,4 +1,4 @@
-package com.idle.togeduck.my_record.model
+package com.idle.togeduck.history.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import retrofit2.Response
@@ -11,17 +11,17 @@ interface HistoryRepository {
     ): Response<HistoryListResponse>
 
     suspend fun getHistory(
-        historyId: Int,
+        historyId: Long,
         historyRequest: HistoryRequest
     ): Response<HistoryTourListResponse>
 
     suspend fun updateHistory(
-        historyId: Int,
+        historyId: Long,
         historyNameRequest: HistoryNameRequest
     ): Response<DefaultResponse>
 
     suspend fun deleteHistory(
-        historyId: Int,
+        historyId: Long,
     ): Response<DefaultResponse>
 }
 
@@ -36,21 +36,21 @@ class DefaultHistoryRepository @Inject constructor(
     }
 
     override suspend fun getHistory(
-        historyId: Int,
+        historyId: Long,
         historyRequest: HistoryRequest
     ): Response<HistoryTourListResponse> {
         return historyService.getHistory(historyId, historyRequest)
     }
 
     override suspend fun updateHistory(
-        historyId: Int,
+        historyId: Long,
         historyNameRequest: HistoryNameRequest
     ): Response<DefaultResponse> {
         return historyService.updateHistory(historyId, historyNameRequest)
     }
 
     override suspend fun deleteHistory(
-        historyId: Int
+        historyId: Long
     ): Response<DefaultResponse> {
         return historyService.deleteHistory(historyId)
     }
