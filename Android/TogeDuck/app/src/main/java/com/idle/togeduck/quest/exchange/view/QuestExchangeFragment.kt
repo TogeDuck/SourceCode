@@ -80,6 +80,6 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
 
     fun showQuestExchangeDetailDialog(questExchange: Exchange){
         exchangeViewModel.setSelectedExchange(questExchange)
-        findNavController().navigate(R.id.action_questExchangeFragment_to_exchangeDialogFragment)
+        findNavController().navigate(R.id.action_mapFragment_to_exchangeDialogFragment)
     }
 }

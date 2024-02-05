@@ -30,10 +30,8 @@ interface ExchangeService {
 
     @GET("events/{event_id}/my-trades")
     suspend fun getMyExchangeList(
-        @Path("event_id") eventId: Long,
-        @Query("page") page: Int,
-        @Query("size") size: Int
-    ) : Response<ExchangeListResponse>
+        @Path("event_id") eventId: Long
+    ) : Response<ExchangeMyListResponse>
 
     @Multipart
     @POST("events/{event_id}/trades")

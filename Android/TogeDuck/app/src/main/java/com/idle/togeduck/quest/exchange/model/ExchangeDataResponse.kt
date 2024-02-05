@@ -17,3 +17,8 @@ data class ExchangeDataResponse(
     val numberOfElements: Int,
     val empty: Boolean
 )
+
+@Serializable
+data class ExchangeDataMyResponse(
+    val contents: List<ExchangeMyResponse>
+)

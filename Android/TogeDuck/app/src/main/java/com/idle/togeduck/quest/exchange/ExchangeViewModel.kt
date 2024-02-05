@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
+import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.model.toExchange
 import com.idle.togeduck.quest.share.model.Share
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,11 @@ class ExchangeViewModel @Inject constructor(
     private val _exchangeList = MutableLiveData<List<Exchange>>()
     val exchangeList: LiveData<List<Exchange>>
         get() = _exchangeList
+
+    private val _myExchangeList = MutableLiveData<List<MyExchange>>()
+    val myExchangeList: LiveData<List<MyExchange>>
+        get() = _myExchangeList
+
 
     private val _selectedExchange = MutableLiveData<Exchange>()
     val selectedExchange: LiveData<Exchange>

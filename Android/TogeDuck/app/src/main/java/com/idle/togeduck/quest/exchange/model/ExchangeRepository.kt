@@ -24,9 +24,7 @@ interface ExchangeRepository {
 
     suspend fun getMyExchangeList(
         eventId: Long,
-        page: Int,
-        size: Int
-    ) : Response<ExchangeListResponse>
+    ) : Response<ExchangeMyListResponse>
 
     suspend fun postExchange(
         eventId: Long,
@@ -84,10 +82,8 @@ class DefaultExchangeRepository @Inject constructor(
 
     override suspend fun getMyExchangeList(
         eventId: Long,
-        page: Int,
-        size: Int,
-    ): Response<ExchangeListResponse> {
-        return exchangeService.getMyExchangeList(eventId, page, size)
+    ): Response<ExchangeMyListResponse> {
+        return exchangeService.getMyExchangeList(eventId)
     }
 
     override suspend fun postExchange(
