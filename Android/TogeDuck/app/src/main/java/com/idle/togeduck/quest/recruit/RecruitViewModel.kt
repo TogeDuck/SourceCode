@@ -28,7 +28,7 @@ class RecruitViewModel @Inject constructor(
 
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
-            _recruitList.value = body.data.content.map { it.recruitResponseToRecruit() }
+            _recruitList.postValue(body.data.content.map { it.recruitResponseToRecruit() })
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!

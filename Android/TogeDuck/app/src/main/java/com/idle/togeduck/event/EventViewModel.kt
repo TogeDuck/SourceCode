@@ -44,7 +44,7 @@ class EventViewModel @Inject constructor(
 
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
-            _reviewList.value  = body.data.content.map { it.toEventReviewContent() }
+            _reviewList.postValue(body.data.content.map { it.toEventReviewContent() })
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!

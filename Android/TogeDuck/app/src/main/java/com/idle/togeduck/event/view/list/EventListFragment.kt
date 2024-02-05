@@ -75,20 +75,20 @@ class EventListFragment : Fragment(), EventInfo {
         }
 
         //즐겨찾기 리스트
-        CoroutineScope(Dispatchers.IO).launch {
-            eventListViewModel.getLikesList()
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            eventListViewModel.getLikesList()
+//        }
 
         //즐겨찾기
-        CoroutineScope(Dispatchers.IO).launch {
-            val likeEventRequest = LikeEventRequest(1)
-            eventListViewModel.likeEvent(likeEventRequest)
-        }
-
-        //즐겨찾기 삭제
-        CoroutineScope(Dispatchers.IO).launch {
-            eventListViewModel.unlikeEvent(1)
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val likeEventRequest = LikeEventRequest(1)
+//            eventListViewModel.likeEvent(likeEventRequest)
+//        }
+//
+//        //즐겨찾기 삭제
+//        CoroutineScope(Dispatchers.IO).launch {
+//            eventListViewModel.unlikeEvent(1)
+//        }
 
     }
 

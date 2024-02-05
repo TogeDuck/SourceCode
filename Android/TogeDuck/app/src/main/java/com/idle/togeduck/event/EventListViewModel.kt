@@ -12,6 +12,7 @@ import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.model.toEvent
+import com.idle.togeduck.quest.recruit.model.recruitResponseToRecruit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -36,13 +37,14 @@ class EventListViewModel @Inject constructor(
     val listPast: LiveData<List<Event>>
         get() = _listPast
 
+
     suspend fun getEventList(celebrityId: Int, startDate: LocalDate, endDate: LocalDate){
         val responseResult = eventRepository.getEventList(celebrityId, startDate, endDate)
 
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
-            _listToday.value = body.today.map { it.toEvent() }
-            _listUpcoming.value = body.later.map { it.toEvent() }
+            _listToday.postValue(body.today.map { it.toEvent() })
+            _listUpcoming.postValue(body.later.map { it.toEvent() })
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
@@ -57,9 +59,9 @@ class EventListViewModel @Inject constructor(
 
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
-            _listPast.value = body.past.map { it.toEvent() }
-            _listToday.value = body.today.map { it.toEvent() }
-            _listUpcoming.value = body.later.map { it.toEvent() }
+            _listPast.postValue(body.past.map { it.toEvent() })
+            _listToday.postValue(body.today.map { it.toEvent() })
+            _listUpcoming.postValue(body.later.map { it.toEvent() })
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!

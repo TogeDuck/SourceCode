@@ -17,7 +17,7 @@ data class RecruitResponse(
     val createdAt: LocalDateTime,
     @Serializable(with = LocalDateTimeIso8601Serializer::class)
     val expiredAt: LocalDateTime,
-    var isMine: Boolean
+    var isMine: Boolean = false
 )
 
 data class Recruit(
@@ -29,6 +29,6 @@ data class Recruit(
     var current: Int,
     val createdAt: LocalDateTime,
     val expiredAt: LocalDateTime,
-    var isMine: Boolean
+    var isMine: Boolean = false
 )
 fun RecruitResponse.recruitResponseToRecruit() = Recruit(chatId, title, destination, maximum, duration, current, createdAt, expiredAt, isMine)
