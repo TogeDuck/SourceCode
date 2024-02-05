@@ -20,6 +20,7 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.LikeEventRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,8 +74,20 @@ class EventListFragment : Fragment(), EventInfo {
             eventListViewModel.getEventList(1, startDate, endDate)
         }
 
+        //즐겨찾기 리스트
         CoroutineScope(Dispatchers.IO).launch {
             eventListViewModel.getLikesList()
+        }
+
+        //즐겨찾기
+        CoroutineScope(Dispatchers.IO).launch {
+            val likeEventRequest = LikeEventRequest(1)
+            eventListViewModel.likeEvent(likeEventRequest)
+        }
+
+        //즐겨찾기 삭제
+        CoroutineScope(Dispatchers.IO).launch {
+            eventListViewModel.unlikeEvent(1)
         }
 
     }

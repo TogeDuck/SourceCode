@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class RecruitListResponse(
     val code: Int,
     val message: String,
-    val data: List<RecruitDataResponse>
+    val data: RecruitDataResponse
 )

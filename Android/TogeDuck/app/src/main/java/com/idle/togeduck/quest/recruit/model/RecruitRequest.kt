@@ -1,5 +1,7 @@
 package com.idle.togeduck.quest.recruit.model
 
+import com.idle.togeduck.event.model.LikeEvent
+import com.idle.togeduck.event.model.LikeEventRequest
 import kotlinx.serialization.Serializable
 
 @Serializable

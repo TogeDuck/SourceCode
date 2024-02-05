@@ -2,7 +2,7 @@ package com.idle.togeduck.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.idle.togeduck.event.model.Event
-import com.idle.togeduck.event.model.EventReviewData
+import com.idle.togeduck.event.model.EventReviewContent
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.my_record.model.HistoryData
 import com.idle.togeduck.quest.exchange.model.Exchange
@@ -95,12 +95,12 @@ object TogeDuckDiffUtil {
         }
     }
 
-    val reviewDiffUtilCallback = object: DiffUtil.ItemCallback<EventReviewData>() {
-        override fun areItemsTheSame(oldItem: EventReviewData, newItem: EventReviewData): Boolean {
+    val reviewDiffUtilCallback = object: DiffUtil.ItemCallback<EventReviewContent>() {
+        override fun areItemsTheSame(oldItem: EventReviewContent, newItem: EventReviewContent): Boolean {
             return oldItem.reviewId == newItem.reviewId
         }
 
-        override fun areContentsTheSame(oldItem: EventReviewData, newItem: EventReviewData): Boolean {
+        override fun areContentsTheSame(oldItem: EventReviewContent, newItem: EventReviewContent): Boolean {
             return oldItem == newItem
         }
     }

@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.event.model.EventRepository
-import com.idle.togeduck.event.model.EventReviewData
+import com.idle.togeduck.event.model.EventReviewContent
+import com.idle.togeduck.event.model.toEventReviewContent
+import com.idle.togeduck.quest.exchange.model.toExchange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,8 +24,8 @@ import javax.inject.Inject
 class EventViewModel @Inject constructor(
     private val eventRepository: EventRepository
 ) : ViewModel() {
-    private val _reviewList = MutableLiveData<List<EventReviewData>>()
-    val reviewList: LiveData<List<EventReviewData>>
+    private val _reviewList = MutableLiveData<List<EventReviewContent>>()
+    val reviewList: LiveData<List<EventReviewContent>>
         get() = _reviewList
 
     suspend fun postReview(eventId: Int, image: MultipartBody.Part, content: String) {
@@ -42,11 +44,7 @@ class EventViewModel @Inject constructor(
 
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
-//            _reviewList.value = body.
-
-
-
-
+            _reviewList.value  = body.data.content.map { it.toEventReviewContent() }
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!

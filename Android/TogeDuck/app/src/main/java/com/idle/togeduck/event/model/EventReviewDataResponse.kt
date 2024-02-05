@@ -2,15 +2,11 @@ package com.idle.togeduck.event.model
 
 import com.idle.togeduck.common.model.PageableResponse
 import com.idle.togeduck.common.model.SortResponse
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class EventReviewDataResponse(
-    @SerialName("review_id") val reviewId: Int,
-    val content: String,
-    val isMine: Boolean,
-    @SerialName("review_image_url") val reviewImageUrl: String,
+    val content: List<EventReviewContentResponse>,
     val pageable: PageableResponse,
     val size: Int,
     val number: Int,
@@ -22,10 +18,7 @@ data class EventReviewDataResponse(
 )
 
 data class EventReviewData(
-    val reviewId: Int,
-    val content: String,
-    val isMine: Boolean,
-    val reviewImageUrl: String,
+    val content: List<EventReviewContentResponse>,
     val pageable: PageableResponse,
     val size: Int,
     val number: Int,
@@ -37,16 +30,5 @@ data class EventReviewData(
 )
 
 fun EventReviewDataResponse.toEventReviewData() = EventReviewData(
-    reviewId,
-    content,
-    isMine,
-    reviewImageUrl,
-    pageable,
-    size,
-    number,
-    sort,
-    first,
-    last,
-    numberOfElements,
-    empty
+    content, pageable, size, number, sort, first, last, numberOfElements, empty
 )
