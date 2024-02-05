@@ -1,15 +1,18 @@
 package com.idle.togeduck.history.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.idle.togeduck.R
+import com.idle.togeduck.common.RandomCupcake
 import com.idle.togeduck.databinding.FragmentHistoryDetailBinding
 import com.idle.togeduck.databinding.ItemHistoryBinding
 import com.idle.togeduck.history.HistoryViewModel
@@ -40,8 +43,11 @@ class HistoryDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        historyDetailCardBinding.tvDate.text = historyViewModel.selectedHistory!!.date.toString()
-        historyDetailCardBinding.tvMyRecord.text = historyViewModel.selectedHistory!!.historyName
+        historyViewModel.selectedHistory.observe(viewLifecycleOwner) { historyData ->
+            historyDetailCardBinding.tvDate.text = historyData.date.toString()
+            historyDetailCardBinding.tvMyRecord.text = historyData.historyName
+            historyDetailCardBinding.ivMyRecordMainImg.setImageDrawable(ContextCompat.getDrawable(requireContext(), RandomCupcake.getImage()))
+        }
     }
 
     override fun onDestroyView() {
