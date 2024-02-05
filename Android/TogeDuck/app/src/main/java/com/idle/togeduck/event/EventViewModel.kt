@@ -28,6 +28,15 @@ class EventViewModel @Inject constructor(
     val reviewList: LiveData<List<EventReviewContent>>
         get() = _reviewList
 
+
+    init {
+        viewModelScope.launch {
+            getReviewList(1,1,100)
+        }
+    }
+
+
+
     suspend fun postReview(eventId: Long, image: MultipartBody.Part, content: String) {
         val responseResult = eventRepository.postReview(eventId, image, content)
 
@@ -40,17 +49,17 @@ class EventViewModel @Inject constructor(
     }
 
     suspend fun getReviewList(eventId: Long, page: Int, size: Int) {
-        val responseResult = eventRepository.getReviewList(eventId, page, size)
-
-        if (responseResult.isSuccessful) {
-            val body = responseResult.body()!!
-            _reviewList.postValue(body.data.content.map { it.toEventReviewContent() })
-        } else {
-            val errorBody = Json.decodeFromString<DefaultResponse>(
-                responseResult.errorBody()?.string()!!
-            )
-            Log.d("로그", "EventListViewModel - getReviewList() 응답 실패 - $errorBody")
-        }
+//        val responseResult = eventRepository.getReviewList(eventId, page, size)
+//
+//        if (responseResult.isSuccessful) {
+//            val body = responseResult.body()!!
+//            _reviewList.postValue(body.data.content.map { it.toEventReviewContent() })
+//        } else {
+//            val errorBody = Json.decodeFromString<DefaultResponse>(
+//                responseResult.errorBody()?.string()!!
+//            )
+//            Log.d("로그", "EventListViewModel - getReviewList() 응답 실패 - $errorBody")
+//        }
     }
 
     suspend fun deleteReview(eventId: Long, reviewId: Long) {

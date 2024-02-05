@@ -65,7 +65,7 @@ class EventInfoViewHolder(
     override fun onClick(v: View?) {
         when (v) {
             //이벤트 클릭 시 이벤트 상세 화면 보여주기
-            eventLinearLayout -> eventInfo.eventClicked(bindingAdapterPosition)
+            eventLinearLayout -> eventInfo.eventClicked(bindingAdapterPosition, type)
 
             //즐겨찾기 추가, 취소
             isStarImg -> {
@@ -78,7 +78,7 @@ class EventInfoViewHolder(
         }
     }
 
-    fun changeLikeImage() {
+    private fun changeLikeImage() {
         if(event.isStar){
             Glide
                 .with(isStarImg)
@@ -94,7 +94,7 @@ class EventInfoViewHolder(
         }
     }
 
-    fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
+    private fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
         return startDate.toString()+" ~ "+endDate.toString()
     }
 }
