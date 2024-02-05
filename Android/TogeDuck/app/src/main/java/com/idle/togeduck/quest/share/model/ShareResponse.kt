@@ -9,7 +9,6 @@ data class ShareResponse (
     val image: String,
     val title: String,
     val content: String,
-    val duration: Int,
     val isMine: Boolean = false
 )
 
@@ -18,9 +17,8 @@ data class Share (
     val image: String,
     val title: String,
     val content: String,
-    val duration: Int,
     val isMine: Boolean = false
 )
 
-fun ShareResponse.shareResponseToShare() = Share(id, image, title, content, duration, isMine)
+fun ShareResponse.shareResponseToShare() = Share(id, image, title, content, isMine)
 

@@ -64,6 +64,7 @@ class QuestShareViewHolder (
 
         title.setText(questShare.title)
         content.setText(questShare.content)
-        timeText.setText(questShare.duration.toString())
+        // TODO. createdAt으로 시간 추가 필요
+//        timeText.setText(questShare.duration.toString())
     }
 }
