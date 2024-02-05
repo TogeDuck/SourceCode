@@ -20,6 +20,7 @@ import kotlinx.datetime.LocalDate
 class EventInfoViewHolder(
     binding: ItemEventInfoBinding,
     private var eventInfo: EventInfo,
+    private val type: Int
 ) : RecyclerView.ViewHolder(binding.root),
     View.OnClickListener {
 
@@ -49,7 +50,6 @@ class EventInfoViewHolder(
         eventName.text = event.description
         eventPeriod.text = makeDateToString(event.startDate, event.endDate)
 
-        //Todo.이미지 가장자리 둥글게 처리 (지금 적용 안됌)
         //포스터
         Glide
             .with(posterImg)
@@ -59,6 +59,26 @@ class EventInfoViewHolder(
             .into(posterImg)
 
         //즐겨찾기
+        changeLikeImage()
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            //이벤트 클릭 시 이벤트 상세 화면 보여주기
+            eventLinearLayout -> eventInfo.eventClicked(bindingAdapterPosition)
+
+            //즐겨찾기 추가, 취소
+            isStarImg -> {
+                event.isStar = !event.isStar
+                //토글된 isStar 값을 바탕으로 이미지 재설정
+                changeLikeImage()
+
+                eventInfo.likeClick(bindingAdapterPosition, type)
+            }
+        }
+    }
+
+    fun changeLikeImage() {
         if(event.isStar){
             Glide
                 .with(isStarImg)
@@ -76,42 +96,5 @@ class EventInfoViewHolder(
 
     fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
         return startDate.toString()+" ~ "+endDate.toString()
-    }
-
-    override fun onClick(v: View?) {
-        when (v) {
-            eventLinearLayout -> eventInfo.eventClicked(bindingAdapterPosition)
-
-            //todo. 즐겨찾기 버튼 클릭 시 추가
-//            isStarImg ->
-        }
-
-
-//        when (v) {
-//            // 이벤트 정보 영역 클릭 시 이벤트 상세 화면으로 이동
-//            eventLinearLayout -> {
-//
-//            }
-//
-//            //즐겨찾기 / 취소
-//            isStarImg -> {
-//                event.isStar = !event.isStar
-//
-//                // 토글된 isStar 값을 바탕으로 이미지 재설정
-//                if (event.isStar) {
-//                    Glide
-//                        .with(isStarImg)
-//                        .load(R.drawable.common_cupcake8)
-//                        .override(70, 50)
-//                        .into(isStarImg)
-//                } else {
-//                    Glide
-//                        .with(isStarImg)
-//                        .load(R.drawable.common_cupcake8_empty)
-//                        .override(70, 50)
-//                        .into(isStarImg)
-//                }
-//            }
-//        }
     }
 }
