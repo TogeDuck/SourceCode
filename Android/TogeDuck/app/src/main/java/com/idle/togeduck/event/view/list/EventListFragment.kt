@@ -69,30 +69,16 @@ class EventListFragment : Fragment(), EventInfo {
             pastEventInfoAdapter.submitList(list)
         }
 
-
-
-        //즐겨찾기 리스트
+        //todo.즐겨찾기 리스트 호출은 main화면에서 하는 걸로 변경
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventListViewModel.getLikesList()
-//        }
-
-        //즐겨찾기
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val likeEventRequest = LikeEventRequest(1)
-//            eventListViewModel.likeEvent(likeEventRequest)
-//        }
 //
-//        //즐겨찾기 삭제
-//        CoroutineScope(Dispatchers.IO).launch {
-//            eventListViewModel.unlikeEvent(1)
-//        }
-
     }
 
     private fun setRecyclerview() {
-        todayEventInfoAdapter = EventInfoAdapter(this, requireContext())
-        upcomingEventInfoAdapter = EventInfoAdapter(this, requireContext())
-        pastEventInfoAdapter = EventInfoAdapter(this, requireContext())
+        todayEventInfoAdapter = EventInfoAdapter(this, requireContext(), 0)
+        upcomingEventInfoAdapter = EventInfoAdapter(this, requireContext(), 1)
+        pastEventInfoAdapter = EventInfoAdapter(this, requireContext(), 2)
 
         binding.rvEventToday.apply {
             adapter = todayEventInfoAdapter
@@ -126,17 +112,40 @@ class EventListFragment : Fragment(), EventInfo {
     }
 
     override fun eventClicked(position: Int) {
+        //상세화면으로 이동
         TODO("Not yet implemented")
 //        val clickedEvent = todayEventInfoAdapter.getItemId((position))
 //
 //        val intent = Intent(requireContext(), EventDetailFragment::class.java)
 //        intent.putExtra("event_id", clickedEvent.eventId)
 //        startActivity(intent)
-
-
     }
 
-    override fun likeClick(position: Int) {
-        TODO("Not yet implemented")
+    override fun likeClick(position: Int, type: Int) {
+        if (type == 0) {
+            likeEventPerAdapterType(todayEventInfoAdapter, position)
+        }else if (type == 1) {
+            likeEventPerAdapterType(upcomingEventInfoAdapter, position)
+        }else {
+            likeEventPerAdapterType(pastEventInfoAdapter, position)
+        }
     }
+
+    private fun likeEventPerAdapterType (adapter: EventInfoAdapter, position: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val event = adapter.currentList.get(position)
+
+            if(event != null){
+                if(event.isStar){
+                    val likeEventRequest = LikeEventRequest(1)
+                    eventListViewModel.likeEvent(likeEventRequest)
+                    Log.d("log", "eventlistfragment - 즐겨찾기 추가 ")
+                }else{
+                    eventListViewModel.unlikeEvent(1)
+                    Log.d("log", "eventlistfragment - 즐겨찾기 삭제")
+                }
+            }
+        }
+    }
+    
 }

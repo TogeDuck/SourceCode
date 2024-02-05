@@ -82,6 +82,7 @@ class EventListViewModel @Inject constructor(
 
     suspend fun likeEvent(likeEventRequest: LikeEventRequest){
         val responseResult = eventRepository.likeEvent(likeEventRequest)
+        Log.d("로그", "EventListViewModel - likeEvent() 응답 성공 - $responseResult")
 
         if(!responseResult.isSuccessful){
             val errorBody = Json.decodeFromString<DefaultResponse>(
@@ -93,6 +94,7 @@ class EventListViewModel @Inject constructor(
 
     suspend fun unlikeEvent(eventId: Long) {
         val responseResult = eventRepository.unlikeEvent(eventId)
+        Log.d("로그", "EventListViewModel - unlikeEvent() 응답 성공 - $responseResult")
 
         if (!responseResult.isSuccessful) {
             val errorBody = Json.decodeFromString<DefaultResponse>(
