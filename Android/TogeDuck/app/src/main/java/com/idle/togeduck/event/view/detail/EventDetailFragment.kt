@@ -91,6 +91,9 @@ class EventDetailFragment : Fragment(), EventReview {
 
         binding.bookmarkCheck.setOnClickListener { likeClick(event) }
         binding.visitCheck.setOnClickListener { visitClick(event) }
+        _eventReviewInputBinding?.cameraBtn?.setOnClickListener {
+            //todo.갤러리로 이동? (갤러리에서 사진 선택)
+        }
 
 
 
@@ -120,7 +123,7 @@ class EventDetailFragment : Fragment(), EventReview {
 
         val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
-        eventReviewInputBinding.plusEventReviewInput.background = circleDrawable
+        eventReviewInputBinding.cameraBtn.background = circleDrawable
 
         val inputDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
         inputDrawable.setColor(getColor(requireContext(), R.color.white))
@@ -131,8 +134,6 @@ class EventDetailFragment : Fragment(), EventReview {
         registDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
         eventReviewInputBinding.reviewReg.background = registDrawable
     }
-
-
 
     private fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
         return startDate.toString()+" ~ "+endDate.toString()

@@ -21,10 +21,6 @@ class EventReviewViewHolder (
     private val reviewText = binding.reviewText
     private val reviewImg = binding.reviewImg
 
-//    init {
-//        eventReviewLayout.setOnClickListener(this)
-//    }
-
     fun bind(review: EventReviewContent, context: Context){
         val drawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         drawable.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
