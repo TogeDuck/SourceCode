@@ -38,6 +38,14 @@ class EventListViewModel @Inject constructor(
         get() = _listPast
 
 
+    init {
+        viewModelScope.launch {
+            val startDate = LocalDate.parse("2024-01-01")
+            val endDate = LocalDate.parse("2025-01-05")
+            getEventList(1, startDate, endDate)
+        }
+    }
+
     suspend fun getEventList(celebrityId: Long, startDate: LocalDate, endDate: LocalDate){
         val responseResult = eventRepository.getEventList(celebrityId, startDate, endDate)
 
@@ -45,6 +53,7 @@ class EventListViewModel @Inject constructor(
             val body = responseResult.body()!!
             _listToday.postValue(body.today.map { it.toEvent() })
             _listUpcoming.postValue(body.later.map { it.toEvent() })
+            Log.d("로그", "EventListViewModel - getEventList() 응답 성공 $body" )
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
