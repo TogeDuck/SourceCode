@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.quest.share.model.ShareRepository
 import com.idle.togeduck.quest.share.model.shareResponseToShare
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class ShareViewModel @Inject constructor(
     private val shareRepository: ShareRepository
 ) : ViewModel(){

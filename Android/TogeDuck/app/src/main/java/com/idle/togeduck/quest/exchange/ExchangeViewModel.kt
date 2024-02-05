@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.model.toExchange
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class ExchangeViewModel @Inject constructor(
     private val exchangeRepository: DefaultExchangeRepository
 ) : ViewModel() {
