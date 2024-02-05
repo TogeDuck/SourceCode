@@ -83,7 +83,7 @@ class QuestShareViewHolder (
             .thumbnail(
                 Glide.with(image).load(questShare.image).override(200,200)
             )
-            .transform(CenterCrop(),RoundedCorners(DpPxUtil.dpToPx(10, context)))
+            .transform(CenterCrop(),RoundedCorners(DpPxUtil.dpToPx(15, context)))
             .override(500, 500)
             .into(image)
     }
@@ -100,17 +100,15 @@ class QuestShareViewHolder (
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun timerTask(questShare: Share, context: Context) {
-        val name = "MyTimer"
+        val name = "ShareTimer"
         val period = 1000L
 
         mTimer = timer(name = name, period = period){
             elapsedTimeInSeconds++
-            Log.d("타이머 진행",elapsedTimeInSeconds.toString())
-
-            if (elapsedTimeInSeconds < 30 * 60 ) {
+            if (elapsedTimeInSeconds <= 30 * 60 ) {
                 setThemeOnUiThread(questShare, context)
             } else {
-                mTimer.cancel() // 타이머 종료
+                mTimer.cancel()
             }
         }
     }
