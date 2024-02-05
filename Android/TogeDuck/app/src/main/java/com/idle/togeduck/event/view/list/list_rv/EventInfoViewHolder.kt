@@ -70,9 +70,9 @@ class EventInfoViewHolder(
             //즐겨찾기 추가, 취소
             isStarImg -> {
                 event.isStar = !event.isStar
+
                 //토글된 isStar 값을 바탕으로 이미지 재설정
                 changeLikeImage()
-
                 eventInfo.likeClick(bindingAdapterPosition, type)
             }
         }
