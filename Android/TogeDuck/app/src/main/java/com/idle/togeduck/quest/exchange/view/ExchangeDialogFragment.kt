@@ -13,15 +13,23 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogQuestExchangeBinding
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
+import com.idle.togeduck.quest.exchange.model.MyExchange
+import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
+import com.idle.togeduck.quest.exchange.view.my_exchange_rv.MyExchangeAdapter
 import com.idle.togeduck.util.DpPxUtil
+import com.idle.togeduck.util.TogeDuckItemDecoration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class ExchangeDialogFragment: DialogFragment() {
+class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
     private var _binding: DialogQuestExchangeBinding? = null
     private val binding get() = _binding!!
 
@@ -70,6 +78,24 @@ class ExchangeDialogFragment: DialogFragment() {
         binding.questExchangeDialog.setOnClickListener {
             findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
         }
+
+        // RV Setup
+        val recyclerView = binding.questExchangeDialogRv
+        val myExchangeAdapter = MyExchangeAdapter(this, requireContext(), exchangeViewModel.mySelectedExchange.value)
+        recyclerView.adapter = myExchangeAdapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true).apply { stackFromEnd = true }
+        recyclerView.addItemDecoration(TogeDuckItemDecoration(0,10))
+
+        exchangeViewModel.myExchangeList.observe(viewLifecycleOwner){
+            list -> myExchangeAdapter.submitList(list)
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            exchangeViewModel.getMyExchangeList(0)
+        }
+
+        exchangeViewModel.mySelectedExchange.observe(viewLifecycleOwner){
+            myExchangeAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun setImgSize() {
@@ -98,5 +124,9 @@ class ExchangeDialogFragment: DialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun myExchangeItemClicked(myExchange: MyExchange) {
+        exchangeViewModel.setMySelectedExchange(myExchange)
     }
 }

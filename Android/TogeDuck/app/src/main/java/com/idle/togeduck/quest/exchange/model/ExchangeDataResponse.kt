@@ -20,5 +20,5 @@ data class ExchangeDataResponse(
 
 @Serializable
 data class ExchangeDataMyResponse(
-    val contents: List<ExchangeMyResponse>
+    val content: List<ExchangeMyResponse>
 )

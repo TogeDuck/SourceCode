@@ -28,6 +28,10 @@ class ExchangeViewModel @Inject constructor(
     val selectedExchange: LiveData<Exchange>
         get() = _selectedExchange
 
+    private val _myselectedExchange = MutableLiveData<MyExchange>()
+    val mySelectedExchange: LiveData<MyExchange>
+        get() = _myselectedExchange
+
     suspend fun getExchangeList(eventId: Long, page: Int, size: Int){
         val response = exchangeRepository.getExchangeList(eventId, page, size)
         if (response.isSuccessful) {
@@ -35,6 +39,18 @@ class ExchangeViewModel @Inject constructor(
             val exchanges = exchangeListResponse?.data?.content ?: emptyList()
             _exchangeList.postValue(exchanges.map{it.toExchange()})
         } else {
+
+        }
+    }
+
+    suspend fun getMyExchangeList(eventId: Long){
+        val response = exchangeRepository.getMyExchangeList(eventId)
+        if(response.isSuccessful){
+            val exchangeMyListResponse = response.body()
+            val myExchanges = exchangeMyListResponse?.data?.content ?: emptyList()
+            _myExchangeList.postValue(myExchanges.map { it.toExchange() })
+        }
+        else{
 
         }
     }
@@ -47,5 +63,9 @@ class ExchangeViewModel @Inject constructor(
 
     fun setSelectedExchange(exchange: Exchange){
         _selectedExchange.value = exchange
+    }
+
+    fun setMySelectedExchange(myExchange: MyExchange){
+        _myselectedExchange.value = myExchange
     }
 }
