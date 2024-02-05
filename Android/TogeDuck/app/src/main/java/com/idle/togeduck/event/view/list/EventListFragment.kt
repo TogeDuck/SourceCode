@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.R
 
 import com.idle.togeduck.databinding.FragmentEventListBinding
@@ -19,16 +20,19 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.LikeEventRequest
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 
 @AndroidEntryPoint
 class EventListFragment : Fragment(), EventInfo {
     private var _binding: FragmentEventListBinding? = null
     private val binding get() = _binding!!
 
-//    private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     private lateinit var todayEventInfoAdapter: EventInfoAdapter
     private lateinit var upcomingEventInfoAdapter: EventInfoAdapter
@@ -49,6 +53,43 @@ class EventListFragment : Fragment(), EventInfo {
 
         setTheme()
         setRecyclerview()
+
+        eventListViewModel.listToday.observe(viewLifecycleOwner){list->
+            todayEventInfoAdapter.submitList(list)
+        }
+
+        eventListViewModel.listUpcoming.observe(viewLifecycleOwner){list ->
+            upcomingEventInfoAdapter.submitList(list)
+        }
+
+        eventListViewModel.listPast.observe(viewLifecycleOwner){list ->
+            pastEventInfoAdapter.submitList(list)
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            //임시 날짜
+            val startDate = LocalDate.parse("2023-01-01")
+            val endDate = LocalDate.parse("2023-01-05")
+
+            eventListViewModel.getEventList(1, startDate, endDate)
+        }
+
+        //즐겨찾기 리스트
+        CoroutineScope(Dispatchers.IO).launch {
+            eventListViewModel.getLikesList()
+        }
+
+        //즐겨찾기
+        CoroutineScope(Dispatchers.IO).launch {
+            val likeEventRequest = LikeEventRequest(1)
+            eventListViewModel.likeEvent(likeEventRequest)
+        }
+
+        //즐겨찾기 삭제
+        CoroutineScope(Dispatchers.IO).launch {
+            eventListViewModel.unlikeEvent(1)
+        }
+
     }
 
     private fun setRecyclerview() {

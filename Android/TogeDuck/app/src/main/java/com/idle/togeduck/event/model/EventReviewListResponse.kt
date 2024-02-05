@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class EventReviewListResponse(
     val code: Int,
     val message: String,
-    val data: List<EventReviewDataResponse>
+    val data: EventReviewDataResponse
 )
