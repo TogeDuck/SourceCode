@@ -16,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="현재 진행 중인 나눔"
-        android:layout_marginBottom="5dp"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -24,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constrainedHeight="true"
+        android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/tv_current_share"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
 import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.common.Theme
@@ -72,9 +74,12 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         showQuestExchangeDetailDialog(questExchange)
     }
 
+    override fun removeItemFromViewModel(questExchange: Exchange) {
+       exchangeViewModel.removeItemFromList(questExchange)
+    }
+
     fun showQuestExchangeDetailDialog(questExchange: Exchange){
-//        val dialog = QuestShareDialog(Share(1L,"","","", LocalDateTime(2024,11,1),false,))
-        val fragmentManager = childFragmentManager
-//        dialog.show(fragmentManager, "QuestShareDialog")
+        exchangeViewModel.setSelectedExchange(questExchange)
+        findNavController().navigate(R.id.action_questExchangeFragment_to_exchangeDialogFragment)
     }
 }

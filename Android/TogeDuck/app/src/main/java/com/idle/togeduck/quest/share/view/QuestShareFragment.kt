@@ -79,4 +79,5 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     private fun showDialog() {
         findNavController().navigate(R.id.action_mapFragment_to_shareDialogFragment)
     }
+
 }
