@@ -80,7 +80,6 @@ class ShareDialogFragment : DialogFragment() {
     private fun setImgSize() {
         val newSize = (DpPxUtil.dpToPx(ScreenSize.heightDp - 360, requireContext()) * 0.5).toInt()
         val layoutParams = binding.ivMainImg.layoutParams as LinearLayout.LayoutParams
-//        layoutParams.width = newSize
         layoutParams.height = newSize
         binding.ivMainImg.scaleType = ImageView.ScaleType.FIT_CENTER
         binding.ivMainImg.layoutParams = layoutParams
