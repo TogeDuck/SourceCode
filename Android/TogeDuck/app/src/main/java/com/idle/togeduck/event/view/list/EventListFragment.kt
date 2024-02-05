@@ -1,5 +1,6 @@
 package com.idle.togeduck.event.view.list
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,7 @@ import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.model.LikeEventRequest
+import com.idle.togeduck.event.view.detail.EventDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,6 +56,14 @@ class EventListFragment : Fragment(), EventInfo {
         setTheme()
         setRecyclerview()
 
+        CoroutineScope(Dispatchers.IO).launch {
+            //임시 날짜
+            val startDate = LocalDate.parse("2024-01-01")
+            val endDate = LocalDate.parse("2025-01-05")
+
+            eventListViewModel.getEventList(1, startDate, endDate)
+        }
+
         eventListViewModel.listToday.observe(viewLifecycleOwner){list->
             todayEventInfoAdapter.submitList(list)
         }
@@ -66,13 +76,7 @@ class EventListFragment : Fragment(), EventInfo {
             pastEventInfoAdapter.submitList(list)
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            //임시 날짜
-            val startDate = LocalDate.parse("2023-01-01")
-            val endDate = LocalDate.parse("2023-01-05")
 
-            eventListViewModel.getEventList(1, startDate, endDate)
-        }
 
         //즐겨찾기 리스트
 //        CoroutineScope(Dispatchers.IO).launch {
@@ -126,5 +130,20 @@ class EventListFragment : Fragment(), EventInfo {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun eventClicked(position: Int) {
+        TODO("Not yet implemented")
+//        val clickedEvent = todayEventInfoAdapter.getItemId((position))
+//
+//        val intent = Intent(requireContext(), EventDetailFragment::class.java)
+//        intent.putExtra("event_id", clickedEvent.eventId)
+//        startActivity(intent)
+
+
+    }
+
+    override fun likeClick(position: Int) {
+        TODO("Not yet implemented")
     }
 }

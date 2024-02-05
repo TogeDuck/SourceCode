@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 interface EventRepository {
     suspend fun getEventList(
-        celebrityId: Int,
+        celebrityId: Long,
         startDate: LocalDate,
         endDate: LocalDate,
     ): Response<EventListResponse>
@@ -17,23 +17,23 @@ interface EventRepository {
 
     suspend fun likeEvent(likeEventRequest: LikeEventRequest): Response<DefaultResponse>
 
-    suspend fun unlikeEvent(eventId: Int): Response<DefaultResponse>
+    suspend fun unlikeEvent(eventId: Long): Response<DefaultResponse>
 
     suspend fun postReview(
-        eventId: Int,
+        eventId: Long,
         image: MultipartBody.Part,
         content: String,
     ): Response<DefaultResponse>
 
     suspend fun getReviewList(
-        eventId: Int,
+        eventId: Long,
         page: Int,
         size: Int,
     ): Response<EventReviewListResponse>
 
     suspend fun deleteReview(
-        eventId: Int,
-        reviewId: Int,
+        eventId: Long,
+        reviewId: Long,
     ): Response<DefaultResponse>
 }
 
@@ -41,7 +41,7 @@ class DefaultEventRepository @Inject constructor(
     private val eventService: EventService,
 ) : EventRepository {
     override suspend fun getEventList(
-        celebrityId: Int,
+        celebrityId: Long,
         startDate: LocalDate,
         endDate: LocalDate,
     ): Response<EventListResponse> {
@@ -56,12 +56,12 @@ class DefaultEventRepository @Inject constructor(
         return eventService.likeEvent(likeEventRequest)
     }
 
-    override suspend fun unlikeEvent(eventId: Int): Response<DefaultResponse> {
+    override suspend fun unlikeEvent(eventId: Long): Response<DefaultResponse> {
         return eventService.unlikeEvent(eventId)
     }
 
     override suspend fun postReview(
-        eventId: Int,
+        eventId: Long,
         image: MultipartBody.Part,
         content: String,
     ): Response<DefaultResponse> {
@@ -69,14 +69,14 @@ class DefaultEventRepository @Inject constructor(
     }
 
     override suspend fun getReviewList(
-        eventId: Int,
+        eventId: Long,
         page: Int,
         size: Int,
     ): Response<EventReviewListResponse> {
         return eventService.getReviewList(eventId, page, size)
     }
 
-    override suspend fun deleteReview(eventId: Int, reviewId: Int): Response<DefaultResponse> {
+    override suspend fun deleteReview(eventId: Long, reviewId: Long): Response<DefaultResponse> {
         return eventService.deleteReview(eventId, reviewId)
     }
 }
