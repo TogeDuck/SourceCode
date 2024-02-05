@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class HistoryController {
-	
 	private final HistoryService historyService;
 
 	@GetMapping("/history")
