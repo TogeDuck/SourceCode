@@ -41,7 +41,7 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         val recycleView = binding.questShareRecycle
         val questShareAdapter = QuestShareListAdapter(this, requireContext())
         recycleView.adapter = questShareAdapter
-        recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
+        recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true).apply { stackFromEnd = true }
 
         // 간격 설정
         recycleView.addItemDecoration(TogeDuckItemDecoration(15,0))
@@ -59,8 +59,8 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         _binding = null
     }
 
-    override fun myQuestShareClicked(position: Int) {
-//        showDialog(dummyData().get(position))
+    override fun myQuestShareClicked(questShare: Share) {
+        showDialog(questShare)
     }
 
     fun showDialog(questShare: Share) {
