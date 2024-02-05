@@ -46,6 +46,7 @@ class QuestShareViewHolder (
     private val timeText = binding.timerText
 
     private var questShare: Share? = null
+    private var context: Context? = null
 
     private var mTimer = Timer()
     var elapsedTimeInSeconds = 0
@@ -90,6 +91,7 @@ class QuestShareViewHolder (
     @RequiresApi(Build.VERSION_CODES.O)
     private fun configurePassedTime(createdAt: LocalDateTime) {
         val currentTime = java.time.LocalDateTime.now()
+        Log.d("시간",currentTime.toString())
         val durationInMillis = currentTime.toInstant(ZoneOffset.UTC).toEpochMilli() - createdAt.toJavaLocalDateTime().toInstant(
             ZoneOffset.UTC).toEpochMilli()
         elapsedTimeInSeconds = (durationInMillis / 1000).toInt()
