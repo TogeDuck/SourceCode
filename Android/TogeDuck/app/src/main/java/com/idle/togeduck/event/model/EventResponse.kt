@@ -17,8 +17,8 @@ data class EventResponse(
     val endDate: LocalDate,
     val latitude: Double,
     val longitude: Double,
-    var isStar: Boolean = false,
-    var isVisited: Boolean = false
+    var isStar: Boolean,
+    var isVisited: Boolean
 )
 
 data class Event(
@@ -30,8 +30,8 @@ data class Event(
     val endDate: LocalDate,
     val latitude: Double,
     val longitude: Double,
-    var isStar: Boolean = false,
-    var isVisited: Boolean = false
+    var isStar: Boolean,
+    var isVisited: Boolean
 )
 
 fun EventResponse.toEvent(): Event = Event(

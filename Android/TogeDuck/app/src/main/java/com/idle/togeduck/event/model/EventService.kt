@@ -16,7 +16,7 @@ import retrofit2.http.Query
 interface EventService {
     @GET("events")
     suspend fun getEventList(
-        @Query("celebrity-id") celebrityId: Int,
+        @Query("celebrity-id") celebrityId: Long,
         @Query("start-date") startDate: LocalDate,
         @Query("end-date") endDate: LocalDate,
     ): Response<EventListResponse>
@@ -35,27 +35,27 @@ interface EventService {
 
     @DELETE("events/likes/{event_id}")
     suspend fun unlikeEvent(
-        @Path("event_id") eventId: Int,
+        @Path("event_id") eventId: Long,
     ): Response<DefaultResponse>
 
     @Multipart
     @POST("events/{event_id}/reviews")
     suspend fun postReview(
-        @Path("event_id") eventId: Int,
+        @Path("event_id") eventId: Long,
         @Part image: MultipartBody.Part,
         @Part content: String,
     ): Response<DefaultResponse>
 
     @GET("events/{event_id}")
     suspend fun getReviewList(
-        @Path("event_id") eventId: Int,
+        @Path("event_id") eventId: Long,
         @Query("page") page: Int,
         @Query("size") size: Int,
     ): Response<EventReviewListResponse>
 
     @DELETE("events/{event_id}/reviews/{review_id}")
     suspend fun deleteReview(
-        @Path("event_id") eventId: Int,
-        @Path("review_id") reviewId: Int,
+        @Path("event_id") eventId: Long,
+        @Path("review_id") reviewId: Long,
     ): Response<DefaultResponse>
 }

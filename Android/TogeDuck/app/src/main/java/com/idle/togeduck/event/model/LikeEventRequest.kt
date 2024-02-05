@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LikeEventRequest(
-    @SerialName("event_id") val eventId: Int
+    @SerialName("event_id") val eventId: Long
 )
 
 
 data class LikeEvent(
-    val eventId: Int
+    val eventId: Long
 )
 
 fun LikeEvent.toLikeEventRequest() = LikeEventRequest(eventId)
