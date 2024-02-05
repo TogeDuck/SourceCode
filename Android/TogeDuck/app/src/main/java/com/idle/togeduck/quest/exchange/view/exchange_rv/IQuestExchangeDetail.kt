@@ -4,4 +4,5 @@ import com.idle.togeduck.quest.exchange.model.Exchange
 
 interface IQuestExchangeDetail {
     fun myQuestExchangeClicked(questExchange: Exchange)
+    fun removeItemFromViewModel(questExchange: Exchange)
 }

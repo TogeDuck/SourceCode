@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
 import com.idle.togeduck.common.ScreenSize.widthDp
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.view.exchange_rv.GirdLayoutItemDecoration
@@ -50,6 +54,7 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         questExchangeRecycleView.layoutManager = GridLayoutManager(requireContext(), spanCount, LinearLayoutManager.VERTICAL, false)
         // 간격 설정
         questExchangeRecycleView.addItemDecoration(GirdLayoutItemDecoration(20))
+        binding.tvCurrentExchange.setTextColor(ContextCompat.getColor(requireContext(),Theme.theme.main500))
 
         exchangeViewModel.exchangeList.observe(viewLifecycleOwner) {list ->
             questExchangeAdapter.submitList(list)
@@ -69,9 +74,12 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         showQuestExchangeDetailDialog(questExchange)
     }
 
+    override fun removeItemFromViewModel(questExchange: Exchange) {
+       exchangeViewModel.removeItemFromList(questExchange)
+    }
+
     fun showQuestExchangeDetailDialog(questExchange: Exchange){
-//        val dialog = QuestShareDialog(Share(1L,"","","", LocalDateTime(2024,11,1),false,))
-        val fragmentManager = childFragmentManager
-//        dialog.show(fragmentManager, "QuestShareDialog")
+        exchangeViewModel.setSelectedExchange(questExchange)
+        findNavController().navigate(R.id.action_questExchangeFragment_to_exchangeDialogFragment)
     }
 }

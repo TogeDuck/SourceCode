@@ -11,11 +11,13 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.quest.share.model.Share
@@ -51,7 +53,7 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         val questShareAdapter = QuestShareListAdapter(this, requireContext())
         recycleView.adapter = questShareAdapter
         recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true).apply { stackFromEnd = true }
-
+        binding.tvCurrentShare.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         // 간격 설정
         recycleView.addItemDecoration(TogeDuckItemDecoration(15,0))
 
@@ -76,4 +78,5 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     private fun showDialog() {
         findNavController().navigate(R.id.action_mapFragment_to_shareDialogFragment)
     }
+
 }

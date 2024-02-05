@@ -97,7 +97,7 @@ class QuestExchangeViewHolder(
 
         mTimer = timer(name = name, period = period){
             elapsedTimeInSeconds--
-            if (elapsedTimeInSeconds > 0) {
+            if (elapsedTimeInSeconds >= 0) {
                 setThemeOnUiThread(questExchange, context)
             } else {
                 mTimer.cancel()
@@ -114,7 +114,7 @@ class QuestExchangeViewHolder(
 
     private fun setTheme(questExchange: Exchange, context: Context) {
         if(elapsedTimeInSeconds <= 0){
-            questExchangeLayout.visibility = View.GONE
+            questExchangeDetail.removeItemFromViewModel(questExchange)
         }
 
         val roundSmall =
