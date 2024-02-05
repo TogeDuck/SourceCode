@@ -7,6 +7,6 @@ import retrofit2.http.Path
 interface TalkService {
     @GET("events/{event_id}/talk")
     suspend fun getTalkList(
-        @Path("event_id") eventId: Int
+        @Path("event_id") eventId: Long
     ): Response<TalkListResponse>
 }

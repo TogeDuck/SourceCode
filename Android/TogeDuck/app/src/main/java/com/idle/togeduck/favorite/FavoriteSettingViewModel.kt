@@ -60,7 +60,6 @@ class FavoriteSettingViewModel @Inject constructor(
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
 
-//            _searchIdolList.value = body.data.map { it.celebrityResponseToCelebrity() }
             _searchIdolList.postValue(body.data.map { it.celebrityResponseToCelebrity() })
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(

@@ -17,18 +17,18 @@ interface HistoryService {
 
     @GET("users/history/{history_id}")
     suspend fun getHistory(
-        @Path("history_id") historyId: Int,
+        @Path("history_id") historyId: Long,
         @Body historyRequest: HistoryRequest
     ): Response<HistoryTourListResponse>
 
     @PATCH("users/history/{history_id}")
     suspend fun updateHistory(
-        @Path("history_id") historyId: Int,
+        @Path("history_id") historyId: Long,
         @Body historyNameRequest: HistoryNameRequest
     ): Response<DefaultResponse>
 
     @DELETE("users/history/{history_id}")
     suspend fun deleteHistory(
-        @Path("history_id") historyId: Int,
+        @Path("history_id") historyId: Long,
     ): Response<DefaultResponse>
 }

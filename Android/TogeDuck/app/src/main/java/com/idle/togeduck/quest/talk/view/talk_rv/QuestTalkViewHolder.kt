@@ -24,7 +24,10 @@ class QuestTalkViewHolder (
     }
 
     fun binding(talk: Talk, context: Context) {
-        setTheme(talk, context)
+        setTheme(context)
+
+        questTalkUser.text = talk.userId.toString()
+        questTalkContent.text = talk.content
     }
 
     override fun onClick(v: View?) {
@@ -35,7 +38,7 @@ class QuestTalkViewHolder (
         }
     }
 
-    private fun setTheme(talk: Talk, context: Context) {
+    private fun setTheme(context: Context) {
         val roundSquare = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable
         val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         roundSquare.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
@@ -43,8 +46,6 @@ class QuestTalkViewHolder (
         circle.setColor(ContextCompat.getColor(context, Theme.theme.sub500))
         circle.setStroke(0,0)
         questTalkIconContainer.background = circle
-        questTalkUser.setText(talk.userId)
         questTalkContent.background = roundSquare
-        questTalkContent.text = talk.content
     }
 }

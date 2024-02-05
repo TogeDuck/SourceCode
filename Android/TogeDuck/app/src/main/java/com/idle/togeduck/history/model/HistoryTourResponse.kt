@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HistoryTourResponse(
-    @SerialName("event_id") val eventId: Int,
+    @SerialName("event_id") val eventId: Long,
     @SerialName("event_name") val eventName: String,
     val name: String,
     val latitude: String,
@@ -13,7 +13,7 @@ data class HistoryTourResponse(
 )
 
 data class HistoryTour(
-    val eventId: Int,
+    val eventId: Long,
     val eventName: String,
     val name: String,
     val latitude: String,

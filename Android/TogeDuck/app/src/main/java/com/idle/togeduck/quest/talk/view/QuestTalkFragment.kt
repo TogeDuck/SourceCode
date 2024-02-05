@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentQuestTalkBinding
+import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.talk.view.talk_rv.IQuestTalkDetail
 import com.idle.togeduck.quest.talk.view.talk_rv.QuestTalkAdapter
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,31 +21,47 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
     private var _binding: FragmentQuestTalkBinding? = null
     private val binding get() = _binding!!
 
+    private val talkViewModel: TalkViewModel by activityViewModels()
+    private lateinit var questShareAdapter: QuestTalkAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentQuestTalkBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpQuestTalkRV()
+        setTheme()
+
+        talkViewModel.talkList.observe(viewLifecycleOwner) { talkList ->
+            questShareAdapter.submitList(talkList)
+        }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
     override fun myQuestItemClicked(position: Int) {
         TODO("Not yet implemented")
     }
-    fun setUpQuestTalkRV(){
+
+    private fun setTheme() {
+        binding.questTalkMainTitle.setTextColor(getColor(requireContext(), Theme.theme.main500))
+    }
+
+    private fun setUpQuestTalkRV() {
         val recycleView = binding.questTalkRecycle
-        val questShareAdapter = QuestTalkAdapter(this, requireContext())
+        questShareAdapter = QuestTalkAdapter(this, requireContext())
         recycleView.adapter = questShareAdapter
-        recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
-        recycleView.addItemDecoration(TogeDuckItemDecoration(15,0))
-//        questShareAdapter.submitList(questTalkDummyData())
+        recycleView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        recycleView.addItemDecoration(TogeDuckItemDecoration(15, 0))
     }
 }

@@ -39,7 +39,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
     
-    suspend fun getHistoryList(celebrityId: Int) {
+    suspend fun getHistoryList(celebrityId: Long) {
         val responseResult = historyRepository.getHistoryList(HistoryRequest(celebrityId))
 
         if (responseResult.isSuccessful) {
@@ -55,7 +55,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun getHistory(historyId: Int, celebrityId: Int) {
+    suspend fun getHistory(historyId: Long, celebrityId: Long) {
         val responseResult = historyRepository.getHistory(historyId, (HistoryRequest(celebrityId)))
 
         if (responseResult.isSuccessful) {
@@ -71,7 +71,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun updateHistory(historyId: Int, historyName: String) {
+    suspend fun updateHistory(historyId: Long, historyName: String) {
         val responseResult = historyRepository.updateHistory(historyId, HistoryNameRequest(historyName))
 
         if (responseResult.isSuccessful) {
@@ -87,7 +87,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun deleteHistory(historyId: Int) {
+    suspend fun deleteHistory(historyId: Long) {
         val responseResult = historyRepository.deleteHistory(historyId)
 
         if (responseResult.isSuccessful) {
