@@ -54,8 +54,8 @@ class EventInfoViewHolder(
         Glide
             .with(posterImg)
             .load(event.imgUrl)
-            .transform(CenterCrop(), RoundedCorners(DpPxUtil.dpToPx(10, context)))
-            .override(1000,1000)
+            .override(500,500)
+            .transform(CenterCrop(), RoundedCorners(DpPxUtil.dpToPx(20, context)))
             .into(posterImg)
 
         //즐겨찾기

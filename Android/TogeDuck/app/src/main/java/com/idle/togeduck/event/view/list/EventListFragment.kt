@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,19 +57,11 @@ class EventListFragment : Fragment(), EventInfo {
         setTheme()
         setRecyclerview()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            //임시 날짜
-            val startDate = LocalDate.parse("2024-01-01")
-            val endDate = LocalDate.parse("2025-01-05")
-
-            eventListViewModel.getEventList(1, startDate, endDate)
+        eventListViewModel.listToday.observe(viewLifecycleOwner){ list ->
+             todayEventInfoAdapter.submitList(list)
         }
 
-        eventListViewModel.listToday.observe(viewLifecycleOwner){list->
-            todayEventInfoAdapter.submitList(list)
-        }
-
-        eventListViewModel.listUpcoming.observe(viewLifecycleOwner){list ->
+        eventListViewModel.listUpcoming.observe(viewLifecycleOwner){ list ->
             upcomingEventInfoAdapter.submitList(list)
         }
 
