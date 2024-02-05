@@ -16,6 +16,7 @@ import com.idle.togeduck.databinding.FragmentHistoryBinding
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.view.history_rv.HistoryAdapter
 import com.idle.togeduck.history.view.history_rv.IHistory
+import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +30,7 @@ class HistoryFragment : Fragment(), IHistory {
 
     private val historyViewModel: HistoryViewModel by activityViewModels()
 
+    private lateinit var v: View
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,6 +82,8 @@ class HistoryFragment : Fragment(), IHistory {
 
     override fun recordClicked(position: Int) {
         Log.d("로그", "MyRecordFragment - recordClicked() 호출됨 $position")
+        historyViewModel.setSelectedHistory(historyViewModel.historyList.value!![position])
+        (parentFragment as MapFragment).changeViewPagerPage(4)
     }
 
     override fun onDestroyView() {

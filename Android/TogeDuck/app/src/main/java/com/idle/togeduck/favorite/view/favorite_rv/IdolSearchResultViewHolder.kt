@@ -51,7 +51,7 @@ class IdolSearchResultViewHolder(
     }
 
     private fun setWidth(context: Context, spanCount: Int) {
-        val newSize = DpPxUtil.dpToPx(ScreenSize.widthDp - 100 - (spanCount - 1) * 10, context) / spanCount
+        val newSize = DpPxUtil.dpToPx(ScreenSize.widthDp - 100 - (spanCount - 1) * 20, context) / spanCount
         val layoutParams = imgImageView.layoutParams as LinearLayout.LayoutParams
         layoutParams.width = newSize
         layoutParams.height = newSize

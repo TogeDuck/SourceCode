@@ -26,6 +26,9 @@ class HistoryViewModel @Inject constructor(
     val historyList: LiveData<List<HistoryData>>
         get() = _historyList
 
+    private val _selectedHistory = MutableLiveData<HistoryData>()
+    val selectedHistory: LiveData<HistoryData> get() = _selectedHistory
+
     private val _route = MutableLiveData<String>()
     val route: LiveData<String> get() = _route
 
@@ -101,5 +104,9 @@ class HistoryViewModel @Inject constructor(
 
             Log.d("로그", "HistoryViewModel - deleteHistory() 응답 실패 - $errorBody")
         }
+    }
+
+    fun setSelectedHistory(historyData: HistoryData) {
+        _selectedHistory.value = historyData
     }
 }
