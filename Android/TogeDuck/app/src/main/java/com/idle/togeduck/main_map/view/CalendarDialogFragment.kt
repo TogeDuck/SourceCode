@@ -39,7 +39,10 @@ class CalendarDialogFragment : DialogFragment() {
             }
 
             override fun bind(container: DayViewContainer, data: CalendarDay) {
+                container.day = data
                 container.textView.text = data.date.dayOfMonth.toString()
+
+
             }
         }
 
