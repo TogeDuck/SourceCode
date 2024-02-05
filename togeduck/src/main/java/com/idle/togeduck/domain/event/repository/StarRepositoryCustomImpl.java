@@ -25,7 +25,7 @@ public class StarRepositoryCustomImpl implements StarRepositoryCustom {
 	public List<EventResponseDto> findEventListByUserId(Long userId) {
 
 		return jpaQueryFactory
-			.select(Projections.constructor(EventResponseDto.class, event.id, event.image, event.name, event.content,
+			.select(Projections.constructor(EventResponseDto.class, event.id, event.image1, event.cafe.name,
 				event.startDate, event.endDate, event.cafe.latitude, event.cafe.longitude))
 			.from(event)
 			.leftJoin(event.cafe, cafe)

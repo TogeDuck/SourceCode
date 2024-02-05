@@ -39,9 +39,9 @@ public class StarController {
 			.body(new BaseResponse<>(201, "즐겨찾기 등록 완료", null));
 	}
 
-	@DeleteMapping("/likes/{likeId}")
-	public ResponseEntity<BaseResponse<?>> deleteStar(@PathVariable Long likeId, Long userId) {
-		starService.deleteStar(likeId, userId);
+	@DeleteMapping("/likes/{eventId}")
+	public ResponseEntity<BaseResponse<?>> deleteStar(@PathVariable Long eventId, Long userId) {
+		starService.deleteStar(eventId);
 
 		return ResponseEntity
 			.status(HttpStatus.OK)

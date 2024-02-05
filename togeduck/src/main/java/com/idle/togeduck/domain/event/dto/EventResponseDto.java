@@ -6,7 +6,6 @@ public record EventResponseDto(
 	Long eventId,
 	String url,
 	String name,
-	String description,
 	LocalDate startDate,
 	LocalDate endDate,
 	Double latitude,
