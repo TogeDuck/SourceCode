@@ -5,5 +5,5 @@ interface EventInfo {
     fun eventClicked(position: Int)
 
     //즐겨찾기 버튼 클릭 시
-    fun likeClick(position: Int)
+    fun likeClick(position: Int, type: Int)
 }

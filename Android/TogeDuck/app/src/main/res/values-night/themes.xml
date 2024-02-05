@@ -13,4 +13,13 @@
         <item name="android:textViewStyle">@style/m_text_view_font_style</item>
         <item name="android:editTextStyle">@style/m_edit_text_font_style</item>
     </style>
+
+    <style name="fullscreen_dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/white</item>
+    </style>
 </resources>

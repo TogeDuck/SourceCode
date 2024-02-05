@@ -100,12 +100,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun addBackPressedCallback() {
         // OnBackPressedCallback (익명 클래스) 객체 생성
         backPressedCallback = object : OnBackPressedCallback(true) {
+            var backWait: Long = 0
+
             // 뒤로가기 했을 때 실행되는 기능
             override fun handleOnBackPressed() {
                 if (componentBottomSheetBinding.viewPager.currentItem == 4) {
                     changeViewPagerPage(3)
                 } else {
-                    var backWait: Long = 0
+
                     if (System.currentTimeMillis() - backWait >= 2000) {
                         backWait = System.currentTimeMillis()
                         Toast.makeText(

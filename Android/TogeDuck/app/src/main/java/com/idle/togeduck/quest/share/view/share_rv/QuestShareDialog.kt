@@ -17,7 +17,8 @@ import com.idle.togeduck.quest.share.model.Share
 
 class QuestShareDialog(questShare: Share) : DialogFragment() {
 
-    private var _binding: DialogQuestShareBinding? = null
+    private var _binding: DialogQuestShareBinding
+    ? = null
     private val binding get() = _binding!!
     private val questShare = questShare
 
