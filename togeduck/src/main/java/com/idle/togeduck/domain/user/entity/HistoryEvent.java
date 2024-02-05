@@ -2,7 +2,6 @@ package com.idle.togeduck.domain.user.entity;
 
 import com.idle.togeduck.domain.BaseEntity;
 import com.idle.togeduck.domain.event.entity.Event;
-import com.idle.togeduck.domain.user.entity.History;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +30,6 @@ public class HistoryEvent extends BaseEntity {
 	private Event event;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "history_jd")
+	@JoinColumn(name = "history_id")
 	private History history;
 }

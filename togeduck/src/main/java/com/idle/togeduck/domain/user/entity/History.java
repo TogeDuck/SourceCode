@@ -3,7 +3,6 @@ package com.idle.togeduck.domain.user.entity;
 import java.time.LocalDate;
 
 import com.idle.togeduck.domain.BaseEntity;
-import com.idle.togeduck.domain.user.entity.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +23,7 @@ public class History extends BaseEntity {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "hisory_id")
+	@Column(name = "history_id")
 	private Long id;
 
 	private String name;
