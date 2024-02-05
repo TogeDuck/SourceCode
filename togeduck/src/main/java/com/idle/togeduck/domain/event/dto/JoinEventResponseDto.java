@@ -2,7 +2,7 @@ package com.idle.togeduck.domain.event.dto;
 
 import java.time.LocalDate;
 
-public record EventResponseDto(
+public record JoinEventResponseDto(
 	Long eventId,
 	String name,
 	String image1,
@@ -11,6 +11,8 @@ public record EventResponseDto(
 	LocalDate startDate,
 	LocalDate endDate,
 	Double latitude,
-	Double longitude
+	Double longitude,
+	Boolean isStar,
+	Boolean isVisited
 ) {
 }
