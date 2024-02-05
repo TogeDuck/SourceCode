@@ -9,6 +9,16 @@
     tools:background="@color/red"
     >
 
+    <TextView
+        android:id="@+id/tv_current_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="현재 진행 중인 교환"
+        android:layout_marginBottom="5dp"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/quest_share_recycle"
         android:layout_width="match_parent"

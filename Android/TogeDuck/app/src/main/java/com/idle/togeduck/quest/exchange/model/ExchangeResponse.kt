@@ -24,7 +24,8 @@ data class Exchange(
     val image: String,
     val duration: Int,
     val createdAt: LocalDateTime,
+    val expiredAt: LocalDateTime,
     val isMine: Boolean
 )
 
-fun ExchangeResponse.toExchange() = Exchange(id, content, image, duration, createdAt, isMine)
+fun ExchangeResponse.toExchange() = Exchange(id, content, image, duration, createdAt,expiredAt, isMine)

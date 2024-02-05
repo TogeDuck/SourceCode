@@ -65,12 +65,12 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         _binding = null
     }
 
-    override fun myQuestExchangeClicked(position: Int) {
-//        showQuestExchangeDetailDialog(questExchangeDummyData().get(position))
+    override fun myQuestExchangeClicked(questExchange: Exchange) {
+        showQuestExchangeDetailDialog(questExchange)
     }
 
     fun showQuestExchangeDetailDialog(questExchange: Exchange){
-//        val dialog = QuestShareDialog(Exchange("title", "content","",100))
+//        val dialog = QuestShareDialog(Share(1L,"","","", LocalDateTime(2024,11,1),false,))
         val fragmentManager = childFragmentManager
 //        dialog.show(fragmentManager, "QuestShareDialog")
     }

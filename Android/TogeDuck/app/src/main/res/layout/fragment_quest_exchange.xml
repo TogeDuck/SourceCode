@@ -12,12 +12,22 @@
     tools:background="@color/blackpink_main300"
     tools:context=".quest.exchange.view.QuestExchangeFragment">
 
+    <TextView
+        android:id="@+id/tv_current_exchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="현재 진행 중인 교환"
+        android:layout_marginBottom="5dp"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/quest_exchange_recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_current_exchange"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
