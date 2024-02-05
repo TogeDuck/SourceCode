@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
@@ -45,6 +46,16 @@ class TopAppbarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setPadding()
+        setTheme()
+
+        topAppbarBinding.ivCalendar.setOnClickListener {
+            findNavController().navigate(R.id.action_mapFragment_to_calendarDialogFragment)
+        }
+    }
+
+    private fun setPadding() {
         val statusDp = getStatusBarHeightToDp(requireContext())
 
         topAppbarBinding.llTopAppbar.setPadding(
@@ -53,8 +64,6 @@ class TopAppbarFragment : Fragment() {
             dpToPx(20, requireContext()),
             dpToPx(10, requireContext())
         )
-
-        setTheme()
     }
 
     private fun setTheme() {

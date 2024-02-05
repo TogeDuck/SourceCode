@@ -1,4 +1,4 @@
-package com.idle.togeduck.quest.share.view
+package com.idle.togeduck.quest.exchange.view
 
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
@@ -17,17 +17,15 @@ import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
-import com.idle.togeduck.databinding.DialogQuestShareBinding
-import com.idle.togeduck.quest.share.ShareViewModel
+import com.idle.togeduck.databinding.DialogQuestExchangeBinding
+import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.util.DpPxUtil
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class ShareDialogFragment : DialogFragment() {
-    private var _binding: DialogQuestShareBinding? = null
+class ExchangeDialogFragment: DialogFragment() {
+    private var _binding: DialogQuestExchangeBinding? = null
     private val binding get() = _binding!!
 
-    val shareViewModel: ShareViewModel by activityViewModels()
+    val exchangeViewModel: ExchangeViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +46,7 @@ class ShareDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DialogQuestShareBinding.inflate(inflater, container, false)
+        _binding = DialogQuestExchangeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -58,26 +56,26 @@ class ShareDialogFragment : DialogFragment() {
         setImgSize()
         setTheme()
 
-        shareViewModel.selectedShare.observe(viewLifecycleOwner) { share ->
-            binding.tvTitle.text = share.title
-            binding.tvContent.text = share.content
+        exchangeViewModel.selectedExchange.observe(viewLifecycleOwner) { exchange ->
+            binding.tvContent.text = exchange.content
 
             Glide
                 .with(binding.ivMainImg)
-                .load(share.image)
+                .load(exchange.image)
                 .into(binding.ivMainImg)
 
             setImgSize()
         }
 
-        binding.llEmptyLayout.setOnClickListener {
-            findNavController().navigate(R.id.action_shareDialogFragment_pop)
+        binding.questExchangeDialog.setOnClickListener {
+            findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
         }
     }
 
     private fun setImgSize() {
         val newSize = (DpPxUtil.dpToPx(ScreenSize.heightDp - 360, requireContext()) * 0.5).toInt()
         val layoutParams = binding.ivMainImg.layoutParams as LinearLayout.LayoutParams
+//        layoutParams.width = newSize
         layoutParams.height = newSize
         binding.ivMainImg.scaleType = ImageView.ScaleType.FIT_CENTER
         binding.ivMainImg.layoutParams = layoutParams

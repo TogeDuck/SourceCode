@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.model.toExchange
+import com.idle.togeduck.quest.share.model.Share
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -17,6 +18,10 @@ class ExchangeViewModel @Inject constructor(
     val exchangeList: LiveData<List<Exchange>>
         get() = _exchangeList
 
+    private val _selectedExchange = MutableLiveData<Exchange>()
+    val selectedExchange: LiveData<Exchange>
+        get() = _selectedExchange
+
     suspend fun getExchangeList(eventId: Long, page: Int, size: Int){
         val response = exchangeRepository.getExchangeList(eventId, page, size)
         if (response.isSuccessful) {
@@ -26,5 +31,15 @@ class ExchangeViewModel @Inject constructor(
         } else {
 
         }
+    }
+
+    fun removeItemFromList(questExchange: Exchange) {
+        val currentList = _exchangeList.value?.toMutableList() ?: mutableListOf()
+        currentList.remove(questExchange)
+        _exchangeList.value = currentList
+    }
+
+    fun setSelectedExchange(exchange: Exchange){
+        _selectedExchange.value = exchange
     }
 }

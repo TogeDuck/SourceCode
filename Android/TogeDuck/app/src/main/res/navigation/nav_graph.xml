@@ -94,6 +94,9 @@
         <action
             android:id="@+id/action_mapFragment_to_shareDialogFragment"
             app:destination="@id/shareDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_calendarDialogFragment"
+            app:destination="@id/calendarDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -105,6 +108,9 @@
         android:name="com.idle.togeduck.quest.exchange.view.QuestExchangeFragment"
         android:label="quest_exchange_fragment"
         tools:layout="@layout/fragment_quest_exchange">
+        <action
+            android:id="@+id/action_questExchangeFragment_to_exchangeDialogFragment"
+            app:destination="@id/exchangeDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventListFragment"
@@ -136,10 +142,29 @@
         android:id="@+id/shareDialogFragment"
         android:name="com.idle.togeduck.quest.share.view.ShareDialogFragment"
         android:label="dialog_quest_share_test"
-        tools:layout="@layout/dialog_quest_share_test" >
+        tools:layout="@layout/dialog_quest_share" >
         <action
             android:id="@+id/action_shareDialogFragment_pop"
             app:popUpTo="@id/shareDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/exchangeDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangeDialogFragment"
+        android:label="ExchangeDialogFragment" >
+        <action
+            android:id="@+id/action_exchangeDialogFragment_pop"
+            app:popUpTo="@id/exchangeDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/calendarDialogFragment"
+        android:name="com.idle.togeduck.main_map.view.CalendarDialogFragment"
+        android:label="dialog_calendar"
+        tools:layout="@layout/dialog_calendar" >
+        <action
+            android:id="@+id/action_calendarDialogFragment_pop"
+            app:popUpTo="@id/calendarDialogFragment"
             app:popUpToInclusive="true" />
     </dialog>
 </navigation>
