@@ -38,7 +38,7 @@ class EventListViewModel @Inject constructor(
         get() = _listPast
 
 
-    suspend fun getEventList(celebrityId: Int, startDate: LocalDate, endDate: LocalDate){
+    suspend fun getEventList(celebrityId: Long, startDate: LocalDate, endDate: LocalDate){
         val responseResult = eventRepository.getEventList(celebrityId, startDate, endDate)
 
         if(responseResult.isSuccessful){
@@ -82,7 +82,7 @@ class EventListViewModel @Inject constructor(
         }
     }
 
-    suspend fun unlikeEvent(eventId: Int) {
+    suspend fun unlikeEvent(eventId: Long) {
         val responseResult = eventRepository.unlikeEvent(eventId)
 
         if (!responseResult.isSuccessful) {

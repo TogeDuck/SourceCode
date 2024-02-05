@@ -13,27 +13,27 @@ import retrofit2.http.Query
 interface RecruitService {
     @GET("events/{event_id}/parties")
     suspend fun getRecruitList(
-        @Path("event_id") eventId: Int,
+        @Path("event_id") eventId: Long,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<RecruitListResponse>
 
     @POST("events/{event_id}/parties")
     suspend fun createRecruit(
-        @Path("event_id") eventId: Int,
+        @Path("event_id") eventId: Long,
         @Body recruitRequest: RecruitRequest
     ): Response<DefaultResponse>
 
     @PATCH("events/{event_id}/parties/{party_id}")
     suspend fun updateRecruit(
-        @Path("event_id") eventId: Int,
-        @Path("party_id") recruitId: Int,
+        @Path("event_id") eventId: Long,
+        @Path("party_id") recruitId: Long,
         @Body updateRequest: RecruitRequest
     ): Response<DefaultResponse>
 
     @DELETE("/events/{event_id}/parties/{party_id}")
     suspend fun deleteRecruit(
-        @Path("event_id") eventId: Int,
-        @Path("party_id") recruitId: Int,
+        @Path("event_id") eventId: Long,
+        @Path("party_id") recruitId: Long,
     ): Response<DefaultResponse>
 }

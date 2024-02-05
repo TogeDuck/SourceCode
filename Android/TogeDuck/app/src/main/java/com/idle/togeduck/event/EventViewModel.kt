@@ -28,7 +28,7 @@ class EventViewModel @Inject constructor(
     val reviewList: LiveData<List<EventReviewContent>>
         get() = _reviewList
 
-    suspend fun postReview(eventId: Int, image: MultipartBody.Part, content: String) {
+    suspend fun postReview(eventId: Long, image: MultipartBody.Part, content: String) {
         val responseResult = eventRepository.postReview(eventId, image, content)
 
         if (!responseResult.isSuccessful) {
@@ -39,7 +39,7 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    suspend fun getReviewList(eventId: Int, page: Int, size: Int) {
+    suspend fun getReviewList(eventId: Long, page: Int, size: Int) {
         val responseResult = eventRepository.getReviewList(eventId, page, size)
 
         if (responseResult.isSuccessful) {
@@ -53,7 +53,7 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    suspend fun deleteReview(eventId: Int, reviewId: Int) {
+    suspend fun deleteReview(eventId: Long, reviewId: Long) {
         val responseResult = eventRepository.deleteReview(eventId, reviewId)
 
         if (!responseResult.isSuccessful) {

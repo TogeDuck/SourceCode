@@ -23,7 +23,7 @@ class RecruitViewModel @Inject constructor(
     val recruitList: LiveData<List<Recruit>>
         get() = _recruitList
 
-    suspend fun getRecruitList(eventId: Int, page: Int, size: Int){
+    suspend fun getRecruitList(eventId: Long, page: Int, size: Int){
         val responseResult = recruitRepository.getRecruitList(eventId, page, size)
 
         if(responseResult.isSuccessful){
