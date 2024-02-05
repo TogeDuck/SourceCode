@@ -40,8 +40,8 @@ class HistoryDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        historyDetailCardBinding.tvDate.text = historyViewModel.selectedHistory.value!!.date.toString()
-        historyDetailCardBinding.tvMyRecord.text = historyViewModel.selectedHistory.value!!.historyName
+        historyDetailCardBinding.tvDate.text = historyViewModel.selectedHistory!!.date.toString()
+        historyDetailCardBinding.tvMyRecord.text = historyViewModel.selectedHistory!!.historyName
     }
 
     override fun onDestroyView() {

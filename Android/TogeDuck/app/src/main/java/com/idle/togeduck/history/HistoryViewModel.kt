@@ -26,8 +26,7 @@ class HistoryViewModel @Inject constructor(
     val historyList: LiveData<List<HistoryData>>
         get() = _historyList
 
-    private val _selectedHistory = MutableLiveData<HistoryData>()
-    val selectedHistory: LiveData<HistoryData> get() = _selectedHistory
+    var selectedHistory: HistoryData? = null
 
     private val _route = MutableLiveData<String>()
     val route: LiveData<String> get() = _route
@@ -107,6 +106,6 @@ class HistoryViewModel @Inject constructor(
     }
 
     fun setSelectedHistory(historyData: HistoryData) {
-        _selectedHistory.value = historyData
+        selectedHistory = historyData
     }
 }
