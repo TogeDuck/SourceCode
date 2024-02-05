@@ -10,7 +10,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface HistoryService {
-    @GET("users/history")
+    @GET("users/history-event")
     suspend fun getHistoryList(
         @Query("celebrity-id") historyRequest: HistoryRequest
     ): Response<HistoryListResponse>
