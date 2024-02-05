@@ -90,7 +90,11 @@
         android:id="@+id/mapFragment"
         android:name="com.idle.togeduck.main_map.view.MapFragment"
         android:label="map_fragment"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_shareDialogFragment"
+            app:destination="@id/shareDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/questShareFragment"
         android:name="com.idle.togeduck.quest.share.view.QuestShareFragment"
@@ -128,5 +132,14 @@
         android:label="quest_talk_fragment"
         tools:layout="@layout/fragment_quest_talk">
     </fragment>
-
+    <dialog
+        android:id="@+id/shareDialogFragment"
+        android:name="com.idle.togeduck.quest.share.view.ShareDialogFragment"
+        android:label="dialog_quest_share_test"
+        tools:layout="@layout/dialog_quest_share_test" >
+        <action
+            android:id="@+id/action_shareDialogFragment_pop"
+            app:popUpTo="@id/shareDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
 </navigation>

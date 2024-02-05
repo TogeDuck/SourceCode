@@ -1,12 +1,21 @@
 package com.idle.togeduck.quest.share.view
 
+import android.app.Dialog
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.R
+import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.quest.share.model.Share
@@ -14,6 +23,7 @@ import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.share.view.share_rv.IQuestShareDetail
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareDialog
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareListAdapter
+import com.idle.togeduck.util.DpPxUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,12 +70,11 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     }
 
     override fun myQuestShareClicked(questShare: Share) {
-        showDialog(questShare)
+        shareViewModel.setSelectedShare(questShare)
+        showDialog()
     }
 
-    fun showDialog(questShare: Share) {
-        val dialog = QuestShareDialog(questShare)
-        val fragmentManager = childFragmentManager
-        dialog.show(fragmentManager, "QuestShareDialog")
+    private fun showDialog() {
+        findNavController().navigate(R.id.action_mapFragment_to_shareDialogFragment)
     }
 }

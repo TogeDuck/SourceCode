@@ -17,6 +17,10 @@ class ShareViewModel @Inject constructor(
     val shareList: LiveData<List<Share>>
         get() = _shareList
 
+    private val _selectedShare = MutableLiveData<Share>()
+    val selectedShare: LiveData<Share>
+        get() = _selectedShare
+
     suspend fun getShareList(eventId: Long, page: Int, size: Int){
         val response = shareRepository.getShareList(eventId, page, size)
         if(response.isSuccessful) {
@@ -27,5 +31,9 @@ class ShareViewModel @Inject constructor(
         else{
 
         }
+    }
+
+    fun setSelectedShare(share: Share) {
+        _selectedShare.value = share
     }
 }
