@@ -1,4 +1,4 @@
-package com.idle.togeduck.my_record.model
+package com.idle.togeduck.history.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import retrofit2.Response

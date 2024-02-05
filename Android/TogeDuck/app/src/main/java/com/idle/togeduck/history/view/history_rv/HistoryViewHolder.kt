@@ -1,22 +1,20 @@
-package com.idle.togeduck.my_record.view.my_record_rv
+package com.idle.togeduck.history.view.history_rv
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.common.RandomCupcake
-import com.idle.togeduck.databinding.ItemMyRecordBinding
 import com.idle.togeduck.common.Theme
-import com.idle.togeduck.my_record.model.HistoryData
-import com.idle.togeduck.my_record.model.HistoryDataResponse
+import com.idle.togeduck.databinding.ItemHistoryBinding
+import com.idle.togeduck.history.model.HistoryData
 import com.idle.togeduck.util.getColor
 
-class MyRecordViewHolder(
-    binding: ItemMyRecordBinding,
-    private val iMyRecord: IMyRecord
+class HistoryViewHolder(
+    binding: ItemHistoryBinding,
+    private val iHistory: IHistory
 ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
     private val mainLayout = binding.llMainLayout
     private val ivMyRecordMainImg = binding.ivMyRecordMainImg
@@ -52,7 +50,7 @@ class MyRecordViewHolder(
 
     override fun onClick(view: View?) {
         when (view) {
-            mainLayout -> iMyRecord.recordClicked(bindingAdapterPosition)
+            mainLayout -> iHistory.recordClicked(bindingAdapterPosition)
         }
     }
 

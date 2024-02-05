@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@color/green"
-    tools:context=".my_record.view.MyRecordFragment"
+    tools:context=".history.view.HistoryFragment"
     >
 
     <LinearLayout
@@ -128,7 +128,7 @@
             android:id="@+id/rv_my_record"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/item_my_record"
+            tools:listitem="@layout/item_history"
             android:overScrollMode="never"
             android:nestedScrollingEnabled="false"
             />

@@ -1,4 +1,4 @@
-package com.idle.togeduck.my_record.model
+package com.idle.togeduck.history.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -11,3 +11,13 @@ data class HistoryTourResponse(
     val latitude: String,
     val longitude: String
 )
+
+data class HistoryTour(
+    val eventId: Int,
+    val eventName: String,
+    val name: String,
+    val latitude: String,
+    val longitude: String
+)
+
+fun HistoryTourResponse.toHistoryTour() = HistoryTour(eventId, eventName, name, latitude, longitude)

@@ -4,12 +4,11 @@ import androidx.recyclerview.widget.DiffUtil
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.EventReviewContent
 import com.idle.togeduck.favorite.model.Celebrity
-import com.idle.togeduck.my_record.model.HistoryData
+import com.idle.togeduck.history.model.HistoryData
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.recruit.model.Recruit
 import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.quest.talk.model.Talk
-import java.util.Objects
 
 object TogeDuckDiffUtil {
     class DiffUtilCallback(

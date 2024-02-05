@@ -1,4 +1,4 @@
-package com.idle.togeduck.my_record.model
+package com.idle.togeduck.history.model
 
 import kotlinx.serialization.Serializable
 

@@ -9,9 +9,9 @@ import com.idle.togeduck.favorite.model.DefaultCelebrityRepository
 import com.idle.togeduck.favorite.model.DefaultFavoriteRepository
 import com.idle.togeduck.favorite.model.FavoriteRepository
 import com.idle.togeduck.favorite.model.FavoriteService
-import com.idle.togeduck.my_record.model.DefaultHistoryRepository
-import com.idle.togeduck.my_record.model.HistoryRepository
-import com.idle.togeduck.my_record.model.HistoryService
+import com.idle.togeduck.history.model.DefaultHistoryRepository
+import com.idle.togeduck.history.model.HistoryRepository
+import com.idle.togeduck.history.model.HistoryService
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
@@ -22,7 +22,6 @@ import com.idle.togeduck.quest.share.model.DefaultShareRepository
 import com.idle.togeduck.quest.share.model.ShareRepository
 import com.idle.togeduck.quest.share.model.ShareService
 import com.idle.togeduck.quest.talk.model.DefaultTalkRepository
-import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.quest.talk.model.TalkRepository
 import com.idle.togeduck.quest.talk.model.TalkService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -36,7 +35,6 @@ import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.create
 import java.lang.reflect.Type
 import javax.inject.Singleton
 

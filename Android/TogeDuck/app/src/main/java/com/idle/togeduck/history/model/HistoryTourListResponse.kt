@@ -1,4 +1,4 @@
-package com.idle.togeduck.my_record.model
+package com.idle.togeduck.history.model
 
 import kotlinx.serialization.Serializable
 
@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class HistoryTourListResponse(
     val status: Int,
     val message: String,
-    val data: List<HistoryTourDataResponse>
+    val data: HistoryTourDataResponse
 )
