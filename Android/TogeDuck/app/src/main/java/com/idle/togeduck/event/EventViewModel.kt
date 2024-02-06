@@ -1,5 +1,6 @@
 package com.idle.togeduck.event
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +24,10 @@ class EventViewModel @Inject constructor(
     private val _reviewList = MutableLiveData<List<EventReviewContent>>()
     val reviewList: LiveData<List<EventReviewContent>>
         get() = _reviewList
+
+    private val _selectedImg = MutableLiveData<Uri>()
+    val selectedImg: LiveData<Uri>
+        get() = _selectedImg
 
     init {
         viewModelScope.launch {
@@ -64,5 +69,9 @@ class EventViewModel @Inject constructor(
             )
             Log.d("로그", "EventListViewModel - deleteReview() 응답 실패 - $errorBody")
         }
+    }
+
+    fun setSelectedImg(uri: Uri){
+        _selectedImg.value = uri
     }
 }

@@ -1,8 +1,7 @@
 package com.idle.togeduck.event.view.detail
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -56,12 +55,12 @@ class EventDetailFragment : Fragment(), EventReview {
 
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            showDialog()
-
+            showDialog(uri)
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -97,7 +96,6 @@ class EventDetailFragment : Fragment(), EventReview {
         eventReviewViewModel.reviewList.observe(viewLifecycleOwner){ list ->
             eventReviewAdapter.submitList(list)
         }
-
 
         binding.bookmarkCheck.setOnClickListener { likeClick(event) }
         binding.visitCheck.setOnClickListener { visitClick(event) }
@@ -139,18 +137,12 @@ class EventDetailFragment : Fragment(), EventReview {
                 eventReviewViewModel.getReviewList(1,1,100)
             }
         }
-
-
-
+    }
 
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventReviewViewModel.deleteReview(1,1)
 //        }
-
-
-
-    }
 
     //이미지 파일 등록
 //    private fun postReview(){
@@ -254,8 +246,9 @@ class EventDetailFragment : Fragment(), EventReview {
 //        }
     }
 
-    private fun showDialog() {
-//        findNavController().navigate(R.id.action_eventDetailFragment_to_EventReviewDialogFragment)
+    private fun showDialog(uri: Uri) {
+        eventReviewViewModel.setSelectedImg(uri)
+        findNavController().navigate(R.id.action_mapFragment_to_EventReviewDialogFragment)
     }
 
 
