@@ -34,9 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		// 1. request Header 에서 토큰을 꺼내옴
 		String jwt = resolveToken(request);
 
-		log.info(jwt);
-
-		log.info("토큰 권한 Security 저장");
+		log.info("토큰 권한 Security 저장 : " + jwt);
 
 		// 2. validateToken 으로 토큰 유효성 검사
 		if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {

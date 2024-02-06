@@ -88,6 +88,7 @@ public class AuthService {
 		}
 
 		User user = userRepository.findUserBySocialId(socialId); // 유저 정보
+		
 		// 1. Login 정보를 기반으로 AuthenticationToken 생성
 		UsernamePasswordAuthenticationToken authenticationToken =
 			new UsernamePasswordAuthenticationToken(user.getSocialId(), "", user.getAuthorities());
