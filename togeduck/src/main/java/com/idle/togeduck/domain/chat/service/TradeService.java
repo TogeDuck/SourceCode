@@ -1,5 +1,7 @@
 package com.idle.togeduck.domain.chat.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,11 @@ public class TradeService {
 		return tradeRepository.findSliceByEventId(userId, eventId, pageable);
 	}
 
-	public TradeResponseDto getTrade(Long tradeId) {
+	public Slice<TradeResponseDto> getMyTradeList(Long userId, Long eventId, Pageable pageable) {
+		return tradeRepository.findSliceByEventIdAndUserId(userId, eventId, pageable);
+	}
+
+	public TradeResponseDto getTrade(Long userId, Long tradeId) {
 		Trade trade = tradeRepository.findById(tradeId)
 			.orElseThrow(() -> new BaseException(ErrorCode.TRADE_NOT_FOUND));
 		return new TradeResponseDto(
@@ -39,7 +45,9 @@ public class TradeService {
 			trade.getContent(),
 			trade.getImage(),
 			trade.getDuration(),
-			trade.getCreatedAt());
+			trade.getCreatedAt(),
+			trade.getExpiredAt(),
+			trade.getUser().getId() == userId);
 	}
 
 	@Transactional
@@ -48,12 +56,14 @@ public class TradeService {
 			.orElseThrow(() -> new BaseException(ErrorCode.EVENT_NOT_FOUND));
 		String imagePath = s3Service.saveFile(image);
 
+		System.out.println(LocalDateTime.now());
 		Trade trade = Trade.builder()
 			.event(event)
 			.user(user)
 			.image(imagePath)
 			.content(content)
 			.duration(duration)
+			.expiredAt(LocalDateTime.now().plusMinutes(duration))
 			.build();
 
 		tradeRepository.save(trade);
@@ -75,5 +85,4 @@ public class TradeService {
 		s3Service.deleteFile(trade.getImage());
 		tradeRepository.delete(trade);
 	}
-
 }

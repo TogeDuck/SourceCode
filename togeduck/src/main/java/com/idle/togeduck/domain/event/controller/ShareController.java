@@ -36,7 +36,7 @@ public class ShareController {
 		Pageable pageable) {
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", shareService.getShareList(eventId, pageable)));
+			.body(new BaseResponse<>(200, "success", shareService.getShareList(1L, eventId, pageable)));
 	}
 
 	@PostMapping("/{eventId}/shares")

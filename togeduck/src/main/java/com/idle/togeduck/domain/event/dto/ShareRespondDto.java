@@ -5,6 +5,7 @@ public record ShareRespondDto(
 	String image,
 	String title,
 	String content,
-	Integer duration
+	Integer duration,
+	boolean isMine
 ) {
 }
