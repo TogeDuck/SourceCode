@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +36,7 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    suspend fun postReview(eventId: Long, image: MultipartBody.Part?, content: String) {
+    suspend fun postReview(eventId: Long, image: MultipartBody.Part?, content: RequestBody) {
         val responseResult = eventRepository.postReview(eventId, image, content)
 
         if (!responseResult.isSuccessful) {

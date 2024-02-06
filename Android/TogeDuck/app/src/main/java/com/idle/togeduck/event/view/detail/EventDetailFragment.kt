@@ -42,9 +42,6 @@ class EventDetailFragment : Fragment(), EventReview {
     private var _binding: FragmentEventDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val _multiPartUtil: MultiPartUtil? = null
-    private val multiPartUtil get() = _multiPartUtil!!
-
     private var _eventReviewInputBinding: ComponentEventReviewInputBinding? = null
     private val eventReviewInputBinding get() = _eventReviewInputBinding!!
 
@@ -110,11 +107,13 @@ class EventDetailFragment : Fragment(), EventReview {
         }
 
         eventReviewInputBinding.reviewPost.setOnClickListener{
-            val reviewText = eventReviewInputBinding.etReviewInput.text.toString()
+            val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
 
-            if (reviewText.isNotEmpty()) {
+            if (reviewInputText.isNotEmpty()) {
+                val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
+
                 if(postUri.isNotEmpty()){
-                    val reviewImg = multiPartUtil.createImagePart(postUri)
+                    val reviewImg = MultiPartUtil.createImagePart(postUri)
                     CoroutineScope(Dispatchers.IO).launch {
                         eventReviewViewModel.postReview(1, reviewImg, reviewText)
                         eventReviewViewModel.getReviewList(1,1,100)
