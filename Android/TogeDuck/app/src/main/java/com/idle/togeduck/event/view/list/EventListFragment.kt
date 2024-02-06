@@ -116,13 +116,13 @@ class EventListFragment : Fragment(), EventInfo {
     override fun eventClicked(position: Int, type: Int) {
         if(type == 0) {
             eventListViewModel.setSelectedEvent(eventListViewModel.listToday.value!![position])
-            (parentFragment as MapFragment).changeViewPagerPage(5)
+            (parentFragment as MapFragment).changeViewPagerPage(2)
         }else if(type == 1){
             eventListViewModel.setSelectedEvent(eventListViewModel.listUpcoming.value!![position])
-            (parentFragment as MapFragment).changeViewPagerPage(5)
+            (parentFragment as MapFragment).changeViewPagerPage(2)
         }else {
             eventListViewModel.setSelectedEvent(eventListViewModel.listPast.value!![position])
-            (parentFragment as MapFragment).changeViewPagerPage(5)
+            (parentFragment as MapFragment).changeViewPagerPage(2)
         }
     }
 

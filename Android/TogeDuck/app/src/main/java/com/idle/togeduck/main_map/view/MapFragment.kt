@@ -91,6 +91,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var clustering: TedNaverClustering<NaverItem>
 
+    private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -130,18 +132,29 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             // 뒤로가기 했을 때 실행되는 기능
             override fun handleOnBackPressed() {
-                if (componentBottomSheetBinding.viewPager.currentItem == 4) {
-                    changeViewPagerPage(3)
-                } else {
-
-                    if (System.currentTimeMillis() - backWait >= 2000) {
-                        backWait = System.currentTimeMillis()
-                        Toast.makeText(
-                            context, "뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        findNavController().navigate(R.id.mainFragment)
+                when {
+                    componentBottomSheetBinding.viewPager.currentItem == 5 -> {
+                        changeViewPagerPage(4)
+                    }
+                    componentBottomSheetBinding.viewPager.currentItem == 2 -> {
+                        changeViewPagerPage(1)
+                    }
+                    sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
+                        sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                    }
+                    sheetBehavior.state == BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
+                    else -> {
+                        if (System.currentTimeMillis() - backWait >= 2000) {
+                            backWait = System.currentTimeMillis()
+                            Toast.makeText(
+                                context, "뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            findNavController().navigate(R.id.mainFragment)
+                        }
                     }
                 }
             }
@@ -195,7 +208,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun setBottomSheet() {
         val statusDp = getStatusBarHeightToDp(requireContext())
 
-        val sheetBehavior = BottomSheetBehavior.from(componentBottomSheetBinding.bottomSheet)
+        sheetBehavior = BottomSheetBehavior.from(componentBottomSheetBinding.bottomSheet)
 
         sheetBehavior.expandedOffset = dpToPx(statusDp + 5, requireContext())
 
@@ -577,10 +590,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             handleButtonClick(fabList, listOf(fabQuest, fabChat, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonChat.setOnClickListener {
+            componentBottomSheetBinding.viewPager.setCurrentItem(3, false)
             handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonMyrecord.setOnClickListener {
-            componentBottomSheetBinding.viewPager.setCurrentItem(3, false)
+            componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
             handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat))
         }
     }

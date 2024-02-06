@@ -81,9 +81,8 @@ class HistoryFragment : Fragment(), IHistory {
     }
 
     override fun recordClicked(position: Int) {
-        Log.d("로그", "MyRecordFragment - recordClicked() 호출됨 ${historyViewModel.historyList.value!![position]}")
         historyViewModel.setSelectedHistory(historyViewModel.historyList.value!![position])
-        (parentFragment as MapFragment).changeViewPagerPage(4)
+        (parentFragment as MapFragment).changeViewPagerPage(5)
     }
 
     override fun onDestroyView() {
