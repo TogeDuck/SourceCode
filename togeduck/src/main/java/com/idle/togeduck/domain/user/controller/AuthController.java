@@ -34,12 +34,4 @@ public class AuthController {
 			.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "success", authService.reissue(tokenRequestDtoDto)));
 	}
-
-	// @PostMapping("/signup")
-	// public ResponseEntity<BaseResponse<?>> signup(@RequestBody UserRequestDto userRequestDto) {
-	// 	authService.signup(userRequestDto);
-	// 	return ResponseEntity
-	// 		.status(HttpStatus.OK)
-	// 		.body(new BaseResponse<>(200, "success", ""));
-	// }
 }
