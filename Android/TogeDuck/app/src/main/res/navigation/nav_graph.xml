@@ -97,6 +97,9 @@
         <action
             android:id="@+id/action_mapFragment_to_calendarDialogFragment"
             app:destination="@id/calendarDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangeDialogFragment"
+            app:destination="@id/exchangeDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -108,9 +111,6 @@
         android:name="com.idle.togeduck.quest.exchange.view.QuestExchangeFragment"
         android:label="quest_exchange_fragment"
         tools:layout="@layout/fragment_quest_exchange">
-        <action
-            android:id="@+id/action_questExchangeFragment_to_exchangeDialogFragment"
-            app:destination="@id/exchangeDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventListFragment"
@@ -151,7 +151,8 @@
     <dialog
         android:id="@+id/exchangeDialogFragment"
         android:name="com.idle.togeduck.quest.exchange.view.ExchangeDialogFragment"
-        android:label="ExchangeDialogFragment" >
+        android:label="ExchangeDialogFragment"
+        tools:layout="@layout/dialog_quest_exchange">
         <action
             android:id="@+id/action_exchangeDialogFragment_pop"
             app:popUpTo="@id/exchangeDialogFragment"

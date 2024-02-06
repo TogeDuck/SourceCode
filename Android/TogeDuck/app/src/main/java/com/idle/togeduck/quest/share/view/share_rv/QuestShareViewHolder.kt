@@ -46,7 +46,6 @@ class QuestShareViewHolder (
     private val timeText = binding.timerText
 
     private var questShare: Share? = null
-    private var context: Context? = null
 
     private var mTimer = Timer()
     var elapsedTimeInSeconds = 0

@@ -8,3 +8,10 @@ data class ExchangeListResponse(
     val message: String,
     val data: ExchangeDataResponse
 )
+
+@Serializable
+data class ExchangeMyListResponse(
+    val code: Int,
+    val message: String,
+    val data: ExchangeDataMyResponse
+)

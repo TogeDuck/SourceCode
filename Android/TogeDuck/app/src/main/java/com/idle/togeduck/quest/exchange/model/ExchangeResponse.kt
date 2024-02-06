@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExchangeResponse(
-    val id: Int,
+    val id: Long,
     val content: String,
     val image: String,
     val duration: Int,
@@ -16,10 +16,18 @@ data class ExchangeResponse(
     @Serializable(with = LocalDateTimeIso8601Serializer::class)
     val expiredAt: LocalDateTime,
     val isMine: Boolean
+)
+
+@Serializable
+data class ExchangeMyResponse(
+    val id: Long,
+    val image: String,
+    val content: String,
+    val duration: Int
 )
 
 data class Exchange(
-    val id: Int,
+    val id: Long,
     val content: String,
     val image: String,
     val duration: Int,
@@ -28,4 +36,12 @@ data class Exchange(
     val isMine: Boolean
 )
 
+data class MyExchange(
+    val id: Long,
+    val content: String,
+    val image: String,
+    val duration: Int
+)
+
+fun ExchangeMyResponse.toExchange() = MyExchange(id,content,image,duration)
 fun ExchangeResponse.toExchange() = Exchange(id, content, image, duration, createdAt,expiredAt, isMine)

@@ -8,18 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.util.Pair
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.idle.togeduck.R
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
-import com.idle.togeduck.common.Theme
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @AndroidEntryPoint
 class TopAppbarFragment : Fragment() {
@@ -44,14 +51,51 @@ class TopAppbarFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setPadding()
         setTheme()
+        setDateRangePicker()
 
-        topAppbarBinding.ivCalendar.setOnClickListener {
-            findNavController().navigate(R.id.action_mapFragment_to_calendarDialogFragment)
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
+        val dateRangeText = "${LocalDate.now().format(dateTimeFormatter)}-${LocalDate.now().format(dateTimeFormatter)}"
+        topAppbarBinding.tvDate.text = dateRangeText
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setDateRangePicker() {
+        val calendar = Calendar.getInstance()
+        val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTheme(R.style.MyMaterialDatePickerTheme)
+            .setTitleText("날짜를 선택하세요")
+            .setSelection(Pair(calendar.timeInMillis, calendar.timeInMillis))
+            .build()
+        val dateRangePickerTag = "dateRangePicker"
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
+
+        dateRangePicker.addOnPositiveButtonClickListener { selection ->
+            var instant = Instant.ofEpochMilli(selection.first)
+            val startDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
+            instant = Instant.ofEpochMilli(selection.second)
+            val endDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
+            val dateRangeText = "${startDate.format(dateTimeFormatter)}-${endDate.format(dateTimeFormatter)}"
+            topAppbarBinding.tvDate.text = dateRangeText
+            
+            // TODO. API 연결
+        }
+
+        topAppbarBinding.llDate.setOnClickListener {
+            val existingFragment = childFragmentManager.findFragmentByTag(dateRangePickerTag)
+
+            if (existingFragment == null) {
+                dateRangePicker.show(childFragmentManager, dateRangePickerTag)
+            } else {
+                if (existingFragment.isAdded) {
+                    (existingFragment as DialogFragment).dismissAllowingStateLoss()
+                }
+            }
         }
     }
 

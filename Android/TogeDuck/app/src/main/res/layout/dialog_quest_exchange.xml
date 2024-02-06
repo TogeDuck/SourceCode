@@ -22,31 +22,22 @@
         android:padding="20dp"
         android:orientation="vertical"
         >
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="title"
-            android:textSize="@dimen/text_title_small"
-            android:layout_marginBottom="20dp"
-            />
-
         <ImageView
             android:id="@+id/iv_main_img"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:scaleType="fitCenter"
             android:src="@drawable/common_cupcake1"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             />
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginBottom="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             >
 
             <TextView
@@ -56,6 +47,23 @@
                 android:text="sdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfssdfsdfalskdfjlskdjflksjdlfksjdlfkjsldkfjslkdjflskdjflskdjflskdjflskdjflksdjlsdkjflskdjflksdjflskdjfsldkfjsldkfjlskdjsldkfjlskdjflsldkfjlskdjflskdjflskdjflskdjflskdjflskdsdfsdfs" />
 
         </ScrollView>
+        <TextView
+            android:id="@+id/quest_exchange_my_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large"
+            android:textColor="@color/gray_text"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="나의 교환 목록"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/quest_exchange_dialog_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constrainedHeight="true"
+            />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_btn_container"
@@ -64,35 +72,35 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/btn_edit"
+                android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="30dp"
                 android:paddingVertical="10dp"
-                android:text="수정"
+                android:text="뒤로가기"
                 android:textSize="@dimen/text_large"
                 android:elevation="3dp"
                 android:layout_marginVertical="5dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_delete"
+                app:layout_constraintEnd_toStartOf="@id/btn_send"
                 />
 
             <TextView
-                android:id="@+id/btn_delete"
+                android:id="@+id/btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="30dp"
                 android:paddingVertical="10dp"
-                android:text="삭제"
+                android:text="신청하기"
                 android:textSize="@dimen/text_large"
                 android:elevation="3dp"
                 android:layout_marginVertical="10dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_edit"
+                app:layout_constraintStart_toEndOf="@id/btn_back"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
