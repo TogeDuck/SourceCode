@@ -13,6 +13,7 @@ import com.idle.togeduck.domain.user.dto.LoginRequestDto;
 import com.idle.togeduck.domain.user.dto.SocialAuthResponseDto;
 import com.idle.togeduck.domain.user.dto.SocialUserResponseDto;
 import com.idle.togeduck.domain.user.dto.TokenDto;
+import com.idle.togeduck.domain.user.dto.TokenRequestDto;
 import com.idle.togeduck.domain.user.dto.UserRequestDto;
 import com.idle.togeduck.domain.user.entity.Authority;
 import com.idle.togeduck.domain.user.entity.SocialType;
@@ -102,40 +103,40 @@ public class AuthService {
 		String accessToken = tokenDto.getAccessToken();
 		// Long refreshTokenExpired = tokenDto.getAccessTokenExpireDate();
 
-		redisService.setValues(String.valueOf(user.getId()), refreshToken);
-		 
+		redisService.setValues(String.valueOf(user.getSocialId()), refreshToken);
+
 		return tokenDto;
 	}
 
-	// @Transactional
-	// public TokenDto reissue(TokenRequestDto tokenRequestDto) {
-	//
-	// 	// 1. Refresh Token 검증
-	// 	if (!jwtProvider.validateToken(tokenRequestDto.getRefreshToken())) {
-	// 		throw new RuntimeException("Refresh Token 이 유호하지 않습니다.");
-	// 	}
-	//
-	// 	// 2. Access Token 에서 user ID 가져오기
-	// 	Authentication authentication = jwtProvider.getAuthentication(tokenRequestDto.getAccessToken());
-	//
-	// 	// 3. 저장소에서 user ID 를 기반으로 refresh Token 값 가져옴
-	// 	RefreshToken refreshToken = refreshTokenRepository.findByUserId(authentication.getName())
-	// 		.orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-	//
-	// 	// 4. Refresh Token 일치하는지 검사
-	// 	if (!refreshToken.getRefreshToken().equals(tokenRequestDto.getRefreshToken())) {
-	// 		throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
-	// 	}
-	//
-	// 	// 5. 새로운 토큰 생성
-	// 	TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
-	//
-	// 	// 6. 저장소 정보 업데이트
-	// 	RefreshToken newRefreshToken = refreshToken.updateValues(authentication.getName(), tokenDto.getRefreshToken());
-	// 	refreshTokenRepository.save(newRefreshToken);
-	//
-	// 	// 토큰 발급
-	// 	return tokenDto;
-	// }
+	@Transactional
+	public TokenDto reissue(TokenRequestDto tokenRequestDto) {
 
+		// 1. Refresh Token 검증
+		if (!jwtProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+			throw new RuntimeException("Refresh Token 이 유호하지 않습니다.");
+		}
+
+		// 2. Access Token 에서 user ID 가져오기
+		Authentication authentication = jwtProvider.getAuthentication(tokenRequestDto.getAccessToken());
+
+		// 3. 저장소에서 user ID 를 기반으로 refresh Token 값 가져옴
+		String refreshToken = redisService.getValues(authentication.getName());
+		if (refreshToken == null) {
+			throw new RuntimeException("로그아웃 된 사용자입니다.");
+		}
+
+		// 4. Refresh Token 일치하는지 검사
+		if (refreshToken.equals(tokenRequestDto.getRefreshToken())) {
+			throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+		}
+
+		// 5. 새로운 토큰 생성
+		TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
+
+		// 6. 저장소 정보 업데이트
+		redisService.setValues(authentication.getName(), tokenDto.getRefreshToken());
+
+		// 토큰 발급
+		return tokenDto;
+	}
 }

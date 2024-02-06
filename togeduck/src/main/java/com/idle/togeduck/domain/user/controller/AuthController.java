@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.idle.togeduck.domain.user.dto.LoginRequestDto;
-import com.idle.togeduck.domain.user.dto.TokenDto;
+import com.idle.togeduck.domain.user.dto.TokenRequestDto;
 import com.idle.togeduck.domain.user.serivce.AuthService;
 import com.idle.togeduck.global.response.BaseResponse;
 
@@ -29,10 +29,10 @@ public class AuthController {
 	}
 
 	@PostMapping("/reissue")
-	public ResponseEntity<BaseResponse<?>> reissue(@RequestBody TokenDto tokenDto) {
+	public ResponseEntity<BaseResponse<?>> reissue(@RequestBody TokenRequestDto tokenRequestDtoDto) {
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", ""));
+			.body(new BaseResponse<>(200, "success", authService.reissue(tokenRequestDtoDto)));
 	}
 
 	// @PostMapping("/signup")
@@ -42,5 +42,4 @@ public class AuthController {
 	// 		.status(HttpStatus.OK)
 	// 		.body(new BaseResponse<>(200, "success", ""));
 	// }
-
 }
