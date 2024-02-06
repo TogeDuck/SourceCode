@@ -19,8 +19,11 @@ data class Celebrity (
     val nickname: String,
     val birthday: LocalDate,
     val image: String,
-    val teamName: String
+    val teamName: String,
+    var isSelected: Boolean = false,
+    var isClicked: Boolean = false
 )
+
 
 fun CelebrityResponse.celebrityResponseToCelebrity() = Celebrity(id, name, nickname, birthday, image, teamName)
 fun Celebrity.celebrityToFavoriteRequest() = FavoriteRequest(id)

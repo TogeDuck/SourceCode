@@ -1,8 +1,10 @@
 package com.idle.togeduck.main_map.view
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +12,13 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogSelectCelebrityBinding
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.select_celebrity.ISelectCelebrity
 import com.idle.togeduck.main_map.view.select_celebrity.SelectCelebrityAdapter
@@ -26,7 +30,7 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
     private var _binding: DialogSelectCelebrityBinding? = null
     private val binding get() = _binding!!
 
-    private val mapViewModel : MapViewModel by activityViewModels()
+    private val favoriteSettingViewModel : FavoriteSettingViewModel by activityViewModels()
 
     private lateinit var selectCelebrityAdapter: SelectCelebrityAdapter
 
@@ -62,16 +66,46 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
         binding.llEmptyLayout.setOnClickListener {
             findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
         }
+
+        favoriteSettingViewModel.favoriteIdolList.observe(viewLifecycleOwner) { favoriteIdolList ->
+            selectCelebrityAdapter.submitList(favoriteIdolList)
+        }
+
+        binding.btnCancel.setOnClickListener {
+            favoriteSettingViewModel.favoriteIdolList.value?.forEach {
+                it.isClicked = it.isSelected
+            }
+
+            findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
+        }
+
+        binding.btnSelect.setOnClickListener {
+            favoriteSettingViewModel.favoriteIdolList.value?.forEach { celebrity ->
+                celebrity.isSelected = celebrity.isClicked
+            }
+
+            favoriteSettingViewModel.setSelectedCelebrity()
+
+            findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
+        }
     }
 
     private fun setRecyclerView() {
         selectCelebrityAdapter = SelectCelebrityAdapter(this, requireContext())
 
         binding.rvSelectCelebrity.apply {
-            addItemDecoration(TogeDuckItemDecoration(5, 0))
+            addItemDecoration(TogeDuckItemDecoration(10, 0))
             adapter = selectCelebrityAdapter
             layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+
+        favoriteSettingViewModel.setClickedCelebrity()
+
+        if (favoriteSettingViewModel.selectedCelebrity.value != null) {
+            favoriteSettingViewModel.favoriteIdolList.value?.forEach { celebrity ->
+                celebrity.isClicked = celebrity.isSelected
+            }
         }
     }
 
@@ -89,8 +123,18 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
         binding.btnSelect.background = squareCircleDrawable
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun celebrityClicked(position: Int) {
+        Log.d("로그", "${favoriteSettingViewModel.favoriteIdolList.value!![position]}")
 
+        if ((favoriteSettingViewModel.clickedCelebrity.value?.id
+                ?: -1) != favoriteSettingViewModel.favoriteIdolList.value!![position].id
+        ) {
+            favoriteSettingViewModel.clickedCelebrity(position)
+            favoriteSettingViewModel.setClickedCelebrity(favoriteSettingViewModel.favoriteIdolList.value!![position])
+        }
+
+        selectCelebrityAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroyView() {
