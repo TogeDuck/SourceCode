@@ -11,7 +11,7 @@ import com.idle.togeduck.util.TogeDuckDiffUtil
 class MyExchangeAdapter (
     private val iMyExchangeDetail: IMyExchangeDetail,
     private val context: Context,
-    private val selectedMyExchange: MyExchange?
+    private var selectedMyExchange: MyExchange?
 ) :ListAdapter<MyExchange, MyExchangeViewHolder>(TogeDuckDiffUtil.myExchangeDiffUtilCallback){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyExchangeViewHolder {
         val binding = ItemQuestExchangeMyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,9 +21,13 @@ class MyExchangeAdapter (
     override fun onBindViewHolder(holder: MyExchangeViewHolder, position: Int) {
         val currentExchange = getItem(position)
         var isSelected = false
-        if(selectedMyExchange != null && currentExchange.id == selectedMyExchange.id){
+        if(selectedMyExchange != null && currentExchange.id == selectedMyExchange!!.id){
             isSelected = true
         }
         holder.binding(getItem(position), context, isSelected)
+    }
+
+    fun setSelectedMyExchange(myExchange: MyExchange){
+        selectedMyExchange = myExchange
     }
 }

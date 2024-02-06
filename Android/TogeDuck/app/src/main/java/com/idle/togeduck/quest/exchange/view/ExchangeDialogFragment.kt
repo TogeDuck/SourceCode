@@ -3,12 +3,14 @@ package com.idle.togeduck.quest.exchange.view
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -79,6 +81,17 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
             findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
         }
 
+        binding.btnSend.setOnClickListener {
+            if(exchangeViewModel.mySelectedExchange.value != null && exchangeViewModel.selectedExchange.value != null){
+                CoroutineScope(Dispatchers.IO).launch {
+                    exchangeViewModel.sendExchangeRequest(0L)
+                }
+            }
+            else {
+                Toast.makeText(requireContext(), "교환할 아이템을 선택하세요.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // RV Setup
         val recyclerView = binding.questExchangeDialogRv
         val myExchangeAdapter = MyExchangeAdapter(this, requireContext(), exchangeViewModel.mySelectedExchange.value)
@@ -94,7 +107,16 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
         }
 
         exchangeViewModel.mySelectedExchange.observe(viewLifecycleOwner){
+            myExchangeAdapter.setSelectedMyExchange(exchangeViewModel.mySelectedExchange.value!!)
             myExchangeAdapter.notifyDataSetChanged()
+        }
+
+
+        exchangeViewModel.navigationEvent.observe(viewLifecycleOwner){
+            if(exchangeViewModel.navigationEvent.value == true){
+                findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
+                exchangeViewModel.setNavigatjionEvent()
+            }
         }
     }
 
@@ -117,8 +139,8 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
         squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.sub400))
         squareCircleDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
-        binding.btnEdit.background = squareCircleDrawable
-        binding.btnDelete.background = squareCircleDrawable
+        binding.btnBack.background = squareCircleDrawable
+        binding.btnSend.background = squareCircleDrawable
     }
 
     override fun onDestroyView() {
@@ -127,6 +149,7 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
     }
 
     override fun myExchangeItemClicked(myExchange: MyExchange) {
+        Log.d("교환","내 교환 선택"+myExchange.id)
         exchangeViewModel.setMySelectedExchange(myExchange)
     }
 }

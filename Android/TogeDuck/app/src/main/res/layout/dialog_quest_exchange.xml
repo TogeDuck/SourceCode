@@ -72,7 +72,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/btn_edit"
+                android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="30dp"
@@ -84,11 +84,11 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_delete"
+                app:layout_constraintEnd_toStartOf="@id/btn_send"
                 />
 
             <TextView
-                android:id="@+id/btn_delete"
+                android:id="@+id/btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="30dp"
@@ -100,7 +100,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_edit"
+                app:layout_constraintStart_toEndOf="@id/btn_back"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

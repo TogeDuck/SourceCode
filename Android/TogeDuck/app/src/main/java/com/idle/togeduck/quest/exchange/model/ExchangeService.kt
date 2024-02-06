@@ -46,7 +46,7 @@ interface ExchangeService {
     @PATCH("events/{event_id}/trades/{trade_id}")
     suspend fun updateExchange(
         @Path("event_id") eventId: Long,
-        @Path("trade_id") tradeId: Int,
+        @Path("trade_id") tradeId: Long,
         @Part image: MultipartBody.Part,
         @Part content: String,
         @Part duration: Int
@@ -55,24 +55,25 @@ interface ExchangeService {
     @DELETE("events/{event_id}/trades/{trade_id}")
     suspend fun deleteExchange(
         @Path("event_id") eventId: Long,
-        @Path("trade_id") tradeId: Int,
+        @Path("trade_id") tradeId: Long,
     ) : Response<DefaultResponse>
 
-    @POST("events/{event_id}/trades/{trade_id}/requests")
+    @POST("events/{event_id}/trades/{trade_id}/mytrades/{my_trade_id}/requests")
     suspend fun requestExchange(
         @Path("event_id") eventId: Long,
-        @Path("trade_id") tradeId: Int,
+        @Path("trade_id") tradeId: Long,
+        @Path("my_trade_id") myTradeId: Long,
     ) : Response<DefaultResponse>
 
     @POST("events/{event_id}/trades/{trade_id}/requests/accept")
     suspend fun requestAcceptExchange(
         @Path("event_id") eventId: Long,
-        @Path("trade_id") tradeId: Int,
+        @Path("trade_id") tradeId: Long,
     ) : Response<DefaultResponse>
 
     @POST("events/{event_id}/trades/{trade_id}/requests/reject")
     suspend fun requestRejectExchange(
         @Path("event_id") eventId: Long,
-        @Path("trade_id") tradeId: Int,
+        @Path("trade_id") tradeId: Long,
     ) : Response<DefaultResponse>
 }

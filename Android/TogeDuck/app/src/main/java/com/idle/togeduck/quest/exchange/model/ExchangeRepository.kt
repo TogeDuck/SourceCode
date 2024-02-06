@@ -35,7 +35,7 @@ interface ExchangeRepository {
 
     suspend fun updateExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
         image: MultipartBody.Part,
         content: String,
         duration: Int
@@ -43,22 +43,23 @@ interface ExchangeRepository {
 
     suspend fun deleteExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
     ) : Response<DefaultResponse>
 
     suspend fun requestExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
+        myTradeId: Long
     ) : Response<DefaultResponse>
 
     suspend fun requestAcceptExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
     ) : Response<DefaultResponse>
 
     suspend fun requestRejectExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
     ) : Response<DefaultResponse>
 }
 
@@ -97,7 +98,7 @@ class DefaultExchangeRepository @Inject constructor(
 
     override suspend fun updateExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
         image: MultipartBody.Part,
         content: String,
         duration: Int,
@@ -105,24 +106,24 @@ class DefaultExchangeRepository @Inject constructor(
         return exchangeService.updateExchange(eventId, tradeId, image, content, duration)
     }
 
-    override suspend fun deleteExchange(eventId: Long, tradeId: Int): Response<DefaultResponse> {
+    override suspend fun deleteExchange(eventId: Long, tradeId: Long): Response<DefaultResponse> {
         return exchangeService.deleteExchange(eventId, tradeId)
     }
 
-    override suspend fun requestExchange(eventId: Long, tradeId: Int): Response<DefaultResponse> {
-        return exchangeService.requestExchange(eventId, tradeId)
+    override suspend fun requestExchange(eventId: Long, tradeId: Long, myTradeId: Long): Response<DefaultResponse> {
+        return exchangeService.requestExchange(eventId, tradeId, myTradeId)
     }
 
     override suspend fun requestAcceptExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
     ): Response<DefaultResponse> {
         return exchangeService.requestAcceptExchange(eventId, tradeId)
     }
 
     override suspend fun requestRejectExchange(
         eventId: Long,
-        tradeId: Int,
+        tradeId: Long,
     ): Response<DefaultResponse> {
         return exchangeService.requestRejectExchange(eventId, tradeId)
     }
