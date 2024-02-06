@@ -44,7 +44,7 @@ interface EventService {
     suspend fun postReview(
         @Path("event_id") eventId: Long,
         @Part image: MultipartBody.Part?,
-        @Part content: RequestBody,
+        @Part content: MultipartBody.Part,
     ): Response<DefaultResponse>
 
     @GET("events/{event_id}")

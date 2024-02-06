@@ -36,7 +36,7 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    suspend fun postReview(eventId: Long, image: MultipartBody.Part?, content: RequestBody) {
+    suspend fun postReview(eventId: Long, image: MultipartBody.Part?, content: MultipartBody.Part) {
         val responseResult = eventRepository.postReview(eventId, image, content)
 
         if (!responseResult.isSuccessful) {

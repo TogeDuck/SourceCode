@@ -20,11 +20,13 @@ object MultiPartUtil {
         return MultipartBody.Part.createFormData("image", file.name, requestFile)
     }
 
-    fun createRequestBody(content: Int): RequestBody {
-        return content.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+    fun createRequestBody(content: Int): MultipartBody.Part {
+        val requestBody = content.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("content", "content", requestBody)
     }
 
-    fun createRequestBody(content: String): RequestBody {
-        return content.toRequestBody("text/plain".toMediaTypeOrNull())
+    fun createRequestBody(content: String): MultipartBody.Part {
+        val requestBody = content.toRequestBody("text/plain".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("content", "content", requestBody)
     }
 }
