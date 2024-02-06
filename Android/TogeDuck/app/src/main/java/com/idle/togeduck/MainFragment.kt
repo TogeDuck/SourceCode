@@ -1,5 +1,6 @@
 package com.idle.togeduck
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,13 +9,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.gson.Gson
-import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.WebSocketManager
+import com.idle.togeduck.util.GPSWorker
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
+import kotlin.math.log
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -95,4 +101,14 @@ class MainFragment : Fragment() {
         Log.d("좌표", coorDto.toString())
     }
 
+    fun doWorkWithPeriodic() {
+        Log.d("로그", "doWorkWithPeriodic() 호출됨")
+
+        val workRequest = PeriodicWorkRequestBuilder<GPSWorker>(15, TimeUnit.MINUTES).build()
+
+        val workManager = WorkManager.getInstance(requireContext())
+        workManager.enqueueUniquePeriodicWork("doWorkWithPeriodic", ExistingPeriodicWorkPolicy.UPDATE, workRequest)
+
+        workManager.cancelWorkById(workRequest.id)
+    }
 }
