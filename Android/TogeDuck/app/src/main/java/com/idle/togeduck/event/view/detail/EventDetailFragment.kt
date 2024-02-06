@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
@@ -53,9 +54,10 @@ class EventDetailFragment : Fragment(), EventReview {
     private lateinit var eventReviewAdapter: EventReviewAdapter
     private lateinit var event: Event
 
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-//                binding.imageView.setImageURI(uri)
+            showDialog()
+
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
         }
@@ -252,6 +254,9 @@ class EventDetailFragment : Fragment(), EventReview {
 //        }
     }
 
+    private fun showDialog() {
+        findNavController().navigate(R.id.action_eventDetailFragment_to_EventReviewDialogFragment)
+    }
 
 
     override fun onDestroyView() {
