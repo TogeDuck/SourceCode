@@ -42,7 +42,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 //    private const val BASE_URL = "https://a1025c31-1b70-43fc-85ae-a9f7b81404ce.mock.pstmn.io"
-    private const val BASE_URL = "https://780db32a-5548-4d0d-804a-c0f8a2799ab0.mock.pstmn.io"
+    private const val BASE_URL = "https://a88c286f-5cab-4976-a6f1-ba3076fda1cb.mock.pstmn.io"
     @Singleton
     @Provides
     fun provideOkhttpClient(): OkHttpClient {
