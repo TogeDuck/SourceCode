@@ -1,5 +1,7 @@
 package com.idle.togeduck.domain.chat.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +27,6 @@ public interface TradeRepository extends JpaRepository<Trade, Long> {
 		+ "order by t.createdAt desc ")
 	Slice<TradeResponseDto> findSliceByEventIdAndUserId(Long userId, Long eventId, Pageable pageable);
 
+	@Query("select t from Trade t join fetch t.user where t.id = :tradeId")
+	Optional<Trade> findByIdWithUser(Long tradeId);
 }

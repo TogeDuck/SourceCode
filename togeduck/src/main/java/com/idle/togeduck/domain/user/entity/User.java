@@ -30,4 +30,6 @@ public class User extends BaseEntity {
 
 	private String socialId;
 
+	private String deviceToken;
+
 }

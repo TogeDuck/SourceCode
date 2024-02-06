@@ -10,7 +10,7 @@ import com.idle.togeduck.domain.event.entity.Share;
 
 public interface ShareRepository extends JpaRepository<Share, Long> {
 	@Query("select new com.idle.togeduck.domain.event.dto.ShareRespondDto("
-		+ "s.id, s.image, s.title, s.content, s.duration, s.user.id = :userId) "
+		+ "s.id, s.image, s.title, s.content, s.createdAt, s.user.id = :userId) "
 		+ "from Share s "
 		+ "where s.event.id = :eventId "
 		+ "order by s.createdAt desc")
