@@ -60,7 +60,6 @@ class EventDetailFragment : Fragment(), EventReview {
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
             eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-
             imgPath = uriToFilePath(uri)
 //            postUri = uri.path
         } else {
@@ -80,11 +79,12 @@ class EventDetailFragment : Fragment(), EventReview {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setTheme()
         setRecyclerView()
 
         //리스트의 해당 이벤트 정보 가져오기
-        eventListViewModel.selectedEvent.observe(viewLifecycleOwner){ event ->
+        eventListViewModel.selectedEvent.observe(viewLifecycleOwner) { event ->
             this.event = event
             binding.cafeNameDetail.text = event.name
             binding.eventNameDetail.text = event.description
@@ -100,7 +100,7 @@ class EventDetailFragment : Fragment(), EventReview {
             changeVisitImage(event)
         }
 
-        eventReviewViewModel.reviewList.observe(viewLifecycleOwner){ list ->
+        eventReviewViewModel.reviewList.observe(viewLifecycleOwner) { list ->
             eventReviewAdapter.submitList(list)
         }
 
@@ -111,28 +111,8 @@ class EventDetailFragment : Fragment(), EventReview {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        eventReviewInputBinding.reviewPost.setOnClickListener{
-            val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
-
-            if (reviewInputText.isNotEmpty()) {
-                val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
-
-                if(imgPath?.isNotEmpty() == true){
-                    val reviewImg = MultiPartUtil.createImagePart(imgPath!!)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        Log.d("이미지 있는 리뷰 등록", "이미지 있는 리뷰 등록")
-                        eventReviewViewModel.postReview(1, reviewImg, reviewText)
-                        //페이지 새로고침?
-//                        eventReviewViewModel.getReviewList(1,1,100)
-                    }
-                }else{
-                    CoroutineScope(Dispatchers.IO).launch {
-                        Log.d("이미지 없는 리뷰 등록", "이미지 없는 리뷰 등록")
-                        eventReviewViewModel.postReview(1, null, reviewText)
-//                        eventReviewViewModel.getReviewList(1,1,100)
-                    }
-                }
-            }
+        eventReviewInputBinding.reviewPost.setOnClickListener {
+            postReview()
         }
     }
 
@@ -208,11 +188,11 @@ class EventDetailFragment : Fragment(), EventReview {
         changeLikeImage(event)
 
         CoroutineScope(Dispatchers.IO).launch {
-            if(event.isStar){
+            if(event.isStar) {
                 val likeEventRequest = LikeEventRequest(1)
                 eventListViewModel.likeEvent(likeEventRequest)
                 Log.d("log", "eventDetailfragment - 즐겨찾기 추가 ")
-            }else{
+            }else {
                 eventListViewModel.unlikeEvent(1)
                 Log.d("log", "eventDetailfragment - 즐겨찾기 삭제")
             }
@@ -221,7 +201,6 @@ class EventDetailFragment : Fragment(), EventReview {
 
     override fun visitClick(event: Event) {
         event.isVisited = !event.isVisited
-
         changeVisitImage(event)
 
         //todo.방문 체크 api 추가
@@ -269,6 +248,37 @@ class EventDetailFragment : Fragment(), EventReview {
         return filePath
     }
 
+    private fun postReview(){
+        val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
+
+        if (reviewInputText.isNotEmpty()) {
+            val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
+
+            if(imgPath?.isNotEmpty() == true) {
+                val reviewImg = MultiPartUtil.createImagePart(imgPath!!)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
+                    eventReviewViewModel.postReview(1, reviewImg, reviewText)
+                    eventReviewViewModel.getReviewList(1, 1, 100)
+
+                    eventReviewInputBinding.etReviewInput.text?.clear()
+
+                    //튕김
+//                    eventReviewInputBinding.reviewImgThumb.visibility = View.GONE
+//                    imgPath = null
+                }
+            }else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("리뷰 등록", "이미지 없는 리뷰 등록")
+                    eventReviewViewModel.postReview(1, null, reviewText)
+                    eventReviewViewModel.getReviewList(1, 1, 100)
+
+                    eventReviewInputBinding.etReviewInput.text?.clear()
+                }
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
