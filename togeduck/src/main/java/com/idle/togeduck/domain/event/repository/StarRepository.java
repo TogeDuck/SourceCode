@@ -8,6 +8,6 @@ import com.idle.togeduck.domain.user.entity.Star;
 
 public interface StarRepository extends JpaRepository<Star, Long>, StarRepositoryCustom {
 
-	Optional<Star> findByIdAndUserId(Long likeId, Long userId);
+	Optional<Star> findByEventId(Long eventId);
 
 }

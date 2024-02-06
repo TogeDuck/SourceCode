@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Party extends Chat {
+public class Party extends Quest {
 
 	private String title;
 

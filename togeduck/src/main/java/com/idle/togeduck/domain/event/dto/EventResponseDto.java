@@ -4,9 +4,10 @@ import java.time.LocalDate;
 
 public record EventResponseDto(
 	Long eventId,
-	String url,
 	String name,
-	String description,
+	String image1,
+	String image2,
+	String image3,
 	LocalDate startDate,
 	LocalDate endDate,
 	Double latitude,

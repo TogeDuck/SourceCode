@@ -7,6 +7,8 @@ public record TradeResponseDto(
 	String content,
 	String image,
 	Integer duration,
-	LocalDateTime createdAt
+	LocalDateTime createdAt,
+	LocalDateTime expiredAt,
+	boolean isMine
 ) {
 }

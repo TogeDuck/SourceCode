@@ -39,11 +39,14 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String socialId;
 
+	private String deviceToken;
+
 	public void updateUser(Authority authority, String socialId, SocialType socialType) {
 		this.authority = authority;
 		this.socialId = socialId;
 		this.socialType = socialType;
 	}
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,4 +86,6 @@ public class User extends BaseEntity implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+
 }
