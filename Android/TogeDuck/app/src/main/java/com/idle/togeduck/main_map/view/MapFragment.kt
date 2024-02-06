@@ -89,7 +89,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var prevOffset = 0.0f
     private var halfOffset = 0.5f
 
-    private lateinit var clustering: TedNaverClustering<NaverItem>
+    private var clustering: TedNaverClustering<NaverItem>? = null
 
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
 
@@ -121,7 +121,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpFloatingButton()
 
         mapViewModel.markerList.observe(viewLifecycleOwner) {
-            clustering.addItems(it)
+            clustering?.addItems(it)
         }
     }
 
@@ -465,7 +465,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .make()
 
         clustering
-            .setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
+            ?.setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
     }
 
     // 가장 가까운 마커의 위치를 반환하는 메소드
