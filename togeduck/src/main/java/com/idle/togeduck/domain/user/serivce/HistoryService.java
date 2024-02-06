@@ -80,11 +80,7 @@ public class HistoryService {
 		userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 		History history = historyRepository.findById(historyId).orElseThrow(() -> new BaseException(HISTORY_NOT_FOUND));
 
-		System.out.println("history.getName() = " + history.getName());
-		System.out.println("history.getroute() = " + history.getRoute());
 		history.updateName(historyName);
-		System.out.println("history.getName() 1= " + history.getName());
-		System.out.println("history.getroute() 1= " + history.getRoute());
 	}
 
 	@Transactional
