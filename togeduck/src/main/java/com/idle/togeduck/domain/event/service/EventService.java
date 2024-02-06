@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EventService {
-	public final EventRepository eventRepository;
+	private final EventRepository eventRepository;
 
 	public TodayAndLaterEventResponseDto getEvents(Long celebrityId, LocalDate startDate, LocalDate endDate,
 		Long userId) {

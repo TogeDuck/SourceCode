@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
-	public final EventService eventService;
+	private final EventService eventService;
 
 	@GetMapping
 	public ResponseEntity<BaseResponse<TodayAndLaterEventResponseDto>> getEvents(
