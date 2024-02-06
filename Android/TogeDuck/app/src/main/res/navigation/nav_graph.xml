@@ -128,7 +128,11 @@
         android:id="@+id/eventDetailFragment"
         android:name="com.idle.togeduck.event.view.detail.EventDetailFragment"
         android:label="event_detail_fragment"
-        tools:layout="@layout/fragment_event_detail"/>
+        tools:layout="@layout/fragment_event_detail">
+        <action
+            android:id="@+id/action_eventDetailFragment_to_EventReviewDialogFragment"
+            app:destination="@id/eventReviewDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/questTalkFragment"
         android:name="com.idle.togeduck.quest.talk.view.QuestTalkFragment"
@@ -155,4 +159,16 @@
             app:popUpTo="@id/exchangeDialogFragment"
             app:popUpToInclusive="true" />
     </dialog>
+    <dialog
+        android:id="@+id/eventReviewDialogFragment"
+        android:name="com.idle.togeduck.quest.share.view.EventReviewDialogFragment"
+        android:label="EventReviewDialogFragment"
+        tools:layout="@layout/dialog_event_review">
+        <action
+            android:id="@+id/action_eventReviewDialogFragment_pop"
+            app:popUpTo="@id/eventReviewDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+
+
 </navigation>
