@@ -28,6 +28,12 @@ class EventViewModel @Inject constructor(
     val reviewList: LiveData<List<EventReviewContent>>
         get() = _reviewList
 
+    init {
+        viewModelScope.launch {
+            getReviewList(1,1,100)
+        }
+    }
+
     suspend fun postReview(eventId: Long, image: MultipartBody.Part, content: String) {
         val responseResult = eventRepository.postReview(eventId, image, content)
 

@@ -37,6 +37,10 @@ class EventListViewModel @Inject constructor(
     val listPast: LiveData<List<Event>>
         get() = _listPast
 
+    private val _selectedEvent = MutableLiveData<Event>()
+    val selectedEvent: LiveData<Event>
+        get() = _selectedEvent
+
 
     init {
         viewModelScope.launch {
@@ -102,5 +106,9 @@ class EventListViewModel @Inject constructor(
             )
             Log.d("로그", "EventListViewModel - unlikeEvent() 응답 실패 - $errorBody")
         }
+    }
+
+    fun setSelectedEvent(event: Event) {
+        _selectedEvent.value = event
     }
 }

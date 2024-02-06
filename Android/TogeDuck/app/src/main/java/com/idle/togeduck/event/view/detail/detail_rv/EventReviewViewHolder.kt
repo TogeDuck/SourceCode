@@ -21,10 +21,6 @@ class EventReviewViewHolder (
     private val reviewText = binding.reviewText
     private val reviewImg = binding.reviewImg
 
-    init {
-        eventReviewLayout.setOnClickListener(this)
-    }
-
     fun bind(review: EventReviewContent, context: Context){
         val drawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         drawable.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
@@ -39,18 +35,15 @@ class EventReviewViewHolder (
         reviewText.text = review.content
         reviewText.setTextColor(ContextCompat.getColor(context, R.color.black))
 
-
-        //todo.이미지 추가 (Glide) - reviewImg 처리
-        //todo. 이미지 null이 아니면 visibility = visible null이면 반대
-        if(review.reviewImageUrl != null){
+        if(review.reviewImageUrl != ""){
             Glide
                 .with(reviewImg)
                 .load(review.reviewImageUrl)
-                .override(100,100)
+                .override(500,500)
                 .into(reviewImg)
 
             reviewImg.visibility = View.VISIBLE
-        }else{
+        }else {
             reviewImg.visibility = View.GONE
         }
     }

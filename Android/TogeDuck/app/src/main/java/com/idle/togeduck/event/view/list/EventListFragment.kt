@@ -24,6 +24,7 @@ import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.view.detail.EventDetailFragment
+import com.idle.togeduck.main_map.view.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -111,14 +112,18 @@ class EventListFragment : Fragment(), EventInfo {
         _binding = null
     }
 
-    override fun eventClicked(position: Int) {
-        //상세화면으로 이동
-        TODO("Not yet implemented")
-//        val clickedEvent = todayEventInfoAdapter.getItemId((position))
-//
-//        val intent = Intent(requireContext(), EventDetailFragment::class.java)
-//        intent.putExtra("event_id", clickedEvent.eventId)
-//        startActivity(intent)
+    //todo.타입별로 today, upcoming, past 확인하고 그거마다 상세화면 이동
+    override fun eventClicked(position: Int, type: Int) {
+        if(type == 0) {
+            eventListViewModel.setSelectedEvent(eventListViewModel.listToday.value!![position])
+            (parentFragment as MapFragment).changeViewPagerPage(5)
+        }else if(type == 1){
+            eventListViewModel.setSelectedEvent(eventListViewModel.listUpcoming.value!![position])
+            (parentFragment as MapFragment).changeViewPagerPage(5)
+        }else {
+            eventListViewModel.setSelectedEvent(eventListViewModel.listPast.value!![position])
+            (parentFragment as MapFragment).changeViewPagerPage(5)
+        }
     }
 
     override fun likeClick(position: Int, type: Int) {

@@ -7,12 +7,13 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/plus_event_review_input"
+        android:id="@+id/camera_btn"
         android:layout_width="@dimen/circle_xsmall"
         android:layout_height="@dimen/circle_xsmall"
         android:background="@drawable/shape_circle"
         android:padding="5dp"
-        android:src="@drawable/ic_plus"
+        android:src="@drawable/ic_add_photo"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/et_review_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/et_review_input"
@@ -37,7 +38,7 @@
         android:textSize="@dimen/text_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/review_reg"
-        app:layout_constraintStart_toEndOf="@+id/plus_event_review_input"
+        app:layout_constraintStart_toEndOf="@+id/camera_btn"
         app:layout_constraintTop_toTopOf="parent"
         tools:backgroundTint="@color/gray_bg"
         tools:ignore="RtlSymmetry" />
