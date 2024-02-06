@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,6 +58,32 @@ public class HistoryController {
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "투어 방문 이벤트 정보를 가져왔습니다.", historyService.getRoutes(historyId, userId)));
+	}
+
+	@PatchMapping("/history/{history_id}/name")
+	public ResponseEntity<BaseResponse<?>> updateName(@PathVariable(name = "history_id") Long historyId,
+		@RequestParam("history_name") String historyName, Long userId) {
+
+		historyService.updateName(historyId, historyName, userId);
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(new BaseResponse<>(200, "투어 정보를 수정했습니다.", null));
+	}
+
+	@PatchMapping("/history/{history_id}/route")
+	public ResponseEntity<BaseResponse<?>> updateRoute(@PathVariable(name = "history_id") Long historyId,
+		String route, Long userId) {
+
+		historyService.updateRoute(historyId, route, userId);
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(new BaseResponse<>(200, "투어 루트를 추가했습니다.", null));
+	}
+
+	@DeleteMapping("/history/{history_id}")
+	public ResponseEntity<BaseResponse<?>> deleteHistory(@PathVariable(name = "history_id") Long historyId,
+		Long userId) {
+		historyService.deleteHistory(historyId, userId);
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(new BaseResponse<>(200, "투어 정보를 삭제했습니다.", null));
 	}
 
 	// @PatchMapping

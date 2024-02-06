@@ -40,4 +40,11 @@ public class History extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	public void updateName(String name) {
+		this.name = name;
+	}
+
+	public void updateRoute(String route) {
+		this.route = route;
+	}
 }

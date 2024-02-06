@@ -58,7 +58,6 @@ public class HistoryService {
 			.build());
 	}
 
-	@Transactional
 	public List<HistoryResponseDto> joinHistory(Long celebrityId, Long userId) {
 		celebrityRepository.findById(celebrityId)
 			.orElseThrow(() -> new BaseException(CELEBRITY_NOT_FOUND));
@@ -76,16 +75,32 @@ public class HistoryService {
 		return new RouteResponseDto(history.getRoute(), events);
 	}
 
-	// @Transactional
-	// public void updateRoute(String route, Long userId) {
-	// 	User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-	//
-	// 	historyRepository.updateRoute(History.builder()
-	// 		.date(LocalDate.now())
-	// 		.name(LocalDate.now().toString())
-	// 		.route(route)
-	// 		.user(user)
-	// 		.build());
-	// }
+	@Transactional
+	public void updateName(Long historyId, String historyName, Long userId) {
+		userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		History history = historyRepository.findById(historyId).orElseThrow(() -> new BaseException(HISTORY_NOT_FOUND));
+
+		System.out.println("history.getName() = " + history.getName());
+		System.out.println("history.getroute() = " + history.getRoute());
+		history.updateName(historyName);
+		System.out.println("history.getName() 1= " + history.getName());
+		System.out.println("history.getroute() 1= " + history.getRoute());
+	}
+
+	@Transactional
+	public void updateRoute(Long historyId, String route, Long userId) {
+		userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		History history = historyRepository.findById(historyId).orElseThrow(() -> new BaseException(HISTORY_NOT_FOUND));
+
+		history.updateRoute(route);
+	}
+
+	@Transactional
+	public void deleteHistory(Long historyId, Long userId) {
+		userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+		History history = historyRepository.findById(historyId).orElseThrow(() -> new BaseException(HISTORY_NOT_FOUND));
+
+		historyRepository.delete(history);
+	}
 
 }
