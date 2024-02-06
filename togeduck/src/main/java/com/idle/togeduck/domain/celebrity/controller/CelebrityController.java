@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.idle.togeduck.domain.celebrity.dto.CelebrityRequestDto;
 import com.idle.togeduck.domain.celebrity.dto.CelebrityResponseDto;
 import com.idle.togeduck.domain.celebrity.service.CelebrityService;
 import com.idle.togeduck.global.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/celebrities")
 @RequiredArgsConstructor
@@ -23,12 +26,13 @@ public class CelebrityController {
 
 	private final CelebrityService celebrityService;
 
-	@GetMapping
-	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(@RequestParam String name,
-		String nickname, String teamName) throws IOException {
-
+	@GetMapping("/search")
+	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(
+		@RequestParam(required = false) CelebrityRequestDto celebrityRequestDto) throws
+		IOException {
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", celebrityService.getAllCelebrity(name, nickname, teamName)));
+			.body(new BaseResponse<>(200, "success", celebrityService.getAllCelebrity(celebrityRequestDto)));
+
 	}
 }
