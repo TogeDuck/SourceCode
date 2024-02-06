@@ -44,19 +44,6 @@ class MainFragment : Fragment() {
         binding.btn3.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
         }
-
-        val webSocketManager = WebSocketManager()
-        webSocketManager.connect()
-        webSocketManager.subscribe("/topic/coors"){
-            message -> Log.d("좌표", message)
-        }
-
-        webSocketManager.subscribe("/topic/quests"){
-                message -> Log.d("퀘스트", message)
-        }
-
-        webSocketManager.disconnect()
-
     }
 
     override fun onDestroyView() {
