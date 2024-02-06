@@ -14,17 +14,17 @@
     android:clickable="true"
     android:focusable="true" >
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:layout_marginStart="55dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="@dimen/text_extra_large"
-        android:textStyle="bold"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_title"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/app_name"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:layout_marginStart="55dp"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        android:textSize="@dimen/text_extra_large"-->
+<!--        android:textStyle="bold"-->
+<!--        />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,12 +44,22 @@
             android:background="@drawable/shape_circle"
             android:contentDescription="앱 아이콘" />
 
-        <include
-            android:id="@+id/csb"
-            layout="@layout/component_search_bar_top_appbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/circle_xxsmall"
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_title_small"
+            android:textStyle="bold"
             />
+
+<!--        <include-->
+<!--            android:id="@+id/csb"-->
+<!--            layout="@layout/component_search_bar_top_appbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/circle_xxsmall"-->
+<!--            />-->
 
     </LinearLayout>
 
