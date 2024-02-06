@@ -11,6 +11,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
@@ -67,11 +70,27 @@ class TopAppbarFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateRangePicker() {
         val calendar = Calendar.getInstance()
+
+        calendar.add(Calendar.YEAR, -10)
+        val startYear = calendar.timeInMillis
+        calendar.add(Calendar.YEAR, 20)
+        val endYear = calendar.timeInMillis
+        calendar.add(Calendar.YEAR, -10)
+        val now = calendar.timeInMillis
+
+        val constraintsBuilder =
+            CalendarConstraints.Builder()
+                .setStart(startYear)
+                .setEnd(endYear)
+                .setOpenAt(now)
+
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
             .setTheme(R.style.MyMaterialDatePickerTheme)
+            .setCalendarConstraints(constraintsBuilder.build())
             .setTitleText("날짜를 선택하세요")
             .setSelection(Pair(calendar.timeInMillis, calendar.timeInMillis))
             .build()
+
         val dateRangePickerTag = "dateRangePicker"
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
 
