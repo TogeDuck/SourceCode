@@ -28,17 +28,7 @@ class MyFavoriteViewHolder(
     }
 
     fun bind(celebrity: Celebrity, context: Context) {
-        val circleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
-
-        circleDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
-        circleDrawable.setStroke(2, ContextCompat.getColor(context, Theme.theme.main500))
-        imgImageView.background = circleDrawable
-
-        val allCornerDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_5) as GradientDrawable
-        allCornerDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
-        allCornerDrawable.setStroke(0, getColor(context, Theme.theme.main500))
-        allCornerDrawable.alpha = 0.4.toAlpha()
-        idolMyFavoriteLinearLayout.background = allCornerDrawable
+        setTheme(context)
 
         Glide
             .with(imgImageView)
@@ -54,6 +44,19 @@ class MyFavoriteViewHolder(
         nameTextView.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
 
         removeBtn.setColorFilter(ContextCompat.getColor(context, Theme.theme.main500))
+    }
+
+    private fun setTheme(context: Context) {
+        val circleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
+        circleDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
+        circleDrawable.setStroke(2, ContextCompat.getColor(context, Theme.theme.main500))
+        imgImageView.background = circleDrawable
+
+        val allCornerDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_5) as GradientDrawable
+        allCornerDrawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
+        allCornerDrawable.setStroke(0, getColor(context, Theme.theme.main500))
+        allCornerDrawable.alpha = 0.4.toAlpha()
+        idolMyFavoriteLinearLayout.background = allCornerDrawable
     }
 
     override fun onClick(view: View?) {

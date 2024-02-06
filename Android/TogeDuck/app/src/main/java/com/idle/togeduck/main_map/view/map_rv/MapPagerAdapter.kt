@@ -17,10 +17,10 @@ class MapPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         return when (position) {
             0 -> QuestFragment()
             1 -> EventListFragment()
-            2 -> EventListFragment()
-            3 -> HistoryFragment()
-            4 -> HistoryDetailFragment()
-            else -> EventDetailFragment()
+            2 -> EventDetailFragment()
+            3 -> EventListFragment() // TODO. MyQuest 화면 추가 필요
+            4 -> HistoryFragment()
+            else -> HistoryDetailFragment()
         }
     }
 }
