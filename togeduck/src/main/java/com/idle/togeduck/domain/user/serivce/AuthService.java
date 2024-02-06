@@ -113,7 +113,7 @@ public class AuthService {
 
 		// 1. Refresh Token 검증
 		if (!jwtProvider.validateToken(tokenRequestDto.getRefreshToken())) {
-			throw new RuntimeException("Refresh Token 이 유호하지 않습니다.");
+			throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
 		}
 
 		// 2. Access Token 에서 user ID 가져오기
@@ -126,7 +126,7 @@ public class AuthService {
 		}
 
 		// 4. Refresh Token 일치하는지 검사
-		if (refreshToken.equals(tokenRequestDto.getRefreshToken())) {
+		if (!refreshToken.equals(tokenRequestDto.getRefreshToken())) {
 			throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
 		}
 

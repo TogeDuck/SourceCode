@@ -107,7 +107,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 			return Jwts.parserBuilder()
 				.setSigningKey(key)
 				.build()
-				.parseClaimsJwt(accessToken)
+				.parseClaimsJws(accessToken)
 				.getBody();
 		} catch (ExpiredJwtException e) {
 			return e.getClaims();
