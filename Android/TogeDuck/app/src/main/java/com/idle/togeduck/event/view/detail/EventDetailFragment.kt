@@ -3,6 +3,7 @@ package com.idle.togeduck.event.view.detail
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import okhttp3.MultipartBody
+import java.io.File
+import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class EventDetailFragment : Fragment(), EventReview {
@@ -50,14 +53,16 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private lateinit var eventReviewAdapter: EventReviewAdapter
     private lateinit var event: Event
-    private lateinit var postUri: String
+    private var imgPath: String? = null
 
-    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
             eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-            postUri = uri.toString()
-            Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 성공")
+
+            imgPath = uriToFilePath(uri)
+//            postUri = uri.path
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
         }
@@ -112,27 +117,24 @@ class EventDetailFragment : Fragment(), EventReview {
             if (reviewInputText.isNotEmpty()) {
                 val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
 
-                if(postUri.isNotEmpty()){
-                    val reviewImg = MultiPartUtil.createImagePart(postUri)
+                if(imgPath?.isNotEmpty() == true){
+                    val reviewImg = MultiPartUtil.createImagePart(imgPath!!)
                     CoroutineScope(Dispatchers.IO).launch {
+                        Log.d("이미지 있는 리뷰 등록", "이미지 있는 리뷰 등록")
                         eventReviewViewModel.postReview(1, reviewImg, reviewText)
-                        eventReviewViewModel.getReviewList(1,1,100)
+                        //페이지 새로고침?
+//                        eventReviewViewModel.getReviewList(1,1,100)
                     }
                 }else{
                     CoroutineScope(Dispatchers.IO).launch {
+                        Log.d("이미지 없는 리뷰 등록", "이미지 없는 리뷰 등록")
                         eventReviewViewModel.postReview(1, null, reviewText)
-                        eventReviewViewModel.getReviewList(1,1,100)
+//                        eventReviewViewModel.getReviewList(1,1,100)
                     }
                 }
             }
-
         }
     }
-
-//        CoroutineScope(Dispatchers.IO).launch {
-//            eventReviewViewModel.deleteReview(1,1)
-//        }
-
 
     private fun setRecyclerView(){
         eventReviewAdapter = EventReviewAdapter(this, requireContext())
@@ -228,6 +230,43 @@ class EventDetailFragment : Fragment(), EventReview {
 //
 //            }
 //        }
+    }
+
+    //todo.안드로이드 10 이상부터 보안상 문제로 Media.DATA 없음 : 확인 후 삭제
+//    override fun uriToFilePath(uri: Uri): String {
+//        val contentResolver = requireContext().contentResolver
+//        val cursor = contentResolver.query(uri,null, null, null, null)
+//        cursor?.use {
+//            it.moveToNext()
+//            val filePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//            val pathString = it.getString(filePathColumn)
+//            return it.getString(filePathColumn)
+//        }
+//        return ""
+//    }
+
+    //todo. URI 이용해 파일을 복사하는 방식
+    override fun uriToFilePath(uri: Uri): String {
+        val contentResolver = requireContext().contentResolver
+        val cursor = contentResolver.query(uri,null, null, null, null)
+        lateinit var filePath: String
+
+        cursor?.use { cursor ->
+            if(cursor.moveToFirst()){
+                val displayNameIndex = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                val displayName = cursor.getString(displayNameIndex)
+
+                val inputStream = contentResolver.openInputStream(uri)
+                val targetFile = File(requireContext().cacheDir, displayName)
+                inputStream?.use { input ->
+                    FileOutputStream(targetFile).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                filePath = targetFile.absolutePath
+            }
+        }
+        return filePath
     }
 
 
