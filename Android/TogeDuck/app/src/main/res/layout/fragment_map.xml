@@ -21,6 +21,7 @@
         android:layout_gravity="start|top"
         />
     <LinearLayout
+        android:id="@+id/real_time_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
@@ -33,6 +34,10 @@
             android:textColor="@color/gray_text"
             android:text="실시간 정보"
             android:textSize="@dimen/text_medium"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:layout_gravity="center"
             />
         <Switch
