@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -88,7 +89,8 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
                 }
             }
             else {
-                Toast.makeText(requireContext(), "교환할 아이템을 선택하세요.", Toast.LENGTH_SHORT).show()
+                val toast = Toast.makeText(requireContext(), "교환할 아이템을 선택하세요", Toast.LENGTH_SHORT)
+                toast.show()
             }
         }
 
@@ -116,6 +118,7 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
             if(exchangeViewModel.navigationEvent.value == true){
                 findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
                 exchangeViewModel.setNavigatjionEvent()
+                Toast.makeText(requireContext(), "교환이 신청되었습니다", Toast.LENGTH_SHORT).show()
             }
         }
     }
