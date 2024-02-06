@@ -38,7 +38,7 @@ public class TradeController {
 		@PathVariable Long eventId,
 		Pageable pageable) {
 		return ResponseEntity.ok(
-			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTradeList(eventId, pageable)));
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTradeList(1L, eventId, pageable)));
 	}
 
 	@GetMapping("/{eventId}/trades/{tradeId}")

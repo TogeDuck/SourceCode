@@ -27,8 +27,8 @@ public class TradeService {
 	private final EventRepository eventRepository;
 	private final S3Service s3Service;
 
-	public Slice<TradeResponseDto> getTradeList(Long eventId, Pageable pageable) {
-		return tradeRepository.findSliceByEventId(eventId, pageable);
+	public Slice<TradeResponseDto> getTradeList(Long userId, Long eventId, Pageable pageable) {
+		return tradeRepository.findSliceByEventId(userId, eventId, pageable);
 	}
 
 	public TradeResponseDto getTrade(Long tradeId) {

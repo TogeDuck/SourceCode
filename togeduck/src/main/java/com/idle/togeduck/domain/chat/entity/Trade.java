@@ -1,5 +1,7 @@
 package com.idle.togeduck.domain.chat.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +20,8 @@ public class Trade extends Quest {
 	private String content;
 
 	private Integer duration;
+
+	private LocalDateTime expiredAt;
 
 	public void updateTrade(String originalFilename, String content, int duration) {
 		this.image = originalFilename;

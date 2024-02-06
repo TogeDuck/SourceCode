@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
@@ -36,7 +35,7 @@ public class DealService {
 	private final TradeRepository tradeRepository;
 	private final ChatRepository chatRepository;
 	private final MessageRepository messageRepository;
-	private final FirebaseApp firebaseApp;
+	private final FirebaseMessaging firebaseMessaging;
 	private final UserChatRepository userChatRepository;
 
 	//거래 요청
@@ -54,7 +53,7 @@ public class DealService {
 
 		dealRepository.save(deal);
 
-		sendDealNotification(target.getUser().getDeviceToken(), deal.getId(), "거래 요청 도착");
+		// sendDealNotification(target.getUser().getDeviceToken(), deal.getId(), "거래 요청 도착");
 	}
 
 	//거래 수락
@@ -86,7 +85,7 @@ public class DealService {
 		userChatRepository.save(myUserChat);
 
 		//거래 수락 성공 요청 전송
-		sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨");
+		// sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨");
 	}
 
 	//거래 거절
@@ -96,7 +95,7 @@ public class DealService {
 		deal.setStatus(DealStatus.REJECTED);
 
 		//거래 수락 성공 요청 전송
-		sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 거절됨");
+		// sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 거절됨");
 	}
 
 	private void sendDealNotification(String deviceToken, Long dealId, String body) {
@@ -112,7 +111,7 @@ public class DealService {
 			.build();
 
 		try {
-			String response = FirebaseMessaging.getInstance(firebaseApp).sendAsync(fcmMessage).get();
+			String response = firebaseMessaging.sendAsync(fcmMessage).get();
 		} catch (InterruptedException e) {
 			throw new BaseException(ErrorCode.FIREBASE_INTERRUPTED);
 		} catch (ExecutionException e) {
