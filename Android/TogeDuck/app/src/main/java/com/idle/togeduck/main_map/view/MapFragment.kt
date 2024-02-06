@@ -2,6 +2,7 @@ package com.idle.togeduck.main_map.view
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.os.Bundle
@@ -20,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -34,15 +36,31 @@ import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
+import com.idle.togeduck.util.NaverItem
+import com.idle.togeduck.util.builder
+import com.idle.togeduck.util.getColor
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.CircleOverlay
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
+import ted.gun0912.clustering.naver.TedNaverClustering
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -52,6 +70,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val componentBottomSheetBinding get() = _componentBottomSheetBinding!!
     private var _componentBottomAppbarBinding: ComponentBottomAppbarBinding? = null
     private val componentBottomAppbarBinding get() = _componentBottomAppbarBinding!!
+
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     private lateinit var naverMap: NaverMap
 
@@ -68,6 +88,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var prevOffset = 0.0f
     private var halfOffset = 0.5f
+
+    private lateinit var clustering: TedNaverClustering<NaverItem>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,6 +117,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpBackgroundButtonIcon()
         setUpBottomText()
         setUpFloatingButton()
+
+        mapViewModel.markerList.observe(viewLifecycleOwner) {
+            clustering.addItems(it)
+        }
     }
 
     private fun addBackPressedCallback() {
@@ -165,7 +191,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .addToBackStack(null)
             .commit()
     }
-    
+
     private fun setBottomSheet() {
         val statusDp = getStatusBarHeightToDp(requireContext())
 
@@ -174,25 +200,31 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         sheetBehavior.expandedOffset = dpToPx(statusDp + 5, requireContext())
 
         // TODO. BottomSheetBehavior state에 따른 이벤트 추후 추가
-        sheetBehavior.addBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){
+        sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                     }
+
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        if (halfOffset != sheetBehavior.calculateSlideOffset()) halfOffset = sheetBehavior.calculateSlideOffset()
+                        if (halfOffset != sheetBehavior.calculateSlideOffset()) halfOffset =
+                            sheetBehavior.calculateSlideOffset()
 
                         setHalfExpandedPadding()
-                        prevOffset =  halfOffset
+                        prevOffset = halfOffset
                     }
+
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         prevOffset = 1.0f
                     }
+
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         prevOffset = 0.0f
                     }
+
                     BottomSheetBehavior.STATE_DRAGGING -> {
                     }
+
                     BottomSheetBehavior.STATE_SETTLING -> {
                     }
                 }
@@ -206,11 +238,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setHalfExpandedPadding() {
-        binding.bsFragment.bottomSheet.setPadding(0,0, 0, dpToPx(90, requireContext()) + heightPx / 2)
+        binding.bsFragment.bottomSheet.setPadding(
+            0,
+            0,
+            0,
+            dpToPx(90, requireContext()) + heightPx / 2
+        )
     }
 
     private fun setExpandedPadding() {
-        binding.bsFragment.bottomSheet.setPadding(0,0, 0, dpToPx(105, requireContext()))
+        binding.bsFragment.bottomSheet.setPadding(0, 0, 0, dpToPx(105, requireContext()))
     }
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -228,7 +265,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val uiSettings = naverMap.uiSettings
 
         uiSettings.logoGravity = Gravity.TOP
-        uiSettings.setLogoMargin(dpToPx(10, requireContext()), dpToPx(115 + statusBarDp, requireContext()), 0, 0)
+        uiSettings.setLogoMargin(
+            dpToPx(10, requireContext()),
+            dpToPx(115 + statusBarDp, requireContext()),
+            0,
+            0
+        )
 
         uiSettings.isZoomControlEnabled = false
         uiSettings.isCompassEnabled = false
@@ -264,6 +306,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
                 }
+
+                initCluster()
+                mapViewModel.getItems(naverMap, 10)
             }
     }
 
@@ -307,10 +352,160 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    // 클러스터 관리 메소드
+    private fun initCluster() {
+        // 마커, 클러스터 주변 원 리스트
+        val circleOverlayList = mutableMapOf<LatLng, CircleOverlay>()
 
-    private fun handleButtonClick (
+//        setPathLine(markerList)
+
+        clustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
+//            .items(markerList)
+            .customMarker { clusterItem ->
+                Marker(clusterItem.position).apply {
+                    icon = MarkerIcons.BLACK
+                    iconTintColor = getColor(requireContext(), Theme.theme.main500)
+                    width = dpToPx(22, requireContext())
+                    height = dpToPx(30, requireContext())
+                }
+            }
+            .customCluster {
+                val circleDrawable = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.shape_circle
+                ) as GradientDrawable
+                circleDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
+                circleDrawable.setStroke(2, getColor(requireContext(), Theme.theme.main500))
+
+                TextView(requireContext()).apply {
+                    background = circleDrawable
+                    setTextColor(Color.WHITE)
+                    text = "${it.size}"
+                    width = dpToPx(40, requireContext())
+                    height = dpToPx(40, requireContext())
+                    gravity = Gravity.CENTER
+                }
+            }
+            // 마커가 추가되었을 때 이벤트
+            .markerAddedListener { clusterItem, _ ->
+                if (circleOverlayList[clusterItem.position] == null) {
+                    circleOverlayList[clusterItem.position] = CircleOverlay().builder(
+                        clusterItem.position,
+                        100.0,
+                        requireContext(),
+                        naverMap
+                    )
+                } else {
+                    circleOverlayList[clusterItem.position]!!.radius = 150.0
+                    circleOverlayList[clusterItem.position]!!.map = naverMap
+                }
+            }
+            // 클러스터 정보가 변경되었을 때 이벤트
+            .clusterAddedListener { cluster, tedNaverMarker ->
+                val radius = cluster.size * 100.0
+
+                cluster.items.forEach { naverItem ->
+                    if (circleOverlayList[naverItem.position] != null) {
+                        circleOverlayList[naverItem.position]!!.map = null
+                    }
+                }
+
+                val closet = cluster.items.closet(tedNaverMarker.marker.position)
+
+                if (circleOverlayList[closet] == null) {
+                    circleOverlayList[closet] = CircleOverlay().builder(
+                        closet,
+                        radius,
+                        requireContext(),
+                        naverMap
+                    )
+                } else {
+                    circleOverlayList[closet]!!.radius = radius
+                    circleOverlayList[closet]!!.map = naverMap
+                }
+
+                readjustCluster()
+            }
+            // 클러스터를 클릭했을 때 이벤트
+            .clusterClickListener { cluster ->
+                val position = cluster.position
+
+                val cameraPosition = CameraPosition(
+                    LatLng(position.latitude, position.longitude),
+                    naverMap.cameraPosition.zoom + 2
+                )
+
+                naverMap.moveCamera(
+                    CameraUpdate
+                        .toCameraPosition(cameraPosition)
+                        .animate(CameraAnimation.Fly)
+                )
+            }
+            // 마커를 클릭했을 때 이벤트
+            .markerClickListener { naverItem ->
+                val position = naverItem.position
+
+                naverMap.moveCamera(
+                    CameraUpdate.scrollTo(LatLng(position.latitude, position.longitude))
+                )
+            }
+            .make()
+
+        clustering
+            .setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
+    }
+
+    // 가장 가까운 마커의 위치를 반환하는 메소드
+    private fun Collection<NaverItem>.closet(pos: LatLng): LatLng {
+        var min = Double.MAX_VALUE
+        var result: LatLng = this.toList().first().position
+
+        this.forEach { naverItem ->
+            val latSquare =
+                (naverItem.position.latitude - pos.latitude) * (naverItem.position.latitude - pos.latitude)
+            val longSquare =
+                (naverItem.position.longitude - pos.longitude) * (naverItem.position.longitude - pos.longitude)
+            if (min > latSquare + longSquare) {
+                min = latSquare + longSquare
+                result = naverItem.position
+            }
+        }
+
+        return result
+    }
+
+    // 카메라 위치를 미세 이동해서 클러스터 위치 재조정
+    private fun readjustCluster() {
+        val cPos = naverMap.cameraPosition.target
+
+        naverMap.moveCamera(
+            CameraUpdate.scrollTo(
+                LatLng(cPos.latitude + 0.00000001, cPos.longitude + 0.00000001)
+            )
+        )
+
+        naverMap.moveCamera(CameraUpdate.scrollTo(cPos))
+    }
+
+    // 이동 경로를 경로선으로 표시
+    private fun setPathLine(markerList: List<NaverItem>) {
+        val pathLine = PathOverlay()
+        val pathLineList = mutableListOf<LatLng>()
+
+        for (i in 0 until 5) {
+            pathLineList.add(markerList[i].position)
+        }
+
+        pathLine.width = 30
+        pathLine.outlineWidth = 5
+        pathLine.coords = pathLineList
+        pathLine.map = naverMap
+    }
+
+
+    private fun handleButtonClick(
         showFab: LinearLayout,
-        hideList: List<LinearLayout>
+        hideList: List<LinearLayout>,
     ) {
         Log.d("검증", "buttonclick func")
         for (fab in hideList) {
@@ -319,53 +514,57 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         showFab.visibility = View.VISIBLE
     }
 
-    private fun setUpBackgroundRoundCorner(){
+    private fun setUpBackgroundRoundCorner() {
         // Bottom Appbar Background
-        val upperRoundCorner = ContextCompat.getDrawable(requireContext(), R.drawable.shape_upper_round_25) as GradientDrawable
+        val upperRoundCorner = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_upper_round_25
+        ) as GradientDrawable
         upperRoundCorner.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
         val background: ConstraintLayout = componentBottomAppbarBinding.navBackground
         background.background = upperRoundCorner
     }
 
-    private fun setUpBackgroundButtonIcon(){
+    private fun setUpBackgroundButtonIcon() {
         // Normal Buttons : Icons (Main 500)
         val icQuest: ImageView = componentBottomAppbarBinding.icQuest
         val icList: ImageView = componentBottomAppbarBinding.icList
         val icChat: ImageView = componentBottomAppbarBinding.icChat
         val icMyrecord: ImageView = componentBottomAppbarBinding.icMyrecord
         val icons: List<ImageView> = listOf(icQuest, icList, icChat, icMyrecord)
-        for (icon in icons){
+        for (icon in icons) {
             icon.setColorFilter(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         }
     }
 
-    private fun setUpBottomText(){
+    private fun setUpBottomText() {
         val textQuest: TextView = componentBottomAppbarBinding.textQuest
         val textList: TextView = componentBottomAppbarBinding.textList
         val textChat: TextView = componentBottomAppbarBinding.textChat
         val textMyRecord: TextView = componentBottomAppbarBinding.textMyrecord
         val texts: List<TextView> = listOf(textQuest, textList, textChat, textMyRecord)
-        for (text in texts){
+        for (text in texts) {
             text.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         }
-        textQuest.setText("Quest")
-        textList.setText("List")
-        textChat.setText("MyQuest")
-        textMyRecord.setText("MyRecord")
+        textQuest.text = "Quest"
+        textList.text = "List"
+        textChat.text = "MyQuest"
+        textMyRecord.text = "History"
     }
 
-    private fun setUpFloatingButton(){
+    private fun setUpFloatingButton() {
         // Floating Buttons : Buttons (Main 500)
         val fabQuest: LinearLayout = componentBottomAppbarBinding.fabQuest
         val fabList: LinearLayout = componentBottomAppbarBinding.fabList
         val fabChat: LinearLayout = componentBottomAppbarBinding.fabChat
         val fabMyrecord: LinearLayout = componentBottomAppbarBinding.fabMyrecord
-        val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        val circle =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
-        circle.setStroke(0,0)
+        circle.setStroke(0, 0)
 
-        val fabs: List<LinearLayout> = listOf(fabQuest,fabList,fabChat,fabMyrecord)
-        for(fab in fabs){
+        val fabs: List<LinearLayout> = listOf(fabQuest, fabList, fabChat, fabMyrecord)
+        for (fab in fabs) {
             fab.background = circle;
         }
 
@@ -375,7 +574,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
         componentBottomAppbarBinding.buttonList.setOnClickListener {
             componentBottomSheetBinding.viewPager.setCurrentItem(1, false)
-            handleButtonClick(fabList, listOf(fabQuest,fabChat,fabMyrecord))
+            handleButtonClick(fabList, listOf(fabQuest, fabChat, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonChat.setOnClickListener {
             handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord))
