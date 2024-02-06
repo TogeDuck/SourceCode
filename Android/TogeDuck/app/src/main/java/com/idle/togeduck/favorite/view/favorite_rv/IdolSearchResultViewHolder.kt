@@ -13,6 +13,7 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ItemIdolSearchResultBinding
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.util.DpPxUtil
+import com.idle.togeduck.util.getColor
 
 class IdolSearchResultViewHolder(
     binding: ItemIdolSearchResultBinding,
@@ -32,8 +33,8 @@ class IdolSearchResultViewHolder(
 
         val drawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
 
-        drawable.setColor(ContextCompat.getColor(context, Theme.theme.main100))
-        drawable.setStroke(2, ContextCompat.getColor(context, Theme.theme.main500))
+        drawable.setColor(getColor(context, Theme.theme.main100))
+        drawable.setStroke(2, getColor(context, Theme.theme.main500))
         imgImageView.background = drawable
 
         Glide
@@ -47,7 +48,7 @@ class IdolSearchResultViewHolder(
             .into(imgImageView)
 
         nameTextView.text = celebrity.nickname
-        nameTextView.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
+        nameTextView.setTextColor(getColor(context, Theme.theme.main500))
     }
 
     private fun setWidth(context: Context, spanCount: Int) {

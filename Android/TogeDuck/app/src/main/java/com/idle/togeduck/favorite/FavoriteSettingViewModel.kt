@@ -29,6 +29,13 @@ class FavoriteSettingViewModel @Inject constructor(
     val searchIdolList: LiveData<List<Celebrity>>
         get() = _searchIdolList
 
+
+    private val _selectedCelebrity = MutableLiveData<Celebrity>()
+    val selectedCelebrity: LiveData<Celebrity> get() = _selectedCelebrity
+
+    private val _clickedCelebrity = MutableLiveData<Celebrity>()
+    val clickedCelebrity: LiveData<Celebrity> get() = _clickedCelebrity
+
     init {
         _favoriteIdolList.value = mutableListOf()
         _searchIdolList.value = mutableListOf()
@@ -86,5 +93,24 @@ class FavoriteSettingViewModel @Inject constructor(
         _favoriteIdolList.postValue(newList)
 
         favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+    }
+
+    fun clickedCelebrity(position: Int) {
+        val newList = _favoriteIdolList.value!!.toMutableList()
+        newList.forEach { it.isClicked = false }
+        newList[position].isClicked = true
+        _favoriteIdolList.value = newList
+    }
+
+    fun setClickedCelebrity(celebrity: Celebrity) {
+        _clickedCelebrity.value = celebrity
+    }
+
+    fun setClickedCelebrity() {
+        _clickedCelebrity.value = _selectedCelebrity.value
+    }
+
+    fun setSelectedCelebrity() {
+        _selectedCelebrity.value = _clickedCelebrity.value
     }
 }
