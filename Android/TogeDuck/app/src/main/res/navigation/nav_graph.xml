@@ -97,6 +97,9 @@
         <action
             android:id="@+id/action_mapFragment_to_exchangeDialogFragment"
             app:destination="@id/exchangeDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_selectCelebrityFragment"
+            app:destination="@id/selectCelebrityFragment" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -128,7 +131,11 @@
         android:id="@+id/eventDetailFragment"
         android:name="com.idle.togeduck.event.view.detail.EventDetailFragment"
         android:label="event_detail_fragment"
-        tools:layout="@layout/fragment_event_detail"/>
+        tools:layout="@layout/fragment_event_detail">
+<!--        <action-->
+<!--            android:id="@+id/action_eventDetailFragment_to_EventReviewDialogFragment"-->
+<!--            app:destination="@id/eventReviewDialogFragment" />-->
+    </fragment>
     <fragment
         android:id="@+id/questTalkFragment"
         android:name="com.idle.togeduck.quest.talk.view.QuestTalkFragment"
@@ -155,4 +162,26 @@
             app:popUpTo="@id/exchangeDialogFragment"
             app:popUpToInclusive="true" />
     </dialog>
+<!--    <dialog-->
+<!--        android:id="@+id/eventReviewDialogFragment"-->
+<!--        android:name="com.idle.togeduck.quest.share.view.EventReviewDialogFragment"-->
+<!--        android:label="EventReviewDialogFragment"-->
+<!--        tools:layout="@layout/dialog_event_review">-->
+<!--        <action-->
+<!--            android:id="@+id/action_eventReviewDialogFragment_pop"-->
+<!--            app:popUpTo="@id/eventReviewDialogFragment"-->
+<!--            app:popUpToInclusive="true" />-->
+<!--    </dialog>-->
+    <dialog
+        android:id="@+id/selectCelebrityFragment"
+        android:name="com.idle.togeduck.main_map.view.SelectCelebrityFragment"
+        android:label="dialog_select_celebrity"
+        tools:layout="@layout/dialog_select_celebrity" >
+        <action
+            android:id="@+id/action_selectCelebrityFragment_pop"
+            app:popUpTo="@id/selectCelebrityFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+
+
 </navigation>

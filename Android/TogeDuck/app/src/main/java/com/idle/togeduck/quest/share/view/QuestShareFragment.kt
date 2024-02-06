@@ -61,7 +61,7 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
             questShareAdapter.submitList(list)
         }
         CoroutineScope(Dispatchers.IO).launch {
-            shareViewModel.getShareList(0,1,10000)
+            shareViewModel.getShareList(1,0,5)
         }
     }
 

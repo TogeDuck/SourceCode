@@ -1,8 +1,6 @@
 package com.idle.togeduck.event
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,9 +9,7 @@ import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.event.model.EventRepository
 import com.idle.togeduck.event.model.EventReviewContent
 import com.idle.togeduck.event.model.toEventReviewContent
-import com.idle.togeduck.quest.exchange.model.toExchange
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.serialization.json.Json

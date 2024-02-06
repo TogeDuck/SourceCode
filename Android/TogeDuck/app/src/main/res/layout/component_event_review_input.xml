@@ -37,14 +37,14 @@
         android:textCursorDrawable="@drawable/shape_cursor"
         android:textSize="@dimen/text_large"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/review_reg"
+        app:layout_constraintEnd_toStartOf="@+id/review_post"
         app:layout_constraintStart_toEndOf="@+id/camera_btn"
         app:layout_constraintTop_toTopOf="parent"
         tools:backgroundTint="@color/gray_bg"
         tools:ignore="RtlSymmetry" />
 
     <TextView
-        android:id="@+id/review_reg"
+        android:id="@+id/review_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingVertical="10dp"

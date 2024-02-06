@@ -21,6 +21,8 @@
         android:background="@drawable/shape_all_round_20"
         android:padding="20dp"
         android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
         >
 
         <TextView

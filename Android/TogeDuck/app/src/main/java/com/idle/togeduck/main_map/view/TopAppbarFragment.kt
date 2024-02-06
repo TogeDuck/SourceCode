@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -61,7 +62,18 @@ class TopAppbarFragment : Fragment() {
         setPadding()
         setTheme()
         setDateRangePicker()
+        setDate()
+        setIdol()
+    }
 
+    private fun setIdol() {
+        topAppbarBinding.llIdol.setOnClickListener {
+            findNavController().navigate(R.id.action_mapFragment_to_selectCelebrityFragment)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setDate() {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
         val dateRangeText = "${LocalDate.now().format(dateTimeFormatter)}-${LocalDate.now().format(dateTimeFormatter)}"
         topAppbarBinding.tvDate.text = dateRangeText
