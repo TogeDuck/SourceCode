@@ -91,6 +91,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var clustering: TedNaverClustering<NaverItem>? = null
 
+    private var peopleClustering : TedNaverClustering<NaverItem>? = null
+
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
 
     override fun onCreateView(
@@ -119,6 +121,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpBackgroundButtonIcon()
         setUpBottomText()
         setUpFloatingButton()
+        setRealTimeContainer()
 
         mapViewModel.markerList.observe(viewLifecycleOwner) {
             clustering?.addItems(it)
@@ -263,6 +266,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.bsFragment.bottomSheet.setPadding(0, 0, 0, dpToPx(105, requireContext()))
     }
 
+    private fun setRealTimeContainer(){
+        val statusBarDp = getStatusBarHeightToDp(requireContext())
+        val layoutParamsRealTimeContainer = binding.realTimeContainer.layoutParams as FrameLayout.LayoutParams
+        layoutParamsRealTimeContainer.topMargin = dpToPx(90 + statusBarDp, requireContext())
+        layoutParamsRealTimeContainer.rightMargin = dpToPx(10, requireContext())
+        val squareCircle = ContextCompat.getDrawable(requireContext(),R.drawable.shape_square_circle) as GradientDrawable
+        squareCircle.setColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.realTimeTxt.background = squareCircle
+    }
+
     override fun onMapReady(naverMap: NaverMap) {
         val statusBarDp = getStatusBarHeightToDp(requireContext())
 
@@ -280,7 +293,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         uiSettings.logoGravity = Gravity.TOP
         uiSettings.setLogoMargin(
             dpToPx(10, requireContext()),
-            dpToPx(115 + statusBarDp, requireContext()),
+            dpToPx(90 + statusBarDp, requireContext()),
             0,
             0
         )
@@ -358,7 +371,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val layoutParams = locationBtn.layoutParams as FrameLayout.LayoutParams
 
             layoutParams.marginStart = dpToPx(8, requireContext())
-            layoutParams.topMargin = dpToPx(135 + statusBarDp, requireContext())
+            layoutParams.topMargin = dpToPx(115 + statusBarDp, requireContext())
 
             locationBtn.layoutParams = layoutParams
             locationBtn.map = naverMap

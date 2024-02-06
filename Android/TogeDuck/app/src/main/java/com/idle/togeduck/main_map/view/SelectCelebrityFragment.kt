@@ -125,8 +125,6 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun celebrityClicked(position: Int) {
-        Log.d("로그", "${favoriteSettingViewModel.favoriteIdolList.value!![position]}")
-
         if ((favoriteSettingViewModel.clickedCelebrity.value?.id
                 ?: -1) != favoriteSettingViewModel.favoriteIdolList.value!![position].id
         ) {

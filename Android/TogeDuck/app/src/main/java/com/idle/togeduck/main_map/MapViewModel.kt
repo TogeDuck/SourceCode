@@ -8,6 +8,7 @@ import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.util.NaverItem
 import com.naver.maps.map.NaverMap
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,6 +17,12 @@ class MapViewModel @Inject constructor(
 ) : ViewModel() {
     private val _markerList = MutableLiveData<List<NaverItem>>()
     val markerList: LiveData<List<NaverItem>> get() = _markerList
+
+    private val _pickedDate = MutableLiveData<Pair<LocalDate, LocalDate>>()
+    val pickedDate: LiveData<Pair<LocalDate, LocalDate>> get() = _pickedDate
+
+    private val _peopleMarkerList = MutableLiveData<List<NaverItem>>()
+    val peopleMarkerList : MutableLiveData<List<NaverItem>> get() = _peopleMarkerList
 
 
     // 더미 지도 마커 생성 코드
@@ -47,5 +54,9 @@ class MapViewModel @Inject constructor(
         }
 
         _markerList.postValue(list)
+    }
+
+    fun setPickedDate(startDate: LocalDate, endDate: LocalDate) {
+        _pickedDate.value = startDate to endDate
     }
 }

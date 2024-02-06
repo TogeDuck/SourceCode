@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -21,6 +22,8 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.getColor
@@ -41,8 +44,10 @@ class TopAppbarFragment : Fragment() {
     private val topAppbarBinding get() = _topAppBarBinding!!
 
 
-    private var _searchBarBinding: ComponentSearchBarTopAppbarBinding? = null
-    private val searchBarBinding get() = _searchBarBinding!!
+//    private var _searchBarBinding: ComponentSearchBarTopAppbarBinding? = null
+//    private val searchBarBinding get() = _searchBarBinding!!
+
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +56,7 @@ class TopAppbarFragment : Fragment() {
     ): View {
         _binding = FragmentTopAppbarBinding.inflate(inflater, container, false)
         _topAppBarBinding = binding.cta
-        _searchBarBinding = topAppbarBinding.csb
+//        _searchBarBinding = topAppbarBinding.csb
         return binding.root
     }
 
@@ -63,10 +68,10 @@ class TopAppbarFragment : Fragment() {
         setTheme()
         setDateRangePicker()
         setDate()
-        setIdol()
+        showSelectCelebrity()
     }
 
-    private fun setIdol() {
+    private fun showSelectCelebrity() {
         topAppbarBinding.llIdol.setOnClickListener {
             findNavController().navigate(R.id.action_mapFragment_to_selectCelebrityFragment)
         }
@@ -77,6 +82,7 @@ class TopAppbarFragment : Fragment() {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
         val dateRangeText = "${LocalDate.now().format(dateTimeFormatter)}-${LocalDate.now().format(dateTimeFormatter)}"
         topAppbarBinding.tvDate.text = dateRangeText
+        mapViewModel.setPickedDate(LocalDate.now(), LocalDate.now())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -113,7 +119,8 @@ class TopAppbarFragment : Fragment() {
             val endDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
             val dateRangeText = "${startDate.format(dateTimeFormatter)}-${endDate.format(dateTimeFormatter)}"
             topAppbarBinding.tvDate.text = dateRangeText
-            
+
+            mapViewModel.setPickedDate(startDate, endDate)
             // TODO. API 연결
         }
 
@@ -159,8 +166,8 @@ class TopAppbarFragment : Fragment() {
         main500CircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
         main500CircleDrawable.setStroke(4, getColor(requireContext(), Theme.theme.main500))
 
-        searchBarBinding.ivSearch.background = main500CircleDrawable
-        searchBarBinding.ivSearch.setColorFilter(getColor(requireContext(), Theme.theme.main500))
+//        searchBarBinding.ivSearch.background = main500CircleDrawable
+//        searchBarBinding.ivSearch.setColorFilter(getColor(requireContext(), Theme.theme.main500))
         topAppbarBinding.ivIdolProfile.background = main500CircleDrawable
         // TODO. 실제 프로필 사진 적용시 삭제 필요
         topAppbarBinding.ivIdolProfile.setColorFilter(getColor(requireContext(), Theme.theme.main500))
@@ -174,11 +181,11 @@ class TopAppbarFragment : Fragment() {
         val cursorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
         cursorDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
 
-        @RequiresApi(Build.VERSION_CODES.Q)
-        searchBarBinding.etSearch.textCursorDrawable = cursorDrawable
-        searchBarBinding.etSearch.background = squareCircleDrawable
-        searchBarBinding.etSearch.setTextColor(getColor(requireContext(), Theme.theme.main500))
-        searchBarBinding.etSearch.setHintTextColor(getColor(requireContext(), Theme.theme.main500))
+//        @RequiresApi(Build.VERSION_CODES.Q)
+//        searchBarBinding.etSearch.textCursorDrawable = cursorDrawable
+//        searchBarBinding.etSearch.background = squareCircleDrawable
+//        searchBarBinding.etSearch.setTextColor(getColor(requireContext(), Theme.theme.main500))
+//        searchBarBinding.etSearch.setHintTextColor(getColor(requireContext(), Theme.theme.main500))
 
         topAppbarBinding.tvDate.setTextColor(getColor(requireContext(), Theme.theme.main500))
 
@@ -192,6 +199,6 @@ class TopAppbarFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         _topAppBarBinding = null
-        _searchBarBinding = null
+//        _searchBarBinding = null
     }
 }
