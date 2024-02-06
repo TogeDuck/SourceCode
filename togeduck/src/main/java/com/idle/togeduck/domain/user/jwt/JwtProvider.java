@@ -13,11 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.idle.togeduck.domain.user.dto.TokenDto;
+import com.idle.togeduck.domain.user.serivce.CustomUserDetailsService;
 import com.idle.togeduck.global.YamlPropertySourceFactory;
 
 import io.jsonwebtoken.Claims;
@@ -29,11 +29,13 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 @Configuration
+@RequiredArgsConstructor
 @PropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰을 바탕으로 유저 정보 가져옴
 
@@ -53,6 +55,8 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 	//
 	// @Value("${jwt.refresh-token-validity-in-seconds}")
 	// private Long refreshTokenValidTime;
+
+	private final CustomUserDetailsService customUserDetailsService;
 
 	@PostConstruct
 	public void getKey() { // JWT 만들 때 사용하는 암호화 키값 생성
@@ -130,9 +134,11 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 				.collect(Collectors.toList());
 
 		// UserDetails 객체를 만들어서 Authentication 리턴
-		UserDetails principal = new User(claims.getSubject(), "", authorities);
+		// UserDetails principal = new User(claims.getSubject(), "", authorities);
+		UserDetails user = customUserDetailsService.loadUserByUsername(claims.getSubject());
 
-		return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
+		return new UsernamePasswordAuthenticationToken(user, accessToken, authorities);
+		// return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
 	}
 
 	public Boolean validateToken(String token) { // 토큰 검증

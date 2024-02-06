@@ -22,7 +22,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String socialId) throws UsernameNotFoundException {
 
 		User user = userRepository.findUserBySocialId(socialId);
-		log.info("UserDetails의 User >> " + user.toString());
 		if (user == null) {
 			throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
 		}

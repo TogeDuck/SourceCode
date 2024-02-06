@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +32,6 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 	private final RedisService redisService;
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 
 	private final List<SocialLoginService> loginServices;
 
@@ -64,22 +62,24 @@ public class AuthService {
 
 		String socialId;
 
-		// 소셜 타입 확인
-		SocialLoginService loginService = this.getLoginService(loginRequestDto.socialType());
+		// 소셜 타입 확인에 맞는 Service 사용
+		SocialLoginService loginService = getLoginService(loginRequestDto.socialType());
 
 		if (loginService.getServiceName().equals(SocialType.GUEST)) { // GUEST
 			socialId = loginRequestDto.code(); // UID
 		} else { // GOOGLE, KAKAO ,NAVER
-			SocialAuthResponseDto socialAuthResponseDto = loginService.getAccessToken(loginRequestDto.code());
-			SocialUserResponseDto socialUserResponseDto = loginService.getUserInfo(socialAuthResponseDto.accessToken());
-			socialId = socialUserResponseDto.socialId(); // SocialId
+			SocialAuthResponseDto socialAuthResponseDto = loginService.getAccessToken(
+				loginRequestDto.code()); // 인증코드로 토큰 가져오기
+			SocialUserResponseDto socialUserResponseDto = loginService.getUserInfo(
+				socialAuthResponseDto.accessToken()); // 토큰으로 유저 정보 가져오기
+			socialId = socialUserResponseDto.socialId();
 		}
 
 		if (userRepository.findBySocialId(socialId) == 0) { // DB 에 정보 없으면 회원가입
 			/*
 			 GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
 			 */
-			this.join(
+			join(
 				UserRequestDto.builder()
 					.socialId(socialId)
 					.socialType(loginRequestDto.socialType())
