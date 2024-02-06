@@ -24,6 +24,7 @@ class WebSocketManager {
                 LifecycleEvent.Type.ERROR -> {
                     Log.d("웹소켓", "WebSocket Error")
                     Log.d("웹소켓", "네트워크 오류 ${lifecycleEvent.exception.toString()}")
+                    disconnect()
                 }
                 else ->{
                     Log.d("웹소켓", lifecycleEvent.message)
@@ -42,5 +43,4 @@ class WebSocketManager {
     fun disconnect(){
         stompClient.disconnect()
     }
-
 }

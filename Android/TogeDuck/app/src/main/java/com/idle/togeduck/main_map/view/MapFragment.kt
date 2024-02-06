@@ -2,6 +2,8 @@ package com.idle.togeduck.main_map.view
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
@@ -26,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.R
@@ -38,6 +41,8 @@ import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
+import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.WebSocketManager
 import com.idle.togeduck.util.NaverItem
 import com.idle.togeduck.util.builder
 import com.idle.togeduck.util.getColor
@@ -51,6 +56,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
@@ -72,6 +78,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val componentBottomAppbarBinding get() = _componentBottomAppbarBinding!!
 
     private val mapViewModel: MapViewModel by activityViewModels()
+
+    private val webSocketManager = WebSocketManager()
 
     private lateinit var naverMap: NaverMap
 
@@ -125,6 +133,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         mapViewModel.markerList.observe(viewLifecycleOwner) {
             clustering?.addItems(it)
+        }
+
+        mapViewModel.peopleMarkerList.observe(viewLifecycleOwner) {
+            updatedMarkerList ->
+            val valuesCollection = updatedMarkerList.values
+            peopleClustering?.clearItems()
+            peopleClustering?.addItems(valuesCollection)
         }
     }
 
@@ -335,7 +350,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                 initCluster()
                 mapViewModel.getItems(naverMap, 10)
+
+                // People Cluster + WebSocket
+                initPeopleCluster()
+                webSocketManager.connect()
+                webSocketManager.subscribe("/topic/coors"){
+                    message ->
+                    mapViewModel.updatePeopleMarker(messageToCoordination(message))
+                }
             }
+    }
+    private fun messageToCoordination(message: String): Coordinate{
+        return Gson().fromJson(message, Coordinate::class.java)
     }
 
     // 권한 설정 알림
@@ -376,6 +402,35 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             locationBtn.layoutParams = layoutParams
             locationBtn.map = naverMap
         }
+    }
+
+
+    private fun initPeopleCluster(){
+        peopleClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
+            .customMarker{
+                clusterItem ->
+                val circleDrawable = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.shape_circle
+                ) as GradientDrawable
+                circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
+                circleDrawable.setStroke(0,0)
+
+                val markerBitmap = Bitmap.createBitmap(
+                    dpToPx(15, requireContext()), // 마커 너비
+                    dpToPx(15, requireContext()), // 마커 높이
+                    Bitmap.Config.ARGB_8888
+                )
+
+                val canvas = Canvas(markerBitmap)
+                circleDrawable.setBounds(0, 0, canvas.width, canvas.height)
+                circleDrawable.draw(canvas)
+
+                Marker(clusterItem.position).apply {
+                    icon = OverlayImage.fromBitmap(markerBitmap)
+                }
+            }
+            .make()
     }
 
     // 클러스터 관리 메소드
