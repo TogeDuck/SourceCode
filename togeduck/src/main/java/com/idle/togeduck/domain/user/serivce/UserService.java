@@ -16,13 +16,6 @@ import com.idle.togeduck.domain.user.repository.FavoriteRepository;
 import com.idle.togeduck.domain.user.repository.UserRepository;
 import com.idle.togeduck.global.response.BaseException;
 import com.idle.togeduck.global.response.ErrorCode;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.idle.togeduck.domain.user.dto.UserRequestDto;
-import com.idle.togeduck.domain.user.dto.UserResponseDto;
-import com.idle.togeduck.domain.user.entity.User;
-import com.idle.togeduck.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,28 +27,6 @@ public class UserService {
 	private final CelebrityRepository celebrityRepository;
 	private final UserRepository userRepository;
 	private final FavoriteRepository favoriteRepository;
-
-	@Transactional
-	public void insertUserBySocialId(UserRequestDto userRequestDto) {
-
-		if (userRepository.findBySocialId(userRequestDto) == 0) {
-
-			User requestUser = new User();
-
-			requestUser.updateUser(userRequestDto.socialId(), userRequestDto.socialType());
-
-			userRepository.save(requestUser);
-		}
-	}
-
-	public UserResponseDto getUserBySocialId(String socialId) { // 유저 아이디로 유저 정보 받아오기
-
-		User user = new User();
-		user = userRepository.findUserBySocialId(socialId);
-
-		return new UserResponseDto(user.getId(), user.getSocialId(), user.getSocialType());
-	}
-
 
 	@Transactional
 	public List<CelebrityResponseDto> getFavoriteCelebrity(FavoriteRequestDto favoriteRequestDto) { // 관심연예인 목록
@@ -91,4 +62,9 @@ public class UserService {
 			}
 		}
 	}
+
+	// public UserResponseDto getUserBySocialId(String socialId) { // 유저 아이디로 유저 정보 받아오기
+	// 	User user = userRepository.findUserBySocialId(socialId);
+	// 	return new UserResponseDto(user.getId(), user.getSocialId(), user.getSocialType());
+	// }
 }

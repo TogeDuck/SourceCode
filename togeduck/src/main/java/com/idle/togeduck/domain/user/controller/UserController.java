@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.idle.togeduck.domain.user.dto.UserRequestDto;
+import com.idle.togeduck.domain.user.dto.FavoriteRequestDto;
 import com.idle.togeduck.domain.user.serivce.UserService;
 import com.idle.togeduck.global.response.BaseResponse;
-import com.idle.togeduck.domain.user.dto.FavoriteRequestDto;
-
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,29 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-
-
 	private final UserService userService;
-
-	@GetMapping
-	public ResponseEntity<BaseResponse<?>> getUser(@RequestBody UserRequestDto userRequestDto) {
-
-		return ResponseEntity
-			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", userService.getUserBySocialId(userRequestDto.socialId())));
-	}
-
-	@PostMapping
-	public ResponseEntity<BaseResponse<?>> insertUid(@RequestBody UserRequestDto userRequestDto) {
-
-		userService.insertUserBySocialId(userRequestDto);
-
-		return ResponseEntity
-			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", ""));
-	}
-
-	private final UserService uesrService;
 
 	@GetMapping("/favorities")
 	public ResponseEntity<BaseResponse<?>> getFavorite(
@@ -52,7 +28,7 @@ public class UserController {
 		return ResponseEntity
 			.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "success",
-				uesrService.getFavoriteCelebrity(favoriteRequestDto)
+				userService.getFavoriteCelebrity(favoriteRequestDto)
 			));
 	}
 
@@ -60,11 +36,10 @@ public class UserController {
 	public ResponseEntity<BaseResponse<?>> upsertFavorite(
 		@RequestBody FavoriteRequestDto favoriteRequestDto) { // update + insert
 
-		uesrService.upsertFavorite(favoriteRequestDto);
+		userService.upsertFavorite(favoriteRequestDto);
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "success", null));
 	}
-
 }

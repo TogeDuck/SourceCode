@@ -1,5 +1,11 @@
 package com.idle.togeduck.domain.user.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.idle.togeduck.domain.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -18,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
 	@Id
 	@GeneratedValue
@@ -33,8 +39,48 @@ public class User extends BaseEntity {
 
 	private String socialId;
 
-	public void updateUser(String socialId, SocialType socialType) {
+	public void updateUser(Authority authority, String socialId, SocialType socialType) {
+		this.authority = authority;
 		this.socialId = socialId;
 		this.socialType = socialType;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		Collection<GrantedAuthority> collectors = new ArrayList<>();
+		collectors.add(() -> {
+			return String.valueOf(authority);
+		});
+		return collectors;
+	}
+
+	@Override
+	public String getPassword() {
+		return "";
+	}
+
+	@Override
+	public String getUsername() {
+		return socialId;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,10 +15,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import com.idle.togeduck.domain.user.dto.TokenDto;
 import com.idle.togeduck.global.YamlPropertySourceFactory;
-import com.idle.togeduck.global.response.JwtCode;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -27,26 +28,34 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
+@Configuration
 @PropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰을 바탕으로 유저 정보 가져옴
 
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String BEARER_TYPE = "Bearer";
+
+	private static final Long accessTokenValidTime = 1000L * 60 * 60;
+	private static final Long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7;
+
 	private Key key;
 
 	@Value("${jwt.secret}")
 	private String secretKey;
 
-	@Value("${jwt.access-token-validity-in-milliseconds}")
-	private Long accessTokenValidTime;
+	// @Value("${jwt.access-token-validity-in-seconds}")
+	// private Long accessTokenValidTime;
+	//
+	// @Value("${jwt.refresh-token-validity-in-seconds}")
+	// private Long refreshTokenValidTime;
 
-	@Value("${jwt.refresh-token-validity-in-milliseconds}")
-	private Long refreshTokenValidTime;
-
-	public JwtProvider() { // JWT 만들 때 사용하는 암호화 키값 생성
+	@PostConstruct
+	public void getKey() { // JWT 만들 때 사용하는 암호화 키값 생성
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey); // secret 값을 base64로 디코딩
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
@@ -62,7 +71,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		Date expiration = new Date(now.getTime() + tokenValidTime); // 만료날짜
 
 		Claims claims = Jwts.claims()
-			.setSubject(authentication.getName()) // payload "sub" : "userId" (토큰제목)
+			.setSubject(authentication.getName()) // payload "sub" : "username" (토큰제목)
 			.setIssuedAt(now) // payload "iss" : 147621021 (토큰발급자)
 			.setExpiration(expiration);  // payload "exp" : 151621022 (토큰만료시간)
 
@@ -70,7 +79,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 
 		return Jwts.builder()
 			.setClaims(claims)
-			.signWith(key, SignatureAlgorithm.ES512) // header "alg" : "HS512"
+			.signWith(key, SignatureAlgorithm.HS256) // header "alg" : "HS512"
 			.compact();
 	}
 
@@ -85,7 +94,6 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 	}
 
 	public TokenDto createTokenDto(Authentication authentication) {
-
 		return TokenDto.builder()
 			.grantType(BEARER_TYPE)
 			.accessToken(createAccessToken(authentication))
@@ -106,7 +114,8 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		}
 	}
 
-	public Authentication getAuthentication(String accessToken) {
+	public Authentication getAuthentication(String accessToken) { // 토큰 정보 추출
+
 		// 토큰 복호화
 		Claims claims = parseClaims(accessToken);
 
@@ -126,22 +135,19 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
 	}
 
-	public JwtCode validateToken(String token) {
+	public Boolean validateToken(String token) { // 토큰 검증
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-			return JwtCode.ACCESS;
+			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			log.info("잘못된 JWT 서명입니다.");
-			return JwtCode.DENIED;
 		} catch (ExpiredJwtException e) {
 			log.info("만료된 JWT 토근입니다.");
-			return JwtCode.EXPIRED;
 		} catch (UnsupportedJwtException e) {
 			log.info("지원되지 않는 JWT 토근입니다.");
-			return JwtCode.DENIED;
 		} catch (IllegalArgumentException e) {
 			log.info("JWT 토큰이 잘못되었습니다.");
-			return JwtCode.DENIED;
 		}
+		return false;
 	}
 }
