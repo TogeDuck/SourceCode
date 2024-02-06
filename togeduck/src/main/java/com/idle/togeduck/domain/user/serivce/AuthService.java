@@ -69,7 +69,7 @@ public class AuthService {
 
 		if (loginService.getServiceName().equals(SocialType.GUEST)) { // GUEST
 			socialId = loginRequestDto.code(); // UID
-		} else { // GOOGLE
+		} else { // GOOGLE, KAKAO ,NAVER
 			SocialAuthResponseDto socialAuthResponseDto = loginService.getAccessToken(loginRequestDto.code());
 			SocialUserResponseDto socialUserResponseDto = loginService.getUserInfo(socialAuthResponseDto.accessToken());
 			socialId = socialUserResponseDto.socialId(); // SocialId
@@ -77,7 +77,7 @@ public class AuthService {
 
 		if (userRepository.findBySocialId(socialId) == 0) { // DB 에 정보 없으면 회원가입
 			/*
-			 GUEST 인 경우에 재로그인 시 에러날릴 코드 작성 필요
+			 GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
 			 */
 			this.join(
 				UserRequestDto.builder()
