@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -21,6 +22,7 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.getColor
@@ -43,6 +45,8 @@ class TopAppbarFragment : Fragment() {
 
     private var _searchBarBinding: ComponentSearchBarTopAppbarBinding? = null
     private val searchBarBinding get() = _searchBarBinding!!
+
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,6 +81,7 @@ class TopAppbarFragment : Fragment() {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
         val dateRangeText = "${LocalDate.now().format(dateTimeFormatter)}-${LocalDate.now().format(dateTimeFormatter)}"
         topAppbarBinding.tvDate.text = dateRangeText
+        mapViewModel.setPickedDate(LocalDate.now(), LocalDate.now())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -113,7 +118,8 @@ class TopAppbarFragment : Fragment() {
             val endDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
             val dateRangeText = "${startDate.format(dateTimeFormatter)}-${endDate.format(dateTimeFormatter)}"
             topAppbarBinding.tvDate.text = dateRangeText
-            
+
+            mapViewModel.setPickedDate(startDate, endDate)
             // TODO. API 연결
         }
 
