@@ -49,6 +49,7 @@ class EventReviewDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = DialogEventReviewBinding.inflate(inflater, container, false)
         return binding.root
     }
 

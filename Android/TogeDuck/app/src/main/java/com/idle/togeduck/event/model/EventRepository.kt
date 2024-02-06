@@ -21,7 +21,7 @@ interface EventRepository {
 
     suspend fun postReview(
         eventId: Long,
-        image: MultipartBody.Part,
+        image: MultipartBody.Part?,
         content: String,
     ): Response<DefaultResponse>
 
@@ -62,7 +62,7 @@ class DefaultEventRepository @Inject constructor(
 
     override suspend fun postReview(
         eventId: Long,
-        image: MultipartBody.Part,
+        image: MultipartBody.Part?,
         content: String,
     ): Response<DefaultResponse> {
         return eventService.postReview(eventId, image, content)

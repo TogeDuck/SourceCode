@@ -42,7 +42,7 @@ interface EventService {
     @POST("events/{event_id}/reviews")
     suspend fun postReview(
         @Path("event_id") eventId: Long,
-        @Part image: MultipartBody.Part,
+        @Part image: MultipartBody.Part?,
         @Part content: String,
     ): Response<DefaultResponse>
 

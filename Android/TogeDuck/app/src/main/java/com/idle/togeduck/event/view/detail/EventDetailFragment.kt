@@ -29,20 +29,21 @@ import com.idle.togeduck.util.getColor
 import com.idle.togeduck.event.view.detail.detail_rv.EventReview
 import com.idle.togeduck.event.view.detail.detail_rv.EventReviewAdapter
 import com.idle.togeduck.event.view.list.EventListFragment
+import com.idle.togeduck.util.MultiPartUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 
 @AndroidEntryPoint
 class EventDetailFragment : Fragment(), EventReview {
     private var _binding: FragmentEventDetailBinding? = null
     private val binding get() = _binding!!
+
+    private val _multiPartUtil: MultiPartUtil? = null
+    private val multiPartUtil get() = _multiPartUtil!!
 
     private var _eventReviewInputBinding: ComponentEventReviewInputBinding? = null
     private val eventReviewInputBinding get() = _eventReviewInputBinding!!
@@ -52,10 +53,14 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private lateinit var eventReviewAdapter: EventReviewAdapter
     private lateinit var event: Event
+    private lateinit var postUri: String
 
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            showDialog(uri)
+            eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
+            eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
+            postUri = uri.toString()
+            Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 성공")
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
         }
@@ -100,55 +105,35 @@ class EventDetailFragment : Fragment(), EventReview {
         binding.bookmarkCheck.setOnClickListener { likeClick(event) }
         binding.visitCheck.setOnClickListener { visitClick(event) }
 
-        //todo. 뒤로가기 (제대로 작동 x) - 수정 필요
-        binding.goBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    val fragmentManager = requireActivity().supportFragmentManager
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.event_detail_fragment, EventListFragment())
-                        .addToBackStack(null)
-                        .commit()
-                }
-            })
-            Log.d("log", "뒤로가기 클릭리스너 실행 성공")
-        }
-
-        _eventReviewInputBinding?.cameraBtn?.setOnClickListener {
+        eventReviewInputBinding.cameraBtn.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
+        eventReviewInputBinding.reviewPost.setOnClickListener{
+            val reviewText = eventReviewInputBinding.etReviewInput.text.toString()
 
-        _eventReviewInputBinding?.reviewPost?.setOnClickListener{
-            //todo. 추후 유저가 등록한 이미지 경로로 수정
-            val imgFile = File("https://cdn.theden.co.kr/news/photo/202309/1720_6449_2125.jpg")
-            val requestFile = imgFile.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val img = MultipartBody.Part.createFormData("image", imgFile.name, requestFile)
-
-            val reviewContent = _eventReviewInputBinding?.etReviewInput?.text?.toString()
-
-            if(!reviewContent.isNullOrEmpty()){
-                CoroutineScope(Dispatchers.IO).launch {
-                    eventReviewViewModel.postReview(1,img,reviewContent)
+            if (reviewText.isNotEmpty()) {
+                if(postUri.isNotEmpty()){
+                    val reviewImg = multiPartUtil.createImagePart(postUri)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        eventReviewViewModel.postReview(1, reviewImg, reviewText)
+                        eventReviewViewModel.getReviewList(1,1,100)
+                    }
+                }else{
+                    CoroutineScope(Dispatchers.IO).launch {
+                        eventReviewViewModel.postReview(1, null, reviewText)
+                        eventReviewViewModel.getReviewList(1,1,100)
+                    }
                 }
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                eventReviewViewModel.getReviewList(1,1,100)
-            }
         }
     }
-
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventReviewViewModel.deleteReview(1,1)
 //        }
 
-    //이미지 파일 등록
-//    private fun postReview(){
-//
-//
-//    }
 
     private fun setRecyclerView(){
         eventReviewAdapter = EventReviewAdapter(this, requireContext())
@@ -173,7 +158,7 @@ class EventDetailFragment : Fragment(), EventReview {
         val inputDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
         inputDrawable.setColor(getColor(requireContext(), R.color.white))
         inputDrawable.setStroke(4, getColor(requireContext(), Theme.theme.sub500))
-        eventReviewInputBinding.etReviewInput.background = inputDrawable
+        eventReviewInputBinding.llInputLayout.background = inputDrawable
 
         val registDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
         registDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
@@ -238,17 +223,12 @@ class EventDetailFragment : Fragment(), EventReview {
 
         changeVisitImage(event)
 
-        //todo.방문체크 api 없음
+        //todo.방문 체크 api 추가
 //        CoroutineScope(Dispatchers.IO).launch {
 //            if(event.isVisited){
 //
 //            }
 //        }
-    }
-
-    private fun showDialog(uri: Uri) {
-        eventReviewViewModel.setSelectedImg(uri)
-        findNavController().navigate(R.id.action_mapFragment_to_EventReviewDialogFragment)
     }
 
 
