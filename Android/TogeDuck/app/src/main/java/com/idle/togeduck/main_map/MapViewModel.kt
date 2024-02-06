@@ -21,6 +21,9 @@ class MapViewModel @Inject constructor(
     private val _pickedDate = MutableLiveData<Pair<LocalDate, LocalDate>>()
     val pickedDate: LiveData<Pair<LocalDate, LocalDate>> get() = _pickedDate
 
+    private val _peopleMarkerList = MutableLiveData<List<NaverItem>>()
+    val peopleMarkerList : MutableLiveData<List<NaverItem>> get() = _peopleMarkerList
+
 
     // 더미 지도 마커 생성 코드
     fun getItems(naverMap: NaverMap, num: Int) {
