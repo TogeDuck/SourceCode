@@ -4,12 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -28,11 +28,15 @@ import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.event.view.detail.detail_rv.EventReview
 import com.idle.togeduck.event.view.detail.detail_rv.EventReviewAdapter
+import com.idle.togeduck.event.view.list.EventListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 @AndroidEntryPoint
@@ -49,6 +53,13 @@ class EventDetailFragment : Fragment(), EventReview {
     private lateinit var eventReviewAdapter: EventReviewAdapter
     private lateinit var event: Event
 
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+//                binding.imageView.setImageURI(uri)
+        } else {
+            Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -86,30 +97,50 @@ class EventDetailFragment : Fragment(), EventReview {
         }
 
 
-        //뒤로가기 버튼
-        binding.goBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // 뒤로 가기 시 실행되는 코드
-                    requireActivity().supportFragmentManager.beginTransaction().remove(this@EventDetailFragment).commit()
-                }
-            })
-        }
         binding.bookmarkCheck.setOnClickListener { likeClick(event) }
         binding.visitCheck.setOnClickListener { visitClick(event) }
 
+        //todo. 뒤로가기 (제대로 작동 x) - 수정 필요
+        binding.goBack.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.event_detail_fragment, EventListFragment())
+                        .addToBackStack(null)
+                        .commit()
+                }
+            })
+            Log.d("log", "뒤로가기 클릭리스너 실행 성공")
+        }
+
         _eventReviewInputBinding?.cameraBtn?.setOnClickListener {
-            // 갤러리 열기
-            val galleryIntent = Intent(Intent.ACTION_PICK)
-            galleryIntent.type = "image/*"
-            galleryLauncher.launch(galleryIntent)
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+
+        _eventReviewInputBinding?.reviewPost?.setOnClickListener{
+            //todo. 추후 유저가 등록한 이미지 경로로 수정
+            val imgFile = File("https://cdn.theden.co.kr/news/photo/202309/1720_6449_2125.jpg")
+            val requestFile = imgFile.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val img = MultipartBody.Part.createFormData("image", imgFile.name, requestFile)
+
+            val reviewContent = _eventReviewInputBinding?.etReviewInput?.text?.toString()
+
+            if(!reviewContent.isNullOrEmpty()){
+                CoroutineScope(Dispatchers.IO).launch {
+                    eventReviewViewModel.postReview(1,img,reviewContent)
+                }
+            }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                eventReviewViewModel.getReviewList(1,1,100)
+            }
         }
 
 
 
-//        CoroutineScope(Dispatchers.IO).launch {
-//            eventReviewViewModel.postReview(1, , "리뷰1")
-//        }
+
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventReviewViewModel.deleteReview(1,1)
@@ -152,18 +183,8 @@ class EventDetailFragment : Fragment(), EventReview {
 
         val registDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
         registDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
-        eventReviewInputBinding.reviewReg.background = registDrawable
+        eventReviewInputBinding.reviewPost.background = registDrawable
     }
-
-    private val galleryLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val selectedImageUri = result.data?.data
-                // TODO: 선택한 이미지 처리 로직 추가
-                // 선택된 이미지 포함해서 리뷰 등록
-            }
-        }
-
 
     private fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
         return startDate.toString()+" ~ "+endDate.toString()
