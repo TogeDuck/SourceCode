@@ -8,11 +8,25 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/ll_go_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp">
+        <ImageView
+            android:id="@+id/go_back"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_go_back" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/ll_detail_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ll_go_back"
         android:layout_above="@+id/ll_review_input"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
         android:orientation="vertical">
 
@@ -157,7 +171,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="5dp"
         android:orientation="vertical">
 

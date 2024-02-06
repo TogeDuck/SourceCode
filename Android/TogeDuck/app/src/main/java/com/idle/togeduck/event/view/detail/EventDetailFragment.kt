@@ -1,11 +1,16 @@
 package com.idle.togeduck.event.view.detail
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -80,6 +85,28 @@ class EventDetailFragment : Fragment(), EventReview {
             eventReviewAdapter.submitList(list)
         }
 
+
+        //뒤로가기 버튼
+        binding.goBack.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // 뒤로 가기 시 실행되는 코드
+                    requireActivity().supportFragmentManager.beginTransaction().remove(this@EventDetailFragment).commit()
+                }
+            })
+        }
+        binding.bookmarkCheck.setOnClickListener { likeClick(event) }
+        binding.visitCheck.setOnClickListener { visitClick(event) }
+
+        _eventReviewInputBinding?.cameraBtn?.setOnClickListener {
+            // 갤러리 열기
+            val galleryIntent = Intent(Intent.ACTION_PICK)
+            galleryIntent.type = "image/*"
+            galleryLauncher.launch(galleryIntent)
+        }
+
+
+
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventReviewViewModel.postReview(1, , "리뷰1")
 //        }
@@ -87,14 +114,6 @@ class EventDetailFragment : Fragment(), EventReview {
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventReviewViewModel.deleteReview(1,1)
 //        }
-
-
-        binding.bookmarkCheck.setOnClickListener { likeClick(event) }
-        binding.visitCheck.setOnClickListener { visitClick(event) }
-        _eventReviewInputBinding?.cameraBtn?.setOnClickListener {
-            //todo.갤러리로 이동? (갤러리에서 사진 선택)
-        }
-
 
 
 
@@ -123,6 +142,7 @@ class EventDetailFragment : Fragment(), EventReview {
 
         val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
+        circleDrawable.setStroke(0, Theme.theme.sub500)
         eventReviewInputBinding.cameraBtn.background = circleDrawable
 
         val inputDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
@@ -134,6 +154,16 @@ class EventDetailFragment : Fragment(), EventReview {
         registDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
         eventReviewInputBinding.reviewReg.background = registDrawable
     }
+
+    private val galleryLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val selectedImageUri = result.data?.data
+                // TODO: 선택한 이미지 처리 로직 추가
+                // 선택된 이미지 포함해서 리뷰 등록
+            }
+        }
+
 
     private fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
         return startDate.toString()+" ~ "+endDate.toString()
