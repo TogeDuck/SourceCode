@@ -40,7 +40,7 @@ class MyFavoriteViewHolder(
             .override(500, 500)
             .into(imgImageView)
 
-        nameTextView.text = celebrity.name
+        nameTextView.text = celebrity.nickname
         nameTextView.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
 
         removeBtn.setColorFilter(ContextCompat.getColor(context, Theme.theme.main500))

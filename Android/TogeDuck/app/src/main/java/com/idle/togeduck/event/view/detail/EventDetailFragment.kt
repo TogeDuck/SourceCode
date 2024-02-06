@@ -255,7 +255,7 @@ class EventDetailFragment : Fragment(), EventReview {
     }
 
     private fun showDialog() {
-        findNavController().navigate(R.id.action_eventDetailFragment_to_EventReviewDialogFragment)
+//        findNavController().navigate(R.id.action_eventDetailFragment_to_EventReviewDialogFragment)
     }
 
 
