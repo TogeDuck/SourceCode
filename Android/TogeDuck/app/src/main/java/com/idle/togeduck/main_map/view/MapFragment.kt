@@ -91,6 +91,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var clustering: TedNaverClustering<NaverItem>? = null
 
+    private var peopleClustering : TedNaverClustering<NaverItem>? = null
+
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
 
     override fun onCreateView(

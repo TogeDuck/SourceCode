@@ -20,6 +20,28 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start|top"
         />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/real_time_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_text"
+            android:text="실시간 정보"
+            android:textSize="@dimen/text_medium"
+            android:layout_gravity="center"
+            />
+        <Switch
+            android:id="@+id/real_time_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_top_appbar"
