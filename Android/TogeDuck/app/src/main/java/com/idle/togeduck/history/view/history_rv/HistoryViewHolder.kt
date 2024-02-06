@@ -43,7 +43,7 @@ class HistoryViewHolder(
 
         val squareCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable
         squareCircleDrawable.setColor(getColor(context, Theme.theme.sub200))
-        squareCircleDrawable.setStroke(0, Theme.theme.main500)
+        squareCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
 
         mainLayout.background = squareCircleDrawable
     }

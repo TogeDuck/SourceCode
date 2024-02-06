@@ -26,7 +26,7 @@ class SelectCelebrityViewHolder(
     }
 
     fun bind(celebrity: Celebrity, context: Context) {
-        setTheme(context)
+        setTheme(celebrity, context)
 
         Glide
             .with(ivImg)
@@ -44,10 +44,15 @@ class SelectCelebrityViewHolder(
         tvName.text = celebrity.nickname
     }
 
-    private fun setTheme(context: Context) {
+    private fun setTheme(celebrity: Celebrity, context: Context) {
         val squareCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable
-        squareCircleDrawable.setColor(getColor(context, Theme.theme.sub200))
-        squareCircleDrawable.setStroke(0, Theme.theme.main500)
+        squareCircleDrawable.setStroke(0, getColor(context, Theme.theme.sub500))
+
+        if (celebrity.isClicked) {
+            squareCircleDrawable.setColor(getColor(context, Theme.theme.sub400))
+        } else {
+            squareCircleDrawable.setColor(getColor(context, Theme.theme.sub200))
+        }
 
         selectCelebrityLayout.background = squareCircleDrawable
 

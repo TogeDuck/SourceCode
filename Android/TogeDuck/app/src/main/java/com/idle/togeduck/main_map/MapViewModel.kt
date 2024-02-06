@@ -17,12 +17,6 @@ class MapViewModel @Inject constructor(
     private val _markerList = MutableLiveData<List<NaverItem>>()
     val markerList: LiveData<List<NaverItem>> get() = _markerList
 
-    private val _celebrityList = MutableLiveData<List<Celebrity>>()
-    val celebrityList: LiveData<List<Celebrity>> get() = _celebrityList
-
-    private val _selectedCelebrity = MutableLiveData<Celebrity>()
-    val selectedCelebrity: LiveData<Celebrity> get() = _selectedCelebrity
-
 
     // 더미 지도 마커 생성 코드
     fun getItems(naverMap: NaverMap, num: Int) {
