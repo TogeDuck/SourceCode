@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idle.togeduck.domain.chat.dto.DealRequest;
 import com.idle.togeduck.domain.chat.dto.TradeRequestDto;
 import com.idle.togeduck.domain.chat.dto.TradeResponseDto;
+import com.idle.togeduck.domain.chat.service.DealService;
 import com.idle.togeduck.domain.chat.service.TradeService;
 import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.global.response.BaseResponse;
@@ -28,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class TradeController {
 
 	private final TradeService tradeService;
+	private final DealService dealService;
 
 	@GetMapping("/{eventId}/trades")
 	public ResponseEntity<BaseResponse<Slice<TradeResponseDto>>> getTradeList(
@@ -80,6 +84,44 @@ public class TradeController {
 		User user = User.builder().id(1L).build();
 
 		tradeService.deleteTrade(tradeId, user);
+
+		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
+	}
+
+	@PostMapping("/{eventId}/trades/{tradeId}/deal")
+	public ResponseEntity<BaseResponse<?>> createDeal(
+		@PathVariable Long tradeId,
+		@RequestBody DealRequest dealRequest) {
+
+		User user = User.builder().id(1L).build();
+
+		dealService.createDeal(1L, tradeId, dealRequest.myTradeId());
+
+		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
+	}
+
+	@GetMapping("/{eventId}/trades/{tradeId}/deal/{dealId}")
+	public ResponseEntity<BaseResponse<?>> getDeal(
+		@PathVariable Long tradeId,
+		@PathVariable Long dealId) {
+
+		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
+	}
+
+	@PostMapping("/{eventId}/trades/{tradeId}/deal/{dealId}/accept")
+	public ResponseEntity<BaseResponse<?>> acceptDeal(
+		@PathVariable Long dealId) {
+
+		dealService.acceptDeal(dealId);
+
+		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
+	}
+
+	@PostMapping("/{eventId}/trades/{tradeId}/deal/{dealId}/reject")
+	public ResponseEntity<BaseResponse<?>> rejectDeal(
+		@PathVariable Long dealId) {
+
+		dealService.rejectDeal(dealId);
 
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
