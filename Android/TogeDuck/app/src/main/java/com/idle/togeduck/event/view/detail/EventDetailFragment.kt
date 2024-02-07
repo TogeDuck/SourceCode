@@ -1,13 +1,16 @@
 package com.idle.togeduck.event.view.detail
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -114,6 +117,10 @@ class EventDetailFragment : Fragment(), EventReview {
         eventReviewInputBinding.reviewPost.setOnClickListener {
             postReview()
         }
+
+//        eventReviewInputBinding.etReviewInput.setOnClickListener { mView, keyCode, _ ->
+//            hideKeyboard(mView, keyCode)
+//        }
     }
 
     private fun setRecyclerView(){
@@ -279,6 +286,17 @@ class EventDetailFragment : Fragment(), EventReview {
             }
         }
     }
+
+//    private fun hideKeyboard(view: View, keyCode: Int): Boolean {
+//        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+//            val inputManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE)
+//                    as InputMethodManager
+//            inputManager.hideSoftInputFromWindow(view.windowToken, 0)
+//            eventReviewInputBinding.etReviewInput.clearFocus()
+//            return true
+//        }
+//        return false
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
