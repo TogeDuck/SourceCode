@@ -1,49 +1,38 @@
 package com.idle.togeduck.event.view.detail
 
-import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentEventReviewInputBinding
 import com.idle.togeduck.databinding.FragmentEventDetailBinding
-import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.EventViewModel
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.view.detail.detail_rv.EventPosterAdapter
-import com.idle.togeduck.util.TogeDuckItemDecoration
-import com.idle.togeduck.util.getColor
 import com.idle.togeduck.event.view.detail.detail_rv.EventReview
 import com.idle.togeduck.event.view.detail.detail_rv.EventReviewAdapter
-import com.idle.togeduck.event.view.list.EventListFragment
 import com.idle.togeduck.util.MultiPartUtil
+import com.idle.togeduck.util.TogeDuckItemDecoration
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import okhttp3.MultipartBody
-import java.io.File
-import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class EventDetailFragment : Fragment(), EventReview {
@@ -144,8 +133,7 @@ class EventDetailFragment : Fragment(), EventReview {
         binding.eventDetailViewpager.adapter = eventPosterAdapter
         binding.eventDetailViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        binding.eventDetailViewpagerIndicator.setViewPager(binding.eventDetailViewpager)
-        eventPosterAdapter.registerAdapterDataObserver(binding.eventDetailViewpagerIndicator.adapterDataObserver)
+        binding.eventDetailViewpagerIndicator.attachTo(binding.eventDetailViewpager)
     }
 
     private fun setTheme(){
@@ -165,6 +153,9 @@ class EventDetailFragment : Fragment(), EventReview {
         val registDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
         registDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
         eventReviewInputBinding.reviewPost.background = registDrawable
+
+        binding.eventDetailViewpagerIndicator.setDotIndicatorColor(getColor(requireContext(), Theme.theme.sub500))
+        binding.eventDetailViewpagerIndicator.setStrokeDotsIndicatorColor(getColor(requireContext(), Theme.theme.sub500))
     }
 
     private fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
