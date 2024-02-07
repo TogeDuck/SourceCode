@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import com.idle.togeduck.databinding.ActivityMainBinding
-import com.idle.togeduck.util.CalcNavigationBarSize.getNavigationBarHeightToPx
 import com.idle.togeduck.common.ScreenSize.heightDp
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.common.ScreenSize.widthPx
+import com.idle.togeduck.databinding.ActivityMainBinding
+import com.idle.togeduck.util.CalcNavigationBarSize.getNavigationBarHeightToPx
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
