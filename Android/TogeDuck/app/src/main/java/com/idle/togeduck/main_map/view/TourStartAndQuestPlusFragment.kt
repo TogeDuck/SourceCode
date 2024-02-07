@@ -45,6 +45,9 @@ class TourStartAndQuestPlusFragment : Fragment() {
     private var _tourStartAndQuestPlusBinding: ComponentTourStartAndQuestPlusBinding? = null
     private val tourStartAndQuestPlusBinding get() = _tourStartAndQuestPlusBinding!!
 
+    private lateinit var tourCircle: GradientDrawable
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,23 +63,37 @@ class TourStartAndQuestPlusFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setTheme()
-        setPadding()
 
+        //클릭하면 색 변경
+        tourStartAndQuestPlusBinding.tourStartBtn.setOnClickListener {
+            changeTourBtn()
+        }
     }
 
+    private fun changeTourBtn() {
+        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        tourStartAndQuestPlusBinding.startText.text = "종료"
 
-    private fun setPadding() {
-
+        //todo. 투어버튼 상태 확인해서 시작 상태이면 종료로, 종료 상태이면 시작으로 바뀌는 거로 수정 필요
     }
+
 
     private fun setTheme() {
-        val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        circle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
-        circle.setStroke(0,0)
+        tourCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        tourCircle.setStroke(0,0)
 
-        tourStartAndQuestPlusBinding.tourStartBtn
+        val plusCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        plusCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        plusCircle.setStroke(0,0)
 
+        tourStartAndQuestPlusBinding.tourStartBtn.background = tourCircle
+        tourStartAndQuestPlusBinding.questPlusBtn.background = plusCircle
     }
+
+
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
