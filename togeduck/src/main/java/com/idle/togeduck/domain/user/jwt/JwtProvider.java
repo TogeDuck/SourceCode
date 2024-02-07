@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 import com.idle.togeduck.domain.user.dto.TokenDto;
 import com.idle.togeduck.domain.user.serivce.CustomUserDetailsService;
 import com.idle.togeduck.global.YamlPropertySourceFactory;
+import com.idle.togeduck.global.response.BaseException;
+import com.idle.togeduck.global.response.ErrorCode;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -42,7 +44,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String BEARER_TYPE = "Bearer";
 
-	private static final Long accessTokenValidTime = 1000L * 60 * 60;
+	private static final Long accessTokenValidTime = 1L; // 1000L * 60 * 60;
 	private static final Long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7;
 
 	private Key key;
@@ -148,7 +150,8 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			log.info("잘못된 JWT 서명입니다.");
 		} catch (ExpiredJwtException e) {
-			log.info("만료된 JWT 토근입니다.");
+			log.info("만료된 JWT 토큰입니다.");
+			throw new BaseException(ErrorCode.TOKEN_EXPIRED);
 		} catch (UnsupportedJwtException e) {
 			log.info("지원되지 않는 JWT 토근입니다.");
 		} catch (IllegalArgumentException e) {

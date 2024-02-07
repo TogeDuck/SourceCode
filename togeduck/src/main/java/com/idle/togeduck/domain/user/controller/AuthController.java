@@ -41,7 +41,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/user")
-	public Long currentUserName(@AuthenticationPrincipal User user) {
-		return user.getId();
+	public User currentUserName(@AuthenticationPrincipal User user) {
+		return user;
 	}
 }
