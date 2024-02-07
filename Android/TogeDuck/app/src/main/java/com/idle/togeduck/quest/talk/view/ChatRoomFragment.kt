@@ -69,7 +69,7 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
         binding.chatroomMainIcon.background = whiteCircleDrawable
         binding.chatroomMainIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), RandomCupcake.getImage()))
         // Header Text
-        binding.chatroomTitle.text = "helo"
+        binding.chatroomTitle.text = talkViewModel.chatTitle.value
         // Post Icon
         val squareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
         squareCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))

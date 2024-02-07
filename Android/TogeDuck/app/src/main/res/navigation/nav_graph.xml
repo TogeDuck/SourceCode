@@ -103,6 +103,9 @@
         <action
             android:id="@+id/action_mapFragment_to_EventReviewDialogFragment"
             app:destination="@id/eventReviewDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_chatRoomFragment"
+            app:destination="@id/chatRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -183,6 +186,15 @@
             app:popUpTo="@id/selectCelebrityFragment"
             app:popUpToInclusive="true" />
     </dialog>
+    <fragment
+        android:id="@+id/chatRoomFragment"
+        android:name="com.idle.togeduck.quest.talk.view.ChatRoomFragment"
+        android:label="ChatRoomFragment" >
+        <action
+            android:id="@+id/action_chatRoomFragment_pop"
+            app:popUpTo="@id/chatRoomFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 
 </navigation>
