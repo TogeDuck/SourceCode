@@ -2,14 +2,10 @@
 #  port: 8082
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/togeduck?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
-    username: root
-    password: 1234
-  #    driver-class-name: com.mysql.cj.jdbc.Driver
-  #    url: jdbc:mysql://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S10P12A301?serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=UTF8
-  #    username: S10P12A301@stg-yswa-kr-practice-db-master.mariadb.database.azure.com
-  #    password: BG2SESN4XA
+     driver-class-name: com.mysql.cj.jdbc.Driver
+     url: jdbc:mysql://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S10P12A301?serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=UTF8
+     username: S10P12A301@stg-yswa-kr-practice-db-master.mariadb.database.azure.com
+     password: BG2SESN4XA
   jpa:
     hibernate:
       ddl-auto: none
