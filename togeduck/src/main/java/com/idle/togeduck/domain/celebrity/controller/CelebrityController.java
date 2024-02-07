@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.idle.togeduck.domain.celebrity.dto.CelebrityRequestDto;
 import com.idle.togeduck.domain.celebrity.dto.CelebrityResponseDto;
 import com.idle.togeduck.domain.celebrity.service.CelebrityService;
 import com.idle.togeduck.global.response.BaseResponse;
@@ -28,11 +27,11 @@ public class CelebrityController {
 
 	@GetMapping("/search")
 	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(
-		@RequestParam(required = false) CelebrityRequestDto celebrityRequestDto) throws
+		@RequestParam String keyword) throws
 		IOException {
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", celebrityService.getAllCelebrity(celebrityRequestDto)));
+			.body(new BaseResponse<>(200, "success", celebrityService.getAllCelebrity(keyword)));
 
 	}
 }

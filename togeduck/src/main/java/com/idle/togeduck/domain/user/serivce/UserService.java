@@ -36,7 +36,7 @@ public class UserService {
 		List<CelebrityResponseDto> celebritylist = new ArrayList<>();
 
 		for (Favorite favorite : favoriteList) {
-			celebritylist.add(celebrityRepository.findCelebrity(favorite.getCelebrity().getId()));
+			// celebritylist.add(celebrityRepository.findCelebrity(favorite.getCelebrity().getId()));
 		}
 		return celebritylist;
 	}
