@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.idle.togeduck.domain.event.dto.AllEventResponseDto;
 import com.idle.togeduck.domain.event.dto.JoinEventResponseDto;
-import com.idle.togeduck.domain.event.dto.TodayAndLaterEventResponseDto;
 import com.idle.togeduck.domain.event.repository.EventRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,10 @@ import lombok.RequiredArgsConstructor;
 public class EventService {
 	private final EventRepository eventRepository;
 
-	public TodayAndLaterEventResponseDto getEvents(Long celebrityId, LocalDate startDate, LocalDate endDate,
+	public AllEventResponseDto getEvents(Long celebrityId, LocalDate startDate, LocalDate endDate,
 		Long userId) {
 		List<JoinEventResponseDto> allEvents = eventRepository.findEventList(celebrityId, startDate, endDate, userId);
+		List<JoinEventResponseDto> past = new ArrayList<>();
 		List<JoinEventResponseDto> today = new ArrayList<>();
 		List<JoinEventResponseDto> later = new ArrayList<>();
 
@@ -35,6 +36,6 @@ public class EventService {
 			(dto.startDate().isBefore(cur) ? today : later).add(dto);
 		}
 
-		return new TodayAndLaterEventResponseDto(today, later);
+		return new AllEventResponseDto(past, today, later);
 	}
 }
