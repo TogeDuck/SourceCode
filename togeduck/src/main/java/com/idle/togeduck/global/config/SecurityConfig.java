@@ -53,6 +53,7 @@ public class SecurityConfig { // 스프링 시큐리티에 필요한 설정
 				authorizeRequests
 					.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 					.requestMatchers("/auth/**").permitAll()
+					.requestMatchers("/ws-stomp/**").permitAll()
 					.anyRequest().authenticated()
 			);
 
