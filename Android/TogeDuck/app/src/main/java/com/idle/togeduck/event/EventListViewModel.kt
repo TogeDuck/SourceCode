@@ -13,6 +13,7 @@ import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.model.toEvent
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.quest.recruit.model.recruitResponseToRecruit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
