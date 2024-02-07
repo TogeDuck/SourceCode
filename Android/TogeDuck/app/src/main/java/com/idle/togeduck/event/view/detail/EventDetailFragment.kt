@@ -63,8 +63,8 @@ class EventDetailFragment : Fragment(), EventReview {
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
             eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-            imgPath = uriToFilePath(uri)
-//            postUri = uri.path
+            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
+
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
         }
@@ -213,46 +213,8 @@ class EventDetailFragment : Fragment(), EventReview {
         //todo.방문 체크 api 추가
 //        CoroutineScope(Dispatchers.IO).launch {
 //            if(event.isVisited){
-//
 //            }
 //        }
-    }
-
-    //todo.안드로이드 10 이상부터 보안상 문제로 Media.DATA 없음 : 확인 후 삭제
-//    override fun uriToFilePath(uri: Uri): String {
-//        val contentResolver = requireContext().contentResolver
-//        val cursor = contentResolver.query(uri,null, null, null, null)
-//        cursor?.use {
-//            it.moveToNext()
-//            val filePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-//            val pathString = it.getString(filePathColumn)
-//            return it.getString(filePathColumn)
-//        }
-//        return ""
-//    }
-
-    //todo. URI 이용해 파일을 복사하는 방식
-    override fun uriToFilePath(uri: Uri): String {
-        val contentResolver = requireContext().contentResolver
-        val cursor = contentResolver.query(uri,null, null, null, null)
-        lateinit var filePath: String
-
-        cursor?.use { cursor ->
-            if(cursor.moveToFirst()){
-                val displayNameIndex = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
-                val displayName = cursor.getString(displayNameIndex)
-
-                val inputStream = contentResolver.openInputStream(uri)
-                val targetFile = File(requireContext().cacheDir, displayName)
-                inputStream?.use { input ->
-                    FileOutputStream(targetFile).use { output ->
-                        input.copyTo(output)
-                    }
-                }
-                filePath = targetFile.absolutePath
-            }
-        }
-        return filePath
     }
 
     private fun postReview(){
