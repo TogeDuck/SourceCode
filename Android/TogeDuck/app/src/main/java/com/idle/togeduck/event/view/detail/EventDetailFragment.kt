@@ -54,9 +54,9 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
-            eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
+//            eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
+//            eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
+//            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
 
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
