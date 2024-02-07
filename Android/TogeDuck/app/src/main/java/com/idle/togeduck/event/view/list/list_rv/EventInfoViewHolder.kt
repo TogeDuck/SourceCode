@@ -47,16 +47,18 @@ class EventInfoViewHolder(
         eventLinearLayout.background = eventDrawable
 
         cafeName.text = event.name
-        eventName.text = event.description
+
         eventPeriod.text = makeDateToString(event.startDate, event.endDate)
 
         //포스터
         Glide
             .with(posterImg)
-            .load(event.imgUrl)
+            .load(event.image1)
             .override(500,500)
             .transform(CenterCrop(), RoundedCorners(DpPxUtil.dpToPx(20, context)))
             .into(posterImg)
+
+        // TODO. image2, image3 처리 필요
 
         //즐겨찾기
         changeLikeImage()

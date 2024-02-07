@@ -72,7 +72,7 @@ class MainFragment : Fragment() {
 
         initGUID()
         setDate()
-        getFavorites()
+//        getFavorites()
 
         // 삭제 예정 ========================================
         binding.btn0.setOnClickListener {

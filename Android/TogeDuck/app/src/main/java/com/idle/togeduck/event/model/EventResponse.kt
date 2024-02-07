@@ -7,10 +7,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EventResponse(
-    @SerialName("event_id") val eventId: Long,
-    @SerialName("url") val imgUrl: String,
+    @SerialName("eventId") val eventId: Long,
+    @SerialName("image1") val image1: String? = null,
+    @SerialName("image2") val image2: String? = null,
+    @SerialName("image3") val image3: String? = null,
     val name: String,
-    val description: String,
     @Serializable(with = LocalDateIso8601Serializer::class)
     val startDate: LocalDate,
     @Serializable(with = LocalDateIso8601Serializer::class)
@@ -23,9 +24,10 @@ data class EventResponse(
 
 data class Event(
     val eventId: Long,
-    val imgUrl: String,
+    val image1: String?,
+    val image2: String?,
+    val image3: String?,
     val name: String,
-    val description: String,
     val startDate: LocalDate,
     val endDate: LocalDate,
     val latitude: Double,
@@ -36,9 +38,10 @@ data class Event(
 
 fun EventResponse.toEvent(): Event = Event(
     eventId,
-    imgUrl,
+    image1,
+    image2,
+    image3,
     name,
-    description,
     startDate,
     endDate,
     latitude,

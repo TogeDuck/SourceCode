@@ -47,6 +47,8 @@ class EventListFragment : Fragment(), EventInfo {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("로그", "EventListFragment - onCreateView() 호출됨")
+
         _binding = FragmentEventListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,6 +56,8 @@ class EventListFragment : Fragment(), EventInfo {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("로그", "EventListFragment - onViewCreated() 호출됨")
 
         setTheme()
         setRecyclerview()
@@ -74,6 +78,16 @@ class EventListFragment : Fragment(), EventInfo {
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventListViewModel.getLikesList()
 //
+    }
+
+    override fun onResume() {
+        Log.d("로그", "EventListFragment - onResume() 호출됨")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Log.d("로그", "EventListFragment - onPause() 호출됨")
+        super.onPause()
     }
 
     private fun setRecyclerview() {
@@ -108,6 +122,7 @@ class EventListFragment : Fragment(), EventInfo {
     }
 
     override fun onDestroyView() {
+        Log.d("로그", "EventListFragment - onDestroyView() 호출됨")
         super.onDestroyView()
         _binding = null
     }
