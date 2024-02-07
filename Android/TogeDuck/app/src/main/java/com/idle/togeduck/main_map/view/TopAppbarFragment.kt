@@ -3,6 +3,7 @@ package com.idle.togeduck.main_map.view
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -89,20 +91,17 @@ class TopAppbarFragment : Fragment() {
         val startYear = calendar.timeInMillis
         calendar.add(Calendar.YEAR, 20)
         val endYear = calendar.timeInMillis
-        calendar.add(Calendar.YEAR, -10)
-        val now = calendar.timeInMillis
 
         val constraintsBuilder =
             CalendarConstraints.Builder()
                 .setStart(startYear)
                 .setEnd(endYear)
-                .setOpenAt(now)
 
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
             .setTheme(R.style.MyMaterialDatePickerTheme)
+            .setSelection(Pair(MaterialDatePicker.todayInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()))
             .setCalendarConstraints(constraintsBuilder.build())
             .setTitleText("날짜를 선택하세요")
-            .setSelection(Pair(calendar.timeInMillis, calendar.timeInMillis))
             .build()
 
         val dateRangePickerTag = "dateRangePicker"
