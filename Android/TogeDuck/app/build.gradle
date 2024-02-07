@@ -111,6 +111,9 @@ dependencies {
 
     // work manager
     implementation "androidx.work:work-runtime-ktx:2.9.0"
+
+    // viewpager2 indicator
+    implementation 'me.relex:circleindicator:2.1.6'
 }
 
 // Allow references to generated code

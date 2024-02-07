@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentEventReviewInputBinding
@@ -28,6 +29,7 @@ import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.EventViewModel
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.LikeEventRequest
+import com.idle.togeduck.event.view.detail.detail_rv.EventPosterAdapter
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.event.view.detail.detail_rv.EventReview
@@ -57,6 +59,8 @@ class EventDetailFragment : Fragment(), EventReview {
     private lateinit var eventReviewAdapter: EventReviewAdapter
     private lateinit var event: Event
     private var imgPath: String? = null
+
+    private lateinit var eventPosterAdapter: EventPosterAdapter
 
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -90,14 +94,16 @@ class EventDetailFragment : Fragment(), EventReview {
         eventListViewModel.selectedEvent.observe(viewLifecycleOwner) { event ->
             this.event = event
             binding.cafeNameDetail.text = event.name
-            binding.eventNameDetail.text = event.description
             binding.eventPeriodDetail.text = makeDateToString(event.startDate, event.endDate)
 
-            Glide
-                .with(binding.eventPosterDetail)
-                .load(event.imgUrl)
-                .override(1000,1000)
-                .into(binding.eventPosterDetail)
+            val list = mutableListOf<String>().apply {
+                if (event.image1 != null) add(event.image1)
+                if (event.image2 != null) add(event.image2)
+                if (event.image3 != null) add(event.image3)
+            }
+
+            eventPosterAdapter.submitList(list)
+            // TODO. image2, image3 처리 필요
 
             changeLikeImage(event)
             changeVisitImage(event)
@@ -132,6 +138,14 @@ class EventDetailFragment : Fragment(), EventReview {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
+
+        eventPosterAdapter = EventPosterAdapter()
+
+        binding.eventDetailViewpager.adapter = eventPosterAdapter
+        binding.eventDetailViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        binding.eventDetailViewpagerIndicator.setViewPager(binding.eventDetailViewpager)
+        eventPosterAdapter.registerAdapterDataObserver(binding.eventDetailViewpagerIndicator.adapterDataObserver)
     }
 
     private fun setTheme(){
