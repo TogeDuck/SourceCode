@@ -62,7 +62,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:text="제한 시간을 정해 주세요 (분)"
-            android:textColor="@color/gray_bg"
+            android:textColor="@color/gray_bg"/>
 
 
         <NumberPicker
@@ -71,8 +71,6 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:maxValue="120"
-            android:minValue="0"
             android:value="50" />
 
 <!--        <LinearLayout-->
