@@ -84,7 +84,7 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
                 celebrity.isSelected = celebrity.isClicked
             }
 
-            favoriteSettingViewModel.setSelectedCelebrity()
+//            favoriteSettingViewModel.setSelectedCelebrity()
 
             findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
         }
@@ -100,7 +100,7 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
 
-        favoriteSettingViewModel.setClickedCelebrity()
+//        favoriteSettingViewModel.setClickedCelebrity()
 
         if (favoriteSettingViewModel.selectedCelebrity.value != null) {
             favoriteSettingViewModel.favoriteIdolList.value?.forEach { celebrity ->

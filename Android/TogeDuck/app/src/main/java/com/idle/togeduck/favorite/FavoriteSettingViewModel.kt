@@ -8,12 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.favorite.model.CelebrityRepository
+import com.idle.togeduck.favorite.model.FavoriteListResponse
 import com.idle.togeduck.favorite.model.FavoriteRepository
 import com.idle.togeduck.favorite.model.celebrityResponseToCelebrity
 import com.idle.togeduck.favorite.model.celebrityToFavoriteRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import retrofit2.Response
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,29 +41,38 @@ class FavoriteSettingViewModel @Inject constructor(
     private val _clickedCelebrity = MutableLiveData<Celebrity>()
     val clickedCelebrity: LiveData<Celebrity> get() = _clickedCelebrity
 
-    init {
-        _favoriteIdolList.value = mutableListOf()
-        _searchIdolList.value = mutableListOf()
+//    init {
+//        _favoriteIdolList.value = mutableListOf()
+//        _searchIdolList.value = mutableListOf()
+//
+//        viewModelScope.launch {
+//            getFavoriteList()
+//        }
+//    }
 
-        viewModelScope.launch {
-            getFavoriteList()
+     suspend fun getFavoriteList() :Boolean{
+         var result = false
+         try {
+             val responseResult = favoriteRepository.getFavorites()
+             if (responseResult.isSuccessful) {
+                 val body = responseResult.body()!!
+                 _favoriteIdolList.value = body.data.map { it.celebrityResponseToCelebrity() }
+                 result = true
+             } else {
+                 val errorBody = Json.decodeFromString<DefaultResponse>(
+                     responseResult.errorBody()?.string()!!
+                 )
+                 Log.d(
+                     "로그",
+                     "FavoriteSettingViewModel - getFavoriteList() 호출됨 - 응답 실패 - $errorBody"
+                 )
+                 result = false
+             }
+         }
+        catch (e: Exception){
+            return result
         }
-    }
-
-    private suspend fun getFavoriteList() {
-        val responseResult = favoriteRepository.getFavorites()
-
-        if (responseResult.isSuccessful) {
-            val body = responseResult.body()!!
-
-            _favoriteIdolList.value = body.data.map { it.celebrityResponseToCelebrity() }
-        } else {
-            val errorBody = Json.decodeFromString<DefaultResponse>(
-                responseResult.errorBody()?.string()!!
-            )
-
-            Log.d("로그", "FavoriteSettingViewModel - getFavoriteList() 호출됨 - 응답 실패 - $errorBody")
-        }
+         return result
     }
 
     suspend fun getCelebrityList(keyword: String) {
@@ -110,7 +124,7 @@ class FavoriteSettingViewModel @Inject constructor(
         _clickedCelebrity.value = _selectedCelebrity.value
     }
 
-    fun setSelectedCelebrity() {
-        _selectedCelebrity.value = _clickedCelebrity.value
+    fun setSelectedCelebrity(celebrity: Celebrity) {
+        _selectedCelebrity.value = celebrity
     }
 }

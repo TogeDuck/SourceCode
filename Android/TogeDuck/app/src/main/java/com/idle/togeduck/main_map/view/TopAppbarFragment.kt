@@ -67,22 +67,18 @@ class TopAppbarFragment : Fragment() {
         setPadding()
         setTheme()
         setDateRangePicker()
-        setDate()
         showSelectCelebrity()
+        mapViewModel.pickedDate.observe(viewLifecycleOwner) { data ->
+            val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
+            val dateRangeText = "${data.first.format(dateTimeFormatter)}-${data.second.format(dateTimeFormatter)}"
+            topAppbarBinding.tvDate.text = dateRangeText
+        }
     }
 
     private fun showSelectCelebrity() {
         topAppbarBinding.llIdol.setOnClickListener {
             findNavController().navigate(R.id.action_mapFragment_to_selectCelebrityFragment)
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setDate() {
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
-        val dateRangeText = "${LocalDate.now().format(dateTimeFormatter)}-${LocalDate.now().format(dateTimeFormatter)}"
-        topAppbarBinding.tvDate.text = dateRangeText
-        mapViewModel.setPickedDate(LocalDate.now(), LocalDate.now())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
