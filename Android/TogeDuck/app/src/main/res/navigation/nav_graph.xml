@@ -106,6 +106,15 @@
         <action
             android:id="@+id/action_mapFragment_to_chatRoomFragment"
             app:destination="@id/chatRoomFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangePostDialogFragment"
+            app:destination="@id/exchangePostDialogFragment"/>
+        <action
+            android:id="@+id/action_mapFragment_to_sharePostDialogFragment"
+            app:destination="@id/sharePostDialogFragment"/>
+        <action
+            android:id="@+id/action_mapFragment_to_recruitPostDialogFragment"
+            app:destination="@id/recruitPostDialogFragment"/>
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -195,6 +204,37 @@
             app:popUpTo="@id/chatRoomFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <dialog
+        android:id="@+id/exchangePostDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangePostDialogFragment"
+        android:label="ExchangePostDialogFragment"
+        tools:layout="@layout/dialog_quest_exchange_post">
+        <action
+            android:id="@+id/action_exchangePostDialogFragment_pop"
+            app:popUpTo="@id/exchangePostDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/sharePostDialogFragment"
+        android:name="com.idle.togeduck.quest.share.view.SharePostDialogFragment"
+        android:label="SharePostDialogFragment"
+        tools:layout="@layout/dialog_quest_share_post" >
+        <action
+            android:id="@+id/action_sharePostDialogFragment_pop"
+            app:popUpTo="@id/sharePostDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/recruitPostDialogFragment"
+        android:name="com.idle.togeduck.quest.recruit.view.RecruitPostDialogFragment"
+        android:label="RecruitPostDialogFragment"
+        tools:layout="@layout/dialog_quest_recruit_post" >
+        <action
+            android:id="@+id/action_recruitPostDialogFragment_pop"
+            app:popUpTo="@id/recruitPostDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+
 
 
 </navigation>

@@ -4,9 +4,12 @@ import android.graphics.drawable.GradientDrawable
 import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
@@ -75,23 +78,18 @@ class TourStartAndQuestPlusFragment : Fragment() {
         }
 
         tourStartAndQuestPlusBinding.plusExchange.setOnClickListener {
-            openGallery()
             //todo.다이얼로그 열기
         }
 
         tourStartAndQuestPlusBinding.plusShare.setOnClickListener {
-            openGallery()
+            //todo. 다이얼로그 열기
         }
 
         tourStartAndQuestPlusBinding.plusRecruit.setOnClickListener {
-
+            //todo. 다이얼로그 열기
         }
 
 
-    }
-
-    private fun openGallery() {
-        TODO("Not yet implemented")
     }
 
     private fun changeTourBtn() {
