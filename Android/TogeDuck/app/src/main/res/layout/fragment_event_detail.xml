@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/event_detail_fragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_detail_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <LinearLayout
         android:id="@+id/ll_go_back"
@@ -15,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="5dp">
+
         <ImageView
             android:id="@+id/go_back"
             android:layout_width="25dp"
@@ -27,8 +27,8 @@
         android:id="@+id/ll_detail_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ll_go_back"
         android:layout_above="@+id/ll_review_input"
+        android:layout_below="@id/ll_go_back"
         android:layout_marginTop="5dp"
         android:orientation="vertical">
 
@@ -43,23 +43,22 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <FrameLayout
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/event_detail_viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp">
+                    android:layout_height="400dp" />
 
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/event_detail_viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="400dp" />
-
-                    <me.relex.circleindicator.CircleIndicator3
-                        android:id="@+id/event_detail_viewpager_indicator"
-                        android:layout_width="match_parent"
-                        android:layout_height="32dp"
-                        android:layout_gravity="bottom|center_horizontal"
-                        />
-
-                </FrameLayout>
+                <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+                    android:id="@+id/event_detail_viewpager_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    app:dotsCornerRadius="8dp"
+                    app:dotsSize="12dp"
+                    app:dotsSpacing="4dp"
+                    app:dotsStrokeWidth="2dp"
+                    android:layout_marginTop="5dp"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -182,8 +181,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <include
