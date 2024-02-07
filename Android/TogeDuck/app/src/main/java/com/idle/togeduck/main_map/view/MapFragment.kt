@@ -262,7 +262,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                Log.d("로그", "${halfOffset} / ${slideOffset}")
                 if (prevOffset < slideOffset && slideOffset > halfOffset) setExpandedPadding()
             }
         })

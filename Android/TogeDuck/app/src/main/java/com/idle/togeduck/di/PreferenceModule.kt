@@ -23,7 +23,7 @@ const val GUID_NAME = "GUID"
 class PreferenceModule @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
-    val jwtRefreshTokenFlow = dataStore.data
+    val getRefreshToken = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -32,19 +32,19 @@ class PreferenceModule @Inject constructor(
             preferences[KEY_JWT_REFRESH_TOKEN]
         }
 
-    suspend fun setJwtRefreshToken(token: String) {
+    suspend fun setRefreshToken(token: String) {
         dataStore.edit { preferences ->
             preferences[KEY_JWT_REFRESH_TOKEN] = token
         }
     }
 
-    suspend fun removeJwtRefreshToken() {
+    suspend fun removeRefreshToken() {
         dataStore.edit { preferences ->
             preferences.remove(KEY_JWT_REFRESH_TOKEN)
         }
     }
 
-    val jwtAccessTokenFlow = dataStore.data
+    val getAccessToken = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -53,19 +53,19 @@ class PreferenceModule @Inject constructor(
             preferences[KEY_JWT_ACCESS_TOKEN_TOKEN]
         }
 
-    suspend fun setJwtAccessToken(token: String) {
+    suspend fun setAccessToken(token: String) {
         dataStore.edit { preferences ->
             preferences[KEY_JWT_ACCESS_TOKEN_TOKEN] = token
         }
     }
 
-    suspend fun removeJwtAccessToken() {
+    suspend fun removeAccessToken() {
         dataStore.edit { preferences ->
             preferences.remove(KEY_JWT_ACCESS_TOKEN_TOKEN)
         }
     }
 
-    val guidFlow = dataStore.data
+    val getGuid = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
