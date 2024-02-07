@@ -20,7 +20,7 @@ import com.idle.togeduck.global.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -62,4 +62,9 @@ public class UserService {
 			}
 		}
 	}
+
+	// public UserResponseDto getUserBySocialId(String socialId) { // 유저 아이디로 유저 정보 받아오기
+	// 	User user = userRepository.findUserBySocialId(socialId);
+	// 	return new UserResponseDto(user.getId(), user.getSocialId(), user.getSocialType());
+	// }
 }

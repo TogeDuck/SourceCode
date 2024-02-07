@@ -13,13 +13,15 @@ import com.idle.togeduck.domain.user.serivce.UserService;
 import com.idle.togeduck.global.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserService uesrService;
+	private final UserService userService;
 
 	@GetMapping("/favorities")
 	public ResponseEntity<BaseResponse<?>> getFavorite(
@@ -28,7 +30,7 @@ public class UserController {
 		return ResponseEntity
 			.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "success",
-				uesrService.getFavoriteCelebrity(favoriteRequestDto)
+				userService.getFavoriteCelebrity(favoriteRequestDto)
 			));
 	}
 
@@ -36,7 +38,7 @@ public class UserController {
 	public ResponseEntity<BaseResponse<?>> upsertFavorite(
 		@RequestBody FavoriteRequestDto favoriteRequestDto) { // update + insert
 
-		uesrService.upsertFavorite(favoriteRequestDto);
+		userService.upsertFavorite(favoriteRequestDto);
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
