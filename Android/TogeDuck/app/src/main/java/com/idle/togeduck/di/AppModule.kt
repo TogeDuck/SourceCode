@@ -77,9 +77,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideOkhttpClient(): OkHttpClient {
+    fun provideOkhttpClient(interceptor: JwtInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-//            .addInterceptor() // TODO. 인터셉터 추가 필요
+            .addInterceptor(interceptor)
             .build()
     }
 

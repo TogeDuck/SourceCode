@@ -24,6 +24,8 @@ import com.idle.togeduck.event.EventViewModel
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.WebSocketManager
+import com.idle.togeduck.quest.recruit.RecruitViewModel
+import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.LoginUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +49,7 @@ class MainFragment : Fragment() {
     lateinit var preference: PreferenceModule
 
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val shareViewModel: ShareViewModel by activityViewModels()
 
     private var temp1 = false
     private var temp2 = false
@@ -107,7 +109,7 @@ class MainFragment : Fragment() {
         binding.btn3.setOnClickListener {
 //            findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
             CoroutineScope(Dispatchers.IO).launch {
-                eventListViewModel.getEventList(1, LocalDate.now().toKotlinLocalDate(), LocalDate.now().toKotlinLocalDate())
+                shareViewModel.getShareList(1, 0, 5)
             }
         }
     }
