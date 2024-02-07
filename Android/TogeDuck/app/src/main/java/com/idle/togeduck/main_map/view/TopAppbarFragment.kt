@@ -1,5 +1,6 @@
 package com.idle.togeduck.main_map.view
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -24,6 +28,7 @@ import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
+import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.getColor
@@ -48,6 +53,7 @@ class TopAppbarFragment : Fragment() {
 //    private val searchBarBinding get() = _searchBarBinding!!
 
     private val mapViewModel: MapViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,8 +72,10 @@ class TopAppbarFragment : Fragment() {
 
         setPadding()
         setTheme()
+        setIdolProfile(requireContext())
         setDateRangePicker()
         showSelectCelebrity()
+
         mapViewModel.pickedDate.observe(viewLifecycleOwner) { data ->
             val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
             val dateRangeText = "${data.first.format(dateTimeFormatter)}-${data.second.format(dateTimeFormatter)}"
@@ -144,6 +152,21 @@ class TopAppbarFragment : Fragment() {
         )
     }
 
+    private fun setIdolProfile(context: Context){
+        val image = topAppbarBinding.ivIdolProfile
+        val imageUrl = favoriteSettingViewModel.selectedCelebrity.value?.image
+        Glide
+            .with(image)
+            .load(imageUrl)
+            .thumbnail(
+                Glide.with(image).load(imageUrl).override(80,80)
+            )
+            .circleCrop()
+            .override(80, 80)
+            .into(image)
+        topAppbarBinding.tvIdolName.text = favoriteSettingViewModel.selectedCelebrity.value?.name
+    }
+
     private fun setTheme() {
         val bottomRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_bottom_round_25) as GradientDrawable
         bottomRoundDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
@@ -164,9 +187,9 @@ class TopAppbarFragment : Fragment() {
 
 //        searchBarBinding.ivSearch.background = main500CircleDrawable
 //        searchBarBinding.ivSearch.setColorFilter(getColor(requireContext(), Theme.theme.main500))
-        topAppbarBinding.ivIdolProfile.background = main500CircleDrawable
+//        topAppbarBinding.ivIdolProfile.background = main500CircleDrawable
         // TODO. 실제 프로필 사진 적용시 삭제 필요
-        topAppbarBinding.ivIdolProfile.setColorFilter(getColor(requireContext(), Theme.theme.main500))
+//        topAppbarBinding.ivIdolProfile.setColorFilter(getColor(requireContext(), Theme.theme.main500))
         topAppbarBinding.ivCalendar.background = main500CircleDrawable
         topAppbarBinding.ivCalendar.setColorFilter(getColor(requireContext(), Theme.theme.main500))
 

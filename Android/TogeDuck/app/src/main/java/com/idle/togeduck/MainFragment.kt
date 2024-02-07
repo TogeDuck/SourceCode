@@ -96,13 +96,14 @@ class MainFragment : Fragment() {
                 com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
             )
 //            stompManager.connect(headers)
-            stompManagerTest.connect(headers)
 
             // 특정 토픽에 대한 구독
             stompManagerTest.subscribeTopic("/sub/chats/1") { message ->
                 questToast(message)
                 Log.d("웹소켓 1", "Received message: $message")
             }
+
+            stompManagerTest.connect(headers)
         }
 
         binding.btn2.setOnClickListener {
@@ -126,14 +127,9 @@ class MainFragment : Fragment() {
     }
 
     private fun initGUID() {
-        var accessToken = runBlocking {
-            preference.getAccessToken.first()
-        }
-
         CoroutineScope(Dispatchers.IO).launch {
-            if (accessToken == null) {
-                val guid = LoginUtil.makeGUID()
-                preference.setGuid(guid)
+            if (!mainViewModel.isAccessTokenPresent()) {
+                val guid = mainViewModel.makeGUID()
                 mainViewModel.login("GUEST", guid)
             }
         }

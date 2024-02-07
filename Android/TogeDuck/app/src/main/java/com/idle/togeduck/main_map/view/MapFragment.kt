@@ -43,6 +43,8 @@ import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.di.PreferenceModule
+import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
@@ -69,14 +71,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toKotlinLocalDate
 import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import ted.gun0912.clustering.naver.TedNaverClustering
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
-    @Inject
-    lateinit var preference: PreferenceModule
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -86,8 +88,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val componentBottomAppbarBinding get() = _componentBottomAppbarBinding!!
 
     private val mapViewModel: MapViewModel by activityViewModels()
-
-//    private val webSocketManager = WebSocketManager()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
     private lateinit var naverMap: NaverMap
 
@@ -106,6 +108,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var halfOffset = 0.5f
 
     private var clustering: TedNaverClustering<NaverItem>? = null
+    private var todayClustering: TedNaverClustering<NaverItem>? = null
+    private var upcomingClustering: TedNaverClustering<NaverItem>? = null
+    private var pastClustering: TedNaverClustering<NaverItem>? = null
 
     private var peopleClustering : TedNaverClustering<NaverItem>? = null
 
@@ -139,8 +144,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpFloatingButton()
         setRealTimeContainer()
 
-        mapViewModel.markerList.observe(viewLifecycleOwner) {
-            clustering?.addItems(it)
+//        mapViewModel.markerList.observe(viewLifecycleOwner) {
+//            clustering?.addItems(it)
+//        }
+
+
+        eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
+            todayClustering?.clearItems()
+            todayClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
+            Log.d("이벤트 리스트 변경","오늘")
+        }
+        eventListViewModel.listUpcoming.observe(viewLifecycleOwner) { updatedMarkerList ->
+            upcomingClustering?.clearItems()
+            upcomingClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
+            Log.d("이벤트 리스트 변경","미래")
+        }
+        eventListViewModel.listPast.observe(viewLifecycleOwner) { updatedMarkerList ->
+            pastClustering?.clearItems()
+            pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
+            Log.d("이벤트 리스트 변경","과거")
         }
 
         mapViewModel.peopleMarkerList.observe(viewLifecycleOwner) {
@@ -392,8 +414,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     )
                 }
 
-                initCluster()
-                mapViewModel.getItems(naverMap, 10)
+//                initPastCluster()
+                initClusterTest()
+                getEventList()
+
+//                initCluster()
+//                mapViewModel.getItems(naverMap, 10)
 
                 // People Cluster + WebSocket
 //                initPeopleCluster()
@@ -448,7 +474,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    // 이벤트 리스트 가져옴
+    private fun getEventList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
+            val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
+            eventListViewModel.getEventList(2, LocalDate(2022,1,1), LocalDate(2025,1,1))
+        }
+    }
 
+    // 지도 사용자들 실시간 위치 초기화
     private fun initPeopleCluster(){
         peopleClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
             .customMarker{
@@ -476,6 +511,35 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
             .make()
     }
+    private fun initPastCluster(){
+        pastClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
+            .customMarker{
+                    clusterItem ->
+                val circleDrawable = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.shape_circle
+                ) as GradientDrawable
+                circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
+                circleDrawable.setStroke(0,0)
+
+                val markerBitmap = Bitmap.createBitmap(
+                    dpToPx(200, requireContext()), // 마커 너비
+                    dpToPx(200, requireContext()), // 마커 높이
+                    Bitmap.Config.ARGB_8888
+                )
+
+                val canvas = Canvas(markerBitmap)
+                circleDrawable.setBounds(0, 0, canvas.width, canvas.height)
+                circleDrawable.draw(canvas)
+
+                Marker(clusterItem.position).apply {
+                    icon = OverlayImage.fromBitmap(markerBitmap)
+                }
+            }
+            .make()
+    }
+
+
 
     // 클러스터 관리 메소드
     private fun initCluster() {
@@ -722,4 +786,152 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
+
+
+
+    // 클러스터 함수 테스트
+    private fun initClusterTest() {
+        pastClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap).apply {
+            setupCustomMarker("PAST")
+            setupCustomCluster("PAST")
+//            setupMarkerAddedListener(circleOverlayList)
+//            setupClusterAddedListener(circleOverlayList)
+            setupClusterClickListener()
+            setupMarkerClickListener()
+        }.make()
+        pastClustering?.setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
+
+        todayClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap).apply {
+            setupCustomMarker("TODAY")
+            setupCustomCluster("TODAY")
+//            setupMarkerAddedListener(circleOverlayList)
+//            setupClusterAddedListener(circleOverlayList)
+            setupClusterClickListener()
+            setupMarkerClickListener()
+        }.make()
+        todayClustering?.setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
+
+        upcomingClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap).apply {
+            setupCustomMarker("LATER")
+            setupCustomCluster("LATER")
+//            setupMarkerAddedListener(circleOverlayList)
+//            setupClusterAddedListener(circleOverlayList)
+            setupClusterClickListener()
+            setupMarkerClickListener()
+        }.make()
+        upcomingClustering?.setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
+    }
+
+    private fun getClusterColor(kind: String): Int{
+        return when(kind){
+            "PAST" -> getColor(requireContext(), R.color.gray_bg)
+            "TODAY" -> getColor(requireContext(), Theme.theme.main500)
+            "LATER" -> getColor(requireContext(), Theme.theme.main300)
+            else -> getColor(requireContext(), R.color.gray_bg)
+        }
+    }
+
+    private fun TedNaverClustering.Builder<NaverItem>.setupCustomMarker(kind: String) = apply {
+        customMarker { clusterItem ->
+            Marker(clusterItem.position).apply {
+                icon = MarkerIcons.BLACK
+                iconTintColor = getClusterColor(kind)
+                width = dpToPx(80, requireContext())
+                height = dpToPx(80, requireContext())
+                // 이 `apply` 블록의 결과 (즉, Marker 객체 자체)가 반환됩니다.
+            }
+        }
+    }
+
+    private fun TedNaverClustering.Builder<NaverItem>.setupCustomCluster(kind: String) = apply {
+        customCluster {
+            val circleDrawable = ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.shape_circle
+            ) as GradientDrawable
+            circleDrawable.setColor(getClusterColor(kind))
+            circleDrawable.setStroke(2, getClusterColor(kind))
+
+            TextView(requireContext()).apply {
+                background = circleDrawable
+                setTextColor(Color.WHITE)
+                text = "${it.size}"
+                width = dpToPx(30, requireContext())
+                height = dpToPx(40, requireContext())
+                gravity = Gravity.CENTER
+            }
+        }
+    }
+
+    private fun TedNaverClustering.Builder<NaverItem>.setupMarkerAddedListener(circleOverlayList: MutableMap<LatLng, CircleOverlay>) = apply {
+        markerAddedListener { clusterItem, _ ->
+            if (circleOverlayList[clusterItem.position] == null) {
+                circleOverlayList[clusterItem.position] = CircleOverlay().builder(
+                    clusterItem.position,
+                    100.0,
+                    requireContext(),
+                    naverMap
+                )
+            } else {
+                circleOverlayList[clusterItem.position]!!.radius = 150.0
+                circleOverlayList[clusterItem.position]!!.map = naverMap
+            }
+        }
+    }
+
+    fun TedNaverClustering.Builder<NaverItem>.setupClusterAddedListener(circleOverlayList: MutableMap<LatLng, CircleOverlay>) = apply {
+        clusterAddedListener { cluster, tedNaverMarker ->
+            val radius = cluster.size * 100.0
+
+            cluster.items.forEach { naverItem ->
+                if (circleOverlayList[naverItem.position] != null) {
+                    circleOverlayList[naverItem.position]!!.map = null
+                }
+            }
+
+            val closet = cluster.items.closet(tedNaverMarker.marker.position)
+
+            if (circleOverlayList[closet] == null) {
+                circleOverlayList[closet] = CircleOverlay().builder(
+                    closet,
+                    radius,
+                    requireContext(),
+                    naverMap
+                )
+            } else {
+                circleOverlayList[closet]!!.radius = radius
+                circleOverlayList[closet]!!.map = naverMap
+            }
+
+            readjustCluster()
+        }
+    }
+
+    fun TedNaverClustering.Builder<NaverItem>.setupClusterClickListener() = apply {
+        clusterClickListener { cluster ->
+            val position = cluster.position
+
+            val cameraPosition = CameraPosition(
+                LatLng(position.latitude, position.longitude),
+                naverMap.cameraPosition.zoom + 2
+            )
+
+            naverMap.moveCamera(
+                CameraUpdate
+                    .toCameraPosition(cameraPosition)
+                    .animate(CameraAnimation.Fly)
+            )
+        }
+    }
+
+    fun TedNaverClustering.Builder<NaverItem>.setupMarkerClickListener() = apply {
+        markerClickListener { naverItem ->
+            val position = naverItem.position
+
+            naverMap.moveCamera(
+                CameraUpdate.scrollTo(LatLng(position.latitude, position.longitude))
+            )
+        }
+    }
+
 }
