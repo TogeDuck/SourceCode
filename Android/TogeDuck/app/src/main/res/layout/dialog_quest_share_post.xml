@@ -1,34 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_gravity="center"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:paddingHorizontal="30dp"
+    android:paddingVertical="20dp"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/ll_dialog_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_all_round_20"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="20dp">
 
     <ImageView
-        android:id="@+id/exchange_post_img"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:id="@+id/share_post_img"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/common_cupcake3" />
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/common_cupcake3"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
         <!-- textCursorDrawable 제작, 수정 -->
         <com.idle.togeduck.util.ClearFocusEditText
-            android:id="@+id/et_exchange_title"
+            android:id="@+id/et_share_title"
             android:layout_width="200dp"
             android:layout_height="@dimen/circle_xsmall"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:hint="제목을 입력하세요"
             android:inputType="text"
@@ -37,12 +54,13 @@
             android:paddingVertical="2dp"
             android:textCursorDrawable="@drawable/shape_cursor"
             android:textSize="@dimen/text_large"
-            tools:ignore="RtlSymmetry"/>
+            tools:ignore="RtlSymmetry">
+        </com.idle.togeduck.util.ClearFocusEditText>
 
         <com.idle.togeduck.util.ClearFocusEditText
-            android:id="@+id/et_exchange_content"
+            android:id="@+id/et_share_content"
             android:layout_width="200dp"
-            android:layout_height="100dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
@@ -53,38 +71,14 @@
             android:paddingVertical="2dp"
             android:textCursorDrawable="@drawable/shape_cursor"
             android:textSize="@dimen/text_large"
-            tools:ignore="RtlSymmetry"/>
-
-        <!-- 색 위에랑 똑같게 변경 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="제한 시간을 정해 주세요 (분)"
-            android:textColor="@color/gray_bg"/>
-
-
-        <NumberPicker
-            android:id="@+id/np_exchange_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:value="50" />
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="300dp"-->
-<!--            android:layout_height="70dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:orientation="horizontal">-->
+            tools:ignore="RtlSymmetry">
+        </com.idle.togeduck.util.ClearFocusEditText>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_share_btn_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:gravity="center">
 
                 <TextView
@@ -118,6 +112,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-<!--        </LinearLayout>-->
+    </LinearLayout>
     </LinearLayout>
 </LinearLayout>
