@@ -17,6 +17,9 @@ import androidx.work.WorkManager
 import com.google.gson.Gson
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.di.PreferenceModule
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.favorite.model.Celebrity
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.WebSocketManager
@@ -29,6 +32,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -42,6 +48,8 @@ class MainFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val shareViewModel: ShareViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
     private var temp1 = false
     private var temp2 = false
@@ -63,7 +71,10 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initGUID()
+        setDate()
+        getFavorites()
 
+        // 삭제 예정 ========================================
         binding.btn0.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
         }
@@ -104,24 +115,79 @@ class MainFragment : Fragment() {
                 shareViewModel.getShareList(1, 0, 5)
             }
         }
+        //----------------------------------------------------
     }
 
     private fun initGUID() {
-        var guid = runBlocking {
-            preference.getGuid.first()
+        var accessToken = runBlocking {
+            preference.getAccessToken.first()
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            if (guid == null) {
-                guid = LoginUtil.makeGUID()
-                preference.setGuid(guid!!)
-
+            if (accessToken == null) {
+                val guid = LoginUtil.makeGUID()
+                preference.setGuid(guid)
+                mainViewModel.login("GUEST", guid)
             }
-
-            mainViewModel.login("GUEST", guid!!)
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setDate() {
+        mapViewModel.setPickedDate(LocalDate.now(), LocalDate.now())
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getFavorites(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = favoriteSettingViewModel.getFavoriteList()
+            handelNavigate(result)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handelNavigate(result: Boolean){
+        if(result){
+            CoroutineScope(Dispatchers.Main).launch {
+                getBirthdayClosest()
+                findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
+            }
+        }
+        else {
+            CoroutineScope(Dispatchers.Main).launch {
+                findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getBirthdayClosest(){
+        val favoriteIdolList = favoriteSettingViewModel.favoriteIdolList.value
+        var closestBirthdayCelebrity: Celebrity? = null
+        var minDaysDifference = Int.MAX_VALUE
+        val today = LocalDate.now()
+        if(favoriteIdolList != null){
+            for(celebrity in favoriteIdolList){
+                // 달이 이전인 경우 || 달과 일이 이전인 경우
+                var year = celebrity.birthday.year
+                if(today.month < celebrity.birthday.month || (today.month <= celebrity.birthday.month && today.dayOfMonth < celebrity.birthday.dayOfMonth)){
+                    year++
+                }
+                val celebrityBirthday = java.time.LocalDate.of(
+                    year,
+                    celebrity.birthday.month,
+                    celebrity.birthday.dayOfMonth
+                )
+                val dayDifference = ChronoUnit.DAYS.between(today, celebrityBirthday)
+                if(dayDifference < minDaysDifference){
+                    closestBirthdayCelebrity = celebrity
+                }
+            }
+            favoriteSettingViewModel.setSelectedCelebrity(closestBirthdayCelebrity!!)
+        }
+    }
+
+    // 삭제 예정-----------------------------------------------------
     private fun questToast(message: String) {
         val questDto = Gson().fromJson(message, Quest::class.java)
         Toast.makeText(requireContext(), "${questDto.questKind}이 생성되었습니다", Toast.LENGTH_SHORT)
@@ -132,6 +198,7 @@ class MainFragment : Fragment() {
         val coorDto = Gson().fromJson(message, Coordinate::class.java)
         Log.d("좌표", coorDto.toString())
     }
+    // -------------------------------------------------------------------
 
     fun doWorkWithPeriodic() {
         Log.d("로그", "doWorkWithPeriodic() 호출됨")
