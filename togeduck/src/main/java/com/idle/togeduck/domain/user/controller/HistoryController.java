@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.idle.togeduck.domain.user.dto.HistoryEventRequestDto;
 import com.idle.togeduck.domain.user.dto.HistoryResponseDto;
 import com.idle.togeduck.domain.user.dto.RouteResponseDto;
+import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.domain.user.serivce.HistoryService;
 import com.idle.togeduck.global.response.BaseResponse;
 
@@ -29,10 +31,11 @@ public class HistoryController {
 	private final HistoryService historyService;
 
 	@GetMapping("/history")
-	public ResponseEntity<BaseResponse<?>> createHistory(@RequestParam("celebrity-id") Long celebrityId, Long userId) {
+	public ResponseEntity<BaseResponse<?>> createHistory(@RequestParam("celebrity-id") Long celebrityId,
+		@AuthenticationPrincipal User user) {
 
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "투어 생성이 완료되었습니다.", historyService.createHistory(celebrityId, userId)));
+			.body(new BaseResponse<>(200, "투어 생성이 완료되었습니다.", historyService.createHistory(celebrityId, user.getId())));
 	}
 
 	@PostMapping("/history-event")

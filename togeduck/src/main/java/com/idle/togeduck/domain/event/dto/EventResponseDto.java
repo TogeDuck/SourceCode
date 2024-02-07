@@ -3,7 +3,7 @@ package com.idle.togeduck.domain.event.dto;
 import java.time.LocalDate;
 
 public record EventResponseDto(
-	Long eventId,
+	Long event_id,
 	String name,
 	String image1,
 	String image2,
