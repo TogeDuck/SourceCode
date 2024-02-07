@@ -6,6 +6,7 @@ import com.idle.togeduck.event.view.detail.EventDetailFragment
 import com.idle.togeduck.event.view.list.EventListFragment
 import com.idle.togeduck.history.view.HistoryDetailFragment
 import com.idle.togeduck.history.view.HistoryFragment
+import com.idle.togeduck.myquest.view.MyQuestFragment
 import com.idle.togeduck.quest.view.QuestFragment
 
 class MapPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -18,7 +19,7 @@ class MapPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
             0 -> QuestFragment()
             1 -> EventListFragment()
             2 -> EventDetailFragment()
-            3 -> EventListFragment() // TODO. MyQuest 화면 추가 필요
+            3 -> MyQuestFragment()
             4 -> HistoryFragment()
             else -> HistoryDetailFragment()
         }
