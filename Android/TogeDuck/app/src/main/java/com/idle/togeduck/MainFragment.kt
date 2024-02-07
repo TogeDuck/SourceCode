@@ -1,6 +1,5 @@
 package com.idle.togeduck
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,15 +15,11 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.gson.Gson
-import com.idle.togeduck.common.LoginData
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.di.PreferenceModule
-import com.idle.togeduck.event.EventListViewModel
-import com.idle.togeduck.event.EventViewModel
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.WebSocketManager
-import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.LoginUtil
@@ -34,11 +29,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.toKotlinLocalDate
-import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.math.log
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -115,18 +107,18 @@ class MainFragment : Fragment() {
     }
 
     private fun initGUID() {
-        LoginData.guid = runBlocking {
-            preference.guidFlow.first()
+        var guid = runBlocking {
+            preference.getGuid.first()
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            Log.d("로그", "MainFragment - initGUID() 호출됨 ${LoginData.guid}")
-            if (LoginData.guid == null) {
-                LoginData.guid = LoginUtil.makeGUID()
-                preference.setGuid(LoginData.guid!!)
+            if (guid == null) {
+                guid = LoginUtil.makeGUID()
+                preference.setGuid(guid!!)
+
             }
 
-            mainViewModel.login("GUEST", LoginData.guid!!)
+            mainViewModel.login("GUEST", guid!!)
         }
     }
 

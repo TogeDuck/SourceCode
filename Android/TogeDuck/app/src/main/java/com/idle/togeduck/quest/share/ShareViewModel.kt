@@ -25,8 +25,8 @@ class ShareViewModel @Inject constructor(
         get() = _selectedShare
 
     suspend fun getShareList(eventId: Long, page: Int, size: Int){
-
         val response = shareRepository.getShareList(eventId, page, size)
+
         if(response.isSuccessful) {
             val shareListResponse = response.body()
             val exchanges = shareListResponse?.data?.content ?: emptyList()

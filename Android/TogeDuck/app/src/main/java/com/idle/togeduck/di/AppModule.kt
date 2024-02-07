@@ -1,7 +1,6 @@
 package com.idle.togeduck.di
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -233,20 +232,20 @@ object AppModule {
 
     @Singleton
     class JwtInterceptor @Inject constructor(
-        private  val preference: PreferenceModule
+        private  val preference: PreferenceModule,
     ): Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
             val accessToken = runBlocking {
-                preference.jwtAccessTokenFlow.first()
+                preference.getAccessToken.first()
             }
 
-            val newRequest = request().newBuilder()
+            val newRequest = chain.request().newBuilder()
                 .apply {
                     if (accessToken != null) addHeader("Authorization", "Bearer $accessToken")
                 }
                 .build()
 
-            proceed(newRequest)
+            return chain.proceed(newRequest)
         }
     }
 }
