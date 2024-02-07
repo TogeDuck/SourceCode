@@ -1,6 +1,7 @@
 package com.idle.togeduck.main_map.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -292,6 +293,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.bsFragment.bottomSheet.setPadding(0, 0, 0, dpToPx(105, requireContext()))
     }
 
+    @SuppressLint("ResourceType")
     private fun setRealTimeContainer(){
         val statusBarDp = getStatusBarHeightToDp(requireContext())
         val layoutParamsRealTimeContainer = binding.realTimeContainer.layoutParams as FrameLayout.LayoutParams
@@ -302,17 +304,30 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         squareCircle.setColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.realTimeTxt.background = squareCircle
 
-        val trackStates = arrayOf(intArrayOf(android.R.attr.state_checked))
-        val thumbStates = arrayOf(intArrayOf(android.R.attr.state_checked))
+        val trackStates = arrayOf(
+            intArrayOf(android.R.attr.state_checked),
+            intArrayOf(-android.R.attr.state_checked)
+        )
+        val thumbStates = arrayOf(
+            intArrayOf(android.R.attr.state_checked),
+            intArrayOf(-android.R.attr.state_checked)
+        )
 
-        val trackColors = intArrayOf(Theme.theme.main200)
-        val thumbColors = intArrayOf(Theme.theme.main500)
+        val trackColors = intArrayOf(
+            getColor(requireContext(), Theme.theme.main200),
+            getColor(requireContext(), R.color.white)
+
+        )
+        val thumbColors = intArrayOf(
+            getColor(requireContext(), Theme.theme.main500),
+            getColor(requireContext(), R.color.gray_text)
+        )
 
         val trackColorStateList = ColorStateList(trackStates, trackColors)
         val thumbColorStateList = ColorStateList(thumbStates, thumbColors)
 
-        binding.realTimeBtn.trackDecorationTintList = trackColorStateList
-        binding.realTimeBtn.thumbIconTintList = thumbColorStateList
+        binding.realTimeBtn.trackTintList = trackColorStateList
+        binding.realTimeBtn.thumbTintList = thumbColorStateList
     }
 
     override fun onMapReady(naverMap: NaverMap) {

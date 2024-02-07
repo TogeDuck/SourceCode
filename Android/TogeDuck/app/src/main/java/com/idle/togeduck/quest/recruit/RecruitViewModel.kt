@@ -37,6 +37,11 @@ class RecruitViewModel @Inject constructor(
         }
     }
 
+    fun removeItem(recruit: Recruit){
+        val currentList = _recruitList.value?.toMutableList() ?: mutableListOf()
+        currentList.remove(recruit)
+        _recruitList.value = currentList
+    }
 
 
 }
