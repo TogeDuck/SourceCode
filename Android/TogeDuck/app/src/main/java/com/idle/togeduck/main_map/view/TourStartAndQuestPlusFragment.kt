@@ -1,6 +1,7 @@
 package com.idle.togeduck.main_map.view
 
 import android.graphics.drawable.GradientDrawable
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -68,9 +69,14 @@ class TourStartAndQuestPlusFragment : Fragment() {
         tourStartAndQuestPlusBinding.tourStartBtn.setOnClickListener {
             changeTourBtn()
         }
+
+        tourStartAndQuestPlusBinding.questPlusBtn.setOnClickListener {
+            tourStartAndQuestPlusBinding.plusToggle.visibility = View.VISIBLE
+        }
     }
 
     private fun changeTourBtn() {
+
         tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
         tourStartAndQuestPlusBinding.startText.text = "종료"
 
@@ -82,16 +88,31 @@ class TourStartAndQuestPlusFragment : Fragment() {
         tourCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
         tourCircle.setStroke(0,0)
+        tourStartAndQuestPlusBinding.tourStartBtn.background = tourCircle
 
         val plusCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         plusCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         plusCircle.setStroke(0,0)
-
-        tourStartAndQuestPlusBinding.tourStartBtn.background = tourCircle
         tourStartAndQuestPlusBinding.questPlusBtn.background = plusCircle
+
+        val exchangeCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        exchangeCircle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+        exchangeCircle.setStroke(0,0)
+        tourStartAndQuestPlusBinding.plusExchange.background = exchangeCircle
+        tourStartAndQuestPlusBinding.plusExchange.setColorFilter(getColor(requireContext(), R.color.white))
+
+        val shareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        shareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        shareCircle.setStroke(0,0)
+        tourStartAndQuestPlusBinding.plusShare.background = shareCircle
+        tourStartAndQuestPlusBinding.plusShare.setColorFilter(getColor(requireContext(), R.color.white))
+
+        val recruitCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        recruitCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        recruitCircle.setStroke(0,0)
+        tourStartAndQuestPlusBinding.plusRecruit.background = recruitCircle
+        tourStartAndQuestPlusBinding.plusRecruit.setColorFilter(getColor(requireContext(), R.color.white))
     }
-
-
 
 
 
