@@ -1,5 +1,6 @@
 package com.idle.togeduck
 
+import android.content.ContentValues.TAG
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -23,6 +25,8 @@ import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.Message
 import com.idle.togeduck.network.Quest
+import com.idle.togeduck.network.StompManager
+import com.idle.togeduck.network.StompManagerTest
 import com.idle.togeduck.network.WebSocketManager
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.util.GPSWorker
@@ -33,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ua.naiksoftware.stomp.dto.StompHeader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -51,9 +56,6 @@ class MainFragment : Fragment() {
     private val shareViewModel: ShareViewModel by activityViewModels()
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
-
-    private var temp1 = false
-    private var temp2 = false
 
     lateinit var webSocketManager : WebSocketManager
     lateinit var webSocketManager1 : WebSocketManager
@@ -83,43 +85,42 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
         }
 
+        val stompManager = StompManager()
+        val stompManagerTest = StompManagerTest()
+
         binding.btn1.setOnClickListener {
-            if (!temp1) {
-                webSocketManager.connect()
-                webSocketManager.subscribe("/sub/chats/1") { message ->
-                    requireActivity().runOnUiThread {
-                        questToast(message)
-                    }
-                }
-                temp1 = true
-            } else {
-                temp1 = false
-                webSocketManager.disconnect()
+            Log.d("버튼","김아영 버튼 눌림")
+
+            // Stomp 연결
+            val headers = listOf(
+                com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
+            )
+//            stompManager.connect(headers)
+            stompManagerTest.connect(headers)
+
+            // 특정 토픽에 대한 구독
+            stompManagerTest.subscribeTopic("/sub/chats/1") { message ->
+                questToast(message)
+                Log.d("웹소켓 1", "Received message: $message")
             }
         }
 
         binding.btn2.setOnClickListener {
-//            if (!temp2) {
-//                webSocketManager1.connect()
-//                webSocketManager1.subscribe("/topic/coors") { message ->
-//                    coor(message)
-//                }
-//                temp2 = true
-//                Log.d("웹소켓 연결", "연결됨")
-//            } else {
-//                temp2 = false
-//                webSocketManager1.disconnect()
-//                Log.d("웹소켓 좌표 종료", "연결끊김")
-//            }
-            webSocketManager1.connect()
-            webSocketManager1.send("/pub/chat/1/message", 1L, "안녕하세요")
+            Log.d("버튼","이지우 버튼 눌림")
+            if(webSocketManager1.getConnectedState()){
+                Log.d("버튼","웹소켓 1번 연결됨")
+                webSocketManager1.send("/pub/chats/1/message", 1, "안녕하세요")
+            }
         }
 
         binding.btn3.setOnClickListener {
-//            findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
-            CoroutineScope(Dispatchers.IO).launch {
-                shareViewModel.getShareList(1, 0, 5)
-            }
+            Log.d("버튼","최지찬 버튼 눌림")
+            val destination = "/pub/chats/1/message"
+            val payload = "Hello, WebSocket!"
+            val headers = listOf(
+                com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
+            )
+            stompManagerTest.send(destination,1, payload, headers)
         }
         //----------------------------------------------------
     }
