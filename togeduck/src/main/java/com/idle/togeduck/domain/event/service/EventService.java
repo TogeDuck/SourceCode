@@ -31,6 +31,7 @@ public class EventService {
 
 		for (JoinEventResponseDto dto : allEvents) {
 			if (dto.endDate().isBefore(cur)) {
+				past.add(dto);
 				continue;
 			}
 			(dto.startDate().isBefore(cur) ? today : later).add(dto);

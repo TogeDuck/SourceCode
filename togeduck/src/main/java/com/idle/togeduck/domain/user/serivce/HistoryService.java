@@ -96,6 +96,7 @@ public class HistoryService {
 		userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 		History history = historyRepository.findById(historyId).orElseThrow(() -> new BaseException(HISTORY_NOT_FOUND));
 
+		historyEventRepository.deleteAllByHistoryId(historyId);
 		historyRepository.delete(history);
 	}
 
