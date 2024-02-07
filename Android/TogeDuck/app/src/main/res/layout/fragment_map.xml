@@ -62,6 +62,14 @@
         android:name="com.idle.togeduck.main_map.view.TopAppbarFragment"
         />
 
+    <include
+        android:id="@+id/tsqp_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="105dp"
+        layout="@layout/fragment_tour_start_and_quest_plus"/>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
