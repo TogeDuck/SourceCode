@@ -22,6 +22,19 @@
         android:padding="20dp"
         >
 
+        <!-- 이미지 선택하면 gone으로 -->
+        <Button
+            android:id="@+id/exchange_img_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이미지 첨부"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:visibility="visible"
+            android:backgroundTint="@color/bts_main500"/>
+
+
+        <!-- 이미지 선택하면 visible로-->
         <ImageView
             android:id="@+id/exchange_post_img"
             android:layout_width="150dp"
@@ -29,6 +42,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:scaleType="fitCenter"
+            android:visibility="gone"
             android:src="@drawable/common_cupcake3" />
 
         <LinearLayout
