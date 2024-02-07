@@ -1,5 +1,10 @@
 package com.idle.togeduck.di
 
+import android.content.Context
+import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.EventRepository
 import com.idle.togeduck.event.model.EventService
@@ -12,6 +17,9 @@ import com.idle.togeduck.favorite.model.FavoriteService
 import com.idle.togeduck.history.model.DefaultHistoryRepository
 import com.idle.togeduck.history.model.HistoryRepository
 import com.idle.togeduck.history.model.HistoryService
+import com.idle.togeduck.login.model.DefaultLoginRepository
+import com.idle.togeduck.login.model.LoginRepository
+import com.idle.togeduck.login.model.LoginService
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
@@ -28,21 +36,42 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
+import javax.inject.Inject
 import javax.inject.Singleton
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = TOGEDUCK_PREFERENCE_DATASTORE_NAME)
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 //    private const val BASE_URL = "https://a1025c31-1b70-43fc-85ae-a9f7b81404ce.mock.pstmn.io"
-    private const val BASE_URL = "https://a88c286f-5cab-4976-a6f1-ba3076fda1cb.mock.pstmn.io"
+    private const val BASE_URL = "https://i10a301.p.ssafy.io"
+
+    @Singleton
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context) : DataStore<Preferences> {
+        return context.dataStore
+    }
+
+    @Singleton
+    @Provides
+    fun provideLoginUserPreference(dataStore: DataStore<Preferences>): PreferenceModule {
+        return PreferenceModule(dataStore)
+    }
+
     @Singleton
     @Provides
     fun provideOkhttpClient(): OkHttpClient {
@@ -173,6 +202,37 @@ object AppModule {
     @Provides
     fun provideFavoriteRepository(favoriteService: FavoriteService) : FavoriteRepository {
         return DefaultFavoriteRepository(favoriteService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLoginService(retrofit: Retrofit) : LoginService {
+        return retrofit.create(LoginService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLoginRepository(loginService: LoginService) : LoginRepository {
+        return DefaultLoginRepository(loginService)
+    }
+
+    @Singleton
+    class JwtInterceptor @Inject constructor(
+        private  val preference: PreferenceModule
+    ): Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
+            val accessToken = runBlocking {
+                preference.jwtAccessTokenFlow.first()
+            }
+
+            val newRequest = request().newBuilder()
+                .apply {
+                    if (accessToken != null) addHeader("Authorization", "Bearer $accessToken")
+                }
+                .build()
+
+            proceed(newRequest)
+        }
     }
 }
 
