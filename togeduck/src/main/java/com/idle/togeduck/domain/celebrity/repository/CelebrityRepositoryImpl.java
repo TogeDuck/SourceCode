@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import com.idle.togeduck.domain.celebrity.dto.CelebrityResponseDto;
 import com.idle.togeduck.domain.celebrity.entity.Celebrity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
 
 @Repository
@@ -69,5 +69,4 @@ public class CelebrityRepositoryImpl implements CelebrityRepositoryCustom {
 		}
 		return celebrity.team.name.eq(teamName);
 	}
-
 }
