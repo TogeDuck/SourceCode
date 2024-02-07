@@ -1,16 +1,33 @@
 package com.idle.togeduck.network
 
 import android.util.Log
+import com.google.gson.Gson
+import com.idle.togeduck.di.PreferenceModule
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
+import ua.naiksoftware.stomp.dto.StompHeader
+import javax.inject.Inject
 
-class WebSocketManager {
-    val url = "ws://70.12.246.147:8080/ws"
+class WebSocketManager @Inject constructor(private val preference: PreferenceModule) {
+    val url = "wss://i10a301.p.ssafy.io/ws-stomp"
     val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
+    var accessToken: String? = null
+    val headerList = arrayListOf<StompHeader>()
+
+    init {
+        accessToken = runBlocking {
+            preference.getAccessToken.first()
+        }
+        headerList.add(StompHeader("Authorization",accessToken))
+    }
 
     fun connect(){
-        stompClient.connect()
+        Log.d("웹소켓",accessToken.toString())
+        Log.d("웹소켓",headerList.toString())
+        stompClient.connect(headerList)
 
         stompClient.lifecycle().subscribe { lifecycleEvent ->
             when (lifecycleEvent.type) {
@@ -42,6 +59,16 @@ class WebSocketManager {
         } catch (e: Exception) {
             Log.d("웹소켓", e.toString())
             disconnect()
+        }
+    }
+
+    fun send(destination:String, chatId: Long, message: String){
+        var messageRequest = Message(chatId, message)
+        try {
+            stompClient.send(destination, Gson().toJson(messageRequest))
+        }
+        catch (e: Exception){
+            Log.d("웹소켓", "메세지 전송 실패")
         }
     }
 
