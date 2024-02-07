@@ -20,6 +20,9 @@ import com.idle.togeduck.history.model.HistoryService
 import com.idle.togeduck.login.model.DefaultLoginRepository
 import com.idle.togeduck.login.model.LoginRepository
 import com.idle.togeduck.login.model.LoginService
+import com.idle.togeduck.myquest.model.MyQuestService
+import com.idle.togeduck.myquest.view.myquest_rv.DefaultMyQuestRepository
+import com.idle.togeduck.myquest.view.myquest_rv.MyQuestRepository
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
@@ -214,6 +217,18 @@ object AppModule {
     @Provides
     fun provideLoginRepository(loginService: LoginService) : LoginRepository {
         return DefaultLoginRepository(loginService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMyQuestService(retrofit: Retrofit) : MyQuestService {
+        return retrofit.create(MyQuestService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMyQuestRepository(myQuestService: MyQuestService) : MyQuestRepository {
+        return DefaultMyQuestRepository(myQuestService)
     }
 
     @Singleton
