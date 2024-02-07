@@ -21,10 +21,16 @@ class TalkViewModel @Inject constructor(
     private val _talkList = MutableLiveData<List<Talk>>()
     val talkList: LiveData<List<Talk>> get() = _talkList
 
+    private val _chatTitle = MutableLiveData<String>()
+    val chatTitle: LiveData<String> get() = _chatTitle
+
+    private val _chatId = MutableLiveData<Long>()
+    val chatId: LiveData<Long> get() = _chatId
+
 
     init {
         viewModelScope.launch {
-            getTalkList(1)
+//            getTalkList(1)
         }
     }
 
@@ -47,5 +53,10 @@ class TalkViewModel @Inject constructor(
     suspend fun getChatRoomTalkList(chatRoomId: Long){
 
 
+    }
+
+    fun setChatRoomInfo(title:String, id:Long){
+        _chatId.value = id
+        _chatTitle.value = title
     }
 }
