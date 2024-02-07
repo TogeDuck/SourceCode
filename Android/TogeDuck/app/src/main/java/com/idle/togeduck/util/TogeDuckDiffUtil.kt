@@ -5,6 +5,7 @@ import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.EventReviewContent
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.history.model.HistoryData
+import com.idle.togeduck.myquest.model.MyQuest
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.recruit.model.Recruit
@@ -121,6 +122,16 @@ object TogeDuckDiffUtil {
         }
 
         override fun areContentsTheSame(oldItem: MyExchange, newItem: MyExchange): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val myQuestDiffUtilCallback = object : DiffUtil.ItemCallback<MyQuest>() {
+        override fun areItemsTheSame(oldItem: MyQuest, newItem: MyQuest): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: MyQuest, newItem: MyQuest): Boolean {
             return oldItem == newItem
         }
     }

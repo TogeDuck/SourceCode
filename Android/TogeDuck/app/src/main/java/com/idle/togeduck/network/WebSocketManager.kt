@@ -34,9 +34,14 @@ class WebSocketManager {
     }
 
     fun subscribe(url: String, callback: (String) -> Unit) {
-        stompClient.topic(url).subscribe { topicMessage ->
-            val message = topicMessage.payload
-            callback(message)
+        try {
+            stompClient.topic(url).subscribe { topicMessage ->
+                val message = topicMessage.payload
+                callback(message)
+            }
+        } catch (e: Exception) {
+            Log.d("웹소켓", e.toString())
+            disconnect()
         }
     }
 
