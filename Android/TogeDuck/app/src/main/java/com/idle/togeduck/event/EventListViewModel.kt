@@ -47,7 +47,7 @@ class EventListViewModel @Inject constructor(
         viewModelScope.launch {
             val startDate = LocalDate.parse("2024-01-01")
             val endDate = LocalDate.parse("2025-01-05")
-            getEventList(1, startDate, endDate)
+            getEventList(2, startDate, endDate)
         }
     }
 

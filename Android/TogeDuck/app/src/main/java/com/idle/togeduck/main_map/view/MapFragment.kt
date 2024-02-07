@@ -2,6 +2,7 @@ package com.idle.togeduck.main_map.view
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -214,7 +215,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         componentBottomSheetBinding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when (position) {
-                    1 ->  {}
+                    0 ->  {
+
+                    }
                 }
             }
         })
@@ -294,9 +297,22 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val layoutParamsRealTimeContainer = binding.realTimeContainer.layoutParams as FrameLayout.LayoutParams
         layoutParamsRealTimeContainer.topMargin = dpToPx(90 + statusBarDp, requireContext())
         layoutParamsRealTimeContainer.rightMargin = dpToPx(10, requireContext())
+
         val squareCircle = ContextCompat.getDrawable(requireContext(),R.drawable.shape_square_circle) as GradientDrawable
         squareCircle.setColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.realTimeTxt.background = squareCircle
+
+        val trackStates = arrayOf(intArrayOf(android.R.attr.state_checked))
+        val thumbStates = arrayOf(intArrayOf(android.R.attr.state_checked))
+
+        val trackColors = intArrayOf(Theme.theme.main200)
+        val thumbColors = intArrayOf(Theme.theme.main500)
+
+        val trackColorStateList = ColorStateList(trackStates, trackColors)
+        val thumbColorStateList = ColorStateList(thumbStates, thumbColors)
+
+        binding.realTimeBtn.trackDecorationTintList = trackColorStateList
+        binding.realTimeBtn.thumbIconTintList = thumbColorStateList
     }
 
     override fun onMapReady(naverMap: NaverMap) {
