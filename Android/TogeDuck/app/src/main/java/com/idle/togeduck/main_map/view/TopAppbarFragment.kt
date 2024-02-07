@@ -26,6 +26,7 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.quest.share.model.Share
@@ -34,6 +35,10 @@ import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.datetime.toKotlinLocalDate
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -54,6 +59,7 @@ class TopAppbarFragment : Fragment() {
 
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,6 +86,15 @@ class TopAppbarFragment : Fragment() {
             val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
             val dateRangeText = "${data.first.format(dateTimeFormatter)}-${data.second.format(dateTimeFormatter)}"
             topAppbarBinding.tvDate.text = dateRangeText
+            getEventList()
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getEventList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
+            val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
+            eventListViewModel.getEventList(2, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
         }
     }
 
@@ -125,6 +140,7 @@ class TopAppbarFragment : Fragment() {
             topAppbarBinding.tvDate.text = dateRangeText
 
             mapViewModel.setPickedDate(startDate, endDate)
+
             // TODO. API 연결
         }
 

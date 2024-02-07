@@ -9,6 +9,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -21,6 +22,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -475,11 +477,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     // 이벤트 리스트 가져옴
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getEventList() {
+        val today = java.time.LocalDate.now()
         CoroutineScope(Dispatchers.IO).launch {
             val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
             val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
-            eventListViewModel.getEventList(2, LocalDate(2022,1,1), LocalDate(2025,1,1))
+            if (startDate.isEqual(today) && endDate.isEqual(today)) {
+                val sixMonthsAgo = today.minusMonths(6)
+                val sixMonthsLater = today.plusMonths(6)
+                eventListViewModel.getEventList(2, sixMonthsAgo.toKotlinLocalDate(), sixMonthsLater.toKotlinLocalDate())
+            } else {
+                eventListViewModel.getEventList(2, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
+            }
         }
     }
 
@@ -511,6 +521,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
             .make()
     }
+
+    // 테스트용 추후 삭제 -------------------------------------------------------------------------------
     private fun initPastCluster(){
         pastClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
             .customMarker{
@@ -538,7 +550,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
             .make()
     }
-
+    // ---------------------------------------------------------------------------------------------
 
 
     // 클러스터 관리 메소드
@@ -789,7 +801,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
 
 
-    // 클러스터 함수 테스트
+    // 클러스터 생성 -----------------------------------------------------------------------------------------------
     private fun initClusterTest() {
         pastClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap).apply {
             setupCustomMarker("PAST")
