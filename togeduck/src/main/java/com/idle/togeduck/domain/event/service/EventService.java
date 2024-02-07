@@ -21,14 +21,15 @@ public class EventService {
 
 	public AllEventResponseDto getEvents(Long celebrityId, LocalDate startDate, LocalDate endDate,
 		Long userId) {
-		List<JoinEventResponseDto> allEvents = eventRepository.findEventList(celebrityId, startDate, endDate, userId);
+		return classifyEvents(eventRepository.findEventList(celebrityId, startDate, endDate, userId));
+	}
+
+	public AllEventResponseDto classifyEvents(List<JoinEventResponseDto> allEvents) {
 		List<JoinEventResponseDto> past = new ArrayList<>();
 		List<JoinEventResponseDto> today = new ArrayList<>();
 		List<JoinEventResponseDto> later = new ArrayList<>();
 
-		// LocalDate cur = LocalDate.of(2023, 12, 5);
 		LocalDate cur = LocalDate.now();
-
 		for (JoinEventResponseDto dto : allEvents) {
 			if (dto.endDate().isBefore(cur)) {
 				past.add(dto);
