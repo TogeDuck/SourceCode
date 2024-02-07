@@ -11,3 +11,8 @@ data class Coordinate(
     val lat: Double,
     val lng: Double
 )
+
+data class Message(
+    val chatId: Long,
+    val content: String
+)

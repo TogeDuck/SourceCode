@@ -42,6 +42,7 @@ import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
@@ -70,9 +71,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import ted.gun0912.clustering.naver.TedNaverClustering
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
+    @Inject
+    lateinit var preference: PreferenceModule
+
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
     private var _componentBottomSheetBinding: ComponentBottomSheetBinding? = null
@@ -82,7 +87,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private val mapViewModel: MapViewModel by activityViewModels()
 
-    private val webSocketManager = WebSocketManager()
+//    private val webSocketManager = WebSocketManager()
 
     private lateinit var naverMap: NaverMap
 

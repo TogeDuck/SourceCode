@@ -21,6 +21,7 @@ import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.Message
 import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.WebSocketManager
 import com.idle.togeduck.quest.share.ShareViewModel
@@ -54,8 +55,8 @@ class MainFragment : Fragment() {
     private var temp1 = false
     private var temp2 = false
 
-    val webSocketManager = WebSocketManager()
-    val webSocketManager1 = WebSocketManager()
+    lateinit var webSocketManager : WebSocketManager
+    lateinit var webSocketManager1 : WebSocketManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +73,10 @@ class MainFragment : Fragment() {
 
         initGUID()
         setDate()
-//        getFavorites()
+        getFavorites()
+
+        webSocketManager = WebSocketManager(preference)
+        webSocketManager1 = WebSocketManager(preference)
 
         // 삭제 예정 ========================================
         binding.btn0.setOnClickListener {
@@ -82,7 +86,7 @@ class MainFragment : Fragment() {
         binding.btn1.setOnClickListener {
             if (!temp1) {
                 webSocketManager.connect()
-                webSocketManager.subscribe("/topic/quests") { message ->
+                webSocketManager.subscribe("/sub/chats/1") { message ->
                     requireActivity().runOnUiThread {
                         questToast(message)
                     }
@@ -95,18 +99,20 @@ class MainFragment : Fragment() {
         }
 
         binding.btn2.setOnClickListener {
-            if (!temp2) {
-                webSocketManager1.connect()
-                webSocketManager1.subscribe("/topic/coors") { message ->
-                    coor(message)
-                }
-                temp2 = true
-                Log.d("웹소켓 연결", "연결됨")
-            } else {
-                temp2 = false
-                webSocketManager1.disconnect()
-                Log.d("웹소켓 좌표 종료", "연결끊김")
-            }
+//            if (!temp2) {
+//                webSocketManager1.connect()
+//                webSocketManager1.subscribe("/topic/coors") { message ->
+//                    coor(message)
+//                }
+//                temp2 = true
+//                Log.d("웹소켓 연결", "연결됨")
+//            } else {
+//                temp2 = false
+//                webSocketManager1.disconnect()
+//                Log.d("웹소켓 좌표 종료", "연결끊김")
+//            }
+            webSocketManager1.connect()
+            webSocketManager1.send("/pub/chat/1/message", 1L, "안녕하세요")
         }
 
         binding.btn3.setOnClickListener {
@@ -150,12 +156,12 @@ class MainFragment : Fragment() {
         if(result){
             CoroutineScope(Dispatchers.Main).launch {
                 getBirthdayClosest()
-                findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
+//                findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
             }
         }
         else {
             CoroutineScope(Dispatchers.Main).launch {
-                findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
+//                findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
             }
         }
     }
@@ -189,8 +195,8 @@ class MainFragment : Fragment() {
 
     // 삭제 예정-----------------------------------------------------
     private fun questToast(message: String) {
-        val questDto = Gson().fromJson(message, Quest::class.java)
-        Toast.makeText(requireContext(), "${questDto.questKind}이 생성되었습니다", Toast.LENGTH_SHORT)
+        val questDto = Gson().fromJson(message, Message::class.java)
+        Toast.makeText(requireContext(), "${questDto.content}이 생성되었습니다", Toast.LENGTH_SHORT)
             .show()
     }
 
