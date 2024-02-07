@@ -54,6 +54,8 @@ class EventListViewModel @Inject constructor(
     suspend fun getEventList(celebrityId: Long, startDate: LocalDate, endDate: LocalDate){
         val responseResult = eventRepository.getEventList(celebrityId, startDate, endDate)
 
+        Log.d("로그", "EventListViewModel - getEventList() 호출됨")
+        
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
             val data = body.data
