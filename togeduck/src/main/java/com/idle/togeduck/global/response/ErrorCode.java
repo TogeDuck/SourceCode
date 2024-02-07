@@ -13,6 +13,7 @@ public enum ErrorCode {
 	UNAUTHORIZED(401, "USER-002", "인증에 실패한 경우"),
 	USER_NOT_FOUND(404, "USER-003", "유저를 찾을 수 없는 경우"),
 	TOKEN_NOT_EXISTS(404, "USER-004", "토큰이 존재하지 않는 경우"),
+	USER_UNAUTHENTICATED(409, "USER-005", "유저 권한이 없는 경우 "),
 	EVENT_NOT_FOUND(404, "EVENT-001", "이벤트를 찾을 수 없는 경우"),
 	REVIEW_NOT_FOUND(404, "REVIEW-001", "리뷰를 찾을 수 없는 경우"),
 	DATA_CANT_SAVE(404, "S3-001", "데이터 저장에 실패 - 필드값 확인 OR 연관 엔티티 확인"),
@@ -27,7 +28,8 @@ public enum ErrorCode {
 	CELEBRITY_NOT_FOUND(404, "CELEBRITY-001", "연예인을 찾을 수 없는 경우"),
 	FIREBASE_INTERRUPTED(500, "FIREBASE-001", "파이어베이스 메시지 전송 중단"),
 	FIREBASE_EXECUTION(500, "FIREBASE-002", "파이어베이스 메시지 전송 중단"),
-	DEAL_NOT_FOUND(404, "DEAL-001", "교환 요청을 찾을 수 없는 경우"),;
+	DEAL_NOT_FOUND(404, "DEAL-001", "교환 요청을 찾을 수 없는 경우"),
+	;
 
 	private final int status;
 	private final String code;

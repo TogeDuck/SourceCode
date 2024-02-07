@@ -4,6 +4,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,9 +40,8 @@ public class PartyController {
 	@PostMapping("/{eventId}/parties")
 	public ResponseEntity<BaseResponse<?>> createParty(
 		@PathVariable Long eventId,
-		@RequestBody PartyRequestDto partyRequestDto) {
-
-		User user = User.builder().id(1L).build();
+		@RequestBody PartyRequestDto partyRequestDto,
+		@AuthenticationPrincipal User user) {
 
 		partyService.createParty(eventId, partyRequestDto.destinationId(), user, partyRequestDto.title(),
 			partyRequestDto.maximum(), partyRequestDto.duration());
@@ -52,12 +53,21 @@ public class PartyController {
 	public ResponseEntity<BaseResponse<?>> updateParty(
 		@PathVariable Long eventId,
 		@PathVariable Long partyId,
-		@RequestBody PartyRequestDto partyRequestDto) {
-
-		User user = User.builder().id(1L).build();
+		@RequestBody PartyRequestDto partyRequestDto,
+		@AuthenticationPrincipal User user) {
 
 		partyService.updateParty(eventId, partyId, user, partyRequestDto.title(),
 			partyRequestDto.maximum(), partyRequestDto.duration());
+
+		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
+	}
+
+	@DeleteMapping("/{eventId}/parties/{partyId}")
+	public ResponseEntity<BaseResponse<?>> deleteParty(
+		@PathVariable Long partyId,
+		@AuthenticationPrincipal User user) {
+
+		partyService.deleteParty(partyId);
 
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
