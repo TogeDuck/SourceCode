@@ -22,7 +22,7 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
     private val binding get() = _binding!!
 
     private val talkViewModel: TalkViewModel by activityViewModels()
-    private lateinit var questShareAdapter: QuestTalkAdapter
+    private lateinit var questTalkAdapter: QuestTalkAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +39,7 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
         setTheme()
 
         talkViewModel.talkList.observe(viewLifecycleOwner) { talkList ->
-            questShareAdapter.submitList(talkList)
+            questTalkAdapter.submitList(talkList)
         }
     }
 
@@ -49,7 +49,6 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
     }
 
     override fun myQuestItemClicked(position: Int) {
-        TODO("Not yet implemented")
     }
 
     private fun setTheme() {
@@ -58,8 +57,8 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
 
     private fun setUpQuestTalkRV() {
         val recycleView = binding.questTalkRecycle
-        questShareAdapter = QuestTalkAdapter(this, requireContext())
-        recycleView.adapter = questShareAdapter
+        questTalkAdapter = QuestTalkAdapter(this, requireContext())
+        recycleView.adapter = questTalkAdapter
         recycleView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recycleView.addItemDecoration(TogeDuckItemDecoration(15, 0))

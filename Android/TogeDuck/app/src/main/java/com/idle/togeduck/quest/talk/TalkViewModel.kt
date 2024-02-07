@@ -21,6 +21,7 @@ class TalkViewModel @Inject constructor(
     private val _talkList = MutableLiveData<List<Talk>>()
     val talkList: LiveData<List<Talk>> get() = _talkList
 
+
     init {
         viewModelScope.launch {
             getTalkList(1)
@@ -41,5 +42,10 @@ class TalkViewModel @Inject constructor(
 
             Log.d("로그", "TalkViewModel - getTalkList() 호출됨 - 응답 실패 - $errorBody")
         }
+    }
+
+    suspend fun getChatRoomTalkList(chatRoomId: Long){
+
+
     }
 }
