@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestTalkBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.quest.talk.model.Talk
 
 class QuestTalkViewHolder (
     binding: ItemQuestTalkBinding,
@@ -22,8 +23,11 @@ class QuestTalkViewHolder (
         questTalkLayout.setOnClickListener(this)
     }
 
-    fun binding(questTalk: QuestTalk, context: Context) {
-        setTheme(questTalk, context)
+    fun binding(talk: Talk, context: Context) {
+        setTheme(context)
+
+        questTalkUser.text = talk.userId.toString()
+        questTalkContent.text = talk.content
     }
 
     override fun onClick(v: View?) {
@@ -34,7 +38,7 @@ class QuestTalkViewHolder (
         }
     }
 
-    private fun setTheme(questTalk: QuestTalk, context: Context) {
+    private fun setTheme(context: Context) {
         val roundSquare = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable
         val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         roundSquare.setColor(ContextCompat.getColor(context, Theme.theme.sub200))
@@ -42,8 +46,6 @@ class QuestTalkViewHolder (
         circle.setColor(ContextCompat.getColor(context, Theme.theme.sub500))
         circle.setStroke(0,0)
         questTalkIconContainer.background = circle
-        questTalkUser.setText(questTalk.user)
         questTalkContent.background = roundSquare
-        questTalkContent.setText(questTalk.content)
     }
 }

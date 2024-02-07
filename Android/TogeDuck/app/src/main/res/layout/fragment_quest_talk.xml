@@ -18,7 +18,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="현재 진행중인 잡담" />
+            android:text="현재 진행 중인 잡담" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/quest_talk_recycle"

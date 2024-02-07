@@ -1,22 +1,42 @@
 package com.idle.togeduck.quest.share.view
 
+import android.app.Dialog
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.R
+import com.idle.togeduck.common.ScreenSize
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
+import com.idle.togeduck.quest.share.ShareViewModel
+import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.share.view.share_rv.IQuestShareDetail
-import com.idle.togeduck.quest.share.view.share_rv.QuestShareDialog
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareListAdapter
+import com.idle.togeduck.util.DpPxUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class QuestShareFragment : Fragment(), IQuestShareDetail {
     private var _binding: FragmentQuestShareBinding? = null
     private val binding get() = _binding!!
+    val shareViewModel: ShareViewModel by activityViewModels()
+//    val eventViewModel: EventViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,13 +52,17 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         val recycleView = binding.questShareRecycle
         val questShareAdapter = QuestShareListAdapter(this, requireContext())
         recycleView.adapter = questShareAdapter
-        recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
-
+        recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true).apply { stackFromEnd = true }
+        binding.tvCurrentShare.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         // 간격 설정
         recycleView.addItemDecoration(TogeDuckItemDecoration(15,0))
 
-        // Dummy Data
-//        questShareAdapter.submitList(dummyData())
+        shareViewModel.shareList.observe(viewLifecycleOwner) {list ->
+            questShareAdapter.submitList(list)
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            shareViewModel.getShareList(1,0,5)
+        }
     }
 
     override fun onDestroyView() {
@@ -46,13 +70,13 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         _binding = null
     }
 
-    override fun myQuestShareClicked(position: Int) {
-//        showDialog(dummyData().get(position))
+    override fun myQuestShareClicked(questShare: Share) {
+        shareViewModel.setSelectedShare(questShare)
+        showDialog()
     }
 
-    fun showDialog(questShare: QuestShare) {
-        val dialog = QuestShareDialog(questShare)
-        val fragmentManager = childFragmentManager
-        dialog.show(fragmentManager, "QuestShareDialog")
+    private fun showDialog() {
+        findNavController().navigate(R.id.action_mapFragment_to_shareDialogFragment)
     }
+
 }

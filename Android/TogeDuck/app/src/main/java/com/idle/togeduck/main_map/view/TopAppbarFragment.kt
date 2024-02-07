@@ -8,17 +8,32 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.util.Pair
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.idle.togeduck.R
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
-import com.idle.togeduck.common.Theme
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @AndroidEntryPoint
 class TopAppbarFragment : Fragment() {
@@ -29,8 +44,10 @@ class TopAppbarFragment : Fragment() {
     private val topAppbarBinding get() = _topAppBarBinding!!
 
 
-    private var _searchBarBinding: ComponentSearchBarTopAppbarBinding? = null
-    private val searchBarBinding get() = _searchBarBinding!!
+//    private var _searchBarBinding: ComponentSearchBarTopAppbarBinding? = null
+//    private val searchBarBinding get() = _searchBarBinding!!
+
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,12 +56,88 @@ class TopAppbarFragment : Fragment() {
     ): View {
         _binding = FragmentTopAppbarBinding.inflate(inflater, container, false)
         _topAppBarBinding = binding.cta
-        _searchBarBinding = topAppbarBinding.csb
+//        _searchBarBinding = topAppbarBinding.csb
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setPadding()
+        setTheme()
+        setDateRangePicker()
+        setDate()
+        showSelectCelebrity()
+    }
+
+    private fun showSelectCelebrity() {
+        topAppbarBinding.llIdol.setOnClickListener {
+            findNavController().navigate(R.id.action_mapFragment_to_selectCelebrityFragment)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setDate() {
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
+        val dateRangeText = "${LocalDate.now().format(dateTimeFormatter)}-${LocalDate.now().format(dateTimeFormatter)}"
+        topAppbarBinding.tvDate.text = dateRangeText
+        mapViewModel.setPickedDate(LocalDate.now(), LocalDate.now())
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setDateRangePicker() {
+        val calendar = Calendar.getInstance()
+
+        calendar.add(Calendar.YEAR, -10)
+        val startYear = calendar.timeInMillis
+        calendar.add(Calendar.YEAR, 20)
+        val endYear = calendar.timeInMillis
+        calendar.add(Calendar.YEAR, -10)
+        val now = calendar.timeInMillis
+
+        val constraintsBuilder =
+            CalendarConstraints.Builder()
+                .setStart(startYear)
+                .setEnd(endYear)
+                .setOpenAt(now)
+
+        val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTheme(R.style.MyMaterialDatePickerTheme)
+            .setCalendarConstraints(constraintsBuilder.build())
+            .setTitleText("날짜를 선택하세요")
+            .setSelection(Pair(calendar.timeInMillis, calendar.timeInMillis))
+            .build()
+
+        val dateRangePickerTag = "dateRangePicker"
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
+
+        dateRangePicker.addOnPositiveButtonClickListener { selection ->
+            var instant = Instant.ofEpochMilli(selection.first)
+            val startDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
+            instant = Instant.ofEpochMilli(selection.second)
+            val endDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
+            val dateRangeText = "${startDate.format(dateTimeFormatter)}-${endDate.format(dateTimeFormatter)}"
+            topAppbarBinding.tvDate.text = dateRangeText
+
+            mapViewModel.setPickedDate(startDate, endDate)
+            // TODO. API 연결
+        }
+
+        topAppbarBinding.llDate.setOnClickListener {
+            val existingFragment = childFragmentManager.findFragmentByTag(dateRangePickerTag)
+
+            if (existingFragment == null) {
+                dateRangePicker.show(childFragmentManager, dateRangePickerTag)
+            } else {
+                if (existingFragment.isAdded) {
+                    (existingFragment as DialogFragment).dismissAllowingStateLoss()
+                }
+            }
+        }
+    }
+
+    private fun setPadding() {
         val statusDp = getStatusBarHeightToDp(requireContext())
 
         topAppbarBinding.llTopAppbar.setPadding(
@@ -53,8 +146,6 @@ class TopAppbarFragment : Fragment() {
             dpToPx(20, requireContext()),
             dpToPx(10, requireContext())
         )
-
-        setTheme()
     }
 
     private fun setTheme() {
@@ -75,8 +166,8 @@ class TopAppbarFragment : Fragment() {
         main500CircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
         main500CircleDrawable.setStroke(4, getColor(requireContext(), Theme.theme.main500))
 
-        searchBarBinding.ivSearch.background = main500CircleDrawable
-        searchBarBinding.ivSearch.setColorFilter(getColor(requireContext(), Theme.theme.main500))
+//        searchBarBinding.ivSearch.background = main500CircleDrawable
+//        searchBarBinding.ivSearch.setColorFilter(getColor(requireContext(), Theme.theme.main500))
         topAppbarBinding.ivIdolProfile.background = main500CircleDrawable
         // TODO. 실제 프로필 사진 적용시 삭제 필요
         topAppbarBinding.ivIdolProfile.setColorFilter(getColor(requireContext(), Theme.theme.main500))
@@ -90,11 +181,11 @@ class TopAppbarFragment : Fragment() {
         val cursorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
         cursorDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
 
-        @RequiresApi(Build.VERSION_CODES.Q)
-        searchBarBinding.etSearch.textCursorDrawable = cursorDrawable
-        searchBarBinding.etSearch.background = squareCircleDrawable
-        searchBarBinding.etSearch.setTextColor(getColor(requireContext(), Theme.theme.main500))
-        searchBarBinding.etSearch.setHintTextColor(getColor(requireContext(), Theme.theme.main500))
+//        @RequiresApi(Build.VERSION_CODES.Q)
+//        searchBarBinding.etSearch.textCursorDrawable = cursorDrawable
+//        searchBarBinding.etSearch.background = squareCircleDrawable
+//        searchBarBinding.etSearch.setTextColor(getColor(requireContext(), Theme.theme.main500))
+//        searchBarBinding.etSearch.setHintTextColor(getColor(requireContext(), Theme.theme.main500))
 
         topAppbarBinding.tvDate.setTextColor(getColor(requireContext(), Theme.theme.main500))
 
@@ -108,6 +199,6 @@ class TopAppbarFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         _topAppBarBinding = null
-        _searchBarBinding = null
+//        _searchBarBinding = null
     }
 }

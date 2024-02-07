@@ -1,13 +1,16 @@
 package com.idle.togeduck.quest.recruit.view.recruit_rv
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.idle.togeduck.R
+import com.idle.togeduck.common.RandomCupcake
 import com.idle.togeduck.databinding.ItemQuestRecruitBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.quest.recruit.model.Recruit
 import com.idle.togeduck.util.getColor
 
 class QuestRecruitViewHolder(
@@ -22,27 +25,15 @@ class QuestRecruitViewHolder(
     private val tvEnter = binding.tvEnter
     private val tvTimer = binding.tvTimer
 
-    val list = listOf(
-        R.drawable.common_cupcake1,
-        R.drawable.common_cupcake2,
-        R.drawable.common_cupcake3,
-        R.drawable.common_cupcake4,
-        R.drawable.common_cupcake5,
-        R.drawable.common_cupcake6,
-        R.drawable.common_cupcake7,
-        R.drawable.common_cupcake8,
-        R.drawable.common_cupcake9,
-    )
-
     init {
         tvEnter.setOnClickListener(this)
     }
 
-    fun bind(questRecruit: QuestShare, context: Context) {
+    fun bind(recruit: Recruit, context: Context) {
         setTheme(context)
 
-        tvTitle.text = questRecruit.title
-        tvPersonCnt.text = questRecruit.content
+        tvTitle.text = recruit.title
+        tvPersonCnt.text = "${recruit.current} / ${recruit.maximum}"
     }
 
     private fun setTheme(context: Context) {
@@ -50,7 +41,7 @@ class QuestRecruitViewHolder(
         whiteCircleDrawable.setColor(getColor(context, R.color.white))
         whiteCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))
         ivMainIcon.background = whiteCircleDrawable
-        ivMainIcon.setImageDrawable(ContextCompat.getDrawable(context, list.random()))
+        ivMainIcon.setImageDrawable(ContextCompat.getDrawable(context, RandomCupcake.getImage()))
 
         val greenCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         greenCircleDrawable.setColor(getColor(context, R.color.green))

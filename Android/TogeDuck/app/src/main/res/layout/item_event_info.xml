@@ -18,7 +18,10 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_event_poster" />
 
@@ -29,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_gravity="center"
+        android:paddingStart="10dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/cafe_name"
@@ -59,7 +63,7 @@
 
     <!-- 즐겨찾기 -->
     <ImageView
-        android:id="@+id/bookmark_btn"
+        android:id="@+id/isStar_btn"
         android:layout_width="70dp"
         android:layout_height="50dp"
         android:src="@drawable/common_cupcake8"

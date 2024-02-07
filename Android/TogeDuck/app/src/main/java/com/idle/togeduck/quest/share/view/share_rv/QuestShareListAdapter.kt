@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.databinding.ItemQuestShareBinding
+import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.TogeDuckDiffUtil
 
 class QuestShareListAdapter (
     private val iquestDetail: IQuestShareDetail,
     private val context: Context
 )
-    : ListAdapter<QuestShare, QuestShareViewHolder>(TogeDuckDiffUtil.questShareDiffUtilCallback) {
+    : ListAdapter<Share, QuestShareViewHolder>(TogeDuckDiffUtil.shareDiffUtilCallback) {
 
     // ListAdapter ----------------------------------------------------
     // 데이터 리스트, ViewHolder를 매개변수로 받음

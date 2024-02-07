@@ -1,8 +1,10 @@
 package com.idle.togeduck.event.view.list
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import com.idle.togeduck.R
 
 import com.idle.togeduck.databinding.FragmentEventListBinding
@@ -19,9 +22,14 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.LikeEventRequest
+import com.idle.togeduck.event.view.detail.EventDetailFragment
+import com.idle.togeduck.main_map.view.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 
 @AndroidEntryPoint
 class EventListFragment : Fragment(), EventInfo {
@@ -33,11 +41,6 @@ class EventListFragment : Fragment(), EventInfo {
     private lateinit var todayEventInfoAdapter: EventInfoAdapter
     private lateinit var upcomingEventInfoAdapter: EventInfoAdapter
     private lateinit var pastEventInfoAdapter: EventInfoAdapter
-
-    private var todayEventsList: MutableList<Event?> = mutableListOf()
-    private var upcomingEventsList: MutableList<Event?> = mutableListOf()
-    private var pastEventsList: MutableList<Event?> = mutableListOf()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,12 +58,28 @@ class EventListFragment : Fragment(), EventInfo {
         setTheme()
         setRecyclerview()
 
+        eventListViewModel.listToday.observe(viewLifecycleOwner){ list ->
+             todayEventInfoAdapter.submitList(list)
+        }
+
+        eventListViewModel.listUpcoming.observe(viewLifecycleOwner){ list ->
+            upcomingEventInfoAdapter.submitList(list)
+        }
+
+        eventListViewModel.listPast.observe(viewLifecycleOwner){list ->
+            pastEventInfoAdapter.submitList(list)
+        }
+
+        //todo.즐겨찾기 리스트 호출은 main화면에서 하는 걸로 변경
+//        CoroutineScope(Dispatchers.IO).launch {
+//            eventListViewModel.getLikesList()
+//
     }
 
     private fun setRecyclerview() {
-        todayEventInfoAdapter = EventInfoAdapter(this, requireContext())
-        upcomingEventInfoAdapter = EventInfoAdapter(this, requireContext())
-        pastEventInfoAdapter = EventInfoAdapter(this, requireContext())
+        todayEventInfoAdapter = EventInfoAdapter(this, requireContext(), 0)
+        upcomingEventInfoAdapter = EventInfoAdapter(this, requireContext(), 1)
+        pastEventInfoAdapter = EventInfoAdapter(this, requireContext(), 2)
 
         binding.rvEventToday.apply {
             adapter = todayEventInfoAdapter
@@ -86,58 +105,52 @@ class EventListFragment : Fragment(), EventInfo {
         binding.today.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
         binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
-
-        val todayColor = ContextCompat.getColor(requireContext(), Theme.theme.sub500)
-        val upComingColor = ContextCompat.getColor(requireContext(), Theme.theme.sub100)
-        val pastColor = ContextCompat.getColor(requireContext(), R.color.gray_bg)
-
-        divideDataByPeriod()
-
-        //더미데이터 넣기
-        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
-            todayEventInfoAdapter.submitList(todayEventsList)
-        }
-        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
-            upcomingEventInfoAdapter.submitList(upcomingEventsList)
-        }
-        eventListViewModel.eventList.observe(viewLifecycleOwner){ list ->
-            pastEventInfoAdapter.submitList(pastEventsList)
-        }
-
-        //날짜 별 색상 지정..
-        val todayEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
-//        binding.rvEventToday.background = todayEventDrawable
-        todayEventDrawable.setColor(todayColor)
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun divideDataByPeriod() {
-        //전체 이벤트 데이터 가져오기
-        var tempDataList = eventListViewModel.eventList.value
-
-        //유저가 선택한 날짜
-        var dateStart = LocalDate.parse("2024-01-04")
-        var dateEnd = LocalDate.parse("2024-01-05")
-
-        //이벤트 기간에 따라 맞는 리스트에 추가
-        if (tempDataList != null) {
-            for(event in tempDataList){
-                val periodSplit = event.eventPeriod.split(" ~ ")
-                val start = LocalDate.parse(periodSplit[0], DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                val end = LocalDate.parse(periodSplit[1], DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-
-                val addToList = when {
-                    dateEnd.isBefore(start) -> upcomingEventsList.add(event)
-                    dateStart.isAfter(end) -> pastEventsList.add(event)
-                    else -> todayEventsList.add(event)
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    //todo.타입별로 today, upcoming, past 확인하고 그거마다 상세화면 이동
+    override fun eventClicked(position: Int, type: Int) {
+        if(type == 0) {
+            eventListViewModel.setSelectedEvent(eventListViewModel.listToday.value!![position])
+            (parentFragment as MapFragment).changeViewPagerPage(2)
+        }else if(type == 1){
+            eventListViewModel.setSelectedEvent(eventListViewModel.listUpcoming.value!![position])
+            (parentFragment as MapFragment).changeViewPagerPage(2)
+        }else {
+            eventListViewModel.setSelectedEvent(eventListViewModel.listPast.value!![position])
+            (parentFragment as MapFragment).changeViewPagerPage(2)
+        }
+    }
+
+    override fun likeClick(position: Int, type: Int) {
+        if (type == 0) {
+            likeEventPerAdapterType(todayEventInfoAdapter, position)
+        }else if (type == 1) {
+            likeEventPerAdapterType(upcomingEventInfoAdapter, position)
+        }else {
+            likeEventPerAdapterType(pastEventInfoAdapter, position)
+        }
+    }
+
+    private fun likeEventPerAdapterType (adapter: EventInfoAdapter, position: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val event = adapter.currentList.get(position)
+
+            if(event != null){
+                if(event.isStar){
+                    val likeEventRequest = LikeEventRequest(1)
+                    eventListViewModel.likeEvent(likeEventRequest)
+                    Log.d("log", "eventlistfragment - 즐겨찾기 추가 ")
+                }else{
+                    eventListViewModel.unlikeEvent(1)
+                    Log.d("log", "eventlistfragment - 즐겨찾기 삭제")
+                }
+            }
+        }
+    }
+    
 }

@@ -7,43 +7,62 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/plus_event_review_input"
+        android:id="@+id/camera_btn"
         android:layout_width="@dimen/circle_xsmall"
         android:layout_height="@dimen/circle_xsmall"
         android:background="@drawable/shape_circle"
         android:padding="5dp"
-        android:src="@drawable/ic_plus"
-        app:layout_constraintBottom_toBottomOf="@+id/et_review_input"
+        android:src="@drawable/ic_add_photo"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_input_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/et_review_input"
-        app:layout_constraintEnd_toStartOf="@+id/et_review_input"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toTopOf="@+id/ll_input_layout"
+        app:layout_constraintEnd_toStartOf="@+id/ll_input_layout"
         tools:backgroundTint="@color/bts_main500"
         tools:ignore="MissingConstraints" />
 
-    <com.idle.togeduck.util.ClearFocusEditText
-        android:id="@+id/et_review_input"
+    <LinearLayout
+        android:id="@+id/ll_input_layout"
         android:layout_width="0dp"
-        android:layout_height="@dimen/circle_xsmall"
-        android:background="@drawable/shape_square_circle"
-        android:hint="리뷰를 작성해주세요"
-        android:inputType="text"
-        android:maxLines="1"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="2dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:textCursorDrawable="@drawable/shape_cursor"
-        android:textSize="@dimen/text_large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/review_reg"
-        app:layout_constraintStart_toEndOf="@+id/plus_event_review_input"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
+        android:background="@drawable/shape_square_circle"
         tools:backgroundTint="@color/gray_bg"
-        tools:ignore="RtlSymmetry" />
+        app:layout_constraintEnd_toStartOf="@+id/review_post"
+        app:layout_constraintStart_toEndOf="@+id/camera_btn"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/review_img_thumb"
+            android:layout_width="@dimen/circle_xsmall"
+            android:layout_height="@dimen/circle_xsmall"
+            android:src="@drawable/ic_add_photo"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+        </ImageView>
+
+        <com.idle.togeduck.util.ClearFocusEditText
+            android:id="@+id/et_review_input"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/circle_xsmall"
+            android:hint="리뷰를 작성해주세요"
+            android:inputType="text"
+            android:maxLines="1"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="2dp"
+            android:textCursorDrawable="@drawable/shape_cursor"
+            android:textSize="@dimen/text_large"
+            tools:ignore="RtlSymmetry">
+        </com.idle.togeduck.util.ClearFocusEditText>
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/review_reg"
+        android:id="@+id/review_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingVertical="10dp"
@@ -52,9 +71,9 @@
         android:text="등록"
         android:textSize="@dimen/text_title_small"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/et_review_input"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_input_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_review_input"
-        app:layout_constraintTop_toTopOf="@+id/et_review_input"
+        app:layout_constraintStart_toEndOf="@+id/ll_input_layout"
+        app:layout_constraintTop_toTopOf="@+id/ll_input_layout"
         tools:backgroundTint="@color/bts_main500" />
 </androidx.constraintlayout.widget.ConstraintLayout>

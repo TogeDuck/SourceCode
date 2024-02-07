@@ -38,8 +38,8 @@
             android:id="@+id/action_mainFragment_to_questRecruitFragment"
             app:destination="@id/questRecruitFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_myRecordFragment"
-            app:destination="@id/myRecordFragment" />
+            android:id="@+id/action_mainFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
         <action
             android:id="@+id/action_mainFragment_to_questExchangeFragment"
             app:destination="@id/questExchangeFragment"/>
@@ -90,7 +90,20 @@
         android:id="@+id/mapFragment"
         android:name="com.idle.togeduck.main_map.view.MapFragment"
         android:label="map_fragment"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_shareDialogFragment"
+            app:destination="@id/shareDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangeDialogFragment"
+            app:destination="@id/exchangeDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_selectCelebrityFragment"
+            app:destination="@id/selectCelebrityFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_EventReviewDialogFragment"
+            app:destination="@id/eventReviewDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/questShareFragment"
         android:name="com.idle.togeduck.quest.share.view.QuestShareFragment"
@@ -113,20 +126,63 @@
         android:label="quest_recruit_fragment"
         tools:layout="@layout/fragment_quest_recruit" />
     <fragment
-        android:id="@+id/myRecordFragment"
-        android:name="com.idle.togeduck.my_record.view.MyRecordFragment"
-        android:label="my_record_fragment"
-        tools:layout="@layout/fragment_my_record" />
+        android:id="@+id/historyFragment"
+        android:name="com.idle.togeduck.history.view.HistoryFragment"
+        android:label="history_fragment"
+        tools:layout="@layout/fragment_history" />
     <fragment
         android:id="@+id/eventDetailFragment"
         android:name="com.idle.togeduck.event.view.detail.EventDetailFragment"
         android:label="event_detail_fragment"
-        tools:layout="@layout/fragment_event_detail"/>
+        tools:layout="@layout/fragment_event_detail">
+
+    </fragment>
     <fragment
         android:id="@+id/questTalkFragment"
         android:name="com.idle.togeduck.quest.talk.view.QuestTalkFragment"
         android:label="quest_talk_fragment"
         tools:layout="@layout/fragment_quest_talk">
     </fragment>
+    <dialog
+        android:id="@+id/shareDialogFragment"
+        android:name="com.idle.togeduck.quest.share.view.ShareDialogFragment"
+        android:label="dialog_quest_share_test"
+        tools:layout="@layout/dialog_quest_share" >
+        <action
+            android:id="@+id/action_shareDialogFragment_pop"
+            app:popUpTo="@id/shareDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/exchangeDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangeDialogFragment"
+        android:label="ExchangeDialogFragment"
+        tools:layout="@layout/dialog_quest_exchange">
+        <action
+            android:id="@+id/action_exchangeDialogFragment_pop"
+            app:popUpTo="@id/exchangeDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/eventReviewDialogFragment"
+        android:name="com.idle.togeduck.quest.share.view.EventReviewDialogFragment"
+        android:label="EventReviewDialogFragment"
+        tools:layout="@layout/dialog_event_review">
+        <action
+            android:id="@+id/action_eventReviewDialogFragment_pop"
+            app:popUpTo="@id/eventReviewDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/selectCelebrityFragment"
+        android:name="com.idle.togeduck.main_map.view.SelectCelebrityFragment"
+        android:label="dialog_select_celebrity"
+        tools:layout="@layout/dialog_select_celebrity" >
+        <action
+            android:id="@+id/action_selectCelebrityFragment_pop"
+            app:popUpTo="@id/selectCelebrityFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+
 
 </navigation>

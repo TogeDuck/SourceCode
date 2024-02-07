@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.idle.togeduck.R
+import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.databinding.ComponentSearchBarBinding
 import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
 import com.idle.togeduck.common.Theme
@@ -33,7 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -47,9 +49,6 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     private val searchBarBinding get() = _searchBarBinding!!
 
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
-
-    private val myJob = Job()
-    private val myContext get() = Dispatchers.Main + myJob
 
     private lateinit var myFavoriteAdapter: MyFavoriteAdapter
     private lateinit var idolSearchResultAdapter: IdolSearchResultAdapter
@@ -90,9 +89,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
             idolSearchResultAdapter.submitList(list.toList())
         }
 
-        val animationTime = 300L
-
-        CoroutineScope(myContext).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             // 메모 검색시 검색어 변경이 0.35초 동안 없을시 검색 실행
             launch {
                 val editTextFlow = searchBarBinding.etSearch.textChangesToFlow()
@@ -102,7 +99,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
                         if (text.isNullOrBlank()) {
                             binding.llSearchResult.animate()
                                 .alpha(0f)
-                                .setDuration(animationTime)
+                                .setDuration(ANIMATION_TIME)
                                 .setListener(object : AnimatorListenerAdapter() {
                                     override fun onAnimationEnd(animation: Animator) {
                                         binding.llSearchResult.visibility = View.GONE
@@ -110,16 +107,20 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
                                 })
                         }
                     }
-                    .debounce(350)
+                    .debounce(DEBOUNCE_TIME)
                     .onEach { text ->
                         // api 호출
                         if (!text.isNullOrBlank()) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                favoriteSettingViewModel.getCelebrityList(text.toString())
+                            }
+
                             binding.llSearchResult.apply {
                                 alpha = 0f
                                 visibility = View.VISIBLE
                                 animate()
                                     .alpha(1f)
-                                    .setDuration(animationTime)
+                                    .setDuration(ANIMATION_TIME)
                                     .setListener(null)
                             }
                         }
@@ -130,11 +131,17 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     }
 
     private fun setRecyclerview() {
+        var spanCount = 1
+
+        while ((ScreenSize.widthDp - 100) / (spanCount + 1) >= 90) {
+            spanCount++
+        }
+
         myFavoriteAdapter = MyFavoriteAdapter(this, requireContext())
-        idolSearchResultAdapter = IdolSearchResultAdapter(this, requireContext())
+        idolSearchResultAdapter = IdolSearchResultAdapter(this, requireContext(), spanCount)
 
         binding.rvMyFavorite.apply {
-            addItemDecoration(TogeDuckItemDecoration(5, 15))
+            addItemDecoration(TogeDuckItemDecoration(5, 10))
             adapter = myFavoriteAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true)
@@ -145,19 +152,25 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
             addItemDecoration(TogeDuckItemDecoration(5, 5))
             adapter = idolSearchResultAdapter
             layoutManager =
-                GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
+                GridLayoutManager(requireContext(), spanCount, GridLayoutManager.VERTICAL, false)
         }
     }
 
     override fun myFavoriteRemoveBtnClicked(position: Int) {
-        favoriteSettingViewModel.removeMyFavoriteIdol(favoriteSettingViewModel.favoriteIdolList.value!![position])
+        CoroutineScope(Dispatchers.IO).launch {
+            favoriteSettingViewModel.removeMyFavoriteIdol(favoriteSettingViewModel.favoriteIdolList.value!![position])
+        }
     }
 
     override fun idolClicked(position: Int) {
         if (favoriteSettingViewModel.favoriteIdolList.value!!.contains(favoriteSettingViewModel.searchIdolList.value!![position])) {
-            favoriteSettingViewModel.removeMyFavoriteIdol(favoriteSettingViewModel.searchIdolList.value!![position])
+            CoroutineScope(Dispatchers.IO).launch {
+                favoriteSettingViewModel.removeMyFavoriteIdol(favoriteSettingViewModel.searchIdolList.value!![position])
+            }
         } else {
-            favoriteSettingViewModel.addFavoriteIdol(favoriteSettingViewModel.searchIdolList.value!![position])
+            CoroutineScope(Dispatchers.IO).launch {
+                favoriteSettingViewModel.addFavoriteIdol(favoriteSettingViewModel.searchIdolList.value!![position])
+            }
         }
     }
 
@@ -204,4 +217,8 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
         _searchBarBinding = null
     }
 
+    companion object {
+        const val ANIMATION_TIME = 300L
+        const val DEBOUNCE_TIME = 350L
+    }
 }

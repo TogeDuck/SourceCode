@@ -17,6 +17,32 @@ data class EventResponse(
     val endDate: LocalDate,
     val latitude: Double,
     val longitude: Double,
-    var isStar: Boolean = false,
-    var isVisited: Boolean = false
+    var isStar: Boolean,
+    var isVisited: Boolean
+)
+
+data class Event(
+    val eventId: Long,
+    val imgUrl: String,
+    val name: String,
+    val description: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate,
+    val latitude: Double,
+    val longitude: Double,
+    var isStar: Boolean,
+    var isVisited: Boolean
+)
+
+fun EventResponse.toEvent(): Event = Event(
+    eventId,
+    imgUrl,
+    name,
+    description,
+    startDate,
+    endDate,
+    latitude,
+    longitude,
+    isStar,
+    isVisited
 )
