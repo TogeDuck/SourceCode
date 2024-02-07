@@ -1,12 +1,16 @@
 package com.idle.togeduck.event.view.detail
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +40,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import okhttp3.MultipartBody
+import java.io.File
+import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class EventDetailFragment : Fragment(), EventReview {
@@ -50,14 +56,15 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private lateinit var eventReviewAdapter: EventReviewAdapter
     private lateinit var event: Event
-    private lateinit var postUri: String
+    private var imgPath: String? = null
 
-    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
             eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-            postUri = uri.toString()
-            Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 성공")
+            imgPath = uriToFilePath(uri)
+//            postUri = uri.path
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
         }
@@ -75,11 +82,12 @@ class EventDetailFragment : Fragment(), EventReview {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setTheme()
         setRecyclerView()
 
         //리스트의 해당 이벤트 정보 가져오기
-        eventListViewModel.selectedEvent.observe(viewLifecycleOwner){ event ->
+        eventListViewModel.selectedEvent.observe(viewLifecycleOwner) { event ->
             this.event = event
             binding.cafeNameDetail.text = event.name
             binding.eventNameDetail.text = event.description
@@ -95,7 +103,7 @@ class EventDetailFragment : Fragment(), EventReview {
             changeVisitImage(event)
         }
 
-        eventReviewViewModel.reviewList.observe(viewLifecycleOwner){ list ->
+        eventReviewViewModel.reviewList.observe(viewLifecycleOwner) { list ->
             eventReviewAdapter.submitList(list)
         }
 
@@ -106,33 +114,14 @@ class EventDetailFragment : Fragment(), EventReview {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        eventReviewInputBinding.reviewPost.setOnClickListener{
-            val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
-
-            if (reviewInputText.isNotEmpty()) {
-                val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
-
-                if(postUri.isNotEmpty()){
-                    val reviewImg = MultiPartUtil.createImagePart(postUri)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        eventReviewViewModel.postReview(1, reviewImg, reviewText)
-                        eventReviewViewModel.getReviewList(1,1,100)
-                    }
-                }else{
-                    CoroutineScope(Dispatchers.IO).launch {
-                        eventReviewViewModel.postReview(1, null, reviewText)
-                        eventReviewViewModel.getReviewList(1,1,100)
-                    }
-                }
-            }
-
+        eventReviewInputBinding.reviewPost.setOnClickListener {
+            postReview()
         }
-    }
 
-//        CoroutineScope(Dispatchers.IO).launch {
-//            eventReviewViewModel.deleteReview(1,1)
+//        eventReviewInputBinding.etReviewInput.setOnClickListener { mView, keyCode, _ ->
+//            hideKeyboard(mView, keyCode)
 //        }
-
+    }
 
     private fun setRecyclerView(){
         eventReviewAdapter = EventReviewAdapter(this, requireContext())
@@ -206,11 +195,11 @@ class EventDetailFragment : Fragment(), EventReview {
         changeLikeImage(event)
 
         CoroutineScope(Dispatchers.IO).launch {
-            if(event.isStar){
+            if(event.isStar) {
                 val likeEventRequest = LikeEventRequest(1)
                 eventListViewModel.likeEvent(likeEventRequest)
                 Log.d("log", "eventDetailfragment - 즐겨찾기 추가 ")
-            }else{
+            }else {
                 eventListViewModel.unlikeEvent(1)
                 Log.d("log", "eventDetailfragment - 즐겨찾기 삭제")
             }
@@ -219,7 +208,6 @@ class EventDetailFragment : Fragment(), EventReview {
 
     override fun visitClick(event: Event) {
         event.isVisited = !event.isVisited
-
         changeVisitImage(event)
 
         //todo.방문 체크 api 추가
@@ -230,6 +218,85 @@ class EventDetailFragment : Fragment(), EventReview {
 //        }
     }
 
+    //todo.안드로이드 10 이상부터 보안상 문제로 Media.DATA 없음 : 확인 후 삭제
+//    override fun uriToFilePath(uri: Uri): String {
+//        val contentResolver = requireContext().contentResolver
+//        val cursor = contentResolver.query(uri,null, null, null, null)
+//        cursor?.use {
+//            it.moveToNext()
+//            val filePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//            val pathString = it.getString(filePathColumn)
+//            return it.getString(filePathColumn)
+//        }
+//        return ""
+//    }
+
+    //todo. URI 이용해 파일을 복사하는 방식
+    override fun uriToFilePath(uri: Uri): String {
+        val contentResolver = requireContext().contentResolver
+        val cursor = contentResolver.query(uri,null, null, null, null)
+        lateinit var filePath: String
+
+        cursor?.use { cursor ->
+            if(cursor.moveToFirst()){
+                val displayNameIndex = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                val displayName = cursor.getString(displayNameIndex)
+
+                val inputStream = contentResolver.openInputStream(uri)
+                val targetFile = File(requireContext().cacheDir, displayName)
+                inputStream?.use { input ->
+                    FileOutputStream(targetFile).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                filePath = targetFile.absolutePath
+            }
+        }
+        return filePath
+    }
+
+    private fun postReview(){
+        val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
+
+        if (reviewInputText.isNotEmpty()) {
+            val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
+
+            if(imgPath?.isNotEmpty() == true) {
+                val reviewImg = MultiPartUtil.createImagePart(imgPath!!)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
+                    eventReviewViewModel.postReview(1, reviewImg, reviewText)
+                    eventReviewViewModel.getReviewList(1, 1, 100)
+
+                    eventReviewInputBinding.etReviewInput.text?.clear()
+
+                    //튕김
+//                    eventReviewInputBinding.reviewImgThumb.visibility = View.GONE
+//                    imgPath = null
+                }
+            }else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("리뷰 등록", "이미지 없는 리뷰 등록")
+                    eventReviewViewModel.postReview(1, null, reviewText)
+                    eventReviewViewModel.getReviewList(1, 1, 100)
+
+                    eventReviewInputBinding.etReviewInput.text?.clear()
+                }
+            }
+        }
+    }
+
+//    private fun hideKeyboard(view: View, keyCode: Int): Boolean {
+//        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+//            val inputManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE)
+//                    as InputMethodManager
+//            inputManager.hideSoftInputFromWindow(view.windowToken, 0)
+//            eventReviewInputBinding.etReviewInput.clearFocus()
+//            return true
+//        }
+//        return false
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
