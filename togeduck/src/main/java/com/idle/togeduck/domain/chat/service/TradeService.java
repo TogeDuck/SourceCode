@@ -29,15 +29,11 @@ public class TradeService {
 	private final EventRepository eventRepository;
 	private final S3Service s3Service;
 
-	public Slice<TradeResponseDto> getTradeList(Long userId, Long eventId, Pageable pageable) {
-		return tradeRepository.findSliceByEventId(userId, eventId, pageable);
+	public Slice<TradeResponseDto> getTradeList(User user, Long eventId, Pageable pageable) {
+		return tradeRepository.findSliceByEventId(user.getId(), eventId, pageable);
 	}
 
-	public Slice<TradeResponseDto> getMyTradeList(Long userId, Long eventId, Pageable pageable) {
-		return tradeRepository.findSliceByEventIdAndUserId(userId, eventId, pageable);
-	}
-
-	public TradeResponseDto getTrade(Long userId, Long tradeId) {
+	public TradeResponseDto getTrade(User user, Long tradeId) {
 		Trade trade = tradeRepository.findById(tradeId)
 			.orElseThrow(() -> new BaseException(ErrorCode.TRADE_NOT_FOUND));
 		return new TradeResponseDto(
@@ -47,7 +43,11 @@ public class TradeService {
 			trade.getDuration(),
 			trade.getCreatedAt(),
 			trade.getExpiredAt(),
-			trade.getUser().getId() == userId);
+			trade.getUser().getId().equals(user.getId()));
+	}
+
+	public Slice<TradeResponseDto> getMyTradeList(User user, Long eventId, Pageable pageable) {
+		return tradeRepository.findSliceByEventIdAndUserId(user.getId(), eventId, pageable);
 	}
 
 	@Transactional
@@ -56,7 +56,6 @@ public class TradeService {
 			.orElseThrow(() -> new BaseException(ErrorCode.EVENT_NOT_FOUND));
 		String imagePath = s3Service.saveFile(image);
 
-		System.out.println(LocalDateTime.now());
 		Trade trade = Trade.builder()
 			.event(event)
 			.user(user)

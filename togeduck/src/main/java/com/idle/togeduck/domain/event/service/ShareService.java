@@ -26,6 +26,7 @@ public class ShareService {
 	private final EventRepository eventRepository;
 	private final UserRepository userRepository;
 	private final ShareRepository shareRepository;
+	private final S3Service s3Service;
 
 	public Slice<ShareRespondDto> getShareList(Long userId, Long eventId, Pageable pageable) {
 		return shareRepository.findSliceByEventId(userId, eventId, pageable);
@@ -42,13 +43,13 @@ public class ShareService {
 	) {
 		Event event = eventRepository.findById(eventId).orElseThrow(() -> new BaseException(ErrorCode.EVENT_NOT_FOUND));
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
-
+		String imageUrl = s3Service.saveFile(image);
 		shareRepository.save(Share.builder()
 			.event(event)
 			.user(user)
 			.title(title)
 			.content(content)
-			.image(image.getOriginalFilename())
+			.image(imageUrl)
 			.duration(duration)
 			.build());
 	}
@@ -61,8 +62,8 @@ public class ShareService {
 		String content,
 		Integer duration) {
 		Share share = shareRepository.findById(shareId).orElseThrow(() -> new BaseException(ErrorCode.SHARE_NOT_FOUND));
-
-		share.updateShare(image.getOriginalFilename(), title, content, duration);
+		String imageUrl = s3Service.saveFile(image);
+		share.updateShare(imageUrl, title, content, duration);
 
 	}
 
