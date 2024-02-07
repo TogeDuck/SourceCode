@@ -73,6 +73,25 @@ class TourStartAndQuestPlusFragment : Fragment() {
         tourStartAndQuestPlusBinding.questPlusBtn.setOnClickListener {
             tourStartAndQuestPlusBinding.plusToggle.visibility = View.VISIBLE
         }
+
+        tourStartAndQuestPlusBinding.plusExchange.setOnClickListener {
+            openGallery()
+            //todo.다이얼로그 열기
+        }
+
+        tourStartAndQuestPlusBinding.plusShare.setOnClickListener {
+            openGallery()
+        }
+
+        tourStartAndQuestPlusBinding.plusRecruit.setOnClickListener {
+
+        }
+
+
+    }
+
+    private fun openGallery() {
+        TODO("Not yet implemented")
     }
 
     private fun changeTourBtn() {
