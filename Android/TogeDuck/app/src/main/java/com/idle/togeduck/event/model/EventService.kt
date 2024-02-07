@@ -3,7 +3,6 @@ package com.idle.togeduck.event.model
 import com.idle.togeduck.common.model.DefaultResponse
 import kotlinx.datetime.LocalDate
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -27,7 +26,7 @@ interface EventService {
 
 
     @GET("events/likes")
-    suspend fun getLikesList(): Response<EventLikesDataResponse>
+    suspend fun getLikesList(): Response<EventDataResponse>
 
     @POST("events/likes")
     suspend fun likeEvent(

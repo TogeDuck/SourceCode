@@ -3,7 +3,6 @@ package com.idle.togeduck.event.model
 import com.idle.togeduck.common.model.DefaultResponse
 import kotlinx.datetime.LocalDate
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ interface EventRepository {
         endDate: LocalDate,
     ): Response<EventListResponse>
 
-    suspend fun getLikesList(): Response<EventLikesDataResponse>
+    suspend fun getLikesList(): Response<EventDataResponse>
 
     suspend fun likeEvent(likeEventRequest: LikeEventRequest): Response<DefaultResponse>
 
@@ -49,7 +48,7 @@ class DefaultEventRepository @Inject constructor(
         return eventService.getEventList(celebrityId, startDate, endDate)
     }
 
-    override suspend fun getLikesList(): Response<EventLikesDataResponse> {
+    override suspend fun getLikesList(): Response<EventDataResponse> {
         return eventService.getLikesList()
     }
 

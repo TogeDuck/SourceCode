@@ -56,9 +56,10 @@ class EventListViewModel @Inject constructor(
 
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
+            val data = body.data
 
-            _listToday.postValue(body.today.map { it.toEvent() })
-            _listUpcoming.postValue(body.later.map { it.toEvent() })
+            _listToday.postValue(data.today.map { it.toEvent() })
+            _listUpcoming.postValue(data.later.map { it.toEvent() })
             Log.d("로그", "EventListViewModel - getEventList() 응답 성공 $body" )
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(

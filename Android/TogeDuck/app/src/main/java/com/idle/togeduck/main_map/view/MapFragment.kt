@@ -351,12 +351,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 mapViewModel.getItems(naverMap, 10)
 
                 // People Cluster + WebSocket
-                initPeopleCluster()
-                webSocketManager.connect()
-                webSocketManager.subscribe("/topic/coors"){
-                    message ->
-                    mapViewModel.updatePeopleMarker(messageToCoordination(message))
-                }
+//                initPeopleCluster()
+//                webSocketManager.connect()
+//                webSocketManager.subscribe("/topic/coors"){
+//                    message ->
+//                    mapViewModel.updatePeopleMarker(messageToCoordination(message))
+//                }
             }
     }
     private fun messageToCoordination(message: String): Coordinate{
