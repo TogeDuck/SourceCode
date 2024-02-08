@@ -43,7 +43,7 @@ interface HistoryService {
     @PATCH("users/history/{history_id}/route")
     suspend fun sendHistory(
         @Path("history_id") historyId: Long,
-        @Body sendHistoryRequest: List<SendHistoryRequest>
+        @Body sendHistoryRequest: SendHistoryRequest
     ): Response<DefaultResponse>
 
     @DELETE("users/history/{history_id}")

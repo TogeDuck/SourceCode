@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HistoryTourDataResponse(
-    val route: String,
+    val route: List<Position>,
     @SerialName("history_event") val historyEvent: List<HistoryTourResponse>
 )

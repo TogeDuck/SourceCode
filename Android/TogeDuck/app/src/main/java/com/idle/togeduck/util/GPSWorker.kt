@@ -33,5 +33,4 @@ class GPSWorker(context: Context, params: WorkerParameters) : CoroutineWorker(co
             Result.failure()
         }
     }
-
 }
