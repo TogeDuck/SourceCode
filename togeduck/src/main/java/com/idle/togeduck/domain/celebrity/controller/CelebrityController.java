@@ -32,6 +32,5 @@ public class CelebrityController {
 		return ResponseEntity
 			.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "success", celebrityService.getAllCelebrity(keyword)));
-
 	}
 }
