@@ -103,6 +103,11 @@ class MainFragment : Fragment() {
                 Log.d("웹소켓 1", "Received message: $message")
             }
 
+            stompManagerTest.subscribeTopic("/user/sub/errors") { message ->
+                questToast(message)
+                Log.d("웹소켓 2", "Received message: $message")
+            }
+
             stompManagerTest.connect(headers)
         }
 
@@ -116,12 +121,12 @@ class MainFragment : Fragment() {
 
         binding.btn3.setOnClickListener {
             Log.d("버튼","최지찬 버튼 눌림")
-            val destination = "/pub/chats/1/message"
+            val destination = "/pub/chats/1000/message"
             val payload = "Hello, WebSocket!"
             val headers = listOf(
                 com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
             )
-            stompManagerTest.send(destination,1, payload, headers)
+            stompManagerTest.send(destination,1000, payload, headers)
         }
         //----------------------------------------------------
     }
