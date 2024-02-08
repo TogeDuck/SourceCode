@@ -200,7 +200,8 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_selectCelebrityFragment_to_favoriteSettingFragment"
-            app:destination="@id/favoriteSettingFragment" />
+            app:destination="@id/favoriteSettingFragment"
+            app:popUpToInclusive="false" />
     </dialog>
     <fragment
         android:id="@+id/chatRoomFragment"

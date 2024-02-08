@@ -74,7 +74,6 @@ class TopAppbarFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -90,8 +89,17 @@ class TopAppbarFragment : Fragment() {
             topAppbarBinding.tvDate.text = dateRangeText
             getEventList()
         }
+
+        favoriteSettingViewModel.selectedCelebrity.observe(viewLifecycleOwner) { celebrity ->
+            Glide
+                .with(topAppbarBinding.ivIdolProfile)
+                .load(celebrity.image)
+                .override(300,300)
+                .into(topAppbarBinding.ivIdolProfile)
+
+            topAppbarBinding.tvIdolName.text = celebrity.nickname
+        }
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getEventList() {
         CoroutineScope(Dispatchers.IO).launch {
             val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
@@ -106,7 +114,6 @@ class TopAppbarFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setDateRangePicker() {
         val calendar = Calendar.getInstance()
 

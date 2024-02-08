@@ -8,30 +8,30 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentSearchBarBinding
 import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
-import com.idle.togeduck.common.Theme
-import com.idle.togeduck.util.TogeDuckItemDecoration
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.favorite.view.favorite_rv.IIdolSearchResult
 import com.idle.togeduck.favorite.view.favorite_rv.IMyFavorite
 import com.idle.togeduck.favorite.view.favorite_rv.IdolSearchResultAdapter
 import com.idle.togeduck.favorite.view.favorite_rv.MyFavoriteAdapter
-import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -54,6 +54,9 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     private lateinit var myFavoriteAdapter: MyFavoriteAdapter
     private lateinit var idolSearchResultAdapter: IdolSearchResultAdapter
 
+    // OnBackPressedCallback (뒤로가기 기능) 객체 선언
+    private lateinit var backPressedCallback: OnBackPressedCallback
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,6 +64,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     ): View {
         _binding = FragmentFavoriteSettingBinding.inflate(inflater, container, false)
         _searchBarBinding = binding.csb
+        addBackPressedCallback()
         return binding.root
     }
 
@@ -70,6 +74,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
 
         setRecyclerview()
         setTheme()
+        debounceSearch()
 
         searchBarBinding.etSearch.setOnKeyListener { mView, keyCode, _ ->
             hideKeyboard(mView, keyCode)
@@ -90,6 +95,33 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
             idolSearchResultAdapter.submitList(list.toList())
         }
 
+        binding.btnComplete.setOnClickListener {
+            favoriteSettingViewModel.completeBtnClicked()
+            findNavController().navigate(R.id.action_favoriteSettingFragment_pop)
+        }
+    }
+
+    private fun addBackPressedCallback() {
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                CoroutineScope(Dispatchers.IO).launch {
+                    favoriteSettingViewModel.tempFavoriteIdolList.value?.forEach { celebrity ->
+                        favoriteSettingViewModel.removeMyFavoriteIdol(celebrity)
+                    }
+                }
+
+                findNavController().navigate(R.id.action_favoriteSettingFragment_pop)
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun debounceSearch() {
         CoroutineScope(Dispatchers.Main).launch {
             // 메모 검색시 검색어 변경이 0.35초 동안 없을시 검색 실행
             launch {
@@ -167,6 +199,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
         if (favoriteSettingViewModel.favoriteIdolList.value!!.contains(favoriteSettingViewModel.searchIdolList.value!![position])) {
             CoroutineScope(Dispatchers.IO).launch {
                 favoriteSettingViewModel.removeMyFavoriteIdol(favoriteSettingViewModel.searchIdolList.value!![position])
+
             }
         } else {
             CoroutineScope(Dispatchers.IO).launch {
@@ -189,31 +222,71 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
 
 
     private fun setTheme() {
-        binding.flFavoriteSetting.background = ContextCompat.getDrawable(requireContext(), Theme.theme.main300)
+        binding.flFavoriteSetting.background =
+            ContextCompat.getDrawable(requireContext(), Theme.theme.main300)
         binding.tvTitle.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
-        binding.tvMyFavorite.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
-        binding.tvIdolSearchResult.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        binding.tvMyFavorite.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                Theme.theme.main500
+            )
+        )
+        binding.tvIdolSearchResult.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                Theme.theme.main500
+            )
+        )
 
-        val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        val circleDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
         circleDrawable.setStroke(4, ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
-        val squareCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        val squareCircleDrawable = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_square_circle
+        ) as GradientDrawable
         squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main100))
-        squareCircleDrawable.setStroke(4, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        squareCircleDrawable.setStroke(
+            4,
+            ContextCompat.getColor(requireContext(), Theme.theme.main500)
+        )
 
-        val cursorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
+        val cursorDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
         cursorDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
         @RequiresApi(Build.VERSION_CODES.Q)
         searchBarBinding.etSearch.textCursorDrawable = cursorDrawable
         searchBarBinding.etSearch.background = squareCircleDrawable
-        searchBarBinding.etSearch.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
-        searchBarBinding.etSearch.setHintTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        searchBarBinding.etSearch.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                Theme.theme.main500
+            )
+        )
+        searchBarBinding.etSearch.setHintTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                Theme.theme.main500
+            )
+        )
 
-        val squareCircleBtnDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
-        squareCircleBtnDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
-        squareCircleBtnDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        val squareCircleBtnDrawable = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_square_circle
+        ) as GradientDrawable
+        squareCircleBtnDrawable.setColor(
+            ContextCompat.getColor(
+                requireContext(),
+                Theme.theme.main500
+            )
+        )
+        squareCircleBtnDrawable.setStroke(
+            0,
+            ContextCompat.getColor(requireContext(), Theme.theme.main500)
+        )
 
         binding.btnComplete.background = squareCircleBtnDrawable
         binding.btnComplete.setTextColor(getColor(requireContext(), R.color.white))
@@ -223,6 +296,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
         super.onDestroyView()
         _binding = null
         _searchBarBinding = null
+        backPressedCallback.remove()
     }
 
     companion object {

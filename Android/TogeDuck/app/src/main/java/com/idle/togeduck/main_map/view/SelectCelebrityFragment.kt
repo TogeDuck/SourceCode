@@ -64,12 +64,12 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
         setRecyclerView()
         setTheme()
 
-        binding.llEmptyLayout.setOnClickListener {
-            findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
-        }
-
         favoriteSettingViewModel.favoriteIdolList.observe(viewLifecycleOwner) { favoriteIdolList ->
             selectCelebrityAdapter.submitList(favoriteIdolList)
+        }
+
+        binding.llEmptyLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
         }
 
         binding.btnCancel.setOnClickListener {
@@ -83,9 +83,11 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
         binding.btnSelect.setOnClickListener {
             favoriteSettingViewModel.favoriteIdolList.value?.forEach { celebrity ->
                 celebrity.isSelected = celebrity.isClicked
-            }
 
-//            favoriteSettingViewModel.setSelectedCelebrity()
+                if (celebrity.isClicked) {
+                    favoriteSettingViewModel.setSelectedCelebrity(celebrity)
+                }
+            }
 
             findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
         }
