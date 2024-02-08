@@ -82,6 +82,10 @@ dependencies {
     //firebase
     implementation 'com.google.firebase:firebase-admin:9.1.1'
 
+    //springdoc-openapi
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+
+
 }
 
 tasks.named('test') {

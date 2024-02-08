@@ -15,7 +15,7 @@ public interface TradeRepository extends JpaRepository<Trade, Long> {
 		+ "t.id, t.content, t.image, t.duration, t.createdAt, t.expiredAt, t.user.id = :userId) "
 		+ "from Trade t "
 		+ "where t.event.id = :eventId "
-		+ "and t.createdAt < current_time and current_time < t.expiredAt "
+		+ "and t.createdAt <= current_time and current_time <= t.expiredAt "
 		+ "order by t.createdAt desc ")
 	Slice<TradeResponseDto> findSliceByEventId(Long userId, Long eventId, Pageable pageable);
 
@@ -23,7 +23,7 @@ public interface TradeRepository extends JpaRepository<Trade, Long> {
 		+ "t.id, t.content, t.image, t.duration, t.createdAt, t.expiredAt, t.user.id = :userId) "
 		+ "from Trade t "
 		+ "where t.event.id = :eventId and t.user.id = :userId "
-		// + "and t.createdAt < current_time and current_time < t.expiredAt "
+		+ "and t.createdAt < current_time and current_time < t.expiredAt "
 		+ "order by t.createdAt desc ")
 	Slice<TradeResponseDto> findSliceByEventIdAndUserId(Long userId, Long eventId, Pageable pageable);
 

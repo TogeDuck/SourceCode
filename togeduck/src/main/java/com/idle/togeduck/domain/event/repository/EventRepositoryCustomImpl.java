@@ -49,7 +49,9 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
 			))
 			.from(event)
 			.leftJoin(event.cafe, cafe)
-			.where(event.startDate.between(startDate, endDate).or(event.endDate.between(startDate, endDate)))
+			.where(event.startDate.between(startDate, endDate)
+				.or(event.endDate.between(startDate, endDate))
+				.and(event.celebrity.id.eq(celebrityId)))
 			.fetch();
 	}
 

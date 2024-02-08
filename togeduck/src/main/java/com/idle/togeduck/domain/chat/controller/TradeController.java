@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,35 +37,36 @@ public class TradeController {
 	@GetMapping("/{eventId}/trades")
 	public ResponseEntity<BaseResponse<Slice<TradeResponseDto>>> getTradeList(
 		@PathVariable Long eventId,
-		Pageable pageable) {
+		Pageable pageable,
+		@AuthenticationPrincipal User user) {
 		return ResponseEntity.ok(
-			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTradeList(1L, eventId, pageable)));
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTradeList(user, eventId, pageable)));
 	}
 
 	@GetMapping("/{eventId}/trades/{tradeId}")
 	public ResponseEntity<BaseResponse<TradeResponseDto>> getTrade(
 		@PathVariable Long eventId,
-		@PathVariable Long tradeId) {
+		@PathVariable Long tradeId,
+		@AuthenticationPrincipal User user) {
 		return ResponseEntity.ok(
-			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTrade(1L, tradeId)));
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getTrade(user, tradeId)));
 	}
 
 	@GetMapping("/{eventId}/trades/mytrades")
-	public ResponseEntity<BaseResponse<Slice<TradeResponseDto>>> getMyTrades(
+	public ResponseEntity<BaseResponse<Slice<TradeResponseDto>>> getMyTradeList(
 		@PathVariable Long eventId,
-		Pageable pageable
-	) {
+		Pageable pageable,
+		@AuthenticationPrincipal User user) {
 		return ResponseEntity.ok(
-			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getMyTradeList(1L, eventId, pageable)));
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", tradeService.getMyTradeList(user, eventId, pageable)));
 	}
 
 	@PostMapping("/{eventId}/trades")
 	public ResponseEntity<BaseResponse<?>> createTrade(
 		@PathVariable Long eventId,
 		@RequestPart MultipartFile image,
-		@RequestPart TradeRequestDto tradeRequestDto) {
-
-		User user = User.builder().id(1L).build();
+		@RequestPart TradeRequestDto tradeRequestDto,
+		@AuthenticationPrincipal User user) {
 
 		tradeService.createTrade(eventId, user, image, tradeRequestDto.content(), tradeRequestDto.duration());
 
@@ -76,9 +78,8 @@ public class TradeController {
 		@PathVariable Long eventId,
 		@PathVariable Long tradeId,
 		@RequestPart MultipartFile image,
-		@RequestPart TradeRequestDto tradeRequestDto) {
-
-		User user = User.builder().id(1L).build();
+		@RequestPart TradeRequestDto tradeRequestDto,
+		@AuthenticationPrincipal User user) {
 
 		tradeService.updateTrade(tradeId, user, image, tradeRequestDto.content(), tradeRequestDto.duration());
 
@@ -88,47 +89,40 @@ public class TradeController {
 	@DeleteMapping("/{eventId}/trades/{tradeId}")
 	public ResponseEntity<BaseResponse<?>> deleteTrade(
 		@PathVariable Long eventId,
-		@PathVariable Long tradeId) {
-
-		User user = User.builder().id(1L).build();
+		@PathVariable Long tradeId,
+		@AuthenticationPrincipal User user) {
 
 		tradeService.deleteTrade(tradeId, user);
 
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
 
-	@PostMapping("/{eventId}/trades/{tradeId}/deal")
+	@PostMapping("/{eventId}/trades/{tradeId}/deals")
 	public ResponseEntity<BaseResponse<?>> createDeal(
+		@PathVariable Long eventId,
 		@PathVariable Long tradeId,
-		@RequestBody DealRequest dealRequest) {
+		@RequestBody DealRequest dealRequest,
+		@AuthenticationPrincipal User user) {
 
-		User user = User.builder().id(1L).build();
-
-		dealService.createDeal(1L, tradeId, dealRequest.myTradeId());
+		dealService.createDeal(user.getId(), tradeId, dealRequest.myTradeId());
 
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
 
-	@GetMapping("/{eventId}/trades/{tradeId}/deal/{dealId}")
-	public ResponseEntity<BaseResponse<?>> getDeal(
-		@PathVariable Long tradeId,
-		@PathVariable Long dealId) {
-
-		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
-	}
-
-	@PostMapping("/{eventId}/trades/{tradeId}/deal/{dealId}/accept")
+	@PostMapping("/{eventId}/trades/{tradeId}/deals/{dealId}/accept")
 	public ResponseEntity<BaseResponse<?>> acceptDeal(
-		@PathVariable Long dealId) {
+		@PathVariable Long dealId,
+		@AuthenticationPrincipal User user) {
 
 		dealService.acceptDeal(dealId);
 
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
 
-	@PostMapping("/{eventId}/trades/{tradeId}/deal/{dealId}/reject")
-	public ResponseEntity<BaseResponse<?>> rejectDeal(
-		@PathVariable Long dealId) {
+	@PostMapping("/{eventId}/trades/{tradeId}/deals/{dealId}/reject")
+	public ResponseEntity<BaseResponse<?>> jectDeal(
+		@PathVariable Long dealId,
+		@AuthenticationPrincipal User user) {
 
 		dealService.rejectDeal(dealId);
 
