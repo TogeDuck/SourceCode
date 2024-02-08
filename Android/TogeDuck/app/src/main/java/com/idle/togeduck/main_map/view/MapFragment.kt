@@ -56,6 +56,7 @@ import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
+import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
@@ -212,8 +213,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             peopleClustering?.addItems(valuesCollection)
         }
 
-        historyViewModel.historyList.observe(viewLifecycleOwner) {
-
+        historyViewModel.route.observe(viewLifecycleOwner) { list ->
+            setPathLine(list)
         }
 
         historyViewModel.historyList.observe(viewLifecycleOwner) {
@@ -541,7 +542,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     // 이벤트 리스트 가져옴
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getEventList() {
         val today = java.time.LocalDate.now()
         CoroutineScope(Dispatchers.IO).launch {
@@ -723,12 +723,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     // 이동 경로를 경로선으로 표시
-    private fun setPathLine(markerList: List<NaverItem>) {
+    private fun setPathLine(list: List<Position>) {
         val pathLine = PathOverlay()
         val pathLineList = mutableListOf<LatLng>()
 
-        for (i in 0 until 5) {
-            pathLineList.add(markerList[i].position)
+        list.forEach { (latitude, longitude) ->
+            pathLineList.add(LatLng(latitude, longitude))
         }
 
         pathLine.width = 30
