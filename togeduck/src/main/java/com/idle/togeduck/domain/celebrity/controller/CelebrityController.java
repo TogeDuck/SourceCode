@@ -23,7 +23,7 @@ public class CelebrityController {
 
 	private final CelebrityService celebrityService;
 
-	@GetMapping
+	@GetMapping("/search")
 	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(@RequestParam String keyword
 	) throws IOException {
 

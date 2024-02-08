@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.idle.togeduck.domain.celebrity.dto.CelebrityResponseDto;
 import com.idle.togeduck.domain.celebrity.entity.Celebrity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -26,5 +27,21 @@ public class CelebrityRepositoryImpl implements CelebrityRepositoryCustom {
 			.where(celebrity.name.eq(keyword).or(celebrity.nickname.eq(keyword)).or(celebrity.team.name.eq(keyword)))
 			.join(celebrity.team, team).fetchJoin()
 			.fetch();
+	}
+
+	@Override
+	public CelebrityResponseDto findCelebrityById(Long id) {
+		Celebrity celeb = jpaQueryFactory
+			.selectFrom(celebrity)
+			.where(celebrity.id.eq(id))
+			.join(celebrity.team, team).fetchJoin()
+			.fetchOne();
+
+		if (celeb != null) {
+			return new CelebrityResponseDto(celeb.getId(), celeb.getName(), celeb.getNickname(),
+				celeb.getBirthday(),
+				celeb.getImage(), celeb.getTeam().getName());
+		}
+		return null;
 	}
 }
