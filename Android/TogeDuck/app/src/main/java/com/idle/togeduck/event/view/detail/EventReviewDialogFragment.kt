@@ -56,6 +56,8 @@ class EventReviewDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //todo. 안쓰는 프래그먼트..삭제..
+
         setImgSize()
         setTheme()
 

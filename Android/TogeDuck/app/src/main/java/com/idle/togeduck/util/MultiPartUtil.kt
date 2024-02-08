@@ -35,6 +35,16 @@ object MultiPartUtil {
         return MultipartBody.Part.createFormData("content", "content", requestBody)
     }
 
+    //todo. 임시 추가 (확인 ..)
+    fun createRequestBody2(content: String): RequestBody {
+        val requestBody = content.toRequestBody("text/plain".toMediaTypeOrNull())
+        return requestBody
+    }
+    fun createRequestBody2(content: Int): RequestBody {
+        val requestBody = content.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        return requestBody
+    }
+
     fun uriToFilePath(context: Context, uri: Uri): String {
         val contentResolver = context.contentResolver
         val cursor = contentResolver.query(uri,null, null, null, null)

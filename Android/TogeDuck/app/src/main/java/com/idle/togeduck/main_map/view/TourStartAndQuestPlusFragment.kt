@@ -1,45 +1,23 @@
 package com.idle.togeduck.main_map.view
 
 import android.graphics.drawable.GradientDrawable
-import android.opengl.Visibility
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.util.Pair
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.DateValidatorPointForward
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
-import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
-import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTourStartAndQuestPlusBinding
-import com.idle.togeduck.databinding.FragmentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTourStartAndQuestPlusBinding
-import com.idle.togeduck.favorite.FavoriteSettingViewModel
-import com.idle.togeduck.main_map.MapViewModel
-import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
-import com.idle.togeduck.util.DpPxUtil.dpToPx
+import com.idle.togeduck.util.CalcStatusBarSize
+import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.getColor
-import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
+
 
 @AndroidEntryPoint
 class TourStartAndQuestPlusFragment : Fragment() {
@@ -66,6 +44,7 @@ class TourStartAndQuestPlusFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setPadding()
         setTheme()
 
         //클릭하면 색 변경
@@ -78,15 +57,15 @@ class TourStartAndQuestPlusFragment : Fragment() {
         }
 
         tourStartAndQuestPlusBinding.plusExchange.setOnClickListener {
-            //todo.다이얼로그 열기
+            findNavController().navigate(R.id.action_mapFragment_to_exchangePostDialogFragment)
         }
 
         tourStartAndQuestPlusBinding.plusShare.setOnClickListener {
-            //todo. 다이얼로그 열기
+            findNavController().navigate(R.id.action_mapFragment_to_sharePostDialogFragment)
         }
 
         tourStartAndQuestPlusBinding.plusRecruit.setOnClickListener {
-            //todo. 다이얼로그 열기
+            findNavController().navigate(R.id.action_mapFragment_to_recruitPostDialogFragment)
         }
 
 
@@ -98,6 +77,15 @@ class TourStartAndQuestPlusFragment : Fragment() {
         tourStartAndQuestPlusBinding.startText.text = "종료"
 
         //todo. 투어버튼 상태 확인해서 시작 상태이면 종료로, 종료 상태이면 시작으로 바뀌는 거로 수정 필요
+    }
+
+    private fun setPadding() {
+        tourStartAndQuestPlusBinding.clTourStart.setPadding(
+            DpPxUtil.dpToPx(10, requireContext()),
+            DpPxUtil.dpToPx(0, requireContext()),
+            DpPxUtil.dpToPx(10, requireContext()),
+            DpPxUtil.dpToPx(0, requireContext())
+        )
     }
 
 
