@@ -836,10 +836,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private fun getClusterColor(kind: String): Int{
         return when(kind){
-            "PAST" -> getColor(requireContext(), R.color.gray_bg)
+            "PAST" -> getColor(requireContext(), R.color.gray_text)
             "TODAY" -> getColor(requireContext(), Theme.theme.main500)
             "LATER" -> getColor(requireContext(), Theme.theme.main300)
-            else -> getColor(requireContext(), R.color.gray_bg)
+            else -> getColor(requireContext(), R.color.gray_text)
         }
     }
 
@@ -848,8 +848,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             Marker(clusterItem.position).apply {
                 icon = MarkerIcons.BLACK
                 iconTintColor = getClusterColor(kind)
-                width = dpToPx(80, requireContext())
-                height = dpToPx(80, requireContext())
+                width = dpToPx(22, requireContext())
+                height = dpToPx(30, requireContext())
                 // 이 `apply` 블록의 결과 (즉, Marker 객체 자체)가 반환됩니다.
             }
         }
@@ -868,7 +868,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 background = circleDrawable
                 setTextColor(Color.WHITE)
                 text = "${it.size}"
-                width = dpToPx(30, requireContext())
+                width = dpToPx(40, requireContext())
                 height = dpToPx(40, requireContext())
                 gravity = Gravity.CENTER
             }
