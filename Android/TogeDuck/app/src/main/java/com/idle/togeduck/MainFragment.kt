@@ -26,8 +26,6 @@ import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.Message
 import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.StompManager
-import com.idle.togeduck.network.StompManagerTest
-import com.idle.togeduck.network.WebSocketManager
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.LoginUtil
@@ -57,9 +55,6 @@ class MainFragment : Fragment() {
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
-    lateinit var webSocketManager : WebSocketManager
-    lateinit var webSocketManager1 : WebSocketManager
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,16 +71,12 @@ class MainFragment : Fragment() {
         setDate()
         getFavorites()
 
-        webSocketManager = WebSocketManager(preference)
-        webSocketManager1 = WebSocketManager(preference)
-
         // 삭제 예정 ========================================
         binding.btn0.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
         }
 
-        val stompManager = StompManager()
-        val stompManagerTest = StompManagerTest()
+        val stompManagerTest = StompManager()
 
         binding.btn1.setOnClickListener {
             Log.d("버튼","김아영 버튼 눌림")
@@ -111,11 +102,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn2.setOnClickListener {
-            Log.d("버튼","이지우 버튼 눌림")
-            if(webSocketManager1.getConnectedState()){
-                Log.d("버튼","웹소켓 1번 연결됨")
-                webSocketManager1.send("/pub/chats/1/message", 1, "안녕하세요")
-            }
+
         }
 
         binding.btn3.setOnClickListener {

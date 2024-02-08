@@ -27,6 +27,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -38,6 +39,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermissionUtil
@@ -56,7 +58,8 @@ import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
-import com.idle.togeduck.network.WebSocketManager
+import com.idle.togeduck.network.Message
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.NaverItem
 import com.idle.togeduck.util.builder
@@ -134,7 +137,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private val timer = Timer()
     private lateinit var workRequest: PeriodicWorkRequest
-    private lateinit var workManager: WorkManager
+    private var workManager: WorkManager? = null
+
+    lateinit var realTimeOnOffBtn :MaterialSwitch
+    lateinit var tourStartBtn :FragmentContainerView
+    val stompManager = StompManager()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -152,6 +159,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        realTimeOnOffBtn = binding.realTimeBtn
+        tourStartBtn = binding.fragmentTsqp
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         initViewPager()
         initChildFragment()
@@ -163,11 +173,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpBottomText()
         setUpFloatingButton()
         setRealTimeContainer()
+        stompManager.connect()
+
+        realTimeOnOffBtn.setOnClickListener{
+            Log.d("실시간 버튼","시작버튼 눌림")
+            realTimeBtnOnClick()
+        }
+        tourStartBtn.setOnClickListener{
+            Log.d("투어시작 버튼","시작버튼 눌림")
+            tourStartBtnClick()
+        }
 
 //        mapViewModel.markerList.observe(viewLifecycleOwner) {
 //            clustering?.addItems(it)
 //        }
-
 
         eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
             todayClustering?.clearItems()
@@ -184,13 +203,33 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
             Log.d("이벤트 리스트 변경","과거")
         }
-
         mapViewModel.peopleMarkerList.observe(viewLifecycleOwner) {
             updatedMarkerList ->
             val valuesCollection = updatedMarkerList.values
             peopleClustering?.clearItems()
             peopleClustering?.addItems(valuesCollection)
         }
+    }
+    private fun toast(message: String) {
+        val questDto = Gson().fromJson(message, Message::class.java)
+        Toast.makeText(requireContext(), "${questDto.content}이 생성되었습니다", Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun realTimeBtnOnClick(){
+        if(realTimeOnOffBtn.isChecked){
+            stompManager.subscribeTopic("/sub/chats/1"){ message ->
+                toast(message)
+                Log.d("웹소켓 1", "Received message: $message")
+            }
+        }
+        else{
+            realTimeOnOffBtn.isChecked = false
+            stompManager.unsubscribeTopic("/sub/chats/1")
+        }
+    }
+    private fun tourStartBtnClick(){
+        sendPosition()
     }
 
     private fun addBackPressedCallback() {
@@ -415,7 +454,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         var currentLocation: Location?
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 if (location != null) {
@@ -433,8 +472,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
                 }
-
-//                initPastCluster()
                 initClusterTest()
                 getEventList()
 
@@ -539,36 +576,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
             .make()
     }
-
-    // 테스트용 추후 삭제 -------------------------------------------------------------------------------
-    private fun initPastCluster(){
-        pastClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
-            .customMarker{
-                    clusterItem ->
-                val circleDrawable = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.shape_circle
-                ) as GradientDrawable
-                circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
-                circleDrawable.setStroke(0,0)
-
-                val markerBitmap = Bitmap.createBitmap(
-                    dpToPx(200, requireContext()), // 마커 너비
-                    dpToPx(200, requireContext()), // 마커 높이
-                    Bitmap.Config.ARGB_8888
-                )
-
-                val canvas = Canvas(markerBitmap)
-                circleDrawable.setBounds(0, 0, canvas.width, canvas.height)
-                circleDrawable.draw(canvas)
-
-                Marker(clusterItem.position).apply {
-                    icon = OverlayImage.fromBitmap(markerBitmap)
-                }
-            }
-            .make()
-    }
-    // ---------------------------------------------------------------------------------------------
 
 
     // 클러스터 관리 메소드
@@ -962,6 +969,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             )
         }
     }
+    // ---------------------------------------------------------------------------------------------
+
 
     private fun doWorkWithPeriodic() {
         Log.d("로그", "doWorkWithPeriodic() 호출됨")
@@ -971,7 +980,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         workRequest = PeriodicWorkRequestBuilder<GPSWorker>(15, TimeUnit.MINUTES).build()
 
         workManager = WorkManager.getInstance(requireContext())
-        workManager.enqueueUniquePeriodicWork(
+        workManager?.enqueueUniquePeriodicWork(
             "doWorkWithPeriodic",
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
@@ -979,7 +988,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun cancelWorkWithPeriodic() {
-        workManager.cancelWorkById(workRequest.id)
+        workManager?.cancelWorkById(workRequest.id)
     }
 
     @SuppressLint("MissingPermission")
@@ -991,7 +1000,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         .addOnSuccessListener { location: Location? ->
                             Log.d("로그", "lastLocation : ${location?.latitude} ${location?.longitude}")
 
-                        // TODO. 위치 기록 저장 및 전송 로직 추가 필요
+                            val headers = listOf(
+                                com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
+                            )
+                            stompManager.send("/pub/chats/1/message",1,"lastLocation : ${location?.latitude} ${location?.longitude}" ,headers)
                         }
                 }
             }
@@ -1003,13 +1015,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         Log.d("로그", "MapFragment - onStart() 호출됨")
 
         sendPosition()
-        cancelWorkWithPeriodic()
+        if (workManager != null) cancelWorkWithPeriodic()
     }
     
     override fun onStop() {
         super.onStop()
         Log.d("로그", "MapFragment - onStop() 호출됨")
         doWorkWithPeriodic()
+        timer.cancel()
     }
 
 }

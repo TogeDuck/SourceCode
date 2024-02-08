@@ -1,22 +1,25 @@
 package com.idle.togeduck.network
 
-import android.content.ContentValues.TAG
+import android.content.ContentValues
 import android.util.Log
 import com.google.gson.Gson
+import com.idle.togeduck.websocketcustomlibrary.Stomp
+import com.idle.togeduck.websocketcustomlibrary.StompClient
+import com.idle.togeduck.websocketcustomlibrary.dto.StompHeader
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import ua.naiksoftware.stomp.Stomp
-import ua.naiksoftware.stomp.StompClient
-import ua.naiksoftware.stomp.dto.StompHeader
 
-class StompManager{
+
+class StompManager {
     // StompClient의 인스턴스를 생성할 때 사용할 URL
-    private val SERVER_URL = "ws://10.0.2.2:8080/ws-stomp"
-//    private val SERVER_URL = "wss://i10a301.p.ssafy.io/ws-stomp"
+//    private val SERVER_URL = "ws://10.0.2.2:8080/ws-stomp"
+    private val SERVER_URL = "wss://i10a301.p.ssafy.io/ws-stomp"
 
     private val stompClient: StompClient
     private val compositeDisposable = CompositeDisposable()
+    private val topicSubscriptions = mutableMapOf<String, Disposable>()
 
     init {
         val headerMap: Map<String, String> = mapOf(
@@ -27,15 +30,17 @@ class StompManager{
     }
 
     private fun configureStompClient(stompClient: StompClient) {
-        // stompClient에 대한 추가적인 설정을 할 수 있습니다.
-        // 예를 들어, heartbeat을 설정하거나, 헤더를 추가할 수 있습니다.
+        stompClient.withClientHeartbeat(1000).withServerHeartbeat(1000)
     }
 
     fun connect(headers: List<StompHeader>) {
         stompClient.connect(headers)
     }
     fun connect() {
-        stompClient.connect()
+        val headers = listOf(
+            StompHeader("Authorization", "guest")
+        )
+        stompClient.connect(headers)
     }
 
     fun disconnect() {
@@ -48,6 +53,11 @@ class StompManager{
         stompClient.send(destination, Gson().toJson(messageRequest)).subscribe()
     }
 
+    fun send(destination: String, chatId:Long, message: String, headers: List<StompHeader>){
+        var messageRequest = Message(chatId, message)
+        stompClient.send(destination, Gson().toJson(messageRequest), headers).subscribe()
+    }
+
     fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
         val disposable = stompClient.topic(topic)
             .subscribeOn(Schedulers.io())
@@ -55,9 +65,20 @@ class StompManager{
             .subscribe({ topicMessage ->
                 onMessageReceived(topicMessage.payload)
             }, { throwable ->
-                Log.e(TAG, "Error on subscribe topic", throwable)
+                Log.e(ContentValues.TAG, "Error on"+topic, throwable)
             })
-        compositeDisposable.add(disposable) // 새로운 구독을 CompositeDisposable에 추가
+        compositeDisposable.add(disposable)
+        topicSubscriptions[topic] = disposable
+    }
+
+    fun unsubscribeTopic(topic: String) {
+        topicSubscriptions[topic]?.let { disposable ->
+            disposable.dispose() // RxJava 구독 해제
+            compositeDisposable.remove(disposable) // CompositeDisposable에서 제거
+            topicSubscriptions.remove(topic) // Map에서 제거
+        }
+        // STOMP 프로토콜을 통해 서버에 구독 취소를 알립니다.
+        stompClient.unsubscribePath(topic)
     }
 
     fun clearSubscriptions() {
