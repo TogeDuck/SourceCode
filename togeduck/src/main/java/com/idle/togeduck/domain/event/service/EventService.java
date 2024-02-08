@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.idle.togeduck.domain.event.dto.AllEventResponseDto;
 import com.idle.togeduck.domain.event.dto.JoinEventResponseDto;
 import com.idle.togeduck.domain.event.repository.EventRepository;
+import com.idle.togeduck.domain.user.repository.UserRepository;
+import com.idle.togeduck.global.response.BaseException;
+import com.idle.togeduck.global.response.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,10 +21,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EventService {
 	private final EventRepository eventRepository;
+	private final UserRepository userRepository;
 
 	public AllEventResponseDto getEvents(Long celebrityId, LocalDate startDate, LocalDate endDate,
 		Long userId) {
 		return classifyEvents(eventRepository.findEventList(celebrityId, startDate, endDate, userId));
+	}
+
+	public JoinEventResponseDto getEvent(Long eventId, Long userId) {
+		userRepository.findById(userId).orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+		return eventRepository.findByEventId(eventId, userId);
 	}
 
 	public AllEventResponseDto classifyEvents(List<JoinEventResponseDto> allEvents) {
@@ -40,4 +50,5 @@ public class EventService {
 
 		return new AllEventResponseDto(past, today, later);
 	}
+
 }
