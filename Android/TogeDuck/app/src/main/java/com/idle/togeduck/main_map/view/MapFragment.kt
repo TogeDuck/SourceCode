@@ -149,6 +149,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var tourCircle: GradientDrawable
 
+    /** Fragment Lifecycle Functions **/
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -164,11 +165,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        /** 객체 초기화 **/
         super.onViewCreated(view, savedInstanceState)
-
         realTimeOnOffBtn = binding.realTimeBtn
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+        /** 초기화 관련 함수 호출 **/
         initViewPager()
         initChildFragment()
         setPermissionListener()
@@ -182,6 +184,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setTourBtnTheme()
         stompManager.connect()
 
+        /** 버튼 동작 연결 **/
         realTimeOnOffBtn.setOnClickListener{
             Log.d("실시간 버튼","시작버튼 눌림 ${realTimeOnOffBtn.isChecked}")
             realTimeBtnOnClick()
@@ -191,30 +194,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             changeTourBtn()
             tourStartBtnClick()
         }
-
         binding.questPlus.setOnClickListener {
             //todo. 다시 누르면 view.gone으로 추가 필요
             binding.plusExchange.visibility = View.VISIBLE
             binding.plusRecruit.visibility = View.VISIBLE
             binding.plusShare.visibility = View.VISIBLE
         }
-
         binding.plusExchange.setOnClickListener {
             findNavController().navigate(R.id.action_mapFragment_to_exchangePostDialogFragment)
         }
-
         binding.plusShare.setOnClickListener {
             findNavController().navigate(R.id.action_mapFragment_to_sharePostDialogFragment)
         }
-
         binding.plusRecruit.setOnClickListener {
             findNavController().navigate(R.id.action_mapFragment_to_recruitPostDialogFragment)
         }
 
-//        mapViewModel.markerList.observe(viewLifecycleOwner) {
-//            clustering?.addItems(it)
-//        }
-
+        /** LiveData Observe **/
         eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
             todayClustering?.clearItems()
             todayClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
@@ -236,99 +232,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             peopleClustering?.clearItems()
             peopleClustering?.addItems(valuesCollection)
         }
-
         historyViewModel.route.observe(viewLifecycleOwner) { list ->
             if (pathLine != null) pathLine!!.map = null
             setPathLine(list)
         }
-
         historyViewModel.historyEventList.observe(viewLifecycleOwner) {
             historyViewModel.setMarkerList()
         }
-
         historyViewModel.markerList.observe(viewLifecycleOwner) { list ->
             list.forEach { it.map = naverMap }
         }
     }
-    private fun toast(message: String) {
-        val questDto = Gson().fromJson(message, Message::class.java)
-        Toast.makeText(requireContext(), "${questDto.content}이 생성되었습니다", Toast.LENGTH_SHORT)
-            .show()
-    }
 
-    private fun realTimeBtnOnClick(){
-        if(realTimeOnOffBtn.isChecked){
-            stompManager.subscribeTopic("/sub/chats/1"){ message ->
-                toast(message)
-                Log.d("웹소켓 1", "Received message: $message")
-            }
-        }
-        else{
-            stompManager.unsubscribeTopic("/sub/chats/1")
-        }
-    }
-
-
-    private fun addBackPressedCallback() {
-        // OnBackPressedCallback (익명 클래스) 객체 생성
-        backPressedCallback = object : OnBackPressedCallback(true) {
-            var backWait: Long = 0
-
-            // 뒤로가기 했을 때 실행되는 기능
-            override fun handleOnBackPressed() {
-                when {
-                    componentBottomSheetBinding.viewPager.currentItem == 5 -> {
-                        changeViewPagerPage(4)
-                    }
-                    componentBottomSheetBinding.viewPager.currentItem == 2 -> {
-                        changeViewPagerPage(1)
-                    }
-                    sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
-                        sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                    }
-                    sheetBehavior.state == BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                    }
-                    else -> {
-                        if (System.currentTimeMillis() - backWait >= 2000) {
-                            backWait = System.currentTimeMillis()
-                            Toast.makeText(
-                                context, "뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            findNavController().navigate(R.id.mainFragment)
-                        }
-                    }
-                }
-            }
-        }
-
-        // 액티비티의 BackPressedDispatcher에 여기서 만든 callback 객체를 등록
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            backPressedCallback
-        )
-    }
-
-    private fun setPermissionListener() {
-        val permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-                Log.d("로그", "MainFragment - onPermissionGranted() 호출됨")
-            }
-
-            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-                Toast.makeText(
-                    requireContext(),
-                    "권한 거부\n${deniedPermissions.toString()}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-
-        requestPermission(permissionListener)
-    }
-
+    /** Init Functions **/
     private fun initViewPager() {
         mapPagerAdapter = MapPagerAdapter(this)
         componentBottomSheetBinding.viewPager.adapter = mapPagerAdapter
@@ -346,56 +262,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         })
     }
-
-
-    private fun setTourBtnTheme() {
-        tourCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
-        tourCircle.setStroke(0,0)
-        binding.tourStart.background= tourCircle
-
-        val plusCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        plusCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
-        plusCircle.setStroke(0,0)
-        binding.questPlus.background = plusCircle
-
-        val exchangeCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        exchangeCircle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
-        exchangeCircle.setStroke(0,0)
-        binding.plusExchange.background = exchangeCircle
-        binding.plusExchange.setColorFilter(getColor(requireContext(), R.color.white))
-
-        val shareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        shareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-        shareCircle.setStroke(0,0)
-        binding.plusShare.background = shareCircle
-        binding.plusShare.setColorFilter(getColor(requireContext(), R.color.white))
-
-        val recruitCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        recruitCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
-        recruitCircle.setStroke(0,0)
-        binding.plusRecruit.background = recruitCircle
-        binding.plusRecruit.setColorFilter(getColor(requireContext(), R.color.white))
-    }
-
-    private fun tourStartBtnClick(){
-        sendPosition()
-    }
-
-    private fun changeTourBtn() {
-        //todo. 투어버튼 상태 확인해서 시작 상태이면 종료로, 종료 상태이면 시작으로 바뀌는 거로 수정 필요
-        //todo. tourStartBtnClick() 과 합치기
-        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-        binding.tourStart.background= tourCircle
-        binding.tourStart.text = "투어\n종료"
-
-
-    }
-
-    fun changeViewPagerPage(pageIdx: Int) {
-        componentBottomSheetBinding.viewPager.setCurrentItem(pageIdx, true)
-    }
-
     private fun initChildFragment() {
         childFragmentManager.beginTransaction()
             .add(R.id.fragment_top_appbar, TopAppbarFragment())
@@ -403,7 +269,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .addToBackStack(null)
             .commit()
     }
-
     private fun setBottomSheet() {
         val statusDp = getStatusBarHeightToDp(requireContext())
 
@@ -447,7 +312,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         })
     }
-
     private fun setHalfExpandedPadding() {
         binding.bsFragment.bottomSheet.setPadding(
             0,
@@ -456,11 +320,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             dpToPx(90, requireContext()) + heightPx / 2
         )
     }
-
     private fun setExpandedPadding() {
         binding.bsFragment.bottomSheet.setPadding(0, 0, 0, dpToPx(105, requireContext()))
     }
-
     @SuppressLint("ResourceType")
     private fun setRealTimeContainer(){
         val statusBarDp = getStatusBarHeightToDp(requireContext())
@@ -497,6 +359,131 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.realTimeBtn.trackTintList = trackColorStateList
         binding.realTimeBtn.thumbTintList = thumbColorStateList
     }
+
+    /** Theme Settings **/
+    private fun setTourBtnTheme() {
+        tourCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        tourCircle.setStroke(0,0)
+        binding.tourStart.background= tourCircle
+
+        val plusCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        plusCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        plusCircle.setStroke(0,0)
+        binding.questPlus.background = plusCircle
+
+        val exchangeCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        exchangeCircle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+        exchangeCircle.setStroke(0,0)
+        binding.plusExchange.background = exchangeCircle
+        binding.plusExchange.setColorFilter(getColor(requireContext(), R.color.white))
+
+        val shareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        shareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        shareCircle.setStroke(0,0)
+        binding.plusShare.background = shareCircle
+        binding.plusShare.setColorFilter(getColor(requireContext(), R.color.white))
+
+        val recruitCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        recruitCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        recruitCircle.setStroke(0,0)
+        binding.plusRecruit.background = recruitCircle
+        binding.plusRecruit.setColorFilter(getColor(requireContext(), R.color.white))
+    }
+
+    /** Button Click & Callback Functions **/
+    private fun realTimeBtnOnClick(){
+        if(realTimeOnOffBtn.isChecked){
+            stompManager.subscribeTopic("/sub/chats/1"){ message ->
+                toast(message)
+                Log.d("웹소켓 1", "Received message: $message")
+            }
+        }
+        else{
+            stompManager.unsubscribeTopic("/sub/chats/1")
+        }
+    }
+    private fun tourStartBtnClick(){
+        sendPosition()
+    }
+    private fun addBackPressedCallback() {
+        // OnBackPressedCallback (익명 클래스) 객체 생성
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            var backWait: Long = 0
+
+            // 뒤로가기 했을 때 실행되는 기능
+            override fun handleOnBackPressed() {
+                when {
+                    componentBottomSheetBinding.viewPager.currentItem == 5 -> {
+                        changeViewPagerPage(4)
+                    }
+                    componentBottomSheetBinding.viewPager.currentItem == 2 -> {
+                        changeViewPagerPage(1)
+                    }
+                    sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
+                        sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                    }
+                    sheetBehavior.state == BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
+                    else -> {
+                        if (System.currentTimeMillis() - backWait >= 2000) {
+                            backWait = System.currentTimeMillis()
+                            Toast.makeText(
+                                context, "뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            findNavController().navigate(R.id.mainFragment)
+                        }
+                    }
+                }
+            }
+        }
+
+        // 액티비티의 BackPressedDispatcher에 여기서 만든 callback 객체를 등록
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
+    }
+    private fun setPermissionListener() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+                Log.d("로그", "MainFragment - onPermissionGranted() 호출됨")
+            }
+
+            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                Toast.makeText(
+                    requireContext(),
+                    "권한 거부\n${deniedPermissions.toString()}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        requestPermission(permissionListener)
+    }
+
+
+    /** Testing Functions **/
+    private fun toast(message: String) {
+        val questDto = Gson().fromJson(message, Message::class.java)
+        Toast.makeText(requireContext(), "${questDto.content}이 생성되었습니다", Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun changeTourBtn() {
+        //todo. 투어버튼 상태 확인해서 시작 상태이면 종료로, 종료 상태이면 시작으로 바뀌는 거로 수정 필요
+        //todo. tourStartBtnClick() 과 합치기
+        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        binding.tourStart.background= tourCircle
+        binding.tourStart.text = "투어\n종료"
+    }
+
+    fun changeViewPagerPage(pageIdx: Int) {
+        componentBottomSheetBinding.viewPager.setCurrentItem(pageIdx, true)
+    }
+
 
     override fun onMapReady(naverMap: NaverMap) {
         val statusBarDp = getStatusBarHeightToDp(requireContext())
