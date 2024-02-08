@@ -134,8 +134,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="6dp">
+        android:layout_height="match_parent" >
 
         <include
             android:id="@+id/bs_fragment"
