@@ -79,6 +79,10 @@ import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import ted.gun0912.clustering.naver.TedNaverClustering
 import javax.inject.Inject
 
+enum class EventKind {
+    PAST, TODAY, LATER
+}
+
 @AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -804,8 +808,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // 클러스터 생성 -----------------------------------------------------------------------------------------------
     private fun initClusterTest() {
         pastClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap).apply {
-            setupCustomMarker("PAST")
-            setupCustomCluster("PAST")
+            setupCustomMarker(EventKind.PAST)
+            setupCustomCluster(EventKind.PAST)
 //            setupMarkerAddedListener(circleOverlayList)
 //            setupClusterAddedListener(circleOverlayList)
             setupClusterClickListener()
@@ -814,8 +818,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         pastClustering?.setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
 
         todayClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap).apply {
-            setupCustomMarker("TODAY")
-            setupCustomCluster("TODAY")
+            setupCustomMarker(EventKind.TODAY)
+            setupCustomCluster(EventKind.TODAY)
 //            setupMarkerAddedListener(circleOverlayList)
 //            setupClusterAddedListener(circleOverlayList)
             setupClusterClickListener()
@@ -824,8 +828,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         todayClustering?.setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
 
         upcomingClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap).apply {
-            setupCustomMarker("LATER")
-            setupCustomCluster("LATER")
+            setupCustomMarker(EventKind.LATER)
+            setupCustomCluster(EventKind.LATER)
 //            setupMarkerAddedListener(circleOverlayList)
 //            setupClusterAddedListener(circleOverlayList)
             setupClusterClickListener()
@@ -834,16 +838,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         upcomingClustering?.setAlgorithm(NonHierarchicalViewBasedAlgorithm(1000, 1000))
     }
 
-    private fun getClusterColor(kind: String): Int{
+    private fun getClusterColor(kind: EventKind): Int{
         return when(kind){
-            "PAST" -> getColor(requireContext(), R.color.gray_text)
-            "TODAY" -> getColor(requireContext(), Theme.theme.main500)
-            "LATER" -> getColor(requireContext(), Theme.theme.main300)
-            else -> getColor(requireContext(), R.color.gray_text)
+            EventKind.PAST -> getColor(requireContext(), R.color.gray_text)
+            EventKind.TODAY -> getColor(requireContext(), Theme.theme.main500)
+            EventKind.LATER -> getColor(requireContext(), Theme.theme.main300)
         }
     }
 
-    private fun TedNaverClustering.Builder<NaverItem>.setupCustomMarker(kind: String) = apply {
+    private fun TedNaverClustering.Builder<NaverItem>.setupCustomMarker(kind: EventKind) = apply {
         customMarker { clusterItem ->
             Marker(clusterItem.position).apply {
                 icon = MarkerIcons.BLACK
@@ -855,7 +858,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun TedNaverClustering.Builder<NaverItem>.setupCustomCluster(kind: String) = apply {
+    private fun TedNaverClustering.Builder<NaverItem>.setupCustomCluster(kind: EventKind) = apply {
         customCluster {
             val circleDrawable = ContextCompat.getDrawable(
                 requireContext(),
