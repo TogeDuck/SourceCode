@@ -56,7 +56,6 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private lateinit var eventPosterAdapter: EventPosterAdapter
 
-
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
@@ -264,9 +263,6 @@ class EventDetailFragment : Fragment(), EventReview {
             }
         }
     }
-
-
-
 
 //    private fun hideKeyboard(view: View, keyCode: Int): Boolean {
 //        if (keyCode == KeyEvent.KEYCODE_ENTER) {
