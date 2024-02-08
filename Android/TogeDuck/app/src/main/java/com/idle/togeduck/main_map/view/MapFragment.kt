@@ -147,7 +147,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var pathLine: PathOverlay? = null
 
-    private lateinit var tourCircle: GradientDrawable
+    private lateinit var tourStartCircle: GradientDrawable
+    private lateinit var tourEndCircle: GradientDrawable
 
     /** Fragment Lifecycle Functions **/
     override fun onCreateView(
@@ -184,21 +185,43 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setTourBtnTheme()
         stompManager.connect()
 
+        mapViewModel.isTourStart.observe(viewLifecycleOwner) { isTourStart ->
+            if (isTourStart) {
+                sendPosition()
+            } else {
+                if (timer != null) {
+                    timer!!.cancel()
+                    timer = null
+                }
+            }
+        }
+
         /** 버튼 동작 연결 **/
         realTimeOnOffBtn.setOnClickListener{
             Log.d("실시간 버튼","시작버튼 눌림 ${realTimeOnOffBtn.isChecked}")
             realTimeBtnOnClick()
         }
         binding.tourStart.setOnClickListener{
-            Log.d("투어시작 버튼","시작버튼 눌림")
             changeTourBtn()
-            tourStartBtnClick()
         }
         binding.questPlus.setOnClickListener {
-            //todo. 다시 누르면 view.gone으로 추가 필요
-            binding.plusExchange.visibility = View.VISIBLE
-            binding.plusRecruit.visibility = View.VISIBLE
-            binding.plusShare.visibility = View.VISIBLE
+            if (binding.plusExchange.visibility == View.GONE) {
+                binding.plusExchange.visibility = View.VISIBLE
+            } else if (binding.plusExchange.visibility == View.VISIBLE) {
+                binding.plusExchange.visibility = View.GONE
+            }
+
+            if (binding.plusRecruit.visibility == View.GONE) {
+                binding.plusRecruit.visibility = View.VISIBLE
+            } else if (binding.plusRecruit.visibility == View.VISIBLE) {
+                binding.plusRecruit.visibility = View.GONE
+            }
+
+            if (binding.plusShare.visibility == View.GONE) {
+                binding.plusShare.visibility = View.VISIBLE
+            } else if (binding.plusShare.visibility == View.VISIBLE) {
+                binding.plusShare.visibility = View.GONE
+            }
         }
         binding.plusExchange.setOnClickListener {
             findNavController().navigate(R.id.action_mapFragment_to_exchangePostDialogFragment)
@@ -362,10 +385,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     /** Theme Settings **/
     private fun setTourBtnTheme() {
-        tourCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
-        tourCircle.setStroke(0,0)
-        binding.tourStart.background= tourCircle
+        tourStartCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        tourStartCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        tourStartCircle.setStroke(0,0)
+        binding.tourStart.background= tourStartCircle
+
+        tourEndCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        tourEndCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        tourEndCircle.setStroke(0,0)
 
         val plusCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         plusCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
@@ -403,9 +430,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             stompManager.unsubscribeTopic("/sub/chats/1")
         }
     }
-    private fun tourStartBtnClick(){
-        sendPosition()
-    }
+
     private fun addBackPressedCallback() {
         // OnBackPressedCallback (익명 클래스) 객체 생성
         backPressedCallback = object : OnBackPressedCallback(true) {
@@ -473,11 +498,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun changeTourBtn() {
-        //todo. 투어버튼 상태 확인해서 시작 상태이면 종료로, 종료 상태이면 시작으로 바뀌는 거로 수정 필요
-        //todo. tourStartBtnClick() 과 합치기
-        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-        binding.tourStart.background= tourCircle
-        binding.tourStart.text = "투어\n종료"
+        if (binding.tourStart.text == "투어\n종료") {
+            binding.tourStart.background = tourStartCircle
+            binding.tourStart.text = "투어\n시작"
+            mapViewModel.setTourStatus(false)
+        } else if (binding.tourStart.text == "투어\n시작") {
+            binding.tourStart.background = tourEndCircle
+            binding.tourStart.text = "투어\n종료"
+            mapViewModel.setTourStatus(true)
+        }
     }
 
     fun changeViewPagerPage(pageIdx: Int) {
@@ -1085,14 +1114,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onStart()
         Log.d("로그", "MapFragment - onStart() 호출됨")
 
-        sendPosition()
+        if (mapViewModel.isTourStart.value == true && timer == null) sendPosition()
         if (workManager != null) cancelWorkWithPeriodic()
     }
     
     override fun onStop() {
         super.onStop()
         Log.d("로그", "MapFragment - onStop() 호출됨")
-        doWorkWithPeriodic()
+        if (mapViewModel.isTourStart.value == true) doWorkWithPeriodic()
         if (timer != null) {
             timer!!.cancel()
             timer = null
