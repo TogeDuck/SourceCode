@@ -99,9 +99,11 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		return createToken(authentication, refreshTokenValidTime);
 	}
 
+	// public TokenDto createTok/enDto(Authentication authentication, Long userId) {
 	public TokenDto createTokenDto(Authentication authentication) {
 		return TokenDto.builder()
 			.grantType(BEARER_TYPE)
+			.userId(Long.valueOf(authentication.getName()))
 			.accessToken(createAccessToken(authentication))
 			.refreshToken(createRefreshToken(authentication))
 			.accessTokenExpireDate(accessTokenValidTime)
