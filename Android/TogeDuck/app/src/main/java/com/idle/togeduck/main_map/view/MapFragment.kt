@@ -55,6 +55,7 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
@@ -109,6 +110,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val mapViewModel: MapViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val historyViewModel: HistoryViewModel by activityViewModels()
 
     private lateinit var naverMap: NaverMap
 
@@ -209,6 +211,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             peopleClustering?.clearItems()
             peopleClustering?.addItems(valuesCollection)
         }
+
+        historyViewModel.historyList.observe(viewLifecycleOwner) {
+
+        }
+
+        historyViewModel.historyList.observe(viewLifecycleOwner) {
+
+        }
     }
     private fun toast(message: String) {
         val questDto = Gson().fromJson(message, Message::class.java)
@@ -224,7 +234,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
         else{
-            realTimeOnOffBtn.isChecked = false
             stompManager.unsubscribeTopic("/sub/chats/1")
         }
     }
@@ -1007,7 +1016,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         }
                 }
             }
-        }, 0 ,5000)
+        }, 0 , 10 * 1000)
     }
 
     override fun onStart() {
