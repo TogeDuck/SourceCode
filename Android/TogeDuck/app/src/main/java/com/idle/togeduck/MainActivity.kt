@@ -1,9 +1,13 @@
 package com.idle.togeduck
 
 import android.app.Activity
+import android.content.Intent
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.idle.togeduck.common.ScreenSize.heightDp
@@ -32,6 +36,17 @@ class MainActivity : AppCompatActivity() {
         widthDp = (displayMetrics.widthPixels / displayMetrics.density).toInt()
 
         binding.navHostFragment.setPadding(0, 0, 0, getNavigationBarHeightToPx(this))
+
+        checkGPSSetting()
+    }
+
+    private fun checkGPSSetting() {
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(this, "TogeDuck 앱을 이용하시려면 GPS를 켜주세요", Toast.LENGTH_LONG).show()
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+        }
     }
 
     // 상태바 투명하게 하는 기능
