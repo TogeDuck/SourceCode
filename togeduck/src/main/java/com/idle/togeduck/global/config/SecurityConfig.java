@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idle.togeduck.domain.user.jwt.CustomAuthenticaftionProvider;
 import com.idle.togeduck.domain.user.jwt.JwtAccessDeniedHandler;
 import com.idle.togeduck.domain.user.jwt.JwtAuthenticationEntryPoint;
-import com.idle.togeduck.domain.user.jwt.JwtExceptionFilter;
 import com.idle.togeduck.domain.user.jwt.JwtFilter;
 import com.idle.togeduck.domain.user.jwt.JwtProvider;
 
@@ -48,9 +47,6 @@ public class SecurityConfig { // 스프링 시큐리티에 필요한 설정
 			.sessionManagement((sessionManagement) ->
 				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-
-			.addFilterBefore(new JwtExceptionFilter(objectMapper), JwtFilter.class)
-
 			// exception handling 할 때 우리가 만든 클래스를 추가
 			.exceptionHandling(exception ->
 				exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)

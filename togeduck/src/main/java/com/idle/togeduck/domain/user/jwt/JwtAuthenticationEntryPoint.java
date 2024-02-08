@@ -2,7 +2,6 @@ package com.idle.togeduck.domain.user.jwt;
 
 import java.io.IOException;
 
-import org.apache.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -23,7 +22,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException authException) throws IOException {
-		log.info(request.getAttribute("exception").toString());
 		String code = (String)request.getAttribute("exception");
 		// BaseException e = (BaseException)request.getAttribute("exeception");
 		log.info("commence");
@@ -58,7 +56,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 		log.info("만료");
 
-		response.setStatus(HttpStatus.SC_UNAUTHORIZED);
+		response.setStatus(code.getStatus());
 		response.getWriter()
 			.write(objectMapper.writeValueAsString(new ErrorResponse(code.getStatus(), code.getCode())));
 	}
