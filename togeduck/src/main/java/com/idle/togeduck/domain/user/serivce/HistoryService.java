@@ -8,11 +8,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idle.togeduck.domain.celebrity.repository.CelebrityRepository;
 import com.idle.togeduck.domain.event.entity.Event;
 import com.idle.togeduck.domain.event.repository.EventRepository;
 import com.idle.togeduck.domain.user.dto.HistoryEventResponseDto;
 import com.idle.togeduck.domain.user.dto.HistoryResponseDto;
+import com.idle.togeduck.domain.user.dto.Position;
 import com.idle.togeduck.domain.user.dto.RouteResponseDto;
 import com.idle.togeduck.domain.user.entity.History;
 import com.idle.togeduck.domain.user.entity.HistoryEvent;
@@ -32,6 +36,7 @@ public class HistoryService {
 	private final EventRepository eventRepository;
 	private final UserRepository userRepository;
 	private final CelebrityRepository celebrityRepository;
+	private final ObjectMapper objectMapper;
 
 	@Transactional
 	public Long createHistory(Long celebrityId, Long userId) {
@@ -71,8 +76,15 @@ public class HistoryService {
 		History history = historyRepository.findById(historyId).orElseThrow(() -> new BaseException(HISTORY_NOT_FOUND));
 
 		List<HistoryEventResponseDto> events = historyEventRepository.findEvents(historyId);
+		List<Position> routePositions;
+		try {
+			routePositions = objectMapper.readValue(history.getRoute(), new TypeReference<List<Position>>() {
+			});
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 
-		return new RouteResponseDto(history.getRoute(), events);
+		return new RouteResponseDto(routePositions, events);
 	}
 
 	@Transactional
@@ -84,11 +96,15 @@ public class HistoryService {
 	}
 
 	@Transactional
-	public void updateRoute(Long historyId, String route, Long userId) {
+	public void updateRoute(Long historyId, List<Position> route, Long userId) {
 		userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 		History history = historyRepository.findById(historyId).orElseThrow(() -> new BaseException(HISTORY_NOT_FOUND));
 
-		history.updateRoute(route);
+		try {
+			history.updateRoute(objectMapper.writeValueAsString(route));
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Transactional
