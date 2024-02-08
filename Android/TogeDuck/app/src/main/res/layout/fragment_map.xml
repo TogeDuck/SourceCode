@@ -64,66 +64,67 @@
 
         <TextView
             android:id="@+id/tour_start"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="투어\n시작"
+            android:textSize="@dimen/text_medium"
             android:layout_gravity="bottom"
             android:gravity="center"
             android:padding="5dp"
             android:layout_marginBottom="115dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="25dp"
             android:background="@drawable/shape_circle"
-            android:backgroundTint="@color/green"
             android:textColor="@color/white" />
 
         <ImageView
             android:id="@+id/quest_plus"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="25dp"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="115dp"
             android:src="@drawable/ic_plus"
+            android:scaleType="center"
             tools:background="@color/bts_sub500" />
 
         <ImageView
             android:id="@+id/plus_exchange"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/shape_circle"
             android:src="@drawable/ic_exchange"
             android:scaleType="center"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="265dp"
-            android:layout_marginEnd="15dp"
-            android:visibility="gone"
+            android:layout_marginBottom="260dp"
+            android:layout_marginEnd="30dp"
+            android:visibility="visible"
             tools:background="@color/bts_sub500" />
 
         <ImageView
             android:id="@+id/plus_share"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/shape_circle"
             android:layout_marginTop="5dp"
             android:src="@drawable/ic_share"
             android:scaleType="center"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="220dp"
-            android:layout_marginEnd="15dp"
-            android:visibility="gone"
+            android:layout_marginBottom="215dp"
+            android:layout_marginEnd="30dp"
+            android:visibility="visible"
             tools:background="@color/bts_sub500" />
 
         <ImageView
             android:id="@+id/plus_recruit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/shape_circle"
             android:src="@drawable/ic_recruit"
             android:scaleType="center"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="175dp"
-            android:layout_marginEnd="15dp"
-            android:visibility="gone"
+            android:layout_marginBottom="170dp"
+            android:layout_marginEnd="30dp"
+            android:visibility="visible"
             tools:background="@color/bts_sub500" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
