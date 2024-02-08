@@ -10,9 +10,8 @@ import com.idle.togeduck.history.model.AddHistoryRequest
 import com.idle.togeduck.history.model.HistoryData
 import com.idle.togeduck.history.model.HistoryNameRequest
 import com.idle.togeduck.history.model.HistoryRepository
-import com.idle.togeduck.history.model.HistoryRequest
 import com.idle.togeduck.history.model.HistoryTour
-import com.idle.togeduck.history.model.SendHistoryRequest
+import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.history.model.toHistoryData
 import com.idle.togeduck.history.model.toHistoryTour
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +30,8 @@ class HistoryViewModel @Inject constructor(
     private val _selectedHistory = MutableLiveData<HistoryData>()
     val selectedHistory: LiveData<HistoryData> get() = _selectedHistory
 
-    private val _route = MutableLiveData<String>()
-    val route: LiveData<String> get() = _route
+    private val _route = MutableLiveData<List<Position>>()
+    val route: LiveData<List<Position>> get() = _route
 
     private val _historyEventList = MutableLiveData<List<HistoryTour>>()
     val historyEventList: LiveData<List<HistoryTour>> get() = _historyEventList
@@ -126,7 +125,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun sendHistory(historyId: Long, historyList: List<SendHistoryRequest>) {
+    suspend fun sendHistory(historyId: Long, historyList: List<Position>) {
         val responseResult = historyRepository.sendHistory(historyId, historyList)
 
         if (responseResult.isSuccessful) {

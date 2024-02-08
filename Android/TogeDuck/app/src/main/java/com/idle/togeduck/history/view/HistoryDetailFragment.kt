@@ -18,6 +18,9 @@ import com.idle.togeduck.databinding.ItemHistoryBinding
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.view.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HistoryDetailFragment : Fragment() {
@@ -32,7 +35,7 @@ class HistoryDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHistoryDetailBinding.inflate(layoutInflater, container, false)
         _historyDetailCardBinding = binding.historyDetailCard
@@ -46,9 +49,19 @@ class HistoryDetailFragment : Fragment() {
         historyViewModel.selectedHistory.observe(viewLifecycleOwner) { historyData ->
             historyDetailCardBinding.tvDate.text = historyData.date.toString()
             historyDetailCardBinding.tvMyRecord.text = historyData.historyName
-            historyDetailCardBinding.ivMyRecordMainImg.setImageDrawable(ContextCompat.getDrawable(requireContext(), RandomCupcake.getImage()))
+            historyDetailCardBinding.ivMyRecordMainImg.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    RandomCupcake.getImage()
+                )
+            )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                historyViewModel.getHistory(historyData.historyId)
+            }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

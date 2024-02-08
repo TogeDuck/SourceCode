@@ -1,13 +1,16 @@
 package com.idle.togeduck.event.view.detail
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -58,10 +61,11 @@ class EventDetailFragment : Fragment(), EventReview {
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
             eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-//            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
+            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
 
-            val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
-            imgPath = MultiPartUtil.uriToFilePath2(requireContext(), bitmap, uri)
+            //용량 줄이는 버전
+//            val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
+//            imgPath = MultiPartUtil.uriToFilePath2(requireContext(), bitmap, uri)
 
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
@@ -106,6 +110,7 @@ class EventDetailFragment : Fragment(), EventReview {
         eventReviewViewModel.reviewList.observe(viewLifecycleOwner) { list ->
             eventReviewAdapter.submitList(list)
         }
+
 
         binding.bookmarkCheck.setOnClickListener { likeClick(event) }
         binding.visitCheck.setOnClickListener { visitClick(event) }
@@ -227,65 +232,34 @@ class EventDetailFragment : Fragment(), EventReview {
 //        }
     }
 
-//    private fun postReview(){
-//        val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
-//
-//        if (reviewInputText.isNotEmpty()) {
-//            val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
-//
-//            if(imgPath?.isNotEmpty() == true) {
-//                val reviewImg = MultiPartUtil.createImagePart(imgPath!!)
-//
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
-//                    eventReviewViewModel.postReview(1, reviewImg, reviewText)
-//                    eventReviewViewModel.getReviewList(1, 1, 100)
-//
-//                    eventReviewInputBinding.etReviewInput.text?.clear()
-//
-//                    //튕김
-////                    eventReviewInputBinding.reviewImgThumb.visibility = View.GONE
-////                    imgPath = null
-//                }
-//            }else {
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    Log.d("리뷰 등록", "이미지 없는 리뷰 등록")
-//                    eventReviewViewModel.postReview(1, null, reviewText)
-//                    eventReviewViewModel.getReviewList(1, 1, 100)
-//
-//                    eventReviewInputBinding.etReviewInput.text?.clear()
-//                }
-//            }
-//        }
-//    }
-
     private fun postReview(){
+        val selectedEventId = event.eventId
         val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
-
         if (reviewInputText.isNotEmpty()) {
             val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
-
             if(imgPath?.isNotEmpty() == true) {
                 val reviewImg = MultiPartUtil.createImagePart(imgPath!!)
 
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
-                    eventReviewViewModel.postReview(1, reviewImg, reviewText)
-                    eventReviewViewModel.getReviewList(1, 1, 100)
+                    eventReviewViewModel.postReview(selectedEventId, reviewImg, reviewText)
+                    eventReviewViewModel.getReviewList(selectedEventId, 1, 10)
 
-                    eventReviewInputBinding.etReviewInput.text?.clear()
-
-                    //튕김
-//                    eventReviewInputBinding.reviewImgThumb.visibility = View.GONE
-//                    imgPath = null
+                    launch(Dispatchers.Main) {
+                        eventReviewInputBinding.etReviewInput.text?.clear()
+                        eventReviewInputBinding.reviewImgThumb.visibility = View.GONE
+                        imgPath = null
+                    }
                 }
             }else {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("리뷰 등록", "이미지 없는 리뷰 등록")
-                    eventReviewViewModel.postReview(1, null, reviewText)
-                    eventReviewViewModel.getReviewList(1, 1, 100)
+                    eventReviewViewModel.postReview(selectedEventId, null, reviewText)
+                    eventReviewViewModel.getReviewList(selectedEventId, 1, 10)
 
-                    eventReviewInputBinding.etReviewInput.text?.clear()
+                    launch(Dispatchers.Main) {
+                        eventReviewInputBinding.etReviewInput.text?.clear()
+                    }
                 }
             }
         }
