@@ -143,10 +143,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var workManager: WorkManager? = null
 
     lateinit var realTimeOnOffBtn :MaterialSwitch
-    lateinit var tourStartBtn :FragmentContainerView
     val stompManager = StompManager()
 
     private var pathLine: PathOverlay? = null
+
+    private lateinit var tourCircle: GradientDrawable
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -164,8 +166,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         realTimeOnOffBtn = binding.realTimeBtn
-        tourStartBtn = binding.fragmentTsqp
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         initViewPager()
@@ -178,15 +180,36 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpBottomText()
         setUpFloatingButton()
         setRealTimeContainer()
+        setTourBtnTheme()
         stompManager.connect()
 
         realTimeOnOffBtn.setOnClickListener{
             Log.d("실시간 버튼","시작버튼 눌림 ${realTimeOnOffBtn.isChecked}")
             realTimeBtnOnClick()
         }
-        tourStartBtn.setOnClickListener{
+        binding.tourStart.setOnClickListener{
             Log.d("투어시작 버튼","시작버튼 눌림")
+            changeTourBtn()
             tourStartBtnClick()
+        }
+
+        binding.questPlus.setOnClickListener {
+            //todo. 다시 누르면 view.gone으로 추가 필요
+            binding.plusExchange.visibility = View.VISIBLE
+            binding.plusRecruit.visibility = View.VISIBLE
+            binding.plusShare.visibility = View.VISIBLE
+        }
+
+        binding.plusExchange.setOnClickListener {
+            findNavController().navigate(R.id.action_mapFragment_to_exchangePostDialogFragment)
+        }
+
+        binding.plusShare.setOnClickListener {
+            findNavController().navigate(R.id.action_mapFragment_to_sharePostDialogFragment)
+        }
+
+        binding.plusRecruit.setOnClickListener {
+            findNavController().navigate(R.id.action_mapFragment_to_recruitPostDialogFragment)
         }
 
 //        mapViewModel.markerList.observe(viewLifecycleOwner) {
@@ -245,9 +268,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             stompManager.unsubscribeTopic("/sub/chats/1")
         }
     }
-    private fun tourStartBtnClick(){
-        sendPosition()
-    }
+
 
     private fun addBackPressedCallback() {
         // OnBackPressedCallback (익명 클래스) 객체 생성
@@ -325,6 +346,51 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         })
+    }
+
+
+    private fun setTourBtnTheme() {
+        tourCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        tourCircle.setStroke(0,0)
+        binding.tourStart.background= tourCircle
+
+        val plusCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        plusCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        plusCircle.setStroke(0,0)
+        binding.questPlus.background = plusCircle
+
+        val exchangeCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        exchangeCircle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+        exchangeCircle.setStroke(0,0)
+        binding.plusExchange.background = exchangeCircle
+        binding.plusExchange.setColorFilter(getColor(requireContext(), R.color.white))
+
+        val shareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        shareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        shareCircle.setStroke(0,0)
+        binding.plusShare.background = shareCircle
+        binding.plusShare.setColorFilter(getColor(requireContext(), R.color.white))
+
+        val recruitCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        recruitCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        recruitCircle.setStroke(0,0)
+        binding.plusRecruit.background = recruitCircle
+        binding.plusRecruit.setColorFilter(getColor(requireContext(), R.color.white))
+    }
+
+    private fun tourStartBtnClick(){
+        sendPosition()
+    }
+
+    private fun changeTourBtn() {
+        //todo. 투어버튼 상태 확인해서 시작 상태이면 종료로, 종료 상태이면 시작으로 바뀌는 거로 수정 필요
+        //todo. tourStartBtnClick() 과 합치기
+        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        binding.tourStart.background= tourCircle
+        binding.tourStart.text = "투어\n종료"
+
+
     }
 
     fun changeViewPagerPage(pageIdx: Int) {
