@@ -34,7 +34,10 @@ spring:
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             scope: # 기본 값 openid,profile,email => email 로 설정 변경
               - email
-
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 #          naver:
 #            client-name: Naver
 #            client-id: # 발급 받은 Client ID
