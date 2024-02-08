@@ -30,11 +30,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermissionUtil
 import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
@@ -51,6 +57,7 @@ import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.WebSocketManager
+import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.NaverItem
 import com.idle.togeduck.util.builder
 import com.idle.togeduck.util.getColor
@@ -77,6 +84,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import ted.gun0912.clustering.naver.TedNaverClustering
+import java.util.Timer
+import java.util.TimerTask
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 enum class EventKind {
@@ -121,6 +131,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var peopleClustering : TedNaverClustering<NaverItem>? = null
 
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
+
+    private val timer = Timer()
+    private lateinit var workRequest: PeriodicWorkRequest
+    private lateinit var workManager: WorkManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -949,16 +963,53 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun doWorkWithPeriodic() {
+        Log.d("로그", "doWorkWithPeriodic() 호출됨")
+
+        // TODO. GPSWorker 클래스에서 위치 기록 저장 및 전송 로직 추가 필요
+
+        workRequest = PeriodicWorkRequestBuilder<GPSWorker>(15, TimeUnit.MINUTES).build()
+
+        workManager = WorkManager.getInstance(requireContext())
+        workManager.enqueueUniquePeriodicWork(
+            "doWorkWithPeriodic",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+    }
+
+    private fun cancelWorkWithPeriodic() {
+        workManager.cancelWorkById(workRequest.id)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun sendPosition() {
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                if (TedPermissionUtil.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location: Location? ->
+                            Log.d("로그", "lastLocation : ${location?.latitude} ${location?.longitude}")
+
+                        // TODO. 위치 기록 저장 및 전송 로직 추가 필요
+                        }
+                }
+            }
+        }, 0 ,5000)
+    }
+
     override fun onStart() {
         super.onStart()
         Log.d("로그", "MapFragment - onStart() 호출됨")
-        // TODO. 주기적 위치 전송 로직 추가
+
+        sendPosition()
+        cancelWorkWithPeriodic()
     }
     
     override fun onStop() {
         super.onStop()
         Log.d("로그", "MapFragment - onStop() 호출됨")
-        // TODO. 주기적 위치 전송 해제 하는 로직 추가
+        doWorkWithPeriodic()
     }
 
 }

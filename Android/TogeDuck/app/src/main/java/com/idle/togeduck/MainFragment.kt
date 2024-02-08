@@ -69,7 +69,6 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -135,12 +134,10 @@ class MainFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setDate() {
         mapViewModel.setPickedDate(LocalDate.now(), LocalDate.now())
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getFavorites(){
         CoroutineScope(Dispatchers.IO).launch {
             val result = favoriteSettingViewModel.getFavoriteList()
@@ -148,7 +145,6 @@ class MainFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun handelNavigate(result: Boolean){
         if(result){
             CoroutineScope(Dispatchers.Main).launch {
@@ -163,7 +159,6 @@ class MainFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getBirthdayClosest(){
         val favoriteIdolList = favoriteSettingViewModel.favoriteIdolList.value
         var closestBirthdayCelebrity: Celebrity? = null
@@ -202,21 +197,6 @@ class MainFragment : Fragment() {
         Log.d("좌표", coorDto.toString())
     }
     // -------------------------------------------------------------------
-
-    fun doWorkWithPeriodic() {
-        Log.d("로그", "doWorkWithPeriodic() 호출됨")
-
-        val workRequest = PeriodicWorkRequestBuilder<GPSWorker>(15, TimeUnit.MINUTES).build()
-
-        val workManager = WorkManager.getInstance(requireContext())
-        workManager.enqueueUniquePeriodicWork(
-            "doWorkWithPeriodic",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest
-        )
-
-        workManager.cancelWorkById(workRequest.id)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
