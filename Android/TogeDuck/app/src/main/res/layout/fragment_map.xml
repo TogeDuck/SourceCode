@@ -74,7 +74,6 @@
             android:layout_marginBottom="115dp"
             android:layout_marginStart="25dp"
             android:background="@drawable/shape_circle"
-            android:backgroundTint="@color/green"
             android:textColor="@color/white" />
 
         <ImageView

@@ -26,6 +26,9 @@ class MapViewModel @Inject constructor(
     private val _peopleMarkerList = MutableLiveData<Map<Long, NaverItem>>()
     val peopleMarkerList : MutableLiveData<Map<Long, NaverItem>> get() = _peopleMarkerList
 
+    private val _isTourStart = MutableLiveData<Boolean>(false)
+    val isTourStart get() = _isTourStart
+
     init{
         _peopleMarkerList.value = emptyMap()
     }
@@ -73,5 +76,9 @@ class MapViewModel @Inject constructor(
 
     fun clearList() {
         _peopleMarkerList.value = mapOf()
+    }
+
+    fun setTourStatus(isStart: Boolean) {
+        _isTourStart.value = isStart
     }
 }
