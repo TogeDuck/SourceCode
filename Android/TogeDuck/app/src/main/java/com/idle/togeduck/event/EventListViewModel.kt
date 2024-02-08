@@ -43,13 +43,12 @@ class EventListViewModel @Inject constructor(
     val selectedEvent: LiveData<Event>
         get() = _selectedEvent
 
+    var isEventToday = false
 
     init {
-        viewModelScope.launch {
-            val startDate = LocalDate.parse("2024-01-01")
-            val endDate = LocalDate.parse("2025-01-05")
-            getEventList(2, startDate, endDate)
-        }
+        _listToday.value = listOf()
+        _listPast.value = listOf()
+        _listUpcoming.value = listOf()
     }
 
     suspend fun getEventList(celebrityId: Long, startDate: LocalDate, endDate: LocalDate){

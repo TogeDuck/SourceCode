@@ -13,8 +13,6 @@ import io.reactivex.schedulers.Schedulers
 
 
 class StompManager {
-    // StompClient의 인스턴스를 생성할 때 사용할 URL
-//    private val SERVER_URL = "ws://10.0.2.2:8080/ws-stomp"
     private val SERVER_URL = "wss://i10a301.p.ssafy.io/ws-stomp"
 
     private val stompClient: StompClient
@@ -45,16 +43,16 @@ class StompManager {
 
     fun disconnect() {
         stompClient.disconnect()
-        compositeDisposable.clear() // 모든 구독 해제
+        compositeDisposable.clear()
     }
 
     fun send(destination: String, chatId:Long, message: String) {
-        var messageRequest = Message(chatId, message)
+        var messageRequest = MessageRequest(chatId, message, )
         stompClient.send(destination, Gson().toJson(messageRequest)).subscribe()
     }
 
     fun send(destination: String, chatId:Long, message: String, headers: List<StompHeader>){
-        var messageRequest = Message(chatId, message)
+        var messageRequest = MessageRequest(chatId, message)
         stompClient.send(destination, Gson().toJson(messageRequest), headers).subscribe()
     }
 
@@ -74,15 +72,13 @@ class StompManager {
     fun unsubscribeTopic(topic: String) {
         topicSubscriptions[topic]?.let { disposable ->
             disposable.dispose() // RxJava 구독 해제
-            compositeDisposable.remove(disposable) // CompositeDisposable에서 제거
-            topicSubscriptions.remove(topic) // Map에서 제거
+            compositeDisposable.remove(disposable)
+            topicSubscriptions.remove(topic)
         }
-        // STOMP 프로토콜을 통해 서버에 구독 취소를 알립니다.
         stompClient.unsubscribePath(topic)
     }
 
     fun clearSubscriptions() {
-        compositeDisposable.clear() // 모든 구독 해제
+        compositeDisposable.clear()
     }
-
 }
