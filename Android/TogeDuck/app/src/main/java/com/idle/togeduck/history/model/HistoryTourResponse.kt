@@ -8,16 +8,16 @@ data class HistoryTourResponse(
     @SerialName("event_id") val eventId: Long,
     @SerialName("event_name") val eventName: String,
     val name: String,
-    val latitude: String,
-    val longitude: String
+    val latitude: Double,
+    val longitude: Double
 )
 
 data class HistoryTour(
     val eventId: Long,
     val eventName: String,
     val name: String,
-    val latitude: String,
-    val longitude: String
+    val latitude: Double,
+    val longitude: Double
 )
 
 fun HistoryTourResponse.toHistoryTour() = HistoryTour(eventId, eventName, name, latitude, longitude)

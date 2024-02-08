@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentHistoryBinding
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.view.history_rv.HistoryAdapter
 import com.idle.togeduck.history.view.history_rv.IHistory
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
@@ -29,8 +31,8 @@ class HistoryFragment : Fragment(), IHistory {
     private lateinit var historyAdapter: HistoryAdapter
 
     private val historyViewModel: HistoryViewModel by activityViewModels()
-
-    private lateinit var v: View
+    private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,6 +83,9 @@ class HistoryFragment : Fragment(), IHistory {
     }
 
     override fun recordClicked(position: Int) {
+        eventListViewModel.clearList()
+        mapViewModel.clearList()
+
         historyViewModel.setSelectedHistory(historyViewModel.historyList.value!![position])
         (parentFragment as MapFragment).changeViewPagerPage(5)
     }

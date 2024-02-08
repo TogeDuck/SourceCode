@@ -15,6 +15,7 @@ import com.idle.togeduck.R
 import com.idle.togeduck.common.RandomCupcake
 import com.idle.togeduck.databinding.FragmentHistoryDetailBinding
 import com.idle.togeduck.databinding.ItemHistoryBinding
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.view.MapFragment
 import dagger.hilt.android.AndroidEntryPoint

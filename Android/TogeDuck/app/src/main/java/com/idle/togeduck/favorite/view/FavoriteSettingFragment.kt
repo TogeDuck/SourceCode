@@ -32,6 +32,7 @@ import com.idle.togeduck.favorite.view.favorite_rv.IMyFavorite
 import com.idle.togeduck.favorite.view.favorite_rv.IdolSearchResultAdapter
 import com.idle.togeduck.favorite.view.favorite_rv.MyFavoriteAdapter
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -209,6 +210,13 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
         searchBarBinding.etSearch.background = squareCircleDrawable
         searchBarBinding.etSearch.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         searchBarBinding.etSearch.setHintTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        val squareCircleBtnDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        squareCircleBtnDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        squareCircleBtnDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        binding.btnComplete.background = squareCircleBtnDrawable
+        binding.btnComplete.setTextColor(getColor(requireContext(), R.color.white))
     }
 
     override fun onDestroyView() {

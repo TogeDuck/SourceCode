@@ -23,6 +23,7 @@ import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.select_celebrity.ISelectCelebrity
 import com.idle.togeduck.main_map.view.select_celebrity.SelectCelebrityAdapter
 import com.idle.togeduck.util.TogeDuckItemDecoration
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -88,6 +89,10 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
 
             findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
         }
+
+        binding.btnEditCelebrity.setOnClickListener {
+            findNavController().navigate(R.id.action_selectCelebrityFragment_to_favoriteSettingFragment)
+        }
     }
 
     private fun setRecyclerView() {
@@ -121,6 +126,12 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
 
         binding.btnCancel.background = squareCircleDrawable
         binding.btnSelect.background = squareCircleDrawable
+
+        val allRoundEditCelebrityDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_5) as GradientDrawable
+        allRoundEditCelebrityDrawable.setColor(getColor(requireContext(), Theme.theme.sub200))
+        allRoundEditCelebrityDrawable.setStroke(0, getColor(requireContext(), Theme.theme.main500))
+
+        binding.btnEditCelebrity.background = allRoundEditCelebrityDrawable
     }
 
     @SuppressLint("NotifyDataSetChanged")

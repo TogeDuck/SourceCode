@@ -27,14 +27,13 @@ class FavoriteSettingViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
     private val celebrityRepository: CelebrityRepository
 ) : ViewModel() {
-    private val _favoriteIdolList = MutableLiveData<List<Celebrity>>()
+    private val _favoriteIdolList = MutableLiveData<List<Celebrity>>(listOf())
     val favoriteIdolList: LiveData<List<Celebrity>>
         get() = _favoriteIdolList
 
-    private val _searchIdolList = MutableLiveData<List<Celebrity>>()
+    private val _searchIdolList = MutableLiveData<List<Celebrity>>(listOf())
     val searchIdolList: LiveData<List<Celebrity>>
         get() = _searchIdolList
-
 
     private val _selectedCelebrity = MutableLiveData<Celebrity>()
     val selectedCelebrity: LiveData<Celebrity> get() = _selectedCelebrity
@@ -49,6 +48,11 @@ class FavoriteSettingViewModel @Inject constructor(
 //        viewModelScope.launch {
 //            getFavoriteList()
 //        }
+
+        viewModelScope.launch {
+            getFavoriteList()
+        }
+
         _selectedCelebrity.postValue(Celebrity(
             1L, "뷔", "닉네임?", LocalDate(1995,12,30),
             "https://img.hankyung.com/photo/202112/BF.28437746.1.jpg",
