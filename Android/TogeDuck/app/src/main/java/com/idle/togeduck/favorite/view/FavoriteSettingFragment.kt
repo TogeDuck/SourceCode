@@ -104,13 +104,13 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
     private fun addBackPressedCallback() {
         backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_favoriteSettingFragment_pop)
+
                 CoroutineScope(Dispatchers.IO).launch {
                     favoriteSettingViewModel.tempFavoriteIdolList.value?.forEach { celebrity ->
                         favoriteSettingViewModel.removeMyFavoriteIdol(celebrity)
                     }
                 }
-
-                findNavController().navigate(R.id.action_favoriteSettingFragment_pop)
             }
         }
 
