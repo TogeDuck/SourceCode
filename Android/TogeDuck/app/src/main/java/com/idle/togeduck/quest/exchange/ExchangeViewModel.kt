@@ -10,13 +10,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.idle.togeduck.R
+import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
+import com.idle.togeduck.quest.exchange.model.ExchangeRequest
 import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.model.toExchange
 import com.idle.togeduck.quest.share.model.Share
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,6 +71,22 @@ class ExchangeViewModel @Inject constructor(
 
         }
     }
+
+    suspend fun postExchange(eventId: Long, image:MultipartBody.Part, tradeRequestDto: RequestBody){
+        val responseResult = exchangeRepository.postExchange(eventId, image, tradeRequestDto)
+        Log.d("로그", "ExchangeViewModel - postExchange() 성공 - ${responseResult}")
+
+        if (!responseResult.isSuccessful) {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - postExchange() 응답 실패 - $errorBody")
+        }
+    }
+
+
+
+
     suspend fun sendExchangeRequest(eventId: Long){
         val selectedExchangeValue = selectedExchange.value
         val mySelectedExchangeValue = mySelectedExchange.value

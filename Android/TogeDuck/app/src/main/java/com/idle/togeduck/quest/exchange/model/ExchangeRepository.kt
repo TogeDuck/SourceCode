@@ -2,6 +2,8 @@ package com.idle.togeduck.quest.exchange.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import okhttp3.MultipartBody
+import okhttp3.Request
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
@@ -29,9 +31,15 @@ interface ExchangeRepository {
     suspend fun postExchange(
         eventId: Long,
         image: MultipartBody.Part,
-        content: String,
-        duration: Int
+        tradeRequestDto: RequestBody
     ) : Response<DefaultResponse>
+
+//    suspend fun postExchange(
+//        eventId: Long,
+//        image: MultipartBody.Part,
+//        content: RequestBody,
+//        duration: RequestBody
+//    ) : Response<DefaultResponse>
 
     suspend fun updateExchange(
         eventId: Long,
@@ -90,10 +98,9 @@ class DefaultExchangeRepository @Inject constructor(
     override suspend fun postExchange(
         eventId: Long,
         image: MultipartBody.Part,
-        content: String,
-        duration: Int,
+        tradeRequestDto: RequestBody
     ): Response<DefaultResponse> {
-        return exchangeService.postExchange(eventId, image, content, duration)
+        return exchangeService.postExchange(eventId, image, tradeRequestDto)
     }
 
     override suspend fun updateExchange(

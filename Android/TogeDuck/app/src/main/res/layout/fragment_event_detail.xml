@@ -78,19 +78,12 @@
                             android:id="@+id/cafe_name_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginBottom="15dp"
                             android:text="카페 코그"
                             android:textSize="@dimen/text_title_medium"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/event_name_detail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:text="이대휘 생일카페"
-                            android:textColor="@color/gray_text"
-                            android:textSize="@dimen/text_large" />
 
                         <TextView
                             android:id="@+id/event_period_detail"

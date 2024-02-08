@@ -27,7 +27,6 @@ class EventInfoViewHolder(
     private val eventLinearLayout = binding.itemEventOne
     private val posterImg = binding.posterImg
     private val cafeName = binding.cafeName
-    private val eventName = binding.eventName
     private val eventPeriod = binding.eventPeriod
     private var isStarImg = binding.isStarBtn
 

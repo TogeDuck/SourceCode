@@ -2,6 +2,7 @@ package com.idle.togeduck.quest.exchange.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import okhttp3.MultipartBody
+import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -33,13 +34,21 @@ interface ExchangeService {
         @Path("event_id") eventId: Long
     ) : Response<ExchangeMyListResponse>
 
+//    @Multipart
+//    @POST("events/{event_id}/trades")
+//    suspend fun postExchange(
+//        @Path("event_id") eventId: Long,
+//        @Part image: MultipartBody.Part,
+//        @Part("content") content: RequestBody,
+//        @Part("duration") duration: Int
+//    ) : Response<DefaultResponse>
+
     @Multipart
     @POST("events/{event_id}/trades")
     suspend fun postExchange(
         @Path("event_id") eventId: Long,
         @Part image: MultipartBody.Part,
-        @Part content: String,
-        @Part duration: Int
+        @Body tradeRequestDto: RequestBody
     ) : Response<DefaultResponse>
 
     @Multipart

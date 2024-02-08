@@ -54,9 +54,9 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-//            eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
-//            eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-//            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
+            eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
+            eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
+            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
 
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
@@ -222,6 +222,38 @@ class EventDetailFragment : Fragment(), EventReview {
 //        }
     }
 
+//    private fun postReview(){
+//        val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
+//
+//        if (reviewInputText.isNotEmpty()) {
+//            val reviewText = MultiPartUtil.createRequestBody(reviewInputText)
+//
+//            if(imgPath?.isNotEmpty() == true) {
+//                val reviewImg = MultiPartUtil.createImagePart(imgPath!!)
+//
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
+//                    eventReviewViewModel.postReview(1, reviewImg, reviewText)
+//                    eventReviewViewModel.getReviewList(1, 1, 100)
+//
+//                    eventReviewInputBinding.etReviewInput.text?.clear()
+//
+//                    //튕김
+////                    eventReviewInputBinding.reviewImgThumb.visibility = View.GONE
+////                    imgPath = null
+//                }
+//            }else {
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    Log.d("리뷰 등록", "이미지 없는 리뷰 등록")
+//                    eventReviewViewModel.postReview(1, null, reviewText)
+//                    eventReviewViewModel.getReviewList(1, 1, 100)
+//
+//                    eventReviewInputBinding.etReviewInput.text?.clear()
+//                }
+//            }
+//        }
+//    }
+
     private fun postReview(){
         val reviewInputText = eventReviewInputBinding.etReviewInput.text.toString()
 
@@ -253,6 +285,9 @@ class EventDetailFragment : Fragment(), EventReview {
             }
         }
     }
+
+
+
 
 //    private fun hideKeyboard(view: View, keyCode: Int): Boolean {
 //        if (keyCode == KeyEvent.KEYCODE_ENTER) {

@@ -3,6 +3,7 @@ package com.idle.togeduck.event.model
 import com.idle.togeduck.common.model.DefaultResponse
 import kotlinx.datetime.LocalDate
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -24,6 +25,12 @@ interface EventRepository {
         image: MultipartBody.Part?,
         content: MultipartBody.Part,
     ): Response<DefaultResponse>
+
+//    suspend fun postReview(
+//        eventId: Long,
+//        image: MultipartBody.Part?,
+//        content: RequestBody,
+//    ): Response<DefaultResponse>
 
     suspend fun getReviewList(
         eventId: Long,
@@ -67,6 +74,14 @@ class DefaultEventRepository @Inject constructor(
     ): Response<DefaultResponse> {
         return eventService.postReview(eventId, image, content)
     }
+
+//    override suspend fun postReview(
+//        eventId: Long,
+//        image: MultipartBody.Part?,
+//        content: RequestBody,
+//    ): Response<DefaultResponse> {
+//        return eventService.postReview(eventId, image, content)
+//    }
 
     override suspend fun getReviewList(
         eventId: Long,
