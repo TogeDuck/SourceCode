@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.idle.togeduck.domain.user.dto.HistoryEventRequestDto;
 import com.idle.togeduck.domain.user.dto.HistoryResponseDto;
+import com.idle.togeduck.domain.user.dto.RouteRequestDto;
 import com.idle.togeduck.domain.user.dto.RouteResponseDto;
 import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.domain.user.serivce.HistoryService;
@@ -51,8 +52,6 @@ public class HistoryController {
 		@RequestParam("celebrity-id") Long celebrityId,
 		@AuthenticationPrincipal User user) {
 
-		System.out.println("1 = " + 1);
-
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "진행했던 투어 경로 정보들을 가져왔습니다.",
 				historyService.joinHistory(celebrityId, user.getId())));
@@ -77,9 +76,9 @@ public class HistoryController {
 
 	@PatchMapping("/history/{history_id}/route")
 	public ResponseEntity<BaseResponse<?>> updateRoute(@PathVariable(name = "history_id") Long historyId,
-		String route, @AuthenticationPrincipal User user) {
+		@RequestBody RouteRequestDto route, @AuthenticationPrincipal User user) {
 
-		historyService.updateRoute(historyId, route, user.getId());
+		historyService.updateRoute(historyId, route.route(), user.getId());
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "투어 루트를 추가했습니다.", null));
 	}
@@ -91,11 +90,4 @@ public class HistoryController {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "투어 정보를 삭제했습니다.", null));
 	}
-
-	// @PatchMapping
-	// public ResponseEntity<BaseResponse<?>> updateRoute(@RequestBody String route, Long historyId) {
-	// 	historyService.updateRoute(route, historyId);
-	// 	return ResponseEntity.status(HttpStatus.OK)
-	// 		.body(new BaseResponse<>(200, "투어 경로 등록이 완료되었습니다.", null));
-	// }
 }
