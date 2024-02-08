@@ -70,6 +70,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
 
         setRecyclerview()
         setTheme()
+        debounceSearch()
 
         searchBarBinding.etSearch.setOnKeyListener { mView, keyCode, _ ->
             hideKeyboard(mView, keyCode)
@@ -90,6 +91,13 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
             idolSearchResultAdapter.submitList(list.toList())
         }
 
+       binding.btnComplete.setOnClickListener {
+            // TODO. 완료 버튼 동작 추가 필요
+       }
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun debounceSearch() {
         CoroutineScope(Dispatchers.Main).launch {
             // 메모 검색시 검색어 변경이 0.35초 동안 없을시 검색 실행
             launch {
