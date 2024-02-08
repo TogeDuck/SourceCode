@@ -1,5 +1,7 @@
 package com.idle.togeduck.event.view.detail
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
@@ -56,7 +58,10 @@ class EventDetailFragment : Fragment(), EventReview {
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
             eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
-            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
+//            imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
+
+            val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
+            imgPath = MultiPartUtil.uriToFilePath2(requireContext(), bitmap, uri)
 
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
