@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
 import retrofit2.Response
 import java.lang.Exception
@@ -41,14 +42,19 @@ class FavoriteSettingViewModel @Inject constructor(
     private val _clickedCelebrity = MutableLiveData<Celebrity>()
     val clickedCelebrity: LiveData<Celebrity> get() = _clickedCelebrity
 
-//    init {
+    init {
 //        _favoriteIdolList.value = mutableListOf()
 //        _searchIdolList.value = mutableListOf()
 //
 //        viewModelScope.launch {
 //            getFavoriteList()
 //        }
-//    }
+        _selectedCelebrity.postValue(Celebrity(
+            1L, "뷔", "닉네임?", LocalDate(1995,12,30),
+            "https://img.hankyung.com/photo/202112/BF.28437746.1.jpg",
+            "방탄소년단", true, true
+        ))
+    }
 
      suspend fun getFavoriteList() :Boolean{
          var result = false

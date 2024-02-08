@@ -1,8 +1,10 @@
 package com.idle.togeduck.main_map.view
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -22,15 +27,22 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
+import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.datetime.toKotlinLocalDate
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -48,6 +60,8 @@ class TopAppbarFragment : Fragment() {
 //    private val searchBarBinding get() = _searchBarBinding!!
 
     private val mapViewModel: MapViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,12 +80,23 @@ class TopAppbarFragment : Fragment() {
 
         setPadding()
         setTheme()
+        setIdolProfile(requireContext())
         setDateRangePicker()
         showSelectCelebrity()
+
         mapViewModel.pickedDate.observe(viewLifecycleOwner) { data ->
             val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
             val dateRangeText = "${data.first.format(dateTimeFormatter)}-${data.second.format(dateTimeFormatter)}"
             topAppbarBinding.tvDate.text = dateRangeText
+            getEventList()
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getEventList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
+            val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
+            eventListViewModel.getEventList(2, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
         }
     }
 
@@ -89,20 +114,17 @@ class TopAppbarFragment : Fragment() {
         val startYear = calendar.timeInMillis
         calendar.add(Calendar.YEAR, 20)
         val endYear = calendar.timeInMillis
-        calendar.add(Calendar.YEAR, -10)
-        val now = calendar.timeInMillis
 
         val constraintsBuilder =
             CalendarConstraints.Builder()
                 .setStart(startYear)
                 .setEnd(endYear)
-                .setOpenAt(now)
 
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
             .setTheme(R.style.MyMaterialDatePickerTheme)
+            .setSelection(Pair(MaterialDatePicker.todayInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()))
             .setCalendarConstraints(constraintsBuilder.build())
             .setTitleText("날짜를 선택하세요")
-            .setSelection(Pair(calendar.timeInMillis, calendar.timeInMillis))
             .build()
 
         val dateRangePickerTag = "dateRangePicker"
@@ -117,6 +139,7 @@ class TopAppbarFragment : Fragment() {
             topAppbarBinding.tvDate.text = dateRangeText
 
             mapViewModel.setPickedDate(startDate, endDate)
+
             // TODO. API 연결
         }
 
@@ -144,6 +167,21 @@ class TopAppbarFragment : Fragment() {
         )
     }
 
+    private fun setIdolProfile(context: Context){
+        val image = topAppbarBinding.ivIdolProfile
+        val imageUrl = favoriteSettingViewModel.selectedCelebrity.value?.image
+        Glide
+            .with(image)
+            .load(imageUrl)
+            .thumbnail(
+                Glide.with(image).load(imageUrl).override(80,80)
+            )
+            .circleCrop()
+            .override(80, 80)
+            .into(image)
+        topAppbarBinding.tvIdolName.text = favoriteSettingViewModel.selectedCelebrity.value?.name
+    }
+
     private fun setTheme() {
         val bottomRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_bottom_round_25) as GradientDrawable
         bottomRoundDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
@@ -164,9 +202,9 @@ class TopAppbarFragment : Fragment() {
 
 //        searchBarBinding.ivSearch.background = main500CircleDrawable
 //        searchBarBinding.ivSearch.setColorFilter(getColor(requireContext(), Theme.theme.main500))
-        topAppbarBinding.ivIdolProfile.background = main500CircleDrawable
+//        topAppbarBinding.ivIdolProfile.background = main500CircleDrawable
         // TODO. 실제 프로필 사진 적용시 삭제 필요
-        topAppbarBinding.ivIdolProfile.setColorFilter(getColor(requireContext(), Theme.theme.main500))
+//        topAppbarBinding.ivIdolProfile.setColorFilter(getColor(requireContext(), Theme.theme.main500))
         topAppbarBinding.ivCalendar.background = main500CircleDrawable
         topAppbarBinding.ivCalendar.setColorFilter(getColor(requireContext(), Theme.theme.main500))
 
