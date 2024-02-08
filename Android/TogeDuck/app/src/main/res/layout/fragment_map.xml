@@ -68,15 +68,13 @@
             android:layout_height="50dp"
             android:text="투어\n시작"
             android:layout_gravity="bottom"
-            android:textAlignment="center"
+            android:gravity="center"
             android:padding="5dp"
             android:layout_marginBottom="115dp"
             android:layout_marginStart="15dp"
             android:background="@drawable/shape_circle"
             android:backgroundTint="@color/green"
-            android:textColor="@color/white"
-            android:elevation="5dp"
-            tools:ignore="RtlCompat" />
+            android:textColor="@color/white" />
 
         <ImageView
             android:id="@+id/quest_plus"
@@ -86,7 +84,6 @@
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="115dp"
             android:src="@drawable/ic_plus"
-            android:elevation="5dp"
             tools:background="@color/bts_sub500" />
 
         <ImageView
@@ -95,7 +92,6 @@
             android:layout_height="40dp"
             android:background="@drawable/shape_circle"
             android:src="@drawable/ic_exchange"
-            android:elevation="5dp"
             android:scaleType="center"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="265dp"
@@ -110,7 +106,6 @@
             android:background="@drawable/shape_circle"
             android:layout_marginTop="5dp"
             android:src="@drawable/ic_share"
-            android:elevation="5dp"
             android:scaleType="center"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="220dp"
@@ -124,7 +119,6 @@
             android:layout_height="40dp"
             android:background="@drawable/shape_circle"
             android:src="@drawable/ic_recruit"
-            android:elevation="5dp"
             android:scaleType="center"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="175dp"
