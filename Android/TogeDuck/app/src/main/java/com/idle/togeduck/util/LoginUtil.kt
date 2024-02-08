@@ -12,10 +12,6 @@ object LoginUtil {
     var accessToken: String? = null
     var refreshToken: String? = null
 
-    fun setGuid(guid: String){
-        this.guid = guid
-    }
-
      fun setAll(guid:String, accessToken:String, refreshToken:String) {
         this.guid = guid
         this.accessToken = accessToken

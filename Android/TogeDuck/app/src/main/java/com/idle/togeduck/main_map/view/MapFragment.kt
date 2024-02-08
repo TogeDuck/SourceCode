@@ -113,6 +113,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private val historyViewModel: HistoryViewModel by activityViewModels()
 
+    @Inject
+    lateinit var stompManager: StompManager
+
     private lateinit var naverMap: NaverMap
 
     // 최적의 위치를 반환하는 구현체
@@ -143,7 +146,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var workManager: WorkManager? = null
 
     lateinit var realTimeOnOffBtn :MaterialSwitch
-    val stompManager = StompManager()
 
     private var pathLine: PathOverlay? = null
 
@@ -631,17 +633,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     // 이벤트 리스트 가져옴
     private fun getEventList() {
-        val today = java.time.LocalDate.now()
         CoroutineScope(Dispatchers.IO).launch {
             val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
             val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
-            if (startDate.isEqual(today) && endDate.isEqual(today)) {
-                val sixMonthsAgo = today.minusMonths(6)
-                val sixMonthsLater = today.plusMonths(6)
-                eventListViewModel.getEventList(197, sixMonthsAgo.toKotlinLocalDate(), sixMonthsLater.toKotlinLocalDate())
-            } else {
-                eventListViewModel.getEventList(197, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
-            }
+            eventListViewModel.getEventList(197, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
         }
     }
 

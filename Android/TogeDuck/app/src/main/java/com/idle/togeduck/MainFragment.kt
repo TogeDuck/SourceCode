@@ -35,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.toKotlinLocalDate
 import ua.naiksoftware.stomp.dto.StompHeader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -68,7 +69,9 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        // 웹소켓 최초 연결
+        stompManager.connect()
+        // 초기 정보 설정
         initGUID()
         setDate()
         getFavorites()
@@ -78,43 +81,13 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
         }
 
-        val stompManagerTest = StompManager()
-
         binding.btn1.setOnClickListener {
-            Log.d("버튼","김아영 버튼 눌림")
-
-            // Stomp 연결
-            val headers = listOf(
-                com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
-            )
-//            stompManager.connect(headers)
-
-            // 특정 토픽에 대한 구독
-            stompManagerTest.subscribeTopic("/sub/chats/1") { message ->
-                questToast(message)
-                Log.d("웹소켓 1", "Received message: $message")
-            }
-
-            stompManagerTest.subscribeTopic("/user/sub/errors") { message ->
-                questToast(message)
-                Log.d("웹소켓 2", "Received message: $message")
-            }
-
-            stompManagerTest.connect(headers)
         }
 
         binding.btn2.setOnClickListener {
-
         }
 
         binding.btn3.setOnClickListener {
-            Log.d("버튼","최지찬 버튼 눌림")
-            val destination = "/pub/chats/1000/message"
-            val payload = "Hello, WebSocket!"
-            val headers = listOf(
-                com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
-            )
-            stompManagerTest.send(destination,1000, payload)
         }
         //----------------------------------------------------
     }
@@ -129,7 +102,10 @@ class MainFragment : Fragment() {
     }
 
     private fun setDate() {
-        mapViewModel.setPickedDate(LocalDate.now(), LocalDate.now())
+        val today = java.time.LocalDate.now()
+        val sixMonthsAgo = today.minusMonths(6)
+        val sixMonthsLater = today.plusMonths(6)
+        mapViewModel.setPickedDate(sixMonthsAgo, sixMonthsLater)
     }
 
     private fun getFavorites(){
@@ -179,20 +155,8 @@ class MainFragment : Fragment() {
         }
     }
 
-    // 삭제 예정-----------------------------------------------------
-    private fun questToast(message: String) {
-        val questDto = Gson().fromJson(message, Message::class.java)
-        Toast.makeText(requireContext(), "${questDto.content}이 생성되었습니다", Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    private fun coor(message: String) {
-        val coorDto = Gson().fromJson(message, Coordinate::class.java)
-        Log.d("좌표", coorDto.toString())
-    }
-    // -------------------------------------------------------------------
-
     override fun onDestroyView() {
+        stompManager.disconnect()
         super.onDestroyView()
         _binding = null
     }
