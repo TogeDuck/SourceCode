@@ -55,4 +55,33 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
 			.fetch();
 	}
 
+	@Override
+	public JoinEventResponseDto findByEventId(Long eventId, Long userId) {
+		return jpaQueryFactory
+			.select(Projections.constructor(JoinEventResponseDto.class,
+				event.id,
+				event.cafe.name,
+				event.image1,
+				event.image2,
+				event.image3,
+				event.startDate,
+				event.endDate,
+				event.cafe.latitude,
+				event.cafe.longitude,
+				JPAExpressions.selectOne()
+					.from(star)
+					.where(star.event.id.eq(event.id)
+						.and(star.user.id.eq(userId)))
+					.exists(),
+				JPAExpressions.selectOne()
+					.from(historyEvent)
+					.where(historyEvent.event.id.eq(event.id).and(historyEvent.history.user.id.eq(userId)))
+					.exists()
+			))
+			.from(event)
+			.leftJoin(event.cafe, cafe)
+			.where(event.id.eq(eventId))
+			.fetch().get(0);
+	}
+
 }
