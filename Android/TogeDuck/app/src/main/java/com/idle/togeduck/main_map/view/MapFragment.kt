@@ -615,9 +615,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             if (startDate.isEqual(today) && endDate.isEqual(today)) {
                 val sixMonthsAgo = today.minusMonths(6)
                 val sixMonthsLater = today.plusMonths(6)
-                eventListViewModel.getEventList(2, sixMonthsAgo.toKotlinLocalDate(), sixMonthsLater.toKotlinLocalDate())
+                eventListViewModel.getEventList(197, sixMonthsAgo.toKotlinLocalDate(), sixMonthsLater.toKotlinLocalDate())
             } else {
-                eventListViewModel.getEventList(2, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
+                eventListViewModel.getEventList(197, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
             }
         }
     }
