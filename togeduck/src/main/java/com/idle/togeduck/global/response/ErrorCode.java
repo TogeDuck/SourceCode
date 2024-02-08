@@ -11,25 +11,38 @@ public enum ErrorCode {
 
 	DUPLICATE_LOGIN_ID(400, "USER-001", "계정명이 중복된 경우"),
 	UNAUTHORIZED(401, "USER-002", "인증에 실패한 경우"),
-	UNAUTHORIZED_USER(403, "USER-003", "유저 권한이 없을때"),
+	UNAUTHORIZED_USER(403, "USER-003", "유저 권한이 없는 경우"),
 	USER_NOT_FOUND(404, "USER-004", "유저를 찾을 수 없는 경우"),
 	TOKEN_NOT_EXISTS(404, "USER-005", "토큰이 존재하지 않는 경우"),
 	TOKEN_EXPIRED(403, "USER-006", "토큰이 만료된 경우"),
+
 	EVENT_NOT_FOUND(404, "EVENT-001", "이벤트를 찾을 수 없는 경우"),
+
 	REVIEW_NOT_FOUND(404, "REVIEW-001", "리뷰를 찾을 수 없는 경우"),
+
 	DATA_CANT_SAVE(404, "S3-001", "데이터 저장에 실패 - 필드값 확인 OR 연관 엔티티 확인"),
+
 	SHARE_NOT_FOUND(404, "SHARE-001", "이벤트를 찾을 수 없는 경우"),
-	TRADE_NOT_FOUND(404, "TRADE-001", "교환을 찾을 수 없는 경우"),
-	USERCHAT_NOT_FOUND(404, "USERCHAT-001", "참여기록을 찾을 수 없는 경우"),
+
+	TRADE_NOT_FOUND(404, "DEAL-001", "교환을 찾을 수 없는 경우"),
+	DEAL_NOT_FOUND(404, "DEAL-002", "교환 요청을 찾을 수 없는 경우"),
+
+	USERCHAT_NOT_FOUND(404, "USERCHAT-001", "참여 기록을 찾을 수 없는 경우"),
+
 	PARTY_NOT_FOUND(404, "PARTY-001", "모집을 찾을 수 없는 경우"),
+	CHAT_FULL(400, "PARTY-002", "파티가 꽉 찬 경우"),
+
 	CHAT_NOT_FOUND(404, "CHAT-001", "퀘스트을 찾을 수 없는 경우"),
-	CHAT_FULL(400, "PARTY-001", "파티가 꽉 찬 경우"),
+
 	STAR_NOT_FOUND(404, "STAR-001", "해당 즐겨찾기가 없습니다"),
+
 	HISTORY_NOT_FOUND(404, "HISTORY-001", "방문 기록을 찾을 수 없는 경우"),
+
 	CELEBRITY_NOT_FOUND(404, "CELEBRITY-001", "연예인을 찾을 수 없는 경우"),
+
 	FIREBASE_INTERRUPTED(500, "FIREBASE-001", "파이어베이스 메시지 전송 중단"),
 	FIREBASE_EXECUTION(500, "FIREBASE-002", "파이어베이스 메시지 전송 중단"),
-	DEAL_NOT_FOUND(404, "DEAL-001", "교환 요청을 찾을 수 없는 경우");
+	;
 
 	private final int status;
 	private final String code;

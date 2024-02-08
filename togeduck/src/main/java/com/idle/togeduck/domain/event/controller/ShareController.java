@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.idle.togeduck.domain.event.dto.ShareRequestDto;
 import com.idle.togeduck.domain.event.dto.ShareRespondDto;
 import com.idle.togeduck.domain.event.service.ShareService;
+import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.global.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -33,21 +35,22 @@ public class ShareController {
 	@GetMapping("/{eventId}/shares")
 	public ResponseEntity<BaseResponse<Slice<ShareRespondDto>>> getShares(
 		@PathVariable Long eventId,
-		Pageable pageable) {
+		Pageable pageable,
+		@AuthenticationPrincipal User user) {
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", shareService.getShareList(1L, eventId, pageable)));
+			.body(new BaseResponse<>(200, "success", shareService.getShareList(user.getId(), eventId, pageable)));
 	}
 
 	@PostMapping("/{eventId}/shares")
 	public ResponseEntity<BaseResponse<?>> createShare(
 		@PathVariable Long eventId,
 		@RequestPart MultipartFile image,
-		@RequestPart ShareRequestDto shareRequestDto) {
-		Long userId = 1L;
+		@RequestPart ShareRequestDto shareRequestDto,
+		@AuthenticationPrincipal User user) {
 		shareService.createShare(
 			eventId,
-			userId,
+			user.getId(),
 			image,
 			shareRequestDto.title(),
 			shareRequestDto.content(),
@@ -62,7 +65,8 @@ public class ShareController {
 		@PathVariable Long eventId,
 		@PathVariable Long shareId,
 		@RequestPart MultipartFile image,
-		@RequestPart ShareRequestDto shareRequestDto) {
+		@RequestPart ShareRequestDto shareRequestDto,
+		@AuthenticationPrincipal User user) {
 		shareService.updateShare(
 			shareId,
 			image,
@@ -77,7 +81,8 @@ public class ShareController {
 	@DeleteMapping("/{eventId}/shares/{shareId}")
 	public ResponseEntity<BaseResponse<?>> deleteShare(
 		@PathVariable Long eventId,
-		@PathVariable Long shareId) {
+		@PathVariable Long shareId,
+		@AuthenticationPrincipal User user) {
 		shareService.deleteShare(shareId);
 		return ResponseEntity
 			.status(HttpStatus.OK)

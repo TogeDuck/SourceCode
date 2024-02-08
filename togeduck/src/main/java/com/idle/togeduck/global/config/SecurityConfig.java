@@ -6,11 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idle.togeduck.domain.user.jwt.CustomAuthenticaftionProvider;
 import com.idle.togeduck.domain.user.jwt.JwtAccessDeniedHandler;
 import com.idle.togeduck.domain.user.jwt.JwtAuthenticationEntryPoint;
@@ -27,12 +27,6 @@ public class SecurityConfig { // 스프링 시큐리티에 필요한 설정
 	private final JwtProvider jwtProvider;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-	private final ObjectMapper objectMapper;
-	// public WebSecurityCustomizer webSecurityCustomizer() {
-	// 	return web -> web.ignoring()
-	// 		.requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적 리소스들
-	// }
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,8 +52,11 @@ public class SecurityConfig { // 스프링 시큐리티에 필요한 설정
 			// 		HeadersConfigurer.FrameOptionsConfig::sameOrigin))
 			.authorizeHttpRequests(authorizeRequests ->
 				authorizeRequests
+					.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 					.requestMatchers("/auth/**").permitAll()
-					.anyRequest().authenticated());
+					.requestMatchers("/ws-stomp/**").permitAll()
+					.anyRequest().authenticated()
+			);
 
 		return http.build();
 	}

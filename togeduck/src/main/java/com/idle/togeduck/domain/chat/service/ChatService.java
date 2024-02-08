@@ -1,8 +1,13 @@
 package com.idle.togeduck.domain.chat.service;
 
+import static com.idle.togeduck.global.response.ErrorCode.*;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.idle.togeduck.domain.chat.dto.ChatRoomResponseDto;
 import com.idle.togeduck.domain.chat.entity.Chat;
 import com.idle.togeduck.domain.chat.entity.Message;
 import com.idle.togeduck.domain.chat.entity.UserChat;
@@ -82,5 +87,11 @@ public class ChatService {
 			.content(message)
 			.build();
 		messageRepository.save(m);
+	}
+
+	public List<ChatRoomResponseDto> getChatRooms(Long userId) {
+		userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+
+		return userChatRepository.findListByUserId(userId);
 	}
 }
