@@ -946,4 +946,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("로그", "MapFragment - onStart() 호출됨")
+        // TODO. 주기적 위치 전송 로직 추가
+    }
+    
+    override fun onStop() {
+        super.onStop()
+        Log.d("로그", "MapFragment - onStop() 호출됨")
+        // TODO. 주기적 위치 전송 해제 하는 로직 추가
+    }
+
 }
