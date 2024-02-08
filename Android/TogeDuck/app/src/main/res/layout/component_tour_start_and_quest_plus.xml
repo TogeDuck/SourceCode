@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/quest_plus_btn"
         app:layout_constraintBottom_toTopOf="@id/quest_plus_btn"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <ImageView
