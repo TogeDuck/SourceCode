@@ -9,7 +9,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -22,12 +21,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -37,7 +34,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.gson.Gson
@@ -52,7 +48,6 @@ import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.Theme
-import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
@@ -83,16 +78,13 @@ import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import ted.gun0912.clustering.naver.TedNaverClustering
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 enum class EventKind {
     PAST, TODAY, LATER
@@ -147,7 +139,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var pathLine: PathOverlay? = null
 
-    private lateinit var tourCircle: GradientDrawable
+    private lateinit var tourStartCircle: GradientDrawable
+    private lateinit var tourEndCircle: GradientDrawable
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -349,10 +342,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun setTourBtnTheme() {
-        tourCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
-        tourCircle.setStroke(0,0)
-        binding.tourStart.background= tourCircle
+        tourStartCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        tourStartCircle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+        tourStartCircle.setStroke(0,0)
+        binding.tourStart.background= tourStartCircle
+
+        tourEndCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        tourEndCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+        tourEndCircle.setStroke(0,0)
 
         val plusCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         plusCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
@@ -385,11 +382,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun changeTourBtn() {
         //todo. 투어버튼 상태 확인해서 시작 상태이면 종료로, 종료 상태이면 시작으로 바뀌는 거로 수정 필요
         //todo. tourStartBtnClick() 과 합치기
-        tourCircle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-        binding.tourStart.background= tourCircle
-        binding.tourStart.text = "투어\n종료"
 
-
+        if (binding.tourStart.text == "투어\n시작") {
+            binding.tourStart.background= tourEndCircle
+            binding.tourStart.text = "투어\n종료"
+        } else {
+            binding.tourStart.background= tourStartCircle
+            binding.tourStart.text = "투어\n시작"
+        }
     }
 
     fun changeViewPagerPage(pageIdx: Int) {
