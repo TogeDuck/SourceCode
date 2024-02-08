@@ -48,18 +48,6 @@ class EventViewModel @Inject constructor(
         }
     }
 
-//    suspend fun postReview(eventId: Long, image: MultipartBody.Part?, content: RequestBody) {
-//        val responseResult = eventRepository.postReview(eventId, image, content)
-//        Log.d("로그", "EventViewModel - postReview 호출 - ${responseResult}")
-//
-//        if (!responseResult.isSuccessful) {
-//            val errorBody = Json.decodeFromString<DefaultResponse>(
-//                responseResult.errorBody()?.string()!!
-//            )
-//            Log.d("로그", "EventListViewModel - postReview() 응답 실패 - $errorBody")
-//        }
-//    }
-
     suspend fun getReviewList(eventId: Long, page: Int, size: Int) {
         val responseResult = eventRepository.getReviewList(eventId, page, size)
 
