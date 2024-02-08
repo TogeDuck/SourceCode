@@ -149,7 +149,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var tourCircle: GradientDrawable
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
