@@ -24,11 +24,11 @@ public class CelebrityController {
 	private final CelebrityService celebrityService;
 
 	@GetMapping
-	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(@RequestParam String name,
-		String nickname, String teamName) throws IOException {
+	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(@RequestParam String keyword
+	) throws IOException {
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", celebrityService.getAllCelebrity(name, nickname, teamName)));
+			.body(new BaseResponse<>(200, "success", celebrityService.getCelebrityByKeyword(keyword)));
 	}
 }

@@ -2,10 +2,9 @@ package com.idle.togeduck.domain.celebrity.repository;
 
 import java.util.List;
 
-import com.idle.togeduck.domain.celebrity.dto.CelebrityResponseDto;
+import com.idle.togeduck.domain.celebrity.entity.Celebrity;
 
 public interface CelebrityRepositoryCustom {
-	CelebrityResponseDto findCelebrity(Long id);
 
-	List<CelebrityResponseDto> findAllCelebrity(String name, String nickname, String teamName);
+	List<Celebrity> findCelebrityByKeyword(String keyword);
 }
