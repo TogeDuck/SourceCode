@@ -49,6 +49,8 @@ class MainFragment : Fragment() {
 
     @Inject
     lateinit var preference: PreferenceModule
+    @Inject
+    lateinit var stompManager: StompManager
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val shareViewModel: ShareViewModel by activityViewModels()
@@ -112,7 +114,7 @@ class MainFragment : Fragment() {
             val headers = listOf(
                 com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
             )
-            stompManagerTest.send(destination,1000, payload, headers)
+            stompManagerTest.send(destination,1000, payload)
         }
         //----------------------------------------------------
     }

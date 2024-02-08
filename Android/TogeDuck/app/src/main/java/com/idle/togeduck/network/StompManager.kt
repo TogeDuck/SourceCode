@@ -18,41 +18,38 @@ class StompManager {
     private val stompClient: StompClient
     private val compositeDisposable = CompositeDisposable()
     private val topicSubscriptions = mutableMapOf<String, Disposable>()
+    private var headers: List<StompHeader> = listOf()
 
     init {
-        val headerMap: Map<String, String> = mapOf(
-            Pair("Authorization","Dddd")
-        )
+        val headerMap: Map<String,String> = mapOf(Pair("Authorization", "guest"))
+        headers = listOf(StompHeader("Authorization", "guest"))
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SERVER_URL, headerMap)
         configureStompClient(stompClient)
+        clearSubscriptions()
     }
 
     private fun configureStompClient(stompClient: StompClient) {
         stompClient.withClientHeartbeat(1000).withServerHeartbeat(1000)
     }
 
+    fun setHeader(accessToken: String){
+        headers = listOf(StompHeader("Authorization", accessToken))
+    }
+
     fun connect(headers: List<StompHeader>) {
         stompClient.connect(headers)
     }
     fun connect() {
-        val headers = listOf(
-            StompHeader("Authorization", "guest")
-        )
         stompClient.connect(headers)
     }
 
     fun disconnect() {
         stompClient.disconnect()
-        compositeDisposable.clear()
+        clearSubscriptions()
     }
 
     fun send(destination: String, chatId:Long, message: String) {
         var messageRequest = MessageRequest(chatId, message, )
-        stompClient.send(destination, Gson().toJson(messageRequest)).subscribe()
-    }
-
-    fun send(destination: String, chatId:Long, message: String, headers: List<StompHeader>){
-        var messageRequest = MessageRequest(chatId, message)
         stompClient.send(destination, Gson().toJson(messageRequest), headers).subscribe()
     }
 
@@ -71,7 +68,7 @@ class StompManager {
 
     fun unsubscribeTopic(topic: String) {
         topicSubscriptions[topic]?.let { disposable ->
-            disposable.dispose() // RxJava 구독 해제
+            disposable.dispose()
             compositeDisposable.remove(disposable)
             topicSubscriptions.remove(topic)
         }

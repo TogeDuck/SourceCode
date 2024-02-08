@@ -22,6 +22,7 @@ import com.idle.togeduck.login.model.LoginService
 import com.idle.togeduck.myquest.model.MyQuestService
 import com.idle.togeduck.myquest.view.myquest_rv.DefaultMyQuestRepository
 import com.idle.togeduck.myquest.view.myquest_rv.MyQuestRepository
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
@@ -248,5 +249,9 @@ object AppModule {
             return chain.proceed(newRequest)
         }
     }
+
+    @Singleton
+    @Provides
+    fun provideStompManager(): StompManager = StompManager()
 }
 
