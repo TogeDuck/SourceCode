@@ -176,7 +176,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         stompManager.connect()
 
         realTimeOnOffBtn.setOnClickListener{
-            Log.d("실시간 버튼","시작버튼 눌림")
+            Log.d("실시간 버튼","시작버튼 눌림 ${realTimeOnOffBtn.isChecked}")
             realTimeBtnOnClick()
         }
         tourStartBtn.setOnClickListener{

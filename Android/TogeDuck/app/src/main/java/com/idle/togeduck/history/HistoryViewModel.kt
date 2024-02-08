@@ -12,6 +12,7 @@ import com.idle.togeduck.history.model.HistoryNameRequest
 import com.idle.togeduck.history.model.HistoryRepository
 import com.idle.togeduck.history.model.HistoryTour
 import com.idle.togeduck.history.model.Position
+import com.idle.togeduck.history.model.SendHistoryRequest
 import com.idle.togeduck.history.model.toHistoryData
 import com.idle.togeduck.history.model.toHistoryTour
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -126,7 +127,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     suspend fun sendHistory(historyId: Long, historyList: List<Position>) {
-        val responseResult = historyRepository.sendHistory(historyId, historyList)
+        val responseResult = historyRepository.sendHistory(historyId, SendHistoryRequest(historyList))
 
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!

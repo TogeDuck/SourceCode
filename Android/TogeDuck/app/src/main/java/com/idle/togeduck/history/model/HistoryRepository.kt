@@ -33,7 +33,7 @@ interface HistoryRepository {
 
     suspend fun sendHistory(
         historyId: Long,
-        sendHistoryRequest: List<Position>
+        sendHistoryRequest: SendHistoryRequest
     ): Response<DefaultResponse>
 
     suspend fun deleteHistory(
@@ -74,7 +74,7 @@ class DefaultHistoryRepository @Inject constructor(
 
     override suspend fun sendHistory(
         historyId: Long,
-        sendHistoryRequest: List<Position>,
+        sendHistoryRequest: SendHistoryRequest,
     ): Response<DefaultResponse> {
         return historyService.sendHistory(historyId, sendHistoryRequest)
     }
