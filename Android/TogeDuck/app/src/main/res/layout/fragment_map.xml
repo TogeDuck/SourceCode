@@ -62,15 +62,6 @@
         android:name="com.idle.togeduck.main_map.view.TopAppbarFragment"
         />
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/fragment_tsqp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="bottom"-->
-<!--        android:layout_marginBottom="105dp"-->
-<!--        android:name="com.idle.togeduck.main_map.view.TourStartAndQuestPlusFragment"/>-->
-
-
         <TextView
             android:id="@+id/tour_start"
             android:layout_width="50dp"
@@ -143,7 +134,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:elevation="6dp">
 
         <include
             android:id="@+id/bs_fragment"
