@@ -118,4 +118,10 @@ class EventListViewModel @Inject constructor(
     fun setSelectedEvent(event: Event) {
         _selectedEvent.value = event
     }
+
+    fun clearList() {
+        _listPast.value = listOf()
+        _listToday.value = listOf()
+        _listUpcoming.value = listOf()
+    }
 }

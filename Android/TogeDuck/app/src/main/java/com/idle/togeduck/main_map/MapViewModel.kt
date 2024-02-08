@@ -70,4 +70,8 @@ class MapViewModel @Inject constructor(
         updateMap[coordinate.userId] = NaverItem(coordinate.lat, coordinate.lng)
         _peopleMarkerList.postValue(updateMap)
     }
+
+    fun clearList() {
+        _peopleMarkerList.value = mapOf()
+    }
 }

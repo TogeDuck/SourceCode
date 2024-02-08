@@ -138,13 +138,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
 
-    private val timer = Timer()
+    private var timer: Timer? = null
     private lateinit var workRequest: PeriodicWorkRequest
     private var workManager: WorkManager? = null
 
     lateinit var realTimeOnOffBtn :MaterialSwitch
     lateinit var tourStartBtn :FragmentContainerView
     val stompManager = StompManager()
+
+    private var pathLine: PathOverlay? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -214,11 +216,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         historyViewModel.route.observe(viewLifecycleOwner) { list ->
+            if (pathLine != null) pathLine!!.map = null
             setPathLine(list)
         }
 
-        historyViewModel.historyList.observe(viewLifecycleOwner) {
+        historyViewModel.historyEventList.observe(viewLifecycleOwner) {
+            historyViewModel.setMarkerList()
+        }
 
+        historyViewModel.markerList.observe(viewLifecycleOwner) { list ->
+            list.forEach { it.map = naverMap }
         }
     }
     private fun toast(message: String) {
@@ -724,17 +731,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     // 이동 경로를 경로선으로 표시
     private fun setPathLine(list: List<Position>) {
-        val pathLine = PathOverlay()
+        pathLine = PathOverlay()
         val pathLineList = mutableListOf<LatLng>()
 
         list.forEach { (latitude, longitude) ->
             pathLineList.add(LatLng(latitude, longitude))
         }
 
-        pathLine.width = 30
-        pathLine.outlineWidth = 5
-        pathLine.coords = pathLineList
-        pathLine.map = naverMap
+        if (pathLine != null) {
+            pathLine!!.width = 30
+            pathLine!!.outlineWidth = 5
+            pathLine!!.coords = pathLineList
+            pathLine!!.map = naverMap
+        }
     }
 
 
@@ -1002,7 +1011,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun sendPosition() {
-        timer.scheduleAtFixedRate(object : TimerTask() {
+        timer = Timer()
+        timer?.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 if (TedPermissionUtil.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     fusedLocationClient.lastLocation
@@ -1031,7 +1041,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onStop()
         Log.d("로그", "MapFragment - onStop() 호출됨")
         doWorkWithPeriodic()
-        timer.cancel()
+        if (timer != null) {
+            timer!!.cancel()
+            timer = null
+        }
     }
 
 }

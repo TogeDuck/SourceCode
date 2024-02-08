@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide.init
 import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.history.model.AddHistoryRequest
 import com.idle.togeduck.history.model.HistoryData
@@ -15,6 +16,8 @@ import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.history.model.SendHistoryRequest
 import com.idle.togeduck.history.model.toHistoryData
 import com.idle.togeduck.history.model.toHistoryTour
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -36,6 +39,10 @@ class HistoryViewModel @Inject constructor(
 
     private val _historyEventList = MutableLiveData<List<HistoryTour>>()
     val historyEventList: LiveData<List<HistoryTour>> get() = _historyEventList
+
+    private val _markerList = MutableLiveData<List<Marker>>()
+    val markerList: LiveData<List<Marker>> get() = _markerList
+
 
 
     init {
@@ -99,6 +106,9 @@ class HistoryViewModel @Inject constructor(
 
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
+
+            Log.d("로그", "HistoryViewModel - getHistory() 응답 성공 ${body}")
+
             _route.postValue(body.data.route)
             _historyEventList.postValue(body.data.historyEvent.map { it.toHistoryTour() })
         } else {
@@ -160,5 +170,21 @@ class HistoryViewModel @Inject constructor(
 
     fun setSelectedHistory(historyData: HistoryData) {
         _selectedHistory.value = historyData
+    }
+
+    fun setMarkerList() {
+        val newList = mutableListOf<Marker>()
+
+        _historyEventList.value?.forEach { historyTour ->
+            val marker = Marker()
+            marker.position = LatLng(historyTour.latitude, historyTour.longitude)
+            newList.add(marker)
+        }
+
+        _markerList.value?.forEach {
+            it.map = null
+        }
+
+        _markerList.value = newList
     }
 }

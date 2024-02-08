@@ -77,6 +77,10 @@
         android:name="com.idle.togeduck.favorite.view.FavoriteSettingFragment"
         android:label="favorite_setting_fragment"
         tools:layout="@layout/fragment_favorite_setting" >
+        <action
+            android:id="@+id/action_favoriteSettingFragment_pop"
+            app:popUpTo="@id/favoriteSettingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -194,6 +198,9 @@
             android:id="@+id/action_selectCelebrityFragment_pop"
             app:popUpTo="@id/selectCelebrityFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_selectCelebrityFragment_to_favoriteSettingFragment"
+            app:destination="@id/favoriteSettingFragment" />
     </dialog>
     <fragment
         android:id="@+id/chatRoomFragment"
