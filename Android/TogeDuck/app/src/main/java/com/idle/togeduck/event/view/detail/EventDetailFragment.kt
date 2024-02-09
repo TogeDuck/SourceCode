@@ -93,10 +93,12 @@ class EventDetailFragment : Fragment(), EventReview {
             binding.cafeNameDetail.text = event.name
             binding.eventPeriodDetail.text = makeDateToString(event.startDate, event.endDate)
 
+            Log.d("로그", "event : ${event}")
+
             val list = mutableListOf<String>().apply {
-                if (event.image1 != null) add(event.image1)
-                if (event.image2 != null) add(event.image2)
-                if (event.image3 != null) add(event.image3)
+                if (event.image1 != null && event.image1 != "trash") add(event.image1)
+                if (event.image2 != null && event.image2 != "trash" && event.image2 != event.image1) add(event.image2)
+                if (event.image3 != null && event.image3 != "trash" && event.image3 != event.image1 && event.image3 != event.image2) add(event.image3)
             }
 
             eventPosterAdapter.submitList(list)
