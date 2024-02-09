@@ -98,12 +98,9 @@ public class AuthService {
 
 		// 3. 인증 정보를 기반으로 JWT 토큰 생성
 		TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
-		// TokenDto tokenDto = jwtProvider.createTokenDto(authentication, user.getId());
 
 		// 4. RefreshToken redis 저장
 		String refreshToken = tokenDto.getRefreshToken();
-		// String accessToken = tokenDto.getAccessToken();
-		// Long refreshTokenExpired = tokenDto.getAccessTokenExpireDate();
 
 		redisService.setValues(String.valueOf(user.getSocialId()), refreshToken);
 

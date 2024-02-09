@@ -47,7 +47,6 @@ public class User extends BaseEntity implements UserDetails {
 		this.socialType = socialType;
 	}
 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> collectors = new ArrayList<>();
@@ -58,13 +57,13 @@ public class User extends BaseEntity implements UserDetails {
 	}
 
 	@Override
-	public String getPassword() {
-		return "";
+	public String getUsername() {
+		return socialId;
 	}
 
 	@Override
-	public String getUsername() {
-		return socialId;
+	public String getPassword() {
+		return "";
 	}
 
 	@Override
@@ -86,6 +85,5 @@ public class User extends BaseEntity implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-
 
 }

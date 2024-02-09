@@ -23,38 +23,16 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException authException) throws IOException {
 		String code = (String)request.getAttribute("exception");
-		// BaseException e = (BaseException)request.getAttribute("exeception");
-		log.info("commence");
 		if (code.equals("USER-006")) {
-			log.info("entry");
 			setResponse(response, ErrorCode.TOKEN_EXPIRED);
 		}
 	}
 
-	// @Override
-	// public void commence(HttpServletRequest request, HttpServletResponse response,
-	// 	AuthenticationException authException) throws IOException, ServletException {
-	//
-	// 	log.info("확인");
-	//
-	// 	BaseException e = (BaseException)request.getAttribute("error");
-	//
-	// 	if (e != null) {
-	// 		setResponse(response, e);
-	// 	} else {
-	// 		setResponse(response, new BaseException(ErrorCode.INTERNAL_SERVER_ERROR));
-	// 	}
-	//
-	// 	// setResponse(response, new BaseException(ErrorCode.UNAUTHORIZED));
-	// }
-	//
 	private void setResponse(HttpServletResponse response, ErrorCode code) throws IOException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-		log.info("만료");
 
 		response.setStatus(code.getStatus());
 		response.getWriter()

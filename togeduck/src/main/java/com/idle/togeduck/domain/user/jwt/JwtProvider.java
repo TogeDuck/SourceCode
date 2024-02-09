@@ -81,6 +81,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 			.setIssuedAt(now) // payload "iss" : 147621021 (토큰발급자)
 			.setExpiration(expiration);  // payload "exp" : 151621022 (토큰만료시간)
 
+		claims.put("userId", authentication.getName());
 		claims.put(AUTHORITIES_KEY, authorities); // payload "AUTHORITIES_KEY" : 'ROLE_USER' (권한)
 
 		return Jwts.builder()
