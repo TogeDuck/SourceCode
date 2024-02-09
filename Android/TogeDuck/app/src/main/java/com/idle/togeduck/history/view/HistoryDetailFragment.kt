@@ -61,6 +61,10 @@ class HistoryDetailFragment : Fragment() {
                 historyViewModel.getHistory(historyData.historyId)
             }
         }
+
+        binding.goBack.setOnClickListener {
+            (parentFragment as MapFragment).changeViewPagerPage(4)
+        }
     }
 
 

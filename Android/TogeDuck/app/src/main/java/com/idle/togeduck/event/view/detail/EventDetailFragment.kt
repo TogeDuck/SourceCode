@@ -30,6 +30,7 @@ import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.view.detail.detail_rv.EventPosterAdapter
 import com.idle.togeduck.event.view.detail.detail_rv.EventReview
 import com.idle.togeduck.event.view.detail.detail_rv.EventReviewAdapter
+import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.util.MultiPartUtil
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
@@ -122,6 +123,10 @@ class EventDetailFragment : Fragment(), EventReview {
 
         eventReviewInputBinding.reviewPost.setOnClickListener {
             postReview()
+        }
+
+        binding.goBack.setOnClickListener {
+            (parentFragment as MapFragment).changeViewPagerPage(1)
         }
 
 //        eventReviewInputBinding.etReviewInput.setOnClickListener { mView, keyCode, _ ->
