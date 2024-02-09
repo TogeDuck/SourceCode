@@ -1,14 +1,10 @@
 package com.idle.togeduck.main_map.view
 
-import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
@@ -16,21 +12,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
-import com.idle.togeduck.databinding.ComponentSearchBarTopAppbarBinding
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
-import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
 import com.idle.togeduck.util.getColor
@@ -41,8 +31,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toKotlinLocalDate
 import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -79,7 +67,7 @@ class TopAppbarFragment : Fragment() {
 
         setPadding()
         setTheme()
-        setIdolProfile(requireContext())
+        setIdolProfile()
         setDateRangePicker()
         showSelectCelebrity()
 
@@ -91,13 +79,7 @@ class TopAppbarFragment : Fragment() {
         }
 
         favoriteSettingViewModel.selectedCelebrity.observe(viewLifecycleOwner) { celebrity ->
-            Glide
-                .with(topAppbarBinding.ivIdolProfile)
-                .load(celebrity.image)
-                .override(300,300)
-                .into(topAppbarBinding.ivIdolProfile)
-
-            topAppbarBinding.tvIdolName.text = celebrity.nickname
+            setIdolProfile()
         }
     }
     private fun getEventList() {
@@ -174,7 +156,7 @@ class TopAppbarFragment : Fragment() {
         )
     }
 
-    private fun setIdolProfile(context: Context){
+    private fun setIdolProfile(){
         val image = topAppbarBinding.ivIdolProfile
         val imageUrl = favoriteSettingViewModel.selectedCelebrity.value?.image
         Glide
@@ -203,16 +185,12 @@ class TopAppbarFragment : Fragment() {
         topAppbarBinding.ivLogo.background = yellowCircleDrawable
         topAppbarBinding.ivFavorite.background = yellowCircleDrawable
 
-        val main500CircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        main500CircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
-        main500CircleDrawable.setStroke(4, getColor(requireContext(), Theme.theme.main500))
+        val main100CircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        main100CircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
+        main100CircleDrawable.setStroke(0, getColor(requireContext(), Theme.theme.main500))
 
-//        searchBarBinding.ivSearch.background = main500CircleDrawable
-//        searchBarBinding.ivSearch.setColorFilter(getColor(requireContext(), Theme.theme.main500))
-//        topAppbarBinding.ivIdolProfile.background = main500CircleDrawable
-        // TODO. 실제 프로필 사진 적용시 삭제 필요
-//        topAppbarBinding.ivIdolProfile.setColorFilter(getColor(requireContext(), Theme.theme.main500))
-        topAppbarBinding.ivCalendar.background = main500CircleDrawable
+        topAppbarBinding.ivIdolProfile.background = main100CircleDrawable
+        topAppbarBinding.ivCalendar.background = main100CircleDrawable
         topAppbarBinding.ivCalendar.setColorFilter(getColor(requireContext(), Theme.theme.main500))
 
         val squareCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
