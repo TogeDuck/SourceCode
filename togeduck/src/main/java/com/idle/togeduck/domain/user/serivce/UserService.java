@@ -29,9 +29,9 @@ public class UserService {
 	private final FavoriteRepository favoriteRepository;
 
 	@Transactional
-	public List<CelebrityResponseDto> getFavoriteCelebrity(FavoriteRequestDto favoriteRequestDto) { // 관심연예인 목록
+	public List<CelebrityResponseDto> getFavoriteCelebrity(User user) { // 관심연예인 목록
 
-		List<Favorite> favoriteList = favoriteRepository.findAllFavoriteByUserId(favoriteRequestDto);
+		List<Favorite> favoriteList = favoriteRepository.findAllFavoriteByUserId(user);
 
 		List<CelebrityResponseDto> celebritylist = new ArrayList<>();
 
@@ -42,23 +42,23 @@ public class UserService {
 	}
 
 	@Transactional
-	public void upsertFavorite(FavoriteRequestDto favoriteRequestDto) { // 관심 연예인 추가 및 삭제
+	public void upsertFavorite(FavoriteRequestDto favoriteRequestDto, Long userId) { // 관심 연예인 추가 및 삭제
 
 		Celebrity celebrity = celebrityRepository.findById(favoriteRequestDto.celebrityId())
 			.orElseThrow(() -> new BaseException(ErrorCode.CELEBRITY_NOT_FOUND));
-		User user = userRepository.findById(favoriteRequestDto.userId())
+		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-		if (favoriteRepository.findFavorite(favoriteRequestDto) == 0) { // 관심 연예인 디비에 없음
+		if (favoriteRepository.findFavorite(favoriteRequestDto, userId) == 0) { // 관심 연예인 디비에 없음
 			favoriteRepository.save(Favorite.builder()
 				.user(user)
 				.celebrity(celebrity)
 				.build());
 		} else { // 관심 연예인 디비에 있음
-			if (favoriteRepository.findFavoriteByDelCheck(favoriteRequestDto) == 0) { // delcheck == 0 이면 삭제
-				favoriteRepository.updateFavoriteByDelCheck(favoriteRequestDto, 1);
+			if (favoriteRepository.findFavoriteByDelCheck(favoriteRequestDto, userId) == 0) { // delcheck == 0 이면 삭제
+				favoriteRepository.updateFavoriteByDelCheck(favoriteRequestDto, userId, 1);
 			} else { // delcheck == 1 (삭제 처리)이면 다시 추가
-				favoriteRepository.updateFavoriteByDelCheck(favoriteRequestDto, 0);
+				favoriteRepository.updateFavoriteByDelCheck(favoriteRequestDto, userId, 0);
 			}
 		}
 	}
