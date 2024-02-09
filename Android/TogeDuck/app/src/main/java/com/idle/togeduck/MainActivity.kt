@@ -52,10 +52,11 @@ class MainActivity : AppCompatActivity() {
     // 상태바 투명하게 하는 기능
     private fun Activity.setStatusBarTransparent() {
         window.apply {
-            setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            )
+//            setFlags(
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//            )
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         }
 
         if (Build.VERSION.SDK_INT >= 30) {    // API 30 에 적용
