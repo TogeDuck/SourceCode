@@ -164,7 +164,7 @@ class EventDetailFragment : Fragment(), EventReview {
         val inputDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
         inputDrawable.setColor(getColor(requireContext(), R.color.white))
         inputDrawable.setStroke(4, getColor(requireContext(), Theme.theme.sub500))
-        eventReviewInputBinding.llInputLayout.background = inputDrawable
+        eventReviewInputBinding.etReviewInputBackground.background = inputDrawable
 
         val registDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
         registDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
