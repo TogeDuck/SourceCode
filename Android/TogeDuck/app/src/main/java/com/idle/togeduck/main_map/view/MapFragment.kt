@@ -1098,7 +1098,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             val headers = listOf(
                                 com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
                             )
-                            stompManager.send("/pub/chats/1/message",1,"lastLocation : ${location?.latitude} ${location?.longitude}")
                         }
                 }
             }

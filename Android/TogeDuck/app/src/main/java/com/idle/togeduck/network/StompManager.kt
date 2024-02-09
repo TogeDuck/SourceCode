@@ -43,14 +43,15 @@ class StompManager {
         stompClient.connect(headers)
     }
 
-    fun disconnect() {
-        stompClient.disconnect()
-        clearSubscriptions()
+    fun send(destination: String, message: MessageRequest) {
+        stompClient.send(destination, Gson().toJson(message), headers).subscribe()
     }
+    fun sendChat(chatId: Long, message:String){
+        val destination = "/pub/chats/$chatId/message"
+        stompClient.send(destination, Gson().toJson(MessageRequest(chatId, message)), headers).subscribe()
+    }
+    fun sendLocation(){
 
-    fun send(destination: String, chatId:Long, message: String) {
-        var messageRequest = MessageRequest(chatId, message, )
-        stompClient.send(destination, Gson().toJson(messageRequest), headers).subscribe()
     }
 
     fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
@@ -65,6 +66,16 @@ class StompManager {
         compositeDisposable.add(disposable)
         topicSubscriptions[topic] = disposable
     }
+    // 채팅 구독
+    fun subscribeChat(chatId: Long, onMessageReceived: (String) -> Unit) {
+        val topic = "/sub/chats/$chatId"
+        subscribeTopic(topic,onMessageReceived)
+    }
+    // 실시간 사용자 위치 정보 구독
+    fun subscribeCelebrity(celebrityId: Long, onMessageReceived: (String) -> Unit) {
+        val topic = "/sub/celebrities/$celebrityId"
+        subscribeTopic(topic,onMessageReceived)
+    }
 
     fun unsubscribeTopic(topic: String) {
         topicSubscriptions[topic]?.let { disposable ->
@@ -74,8 +85,19 @@ class StompManager {
         }
         stompClient.unsubscribePath(topic)
     }
-
+    fun unsubscribeChat(chatId: Long){
+        val topic = "/sub/chats/$chatId"
+        unsubscribeTopic(topic)
+    }
+    fun unsubscribeCelebrity(celebrityId: Long){
+        val topic = "/sub/celebrities/$celebrityId"
+        unsubscribeTopic(topic)
+    }
     fun clearSubscriptions() {
         compositeDisposable.clear()
+    }
+    fun disconnect() {
+        stompClient.disconnect()
+        clearSubscriptions()
     }
 }
