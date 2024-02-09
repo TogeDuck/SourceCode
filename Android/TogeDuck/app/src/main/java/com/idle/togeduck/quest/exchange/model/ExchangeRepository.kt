@@ -31,15 +31,8 @@ interface ExchangeRepository {
     suspend fun postExchange(
         eventId: Long,
         image: MultipartBody.Part,
-        tradeRequestDto: RequestBody
+        tradeRequestDto: MultipartBody.Part
     ) : Response<DefaultResponse>
-
-//    suspend fun postExchange(
-//        eventId: Long,
-//        image: MultipartBody.Part,
-//        content: RequestBody,
-//        duration: RequestBody
-//    ) : Response<DefaultResponse>
 
     suspend fun updateExchange(
         eventId: Long,
@@ -98,7 +91,7 @@ class DefaultExchangeRepository @Inject constructor(
     override suspend fun postExchange(
         eventId: Long,
         image: MultipartBody.Part,
-        tradeRequestDto: RequestBody
+        tradeRequestDto: MultipartBody.Part
     ): Response<DefaultResponse> {
         return exchangeService.postExchange(eventId, image, tradeRequestDto)
     }

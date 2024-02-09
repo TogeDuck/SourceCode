@@ -1,13 +1,16 @@
 package com.idle.togeduck.quest.share.model
 
 import com.idle.togeduck.common.model.DefaultResponse
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -22,10 +25,12 @@ interface ShareService {
         @Query("size") size:Int
     ): Response<ShareListResponse>
 
+    @Multipart
     @POST("events/{event_id}/shares")
     suspend fun createShare(
         @Path("event_id") eventId: Long,
-        @Body body: ShareRequest
+        @Part image: MultipartBody.Part,
+        @Part shareRequestDto: MultipartBody.Part
     ): Response<DefaultResponse>
 
     @PATCH("events/{event_id}/shares/{share_id}")

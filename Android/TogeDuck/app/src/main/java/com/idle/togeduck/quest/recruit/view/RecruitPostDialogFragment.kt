@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -24,22 +25,38 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogQuestExchangeBinding
 import com.idle.togeduck.databinding.DialogQuestExchangePostBinding
 import com.idle.togeduck.databinding.DialogQuestRecruitPostBinding
+import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.view.list.list_rv.EventInfo
+import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.MyExchangeAdapter
 import com.idle.togeduck.quest.recruit.RecruitViewModel
+import com.idle.togeduck.quest.recruit.model.RecruitRequest
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.datetime.toKotlinLocalDate
+import kotlin.math.min
 
 class RecruitPostDialogFragment: DialogFragment() {
     private var _binding: DialogQuestRecruitPostBinding? = null
     private val binding get() = _binding!!
 
     val recruitViewModel: RecruitViewModel by activityViewModels()
+
+    private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+
+    private lateinit var spinnerAdapter: ArrayAdapter<String>
+    private lateinit var eventNames: List<String>
+    private lateinit var eventIds: List<Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,12 +84,87 @@ class RecruitPostDialogFragment: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setTheme()
+        setSpinner()
 
+        CoroutineScope(Dispatchers.IO).launch {
+            val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
+            val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
+            eventListViewModel.getEventList(2, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
+        }
+
+        binding.llBackground.setOnClickListener{
+            findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
+        }
+
+        binding.btnRecruitCancel.setOnClickListener {
+            findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
+        }
+
+        binding.btnRecruitPost.setOnClickListener {
+            //todo. eventId 받아오는 걸로 수정 지금은 임시로 2
+//            val eventId = event.eventId
+            val title = binding.etRecruitTitle.text.toString()
+            val maximum = binding.npRecruitPeopleNum.value
+            val duration = binding.npRecruitDuration.value
+
+            val selectedPosition = binding.spinner.selectedItemPosition
+            val destinationName = eventNames[selectedPosition]
+            val destinationId = eventIds[selectedPosition]
+
+            val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
+
+            if(title.isNotEmpty() && destinationName.isNotEmpty()
+                && maximum > 0 && maximum <= 5
+                && duration > 0 && duration <= 60) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("모집 등록", "모집 등록 호출됨")
+                    recruitViewModel.createRecruit(2, recruitRequest)
+                }
+            }
+
+            findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
+        }
+
+    }
+
+    //todo. 검색 으로 변경 할것
+    private fun setSpinner() {
+        // 오늘의 이벤트 목록을 관찰하고 해당 목록을 spinner에 설정
+        //todo. 지금은 오늘 이벤트 없어서 listPast로 해놓음 (추후 listToday로 수정)
+        eventListViewModel.listPast.observe(viewLifecycleOwner) { event ->
+            val eventPairs = event.map { it.eventId to it.name } // Pair 형태로 eventId와 eventName을 연결
+            eventIds = eventPairs.map { it.first } // eventId만 추출
+            eventNames = eventPairs.map { it.second }
+            spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, eventNames)
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinner.adapter = spinnerAdapter
+        }
     }
 
 
     private fun setTheme() {
+        binding.npRecruitPeopleNum.apply {
+            minValue = 1
+            maxValue = 10
+        }
 
+        binding.npRecruitDuration.apply {
+            minValue = 1
+            maxValue = 60
+        }
+
+
+        val allRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_10) as GradientDrawable
+        allRoundDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main200))
+        allRoundDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        binding.llDialogLayout.background = allRoundDrawable
+
+        val squareCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.sub400))
+        squareCircleDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+
+        binding.btnRecruitCancel.background = squareCircleDrawable
+        binding.btnRecruitPost.background = squareCircleDrawable
     }
 
     override fun onDestroyView() {

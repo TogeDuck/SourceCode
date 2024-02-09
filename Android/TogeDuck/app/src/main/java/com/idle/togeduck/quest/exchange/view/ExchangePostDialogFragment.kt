@@ -20,8 +20,12 @@ import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogQuestExchangeBinding
 import com.idle.togeduck.databinding.DialogQuestExchangePostBinding
+import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
+import com.idle.togeduck.quest.exchange.model.ExchangeReq
 import com.idle.togeduck.quest.exchange.model.ExchangeRequest
+import com.idle.togeduck.quest.exchange.model.toMultipartBody
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.MultiPartUtil
 import kotlinx.coroutines.CoroutineScope
@@ -38,8 +42,10 @@ class ExchangePostDialogFragment: DialogFragment() {
     private var _binding: DialogQuestExchangePostBinding? = null
     private val binding get() = _binding!!
 
-    val exchangeViewModel: ExchangeViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val exchangeViewModel: ExchangeViewModel by activityViewModels()
 
+//    private lateinit var event: Event
     private var imgPath: String? = null
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -49,7 +55,7 @@ class ExchangePostDialogFragment: DialogFragment() {
             imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
 
         } else {
-            Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
+            Log.d("로그", "ExchangePostDialogFragment - pickMedia - 이미지 선택 실패")
         }
     }
 
@@ -80,45 +86,47 @@ class ExchangePostDialogFragment: DialogFragment() {
 
         setTheme()
 
+        //todo. 퀘스트 등록할 때 eventId 현재 선택한 eventId로 수정 필요 (지금 임시로 1번으로 해놓음)
+//        eventListViewModel.selectedEvent.observe(viewLifecycleOwner) {event ->
+//            this.event = event
+//        }
+
         binding.llBackground.setOnClickListener{
             findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
         }
 
-        binding.btnShareCancel.setOnClickListener {
+        binding.btnExchangeCancel.setOnClickListener {
             findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
         }
 
-        binding.btnSharePost.setOnClickListener {
-//            val imgFile = MultiPartUtil.createImagePart(imgPath!!)
-//
-//            val inputContent = binding.etExchangeInput.text.toString()
-////            val contentRequestBody = MultiPartUtil.createRequestBody2(inputContent)
-//
-//            val inputDuration = binding.npExchangeDuration.value
-//
-//            CoroutineScope(Dispatchers.IO).launch {
-////                exchangeViewModel.postExchange(1, imgFile, contentRequestBody, inputDuration)
-//                exchangeViewModel.postExchange(1, imgFile, ExchangeRequest(inputContent, inputDuration))
-//            }
+        binding.btnExchangePost.setOnClickListener {
+//            val eventId = event.eventId
+            val content = binding.etExchangeInput.text.toString()
+            val duration = binding.npExchangeDuration.value
 
+            val exchangeRequest = ExchangeRequest(content, duration)
+            val exchangeRequestPart = exchangeRequest.toMultipartBody()
 
-//            val imgFile = MultiPartUtil.createImagePart(imgPath!!)
-//
-//            val inputContent = binding.etExchangeInput.text.toString()
-//            val inputDuration = binding.npExchangeDuration.value
-//            val exchangeRequest = ExchangeRequest(inputContent, inputDuration)
-//            val json = encodeToString(exchangeRequest)
-//            //todo.이렇게 하려면 라이브러리 추가해야함..?
-//            //todo.재환오빠한테 dto말고 그냥 스트링, 인트 빼서 수정해달라고 부탁....?
-//
-//            CoroutineScope(Dispatchers.IO).launch {
-////                exchangeViewModel.postExchange(1, imgFile, contentRequestBody, inputDuration)
-//                exchangeViewModel.postExchange(1, imgFile, ExchangeRequest(inputContent, inputDuration))
-//            }
+            if(content.isNotEmpty() && duration > 0 && duration < 61){
 
+                if(imgPath?.isNotEmpty() == true){
+                    val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
 
+                    CoroutineScope(Dispatchers.IO).launch {
+                        Log.d("교환 등록", "교환 등록 호출됨")
+                        Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
+                        exchangeViewModel.postExchange(1, exchaneImg, exchangeRequestPart)
+
+                        launch(Dispatchers.Main) {
+                            imgPath = null
+                        }
+                    }
+                }
+            }
+
+            //todo. 퀘스트 리스트로 이동?
+            //등록되었습니다 알림?
             findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
-            //등록되었습니다 알림? 마이퀘스트 리스트에 추가
         }
 
         binding.exchangeImgBtn.setOnClickListener{
@@ -132,8 +140,8 @@ class ExchangePostDialogFragment: DialogFragment() {
 
     private fun setTheme() {
         binding.npExchangeDuration.apply {
-            minValue = 0
-            maxValue = 120
+            minValue = 1
+            maxValue = 60
         }
 
         val allRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_10) as GradientDrawable
@@ -145,8 +153,8 @@ class ExchangePostDialogFragment: DialogFragment() {
         squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.sub400))
         squareCircleDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
-        binding.btnShareCancel.background = squareCircleDrawable
-        binding.btnSharePost.background = squareCircleDrawable
+        binding.btnExchangeCancel.background = squareCircleDrawable
+        binding.btnExchangePost.background = squareCircleDrawable
 
     }
 

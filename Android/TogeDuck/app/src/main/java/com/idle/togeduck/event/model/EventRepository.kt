@@ -26,12 +26,6 @@ interface EventRepository {
         content: MultipartBody.Part,
     ): Response<DefaultResponse>
 
-//    suspend fun postReview(
-//        eventId: Long,
-//        image: MultipartBody.Part?,
-//        content: RequestBody,
-//    ): Response<DefaultResponse>
-
     suspend fun getReviewList(
         eventId: Long,
         page: Int,

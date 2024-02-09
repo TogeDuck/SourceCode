@@ -72,9 +72,9 @@ class ExchangeViewModel @Inject constructor(
         }
     }
 
-    suspend fun postExchange(eventId: Long, image:MultipartBody.Part, tradeRequestDto: RequestBody){
+    suspend fun postExchange(eventId: Long, image:MultipartBody.Part, tradeRequestDto: MultipartBody.Part){
         val responseResult = exchangeRepository.postExchange(eventId, image, tradeRequestDto)
-        Log.d("로그", "ExchangeViewModel - postExchange() 성공 - ${responseResult}")
+        Log.d("로그", "ExchangeViewModel - postExchange() 호출됨 - ${responseResult}")
 
         if (!responseResult.isSuccessful) {
             val errorBody = Json.decodeFromString<DefaultResponse>(
@@ -83,9 +83,6 @@ class ExchangeViewModel @Inject constructor(
             Log.d("로그", "ExchangeViewModel - postExchange() 응답 실패 - $errorBody")
         }
     }
-
-
-
 
     suspend fun sendExchangeRequest(eventId: Long){
         val selectedExchangeValue = selectedExchange.value
