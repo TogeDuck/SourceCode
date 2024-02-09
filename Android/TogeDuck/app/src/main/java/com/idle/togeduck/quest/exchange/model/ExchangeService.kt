@@ -34,21 +34,12 @@ interface ExchangeService {
         @Path("event_id") eventId: Long
     ) : Response<ExchangeMyListResponse>
 
-//    @Multipart
-//    @POST("events/{event_id}/trades")
-//    suspend fun postExchange(
-//        @Path("event_id") eventId: Long,
-//        @Part image: MultipartBody.Part,
-//        @Part("content") content: RequestBody,
-//        @Part("duration") duration: Int
-//    ) : Response<DefaultResponse>
-
     @Multipart
     @POST("events/{event_id}/trades")
     suspend fun postExchange(
         @Path("event_id") eventId: Long,
         @Part image: MultipartBody.Part,
-        @Body tradeRequestDto: RequestBody
+        @Part tradeRequestDto: MultipartBody.Part
     ) : Response<DefaultResponse>
 
     @Multipart

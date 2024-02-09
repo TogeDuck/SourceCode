@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
+import com.idle.togeduck.quest.exchange.model.ExchangeRequest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -36,16 +37,6 @@ object MultiPartUtil {
     fun createRequestBody(content: String): MultipartBody.Part {
         val requestBody = content.toRequestBody("text/plain".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData("content", "content", requestBody)
-    }
-
-    //todo. 임시 추가 (확인 ..)
-    fun createRequestBody2(content: String): RequestBody {
-        val requestBody = content.toRequestBody("text/plain".toMediaTypeOrNull())
-        return requestBody
-    }
-    fun createRequestBody2(content: Int): RequestBody {
-        val requestBody = content.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        return requestBody
     }
 
     fun uriToFilePath(context: Context, uri: Uri): String {

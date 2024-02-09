@@ -248,6 +248,7 @@ class EventDetailFragment : Fragment(), EventReview {
 
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
+                    Log.d("리뷰 등록 값", ": ${reviewText}")
                     eventReviewViewModel.postReview(selectedEventId, reviewImg, reviewText)
                     eventReviewViewModel.getReviewList(selectedEventId, 1, 10)
 

@@ -10,6 +10,7 @@ import com.idle.togeduck.quest.share.model.ShareRepository
 import com.idle.togeduck.quest.share.model.shareResponseToShare
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.serialization.json.Json
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +39,20 @@ class ShareViewModel @Inject constructor(
             )
         }
     }
+
+    suspend fun createShare(eventId: Long, image: MultipartBody.Part, shareRequestDto: MultipartBody.Part){
+        val responseResult = shareRepository.createShare(eventId, image, shareRequestDto)
+        Log.d("로그", "ShareViewModel - createShare() 호출됨 - ${responseResult}")
+
+        if (!responseResult.isSuccessful) {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ShareViewModel - createShare() 응답 실패 - $errorBody")
+        }
+    }
+
+
 
     fun setSelectedShare(share: Share) {
         _selectedShare.value = share

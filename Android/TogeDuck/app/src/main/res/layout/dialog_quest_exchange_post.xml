@@ -45,7 +45,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
                 android:paddingVertical="8dp"
-                android:text="교환 글을 작성해 주세요 !"
+                android:text="교환 글을 작성해 주세요"
                 android:textSize="@dimen/text_title_small"/>
         </LinearLayout>
 
@@ -121,14 +121,14 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_share_btn_container"
+                android:id="@+id/cl_exchange_btn_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/btn_share_cancel"
+                    android:id="@+id/btn_exchange_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="5dp"
@@ -138,12 +138,12 @@
                     android:text="취소"
                     android:textSize="@dimen/text_large"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_share_post"
+                    app:layout_constraintEnd_toStartOf="@id/btn_exchange_post"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/btn_share_post"
+                    android:id="@+id/btn_exchange_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="10dp"
@@ -154,7 +154,7 @@
                     android:textSize="@dimen/text_large"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/btn_share_cancel"
+                    app:layout_constraintStart_toEndOf="@id/btn_exchange_cancel"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

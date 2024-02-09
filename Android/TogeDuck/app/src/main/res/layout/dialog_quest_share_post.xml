@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -43,7 +44,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
                 android:paddingVertical="8dp"
-                android:text="나눔 글을 작성해 주세요 !"
+                android:text="나눔 글을 작성해 주세요"
                 android:textSize="@dimen/text_title_small"/>
         </LinearLayout>
 

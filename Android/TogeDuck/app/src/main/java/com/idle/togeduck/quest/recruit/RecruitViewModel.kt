@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.quest.recruit.model.Recruit
 import com.idle.togeduck.quest.recruit.model.RecruitRepository
+import com.idle.togeduck.quest.recruit.model.RecruitRequest
 import com.idle.togeduck.quest.recruit.model.recruitResponseToRecruit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.serialization.json.Json
@@ -35,6 +36,19 @@ class RecruitViewModel @Inject constructor(
             )
             Log.d("로그", "RecruitViewModel - getRecruitList() 응답 실패 - $errorBody")
         }
+    }
+
+    suspend fun createRecruit(eventId: Long, recruitRequest: RecruitRequest) {
+        val responseResult = recruitRepository.createRecruit(eventId, recruitRequest)
+        Log.d("로그", "RecruitViewModel - createRecruit() 호출됨 - ${responseResult}")
+
+        if (!responseResult.isSuccessful) {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "RecruitViewModel - createRecruit() 응답 실패 - $errorBody")
+        }
+
     }
 
     fun removeItem(recruit: Recruit){
