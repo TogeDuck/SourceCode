@@ -14,6 +14,7 @@ import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentHistoryBinding
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.view.history_rv.HistoryAdapter
 import com.idle.togeduck.history.view.history_rv.IHistory
@@ -22,6 +23,9 @@ import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HistoryFragment : Fragment(), IHistory {
@@ -33,6 +37,7 @@ class HistoryFragment : Fragment(), IHistory {
     private val historyViewModel: HistoryViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val mapViewModel: MapViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,9 +53,21 @@ class HistoryFragment : Fragment(), IHistory {
 
         setRecyclerView()
         setTheme()
+        getHistoryList()
 
         historyViewModel.historyList.observe(viewLifecycleOwner) { historyList ->
             historyAdapter.submitList(historyList)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getHistoryList()
+    }
+
+    private fun getHistoryList(){
+        CoroutineScope(Dispatchers.IO).launch {
+            historyViewModel.getHistoryList(favoriteSettingViewModel.selectedCelebrity.value!!.id)
         }
     }
 
