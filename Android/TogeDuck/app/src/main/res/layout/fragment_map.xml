@@ -13,6 +13,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.naver.maps.map.MapFragment" />
+    <LinearLayout
+        android:id="@+id/map_peoplecnt_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="10dp"
+        tools:background="@color/blackpink_main100"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="10dp"
+        >
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/common_cupcake1"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/map_peoplecnt_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sdafasdf"
+            android:layout_marginEnd="10dp"
+            android:textSize="@dimen/text_large"
+            android:layout_gravity="center"
+        />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/common_cupcake3"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
 
     <com.naver.maps.map.widget.LocationButtonView
         android:id="@+id/location_btn"
@@ -127,6 +160,7 @@
             android:visibility="visible"
             tools:background="@color/bts_sub500" />
 
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -135,6 +169,18 @@
             android:id="@+id/bs_fragment"
             layout="@layout/component_bottom_sheet" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dasdfasd"/>
+    </LinearLayout>
 
     <include
         android:id="@+id/appbar"
@@ -143,5 +189,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>
