@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,12 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogSelectCelebrityBinding
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
-import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.select_celebrity.ISelectCelebrity
 import com.idle.togeduck.main_map.view.select_celebrity.SelectCelebrityAdapter
 import com.idle.togeduck.util.TogeDuckItemDecoration
@@ -138,8 +135,8 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun celebrityClicked(position: Int) {
-        if ((favoriteSettingViewModel.clickedCelebrity.value?.id
-                ?: -1) != favoriteSettingViewModel.favoriteIdolList.value!![position].id
+        if ((favoriteSettingViewModel.clickedCelebrity.value?.id ?: -1)
+            != favoriteSettingViewModel.favoriteIdolList.value!![position].id
         ) {
             favoriteSettingViewModel.clickedCelebrity(position)
             favoriteSettingViewModel.setClickedCelebrity(favoriteSettingViewModel.favoriteIdolList.value!![position])

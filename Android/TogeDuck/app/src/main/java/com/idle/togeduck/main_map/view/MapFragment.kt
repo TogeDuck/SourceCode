@@ -92,7 +92,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
@@ -168,6 +170,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var tourStartCircle: GradientDrawable
     private lateinit var tourEndCircle: GradientDrawable
 
+    @Inject
+    lateinit var preference: PreferenceModule
+
     /** Fragment Lifecycle Functions **/
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -201,6 +206,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpFloatingButton()
         setRealTimeContainer()
         setTourBtnTheme()
+
         mainViewModel.accessToken.value?.let { stompManager.setHeader(it) }
         stompManager.connect()
         peopleMarkerOverlay = initPeopleMarkerImage()

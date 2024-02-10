@@ -18,6 +18,7 @@ import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentTopAppbarBinding
 import com.idle.togeduck.databinding.FragmentTopAppbarBinding
+import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
@@ -34,6 +35,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TopAppbarFragment : Fragment() {
@@ -51,10 +53,13 @@ class TopAppbarFragment : Fragment() {
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
 
+    @Inject
+    lateinit var preference: PreferenceModule
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentTopAppbarBinding.inflate(inflater, container, false)
         _topAppBarBinding = binding.cta
@@ -73,20 +78,30 @@ class TopAppbarFragment : Fragment() {
 
         mapViewModel.pickedDate.observe(viewLifecycleOwner) { data ->
             val dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM/dd")
-            val dateRangeText = "${data.first.format(dateTimeFormatter)}-${data.second.format(dateTimeFormatter)}"
+            val dateRangeText =
+                "${data.first.format(dateTimeFormatter)}-${data.second.format(dateTimeFormatter)}"
             topAppbarBinding.tvDate.text = dateRangeText
             getEventList()
         }
 
         favoriteSettingViewModel.selectedCelebrity.observe(viewLifecycleOwner) { celebrity ->
+            CoroutineScope(Dispatchers.IO).launch {
+                preference.setSelectedCelebrity(celebrity)
+            }
+
             setIdolProfile()
         }
     }
+
     private fun getEventList() {
         CoroutineScope(Dispatchers.IO).launch {
             val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
             val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
-            eventListViewModel.getEventList(2, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
+            eventListViewModel.getEventList(
+                2,
+                startDate.toKotlinLocalDate(),
+                endDate.toKotlinLocalDate()
+            )
         }
     }
 
@@ -111,7 +126,12 @@ class TopAppbarFragment : Fragment() {
 
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
             .setTheme(R.style.MyMaterialDatePickerTheme)
-            .setSelection(Pair(MaterialDatePicker.todayInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()))
+            .setSelection(
+                Pair(
+                    MaterialDatePicker.todayInUtcMilliseconds(),
+                    MaterialDatePicker.todayInUtcMilliseconds()
+                )
+            )
             .setCalendarConstraints(constraintsBuilder.build())
             .setTitleText("날짜를 선택하세요")
             .build()
@@ -124,7 +144,8 @@ class TopAppbarFragment : Fragment() {
             val startDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
             instant = Instant.ofEpochMilli(selection.second)
             val endDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
-            val dateRangeText = "${startDate.format(dateTimeFormatter)}-${endDate.format(dateTimeFormatter)}"
+            val dateRangeText =
+                "${startDate.format(dateTimeFormatter)}-${endDate.format(dateTimeFormatter)}"
             topAppbarBinding.tvDate.text = dateRangeText
 
             mapViewModel.setPickedDate(startDate, endDate)
@@ -156,36 +177,42 @@ class TopAppbarFragment : Fragment() {
         )
     }
 
-    private fun setIdolProfile(){
+    private fun setIdolProfile() {
         val image = topAppbarBinding.ivIdolProfile
         val imageUrl = favoriteSettingViewModel.selectedCelebrity.value?.image
         Glide
             .with(image)
             .load(imageUrl)
             .thumbnail(
-                Glide.with(image).load(imageUrl).override(80,80)
+                Glide.with(image).load(imageUrl).override(80, 80)
             )
             .circleCrop()
             .override(80, 80)
             .into(image)
-        topAppbarBinding.tvIdolName.text = favoriteSettingViewModel.selectedCelebrity.value?.name
+        topAppbarBinding.tvIdolName.text =
+            favoriteSettingViewModel.selectedCelebrity.value?.nickname
     }
 
     private fun setTheme() {
-        val bottomRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_bottom_round_25) as GradientDrawable
+        val bottomRoundDrawable = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_bottom_round_25
+        ) as GradientDrawable
         bottomRoundDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
         bottomRoundDrawable.alpha = 0.6.toAlpha()
 
         topAppbarBinding.llTopAppbar.background = bottomRoundDrawable
 
-        val yellowCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        val yellowCircleDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         yellowCircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
         yellowCircleDrawable.setStroke(4, getColor(requireContext(), R.color.yellow))
 
         topAppbarBinding.ivLogo.background = yellowCircleDrawable
         topAppbarBinding.ivFavorite.background = yellowCircleDrawable
 
-        val main100CircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        val main100CircleDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         main100CircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
         main100CircleDrawable.setStroke(0, getColor(requireContext(), Theme.theme.main500))
 
@@ -193,11 +220,15 @@ class TopAppbarFragment : Fragment() {
         topAppbarBinding.ivCalendar.background = main100CircleDrawable
         topAppbarBinding.ivCalendar.setColorFilter(getColor(requireContext(), Theme.theme.main500))
 
-        val squareCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        val squareCircleDrawable = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_square_circle
+        ) as GradientDrawable
         squareCircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
         squareCircleDrawable.setStroke(4, getColor(requireContext(), Theme.theme.main500))
 
-        val cursorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
+        val cursorDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
         cursorDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
 
 //        @RequiresApi(Build.VERSION_CODES.Q)
@@ -208,7 +239,10 @@ class TopAppbarFragment : Fragment() {
 
         topAppbarBinding.tvDate.setTextColor(getColor(requireContext(), Theme.theme.main500))
 
-        val allRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_5) as GradientDrawable
+        val allRoundDrawable = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_all_round_5
+        ) as GradientDrawable
         allRoundDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
         allRoundDrawable.setStroke(0, getColor(requireContext(), Theme.theme.main500))
         topAppbarBinding.tvDate.background = allRoundDrawable
