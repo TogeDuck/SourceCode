@@ -24,12 +24,15 @@ import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.view.detail.EventDetailFragment
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toKotlinLocalDate
 
 @AndroidEntryPoint
 class EventListFragment : Fragment(), EventInfo {
@@ -37,6 +40,8 @@ class EventListFragment : Fragment(), EventInfo {
     private val binding get() = _binding!!
 
     private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     private lateinit var todayEventInfoAdapter: EventInfoAdapter
     private lateinit var upcomingEventInfoAdapter: EventInfoAdapter
@@ -74,7 +79,7 @@ class EventListFragment : Fragment(), EventInfo {
             pastEventInfoAdapter.submitList(list)
         }
 
-        //todo.즐겨찾기 리스트 호출은 main화면에서 하는 걸로 변경
+        //todo.즐겨찾기 리스트 호출은 main화면에서 하는 걸로 변경 -> 새로고침은 여기서
 //        CoroutineScope(Dispatchers.IO).launch {
 //            eventListViewModel.getLikesList()
 //
@@ -83,6 +88,18 @@ class EventListFragment : Fragment(), EventInfo {
     override fun onResume() {
         Log.d("로그", "EventListFragment - onResume() 호출됨")
         super.onResume()
+        getEventList()
+    }
+
+    private fun getEventList(){
+        if(favoriteSettingViewModel.selectedCelebrity.value != null){
+            CoroutineScope(Dispatchers.IO).launch{
+                eventListViewModel.getEventList(
+                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                    mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
+                    mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
+            }
+        }
     }
 
     override fun onPause() {
