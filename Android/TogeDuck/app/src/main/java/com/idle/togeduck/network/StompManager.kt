@@ -47,24 +47,31 @@ class StompManager {
         stompClient.send(destination, Gson().toJson(message), headers).subscribe()
     }
     fun sendChat(chatId: Long, message:String){
+        Log.d("웹소켓 헤더", headers.toString())
         val destination = "/pub/chats/$chatId/message"
         stompClient.send(destination, Gson().toJson(MessageRequest(chatId, message)), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" "+Gson().toJson(MessageRequest(chatId, message)))
     }
-    fun sendLocation(){
-
+    fun sendLocation(celebrityId: Long, lat:Double, lng:Double){
+        Log.d("웹소켓 헤더", headers.toString())
+        val destination = "/pub/celebrities/$celebrityId/message"
+        stompClient.send(destination, Gson().toJson(CoordinateRequest(celebrityId,lat,lng)), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" "+Gson().toJson(CoordinateRequest(celebrityId,lat,lng)))
     }
 
-    fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
+    private fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
         val disposable = stompClient.topic(topic)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ topicMessage ->
+                Log.d("웹소켓 메세지 수신", "토픽 ($topic) : 메세지 ($topicMessage)")
                 onMessageReceived(topicMessage.payload)
             }, { throwable ->
                 Log.e(ContentValues.TAG, "Error on"+topic, throwable)
             })
         compositeDisposable.add(disposable)
         topicSubscriptions[topic] = disposable
+        Log.d("웹소켓", "토픽 $topic 구독 시작")
     }
     // 채팅 구독
     fun subscribeChat(chatId: Long, onMessageReceived: (String) -> Unit) {
@@ -84,6 +91,7 @@ class StompManager {
             topicSubscriptions.remove(topic)
         }
         stompClient.unsubscribePath(topic)
+        Log.d("웹소켓", "토픽 $topic 구독 해제")
     }
     fun unsubscribeChat(chatId: Long){
         val topic = "/sub/chats/$chatId"

@@ -4,13 +4,14 @@
     <value>
       <entry key="app">
         <State>
+          <multipleDevicesSelectedInDropDown value="true" />
           <runningDeviceTargetsSelectedWithDialog>
             <Target>
               <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\SSAFY\.android\avd\Pixel_3a_API_34_extension_level_7_x86_64.avd" />
+                  <type value="SERIAL_NUMBER" />
+                  <value value="adb-R39M20CCJKD-ZEtQsP._adb-tls-connect._tcp." />
                 </Key>
               </deviceKey>
             </Target>
@@ -19,7 +20,7 @@
               <deviceKey>
                 <Key>
                   <type value="SERIAL_NUMBER" />
-                  <value value="R59N309LHJK" />
+                  <value value="adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp." />
                 </Key>
               </deviceKey>
             </Target>

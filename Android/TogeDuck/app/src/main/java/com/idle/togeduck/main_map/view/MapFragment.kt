@@ -44,6 +44,7 @@ import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermissionUtil
 import com.gun0912.tedpermission.normal.TedPermission
+import com.idle.togeduck.MainViewModel
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
@@ -54,14 +55,20 @@ import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.CoordinateRequest
+import com.idle.togeduck.network.CoordinateResponse
 import com.idle.togeduck.network.Message
 import com.idle.togeduck.network.StompManager
+import com.idle.togeduck.network.TempCoordinateResponse
+import com.idle.togeduck.network.toCoordinate
+import com.idle.togeduck.util.CalcDistance
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.NaverItem
 import com.idle.togeduck.util.builder
@@ -93,9 +100,14 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.E
+import kotlin.math.ln
 
 enum class EventKind {
     PAST, TODAY, LATER
+}
+enum class MessageKind{
+    MESSAGE, JOIN, LEAVE
 }
 
 @AndroidEntryPoint
@@ -108,6 +120,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var _componentBottomAppbarBinding: ComponentBottomAppbarBinding? = null
     private val componentBottomAppbarBinding get() = _componentBottomAppbarBinding!!
 
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val mapViewModel: MapViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
@@ -185,6 +198,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpFloatingButton()
         setRealTimeContainer()
         setTourBtnTheme()
+        mainViewModel.accessToken.value?.let { stompManager.setHeader(it) }
         stompManager.connect()
 
         mapViewModel.isTourStart.observe(viewLifecycleOwner) { isTourStart ->
@@ -423,13 +437,43 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     /** Button Click & Callback Functions **/
     private fun realTimeBtnOnClick(){
         if(realTimeOnOffBtn.isChecked){
-            stompManager.subscribeTopic("/sub/chats/1"){ message ->
-                toast(message)
-                Log.d("웹소켓 1", "Received message: $message")
+            stompManager.subscribeCelebrity(favoriteSettingViewModel.selectedCelebrity.value!!.id){
+                message -> coordinateMessageCallback(message)
+            }
+            // 추후 삭제
+            stompManager.subscribeChat(1){
+                message -> tempCoordinateMessageCallback(message)
             }
         }
         else{
-            stompManager.unsubscribeTopic("/sub/chats/1")
+            stompManager.unsubscribeCelebrity(favoriteSettingViewModel.selectedCelebrity.value!!.id)
+        }
+    }
+    private fun coordinateMessageCallback(message: String){
+        // 추후 메세지 형식에 따라 변경
+        val location = Gson().fromJson(message, CoordinateResponse::class.java).toCoordinate()
+        mapViewModel.updatePeopleMarker(location)
+    }
+    private fun tempCoordinateMessageCallback(message: String){
+        val response = Gson().fromJson(message, TempCoordinateResponse::class.java)
+        val coordinate = Gson().fromJson(response.content, CoordinateResponse::class.java).toCoordinate()
+        mapViewModel.updatePeopleMarker(coordinate)
+    }
+
+    private fun changeTourBtn() {
+        if (binding.tourStart.text == "투어\n종료") {
+            binding.tourStart.background = tourStartCircle
+            binding.tourStart.text = "투어\n시작"
+            mapViewModel.setTourStatus(false)
+            // 실시간 위치 공유에서 종료 알림
+            stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,0.0, 0.0, mainViewModel.guid.value!!, MessageKind.LEAVE.toString())))
+            // 기록된 투어 post 요청
+
+        } else if (binding.tourStart.text == "투어\n시작") {
+            binding.tourStart.background = tourEndCircle
+            binding.tourStart.text = "투어\n종료"
+            mapViewModel.setTourStatus(true)
+            mapViewModel.initTourList()
         }
     }
 
@@ -494,21 +538,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     /** Testing Functions **/
     private fun toast(message: String) {
-        val questDto = Gson().fromJson(message, Message::class.java)
-        Toast.makeText(requireContext(), "${questDto.content}이 생성되었습니다", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
             .show()
-    }
-
-    private fun changeTourBtn() {
-        if (binding.tourStart.text == "투어\n종료") {
-            binding.tourStart.background = tourStartCircle
-            binding.tourStart.text = "투어\n시작"
-            mapViewModel.setTourStatus(false)
-        } else if (binding.tourStart.text == "투어\n시작") {
-            binding.tourStart.background = tourEndCircle
-            binding.tourStart.text = "투어\n종료"
-            mapViewModel.setTourStatus(true)
-        }
     }
 
     fun changeViewPagerPage(pageIdx: Int) {
@@ -572,19 +603,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
                 }
+
                 initClusterTest()
                 getEventList()
-
-//                initCluster()
-//                mapViewModel.getItems(naverMap, 10)
-
-                // People Cluster + WebSocket
-//                initPeopleCluster()
-//                webSocketManager.connect()
-//                webSocketManager.subscribe("/topic/coors"){
-//                    message ->
-//                    mapViewModel.updatePeopleMarker(messageToCoordination(message))
-//                }
+                initPeopleCluster()
             }
     }
     private fun messageToCoordination(message: String): Coordinate{
@@ -1070,6 +1092,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         Log.d("로그", "doWorkWithPeriodic() 호출됨")
 
         // TODO. GPSWorker 클래스에서 위치 기록 저장 및 전송 로직 추가 필요
+        // [메모]
+        // GPSWorker 클래스에서 뷰모델의 데이터에 접근 하려면 어떻게 해야 하나요?
+        // 선택된 아이돌 id, 당일 열리는 이벤트 리스트(today event)가 필요할 것 같은데
+        // GPSWorker가 받은 좌표를 아니면 MapFragment에서 받을 수 았나?
 
         workRequest = PeriodicWorkRequestBuilder<GPSWorker>(15, TimeUnit.MINUTES).build()
 
@@ -1089,19 +1115,47 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun sendPosition() {
         timer = Timer()
         timer?.scheduleAtFixedRate(object : TimerTask() {
+            val favorite = favoriteSettingViewModel.selectedCelebrity.value?.id
             override fun run() {
                 if (TedPermissionUtil.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
                             Log.d("로그", "lastLocation : ${location?.latitude} ${location?.longitude}")
+                            if(location!= null){
+                                // 좌표 리스트에 등록
 
-                            val headers = listOf(
-                                com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
-                            )
+                                if(mapViewModel.addTourRecord(location.latitude, location.longitude)){
+                                    // 웹소켓 전송 (추후 url, 전송 형식 백엔드에 맞춰 변경)
+                                    stompManager.sendLocation(favoriteSettingViewModel.selectedCelebrity.value!!.id, location.latitude, location.longitude)
+                                    stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,location.latitude, location.longitude, mainViewModel.guid.value!!, MessageKind.MESSAGE.toString())))
+                                }
+                                else{
+                                    stompManager.sendLocation(favoriteSettingViewModel.selectedCelebrity.value!!.id, location.latitude, location.longitude)
+                                    stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,location.latitude, location.longitude, mainViewModel.guid.value!!, MessageKind.MESSAGE.toString())))
+                                }
+                                // 이벤트 리스트 확인, 가까운 리스트 갱신
+                                figureCloseEvents(location.latitude, location.longitude)
+                            }
                         }
                 }
             }
         }, 0 , 10 * 1000)
+    }
+
+    private fun figureCloseEvents(lat:Double, lng:Double) {
+        val eventList = mutableListOf<Event>()
+        eventListViewModel.listToday.value?.let { list ->
+            for (event in list) {
+                if(CalcDistance.idsDistanceOk(lat, lng, event.latitude, event.longitude)){
+                   eventList.add(event)
+                }
+            }
+        }
+        eventListViewModel.closeEvents.value = eventList
+        Log.d("가까운 이벤트 탐색 결과", eventList.toString())
+        if(!eventList.isEmpty()){
+            toast("이벤트 있음")
+        }
     }
 
     override fun onStart() {
