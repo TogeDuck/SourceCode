@@ -43,6 +43,9 @@ class HistoryViewModel @Inject constructor(
     private val _markerList = MutableLiveData<List<Marker>>()
     val markerList: LiveData<List<Marker>> get() = _markerList
 
+    private val _historyId = MutableLiveData<Long>()
+    val historyId: LiveData<Long> get() = _historyId
+
 
 
     init {
@@ -90,8 +93,8 @@ class HistoryViewModel @Inject constructor(
 
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
-
-            // TODO. 작업 추가 필요
+            _historyId.postValue(body.data)
+            Log.d("로그", "HistoryViewModel - createHistory() 응답 성공 - $body")
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!

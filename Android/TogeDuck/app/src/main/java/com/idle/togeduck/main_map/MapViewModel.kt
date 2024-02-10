@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.history.model.Position
+import com.idle.togeduck.main_map.view.MessageKind
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.util.CalcDistance
 import com.idle.togeduck.util.NaverItem
@@ -108,9 +109,16 @@ class MapViewModel @Inject constructor(
         _pickedDate.value = startDate to endDate
     }
 
-    fun updatePeopleMarker(coordinate: Coordinate){
+    fun updatePeopleMarker(coordinate: Coordinate, type:String){
         val updateMap = _peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
-        updateMap[coordinate.userId] = NaverItem(coordinate.latitude, coordinate.longitude)
+        when(type){
+            MessageKind.MESSAGE.toString() -> {
+                updateMap[coordinate.userId] = NaverItem(coordinate.latitude, coordinate.longitude)
+            }
+            MessageKind.LEAVE.toString() -> {
+                updateMap.remove(coordinate.userId)
+            }
+        }
         _peopleMarkerList.postValue(updateMap)
     }
 

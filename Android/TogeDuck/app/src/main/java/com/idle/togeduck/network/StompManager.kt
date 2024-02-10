@@ -29,7 +29,7 @@ class StompManager {
     }
 
     private fun configureStompClient(stompClient: StompClient) {
-        stompClient.withClientHeartbeat(1000).withServerHeartbeat(1000)
+        stompClient.withClientHeartbeat(10000).withServerHeartbeat(10000)
     }
 
     fun setHeader(accessToken: String){
@@ -52,11 +52,11 @@ class StompManager {
         stompClient.send(destination, Gson().toJson(MessageRequest(chatId, message)), headers).subscribe()
         Log.d("웹소켓 전송", destination+" "+Gson().toJson(MessageRequest(chatId, message)))
     }
-    fun sendLocation(celebrityId: Long, lat:Double, lng:Double){
+    fun sendLocation(celebrityId: Long, lat:Double, lng:Double, userId:String, type:String){
         Log.d("웹소켓 헤더", headers.toString())
         val destination = "/pub/celebrities/$celebrityId/message"
-        stompClient.send(destination, Gson().toJson(CoordinateRequest(celebrityId,lat,lng)), headers).subscribe()
-        Log.d("웹소켓 전송", destination+" "+Gson().toJson(CoordinateRequest(celebrityId,lat,lng)))
+        stompClient.send(destination, Gson().toJson(CoordinateRequest(celebrityId,lat,lng,userId,type)), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" "+Gson().toJson(CoordinateRequest(celebrityId,lat,lng,userId,type)))
     }
 
     private fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
