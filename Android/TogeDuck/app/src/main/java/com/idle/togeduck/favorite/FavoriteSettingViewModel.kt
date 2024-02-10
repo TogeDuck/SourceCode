@@ -8,18 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.favorite.model.CelebrityRepository
-import com.idle.togeduck.favorite.model.FavoriteListResponse
 import com.idle.togeduck.favorite.model.FavoriteRepository
 import com.idle.togeduck.favorite.model.celebrityResponseToCelebrity
 import com.idle.togeduck.favorite.model.celebrityToFavoriteRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaLocalDate
 import kotlinx.serialization.json.Json
-import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -50,15 +44,6 @@ class FavoriteSettingViewModel @Inject constructor(
         viewModelScope.launch {
             getFavoriteList()
         }
-        _selectedCelebrity.postValue(Celebrity(1,
-            "뷔",
-            "뷔",
-            LocalDate(1995,12,31),
-            "",
-            "방탄소년단",
-            true,
-            true,
-        ))
     }
 
      suspend fun getFavoriteList() :Boolean{
@@ -67,7 +52,15 @@ class FavoriteSettingViewModel @Inject constructor(
              val responseResult = favoriteRepository.getFavorites()
              if (responseResult.isSuccessful) {
                  val body = responseResult.body()!!
-                 _favoriteIdolList.value = body.data.map { it.celebrityResponseToCelebrity() }
+                 _favoriteIdolList.value = body.data.map { celebrityResponse ->
+                    val celebrity = celebrityResponse.celebrityResponseToCelebrity()
+                     if (selectedCelebrity.value != null && selectedCelebrity.value!!.id == celebrity.id) {
+                         celebrity.isSelected = true
+                         syncClickedCelebrity()
+                         setClickedCelebrity(celebrity)
+                     }
+                     celebrity
+                 }
                  result = true
              } else {
                  val errorBody = Json.decodeFromString<DefaultResponse>(
@@ -139,7 +132,7 @@ class FavoriteSettingViewModel @Inject constructor(
         _clickedCelebrity.value = celebrity
     }
 
-    fun setClickedCelebrity() {
+    fun syncClickedCelebrity() {
         _clickedCelebrity.value = _selectedCelebrity.value
     }
 

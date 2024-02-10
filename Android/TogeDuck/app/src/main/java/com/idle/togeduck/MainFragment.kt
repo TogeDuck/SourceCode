@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.di.PreferenceModule
@@ -56,6 +58,7 @@ class MainFragment : Fragment() {
 
     @Inject
     lateinit var preference: PreferenceModule
+
     @Inject
     lateinit var stompManager: StompManager
 
@@ -64,12 +67,15 @@ class MainFragment : Fragment() {
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
+    private lateinit var backPressedCallback: OnBackPressedCallback
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
+        addBackPressedCallback()
         return binding.root
     }
 
@@ -80,6 +86,7 @@ class MainFragment : Fragment() {
         // 초기 정보 설정
         initGUID()
         setDate()
+        loadSelectedCelebrity()
         getFavorites()
 
 
@@ -143,37 +150,46 @@ class MainFragment : Fragment() {
         mapViewModel.setPickedDate(sixMonthsAgo, sixMonthsLater)
     }
 
-    private fun getFavorites(){
+    private fun loadSelectedCelebrity() {
+        val savedCelebrity = runBlocking {
+            preference.getSelectedCelebrity.first()
+        }
+
+        if (savedCelebrity != null) {
+            favoriteSettingViewModel.setSelectedCelebrity(savedCelebrity)
+        }
+    }
+
+    private fun getFavorites() {
         CoroutineScope(Dispatchers.IO).launch {
             val result = favoriteSettingViewModel.getFavoriteList()
             handelNavigate(result)
         }
     }
 
-    private fun handelNavigate(result: Boolean){
-        if(result){
+    private fun handelNavigate(result: Boolean) {
+        if (result) {
             CoroutineScope(Dispatchers.Main).launch {
                 getBirthdayClosest()
 //                findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
             }
-        }
-        else {
+        } else {
             CoroutineScope(Dispatchers.Main).launch {
 //                findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
             }
         }
     }
 
-    private fun getBirthdayClosest(){
+    private fun getBirthdayClosest() {
         val favoriteIdolList = favoriteSettingViewModel.favoriteIdolList.value
         var closestBirthdayCelebrity: Celebrity? = null
         var minDaysDifference = Int.MAX_VALUE
         val today = LocalDate.now()
-        if(favoriteIdolList != null){
-            for(celebrity in favoriteIdolList){
+        if (favoriteIdolList != null) {
+            for (celebrity in favoriteIdolList) {
                 // 달이 이전인 경우 || 달과 일이 이전인 경우
                 var year = celebrity.birthday.year
-                if(today.month < celebrity.birthday.month || (today.month <= celebrity.birthday.month && today.dayOfMonth < celebrity.birthday.dayOfMonth)){
+                if (today.month < celebrity.birthday.month || (today.month <= celebrity.birthday.month && today.dayOfMonth < celebrity.birthday.dayOfMonth)) {
                     year++
                 }
                 val celebrityBirthday = java.time.LocalDate.of(
@@ -182,7 +198,7 @@ class MainFragment : Fragment() {
                     celebrity.birthday.dayOfMonth
                 )
                 val dayDifference = ChronoUnit.DAYS.between(today, celebrityBirthday)
-                if(dayDifference < minDaysDifference){
+                if (dayDifference < minDaysDifference) {
                     closestBirthdayCelebrity = celebrity
                 }
             }
@@ -190,9 +206,35 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun addBackPressedCallback() {
+        // OnBackPressedCallback (익명 클래스) 객체 생성
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            // 뒤로가기 했을 때 실행되는 기능
+            var backWait: Long = 0
+            override fun handleOnBackPressed() {
+                if (System.currentTimeMillis() - backWait >= 2000) {
+                    backWait = System.currentTimeMillis()
+                    Toast.makeText(
+                        context, "뒤로가기 버튼을 한번 더 누르면 종료됩니다",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    activity?.finish()
+                }
+
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
+    }
+
     override fun onDestroyView() {
-        stompManager.disconnect()
         super.onDestroyView()
         _binding = null
+        stompManager.disconnect()
+        backPressedCallback.remove()
     }
 }
