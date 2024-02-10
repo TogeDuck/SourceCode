@@ -23,9 +23,12 @@ import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.CoordinateResponse
 import com.idle.togeduck.network.Message
 import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.StompManager
+import com.idle.togeduck.network.TempCoordinateResponse
+import com.idle.togeduck.network.toCoordinate
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.LoginUtil
@@ -42,6 +45,9 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+enum class MessageKind{
+    MESSAGE, JOIN, LEAVE, CHAT, QUEST
+}
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -76,6 +82,8 @@ class MainFragment : Fragment() {
         setDate()
         getFavorites()
 
+
+
         // 삭제 예정 ========================================
         binding.btn0.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
@@ -92,11 +100,38 @@ class MainFragment : Fragment() {
         //----------------------------------------------------
     }
 
+    private fun socketCallback(message: String){
+        Log.d("웹소켓 수신", message)
+        val response = Gson().fromJson(message, TempCoordinateResponse::class.java)
+        val coordinateResponse = Gson().fromJson(response.content, CoordinateResponse::class.java)
+        if(coordinateResponse.celebrityId.equals(favoriteSettingViewModel.selectedCelebrity.value?.id)){
+            when(coordinateResponse.type){
+                MessageKind.MESSAGE.toString() -> {
+                    if(mainViewModel.isRealTimeOn && !coordinateResponse.userId.equals(mainViewModel.guid.value)){
+                        mapViewModel.updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
+                    }
+                }
+                MessageKind.LEAVE.toString() -> {
+                    if(mainViewModel.isRealTimeOn && !coordinateResponse.userId.equals(mainViewModel.guid.value)){
+                        mapViewModel.updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
+                    }
+                }
+
+            }
+        }
+    }
+
     private fun initGUID() {
         CoroutineScope(Dispatchers.IO).launch {
             if (!mainViewModel.isAccessTokenPresent()) {
                 val guid = mainViewModel.makeGUID()
-                mainViewModel.login("GUEST", guid)
+                if(mainViewModel.login("GUEST", guid)){
+                    stompManager.setHeader(mainViewModel.accessToken.value!!)
+                    stompManager.connect()
+                    stompManager.subscribeChat(1){
+                            message -> socketCallback(message)
+                    }
+                }
             }
         }
     }

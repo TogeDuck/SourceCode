@@ -29,6 +29,8 @@ class MainViewModel @Inject constructor(
     private val _refreshToken = MutableLiveData<String>()
     val refreshToken: LiveData<String> get() = _refreshToken
 
+    var isRealTimeOn = false
+
     init {
         getFromLocalData()
     }
@@ -80,7 +82,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun login(socialType: String, code: String) {
+    suspend fun login(socialType: String, code: String):Boolean {
         val responseResult = loginRepository.login(LoginRequest(socialType, code))
 
         if(responseResult.isSuccessful){
@@ -92,11 +94,13 @@ class MainViewModel @Inject constructor(
 
             Log.d("로그", "MainViewModel - login() 호출됨 accessToken : ${preference.getAccessToken.first()}")
             Log.d("로그", "MainViewModel - login() 호출됨 refreshToken : ${preference.getRefreshToken.first()}")
+            return true
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
             Log.d("로그", "응답 실패 ${errorBody}")
+            return false
         }
     }
 }

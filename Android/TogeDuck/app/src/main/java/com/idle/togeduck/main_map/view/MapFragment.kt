@@ -46,6 +46,7 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermissionUtil
 import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.MainViewModel
+import com.idle.togeduck.MessageKind
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
@@ -107,9 +108,6 @@ import kotlin.math.ln
 enum class EventKind {
     PAST, TODAY, LATER
 }
-enum class MessageKind{
-    MESSAGE, JOIN, LEAVE
-}
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -150,10 +148,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var todayClustering: TedNaverClustering<NaverItem>? = null
     private var upcomingClustering: TedNaverClustering<NaverItem>? = null
     private var pastClustering: TedNaverClustering<NaverItem>? = null
-    private var peopleMarkerOverlay : OverlayImage? = null
-    private val peopleMarkers : MutableMap<String, Marker?> = mutableMapOf()
-    private var markerSize: Int = 20
-
 
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
 
@@ -196,6 +190,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         initMapView()
         setBottomSheet()
         setUpBackgroundRoundCorner()
+        setUpPeopleNumber()
         setUpBackgroundButtonIcon()
         setUpBottomText()
         setUpFloatingButton()
@@ -203,7 +198,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setTourBtnTheme()
         mainViewModel.accessToken.value?.let { stompManager.setHeader(it) }
         stompManager.connect()
-        peopleMarkerOverlay = initPeopleMarkerImage()
+        mapViewModel.initPeopleMarkerImage(initPeopleMarkerImage())
 
         mapViewModel.isTourStart.observe(viewLifecycleOwner) { isTourStart ->
             if (isTourStart) {
@@ -214,6 +209,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     timer = null
                 }
             }
+        }
+        mapViewModel.peopleNum.observe(viewLifecycleOwner) {
+            number -> binding.mapPeoplecntText.text = "${number}명의 팬들이 함께하고 있습니다!"
         }
 
         /** 버튼 동작 연결 **/
@@ -441,19 +439,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     /** Button Click & Callback Functions **/
     private fun realTimeBtnOnClick(){
         if(realTimeOnOffBtn.isChecked){
-            //TODO 추후 메세지 형식에 따라 변경
-            stompManager.subscribeCelebrity(favoriteSettingViewModel.selectedCelebrity.value!!.id){
-                message -> coordinateMessageCallback(message)
-            }
             // 추후 삭제
-            stompManager.subscribeChat(1){
-                message -> tempCoordinateMessageCallback(message)
-            }
+//            stompManager.subscribeChat(1){
+//                message -> tempCoordinateMessageCallback(message)
+//            }
+            mainViewModel.isRealTimeOn = true
+            binding.mapPeoplecntContainer.visibility = View.VISIBLE
         }
         else{
-            stompManager.unsubscribeCelebrity(favoriteSettingViewModel.selectedCelebrity.value!!.id)
-            stompManager.unsubscribeChat(1)
-            deleteAllMarkers()
+            mapViewModel.deleteAllMarkers()
+            mainViewModel.isRealTimeOn = false
+            binding.mapPeoplecntContainer.visibility = View.GONE
         }
     }
     private fun coordinateMessageCallback(message: String){
@@ -463,29 +459,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
     // 좌표를 json 형태로 채팅방으로 보낼 때 사용하는 메서드 (추후 삭제 가능)
     private fun tempCoordinateMessageCallback(message: String){
+        Log.d("웹소켓 수신", message)
         val response = Gson().fromJson(message, TempCoordinateResponse::class.java)
         val coordinateResponse = Gson().fromJson(response.content, CoordinateResponse::class.java)
         if(!coordinateResponse.userId.equals(mainViewModel.guid.value)){
-            updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
-        }
-    }
-    fun updatePeopleMarker(coordinate: Coordinate, type:String){
-        when(type){
-            MessageKind.MESSAGE.toString() -> {
-                peopleMarkers[coordinate.userId]?.map = null
-                val marker = Marker()
-                marker.position = LatLng(coordinate.latitude, coordinate.longitude)
-                marker.icon = peopleMarkerOverlay!!
-                marker.alpha = 0.5f
-                marker.map = naverMap
-                marker.height = markerSize
-                marker.width = markerSize
-                peopleMarkers[coordinate.userId] = marker
-            }
-            MessageKind.LEAVE.toString() -> {
-                peopleMarkers[coordinate.userId]!!.map = null
-                peopleMarkers.remove(coordinate.userId)
-            }
+            mapViewModel.updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
+
         }
     }
     private fun initPeopleMarkerImage(): OverlayImage{
@@ -517,7 +496,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList.value!!)
             }
             mapViewModel.initTourList()
-            deleteAllMarkers()
         } else if (binding.tourStart.text == "투어\n시작") {
             binding.tourStart.background = tourEndCircle
             binding.tourStart.text = "투어\n종료"
@@ -597,24 +575,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     fun changeViewPagerPage(pageIdx: Int) {
         componentBottomSheetBinding.viewPager.setCurrentItem(pageIdx, true)
     }
-
-    private fun updateMarkerSize(zoom: Double){
-        getMarkerSize(zoom)
-        for ((_, marker) in peopleMarkers) {
-            marker?.let {
-                it.width = markerSize
-                it.height = markerSize
-            }
-        }
-    }
-    private fun deleteAllMarkers(){
-        for ((_,marker) in peopleMarkers){
-            marker?.let {
-                it.map = null
-            }
-        }
-        peopleMarkers.clear()
-    }
     fun getMarkerSize(zoom: Double) {
         val baseZoomLevel = 17.0
         val baseSize = 30
@@ -623,7 +583,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val sizeChange = (zoom - baseZoomLevel)*7
         var size = baseSize + sizeChange
         size = size.coerceAtMost(50.0).coerceAtLeast(1.0)
-        markerSize = dpToPx(size.toInt(), requireContext())
+        mapViewModel.markerSize = dpToPx(size.toInt(), requireContext())
     }
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -632,6 +592,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        mapViewModel.naverMap = naverMap
         // 현재 위치 버튼 표시
         naverMap.uiSettings.isLocationButtonEnabled = true
 
@@ -653,7 +614,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         naverMap.addOnCameraChangeListener{ reason, animated ->
             val zoom = naverMap.cameraPosition.zoom
-            updateMarkerSize(zoom)
+            getMarkerSize(zoom)
+            mapViewModel.updateMarkerSize()
         }
 
         if (ActivityCompat.checkSelfPermission(
@@ -903,6 +865,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             fab.visibility = View.INVISIBLE
         }
         showFab.visibility = View.VISIBLE
+    }
+
+    private fun setUpPeopleNumber(){
+        val statusBarDp = getStatusBarHeightToDp(requireContext())
+        val mapPeoplecntContainerParams = binding.mapPeoplecntContainer.layoutParams as FrameLayout.LayoutParams
+        mapPeoplecntContainerParams.topMargin = dpToPx(110 + statusBarDp, requireContext())
+        val roundSquare = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        roundSquare.setColor(ContextCompat.getColor(requireContext(),R.color.white))
+        roundSquare.setStroke(0,0)
+        binding.mapPeoplecntContainer.background = roundSquare
+        binding.mapPeoplecntText.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        binding.mapPeoplecntContainer.visibility = View.GONE
     }
 
     private fun setUpBackgroundRoundCorner() {

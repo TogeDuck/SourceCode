@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
 import kotlinx.serialization.json.Json
 import retrofit2.Response
 import java.lang.Exception
@@ -49,6 +50,15 @@ class FavoriteSettingViewModel @Inject constructor(
         viewModelScope.launch {
             getFavoriteList()
         }
+        _selectedCelebrity.postValue(Celebrity(1,
+            "뷔",
+            "뷔",
+            LocalDate(1995,12,31),
+            "",
+            "방탄소년단",
+            true,
+            true,
+        ))
     }
 
      suspend fun getFavoriteList() :Boolean{
