@@ -4,23 +4,31 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Coordinate(
     val celebrityId: Long,
-    val userId: Long,
-    val lat: Double,
-    val lng: Double
+    val latitude: Double,
+    val longitude: Double,
+    val userId: String
 )
 @Serializable
 data class CoordinateResponse(
     val celebrityId: Long,
     val latitude: Double,
     val longitude: Double,
-    val userId: Long
+    val userId: String,
+    val type: String
 )
 @Serializable
 data class CoordinateRequest(
     val celebrityId: Long,
     val latitude: Double,
     val longitude: Double,
+    val userId: String,
+    val type: String
 )
 
-fun CoordinateResponse.toCoordinate() = Coordinate(celebrityId, userId, latitude, longitude)
-fun Coordinate.toCoordinateRequest() = CoordinateRequest(celebrityId, lat, lng)
+@Serializable
+data class TempCoordinateResponse(
+    val chatId: Long,
+    val content: String
+)
+
+fun CoordinateResponse.toCoordinate() = Coordinate(celebrityId, latitude, longitude, userId)

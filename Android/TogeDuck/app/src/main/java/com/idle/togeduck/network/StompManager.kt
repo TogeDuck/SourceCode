@@ -29,7 +29,7 @@ class StompManager {
     }
 
     private fun configureStompClient(stompClient: StompClient) {
-        stompClient.withClientHeartbeat(1000).withServerHeartbeat(1000)
+        stompClient.withClientHeartbeat(10000).withServerHeartbeat(10000)
     }
 
     fun setHeader(accessToken: String){
@@ -43,27 +43,45 @@ class StompManager {
         stompClient.connect(headers)
     }
 
-    fun disconnect() {
-        stompClient.disconnect()
-        clearSubscriptions()
+    fun send(destination: String, message: MessageRequest) {
+        stompClient.send(destination, Gson().toJson(message), headers).subscribe()
+    }
+    fun sendChat(chatId: Long, message:String){
+        Log.d("웹소켓 헤더", headers.toString())
+        val destination = "/pub/chats/$chatId/message"
+        stompClient.send(destination, Gson().toJson(MessageRequest(chatId, message)), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" "+Gson().toJson(MessageRequest(chatId, message)))
+    }
+    fun sendLocation(celebrityId: Long, lat:Double, lng:Double, userId:String, type:String){
+        Log.d("웹소켓 헤더", headers.toString())
+        val destination = "/pub/celebrities/$celebrityId/message"
+        stompClient.send(destination, Gson().toJson(CoordinateRequest(celebrityId,lat,lng,userId,type)), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" "+Gson().toJson(CoordinateRequest(celebrityId,lat,lng,userId,type)))
     }
 
-    fun send(destination: String, chatId:Long, message: String) {
-        var messageRequest = MessageRequest(chatId, message, )
-        stompClient.send(destination, Gson().toJson(messageRequest), headers).subscribe()
-    }
-
-    fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
+    private fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
         val disposable = stompClient.topic(topic)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ topicMessage ->
+                Log.d("웹소켓 메세지 수신", "토픽 ($topic) : 메세지 ($topicMessage)")
                 onMessageReceived(topicMessage.payload)
             }, { throwable ->
                 Log.e(ContentValues.TAG, "Error on"+topic, throwable)
             })
         compositeDisposable.add(disposable)
         topicSubscriptions[topic] = disposable
+        Log.d("웹소켓", "토픽 $topic 구독 시작")
+    }
+    // 채팅 구독
+    fun subscribeChat(chatId: Long, onMessageReceived: (String) -> Unit) {
+        val topic = "/sub/chats/$chatId"
+        subscribeTopic(topic,onMessageReceived)
+    }
+    // 실시간 사용자 위치 정보 구독
+    fun subscribeCelebrity(celebrityId: Long, onMessageReceived: (String) -> Unit) {
+        val topic = "/sub/celebrities/$celebrityId"
+        subscribeTopic(topic,onMessageReceived)
     }
 
     fun unsubscribeTopic(topic: String) {
@@ -73,9 +91,21 @@ class StompManager {
             topicSubscriptions.remove(topic)
         }
         stompClient.unsubscribePath(topic)
+        Log.d("웹소켓", "토픽 $topic 구독 해제")
     }
-
+    fun unsubscribeChat(chatId: Long){
+        val topic = "/sub/chats/$chatId"
+        unsubscribeTopic(topic)
+    }
+    fun unsubscribeCelebrity(celebrityId: Long){
+        val topic = "/sub/celebrities/$celebrityId"
+        unsubscribeTopic(topic)
+    }
     fun clearSubscriptions() {
         compositeDisposable.clear()
+    }
+    fun disconnect() {
+        stompClient.disconnect()
+        clearSubscriptions()
     }
 }

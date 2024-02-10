@@ -46,22 +46,9 @@ class FavoriteSettingViewModel @Inject constructor(
     val clickedCelebrity: LiveData<Celebrity> get() = _clickedCelebrity
 
     init {
-//        _favoriteIdolList.value = mutableListOf()
-//        _searchIdolList.value = mutableListOf()
-//
-//        viewModelScope.launch {
-//            getFavoriteList()
-//        }
-
         viewModelScope.launch {
             getFavoriteList()
         }
-
-        _selectedCelebrity.postValue(Celebrity(
-            1L, "뷔", "닉네임?", LocalDate(1995,12,30),
-            "https://img.hankyung.com/photo/202112/BF.28437746.1.jpg",
-            "방탄소년단", true, true
-        ))
     }
 
      suspend fun getFavoriteList() :Boolean{

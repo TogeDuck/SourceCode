@@ -43,12 +43,16 @@ class EventListViewModel @Inject constructor(
     val selectedEvent: LiveData<Event>
         get() = _selectedEvent
 
-    var isEventToday = false
+    val closeEvents = MutableLiveData<List<Event>>()
 
     init {
         _listToday.value = listOf()
         _listPast.value = listOf()
         _listUpcoming.value = listOf()
+    }
+
+    fun initClostEvents(){
+        closeEvents.value = listOf()
     }
 
     suspend fun getEventList(celebrityId: Long, startDate: LocalDate, endDate: LocalDate){

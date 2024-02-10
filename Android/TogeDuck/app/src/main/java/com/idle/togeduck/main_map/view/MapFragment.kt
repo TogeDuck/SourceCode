@@ -45,6 +45,7 @@ import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermissionUtil
 import com.gun0912.tedpermission.normal.TedPermission
+import com.idle.togeduck.MainViewModel
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
@@ -55,14 +56,20 @@ import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
 import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.CoordinateRequest
+import com.idle.togeduck.network.CoordinateResponse
 import com.idle.togeduck.network.Message
 import com.idle.togeduck.network.StompManager
+import com.idle.togeduck.network.TempCoordinateResponse
+import com.idle.togeduck.network.toCoordinate
+import com.idle.togeduck.util.CalcDistance
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.NaverItem
 import com.idle.togeduck.util.builder
@@ -94,9 +101,14 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.E
+import kotlin.math.ln
 
 enum class EventKind {
     PAST, TODAY, LATER
+}
+enum class MessageKind{
+    MESSAGE, JOIN, LEAVE
 }
 
 @AndroidEntryPoint
@@ -109,6 +121,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var _componentBottomAppbarBinding: ComponentBottomAppbarBinding? = null
     private val componentBottomAppbarBinding get() = _componentBottomAppbarBinding!!
 
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val mapViewModel: MapViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
@@ -137,8 +150,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var todayClustering: TedNaverClustering<NaverItem>? = null
     private var upcomingClustering: TedNaverClustering<NaverItem>? = null
     private var pastClustering: TedNaverClustering<NaverItem>? = null
+    private var peopleMarkerOverlay : OverlayImage? = null
+    private val peopleMarkers : MutableMap<String, Marker?> = mutableMapOf()
+    private var markerSize: Int = 20
 
-    private var peopleClustering : TedNaverClustering<NaverItem>? = null
 
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
 
@@ -186,7 +201,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpFloatingButton()
         setRealTimeContainer()
         setTourBtnTheme()
+        mainViewModel.accessToken.value?.let { stompManager.setHeader(it) }
         stompManager.connect()
+        peopleMarkerOverlay = initPeopleMarkerImage()
 
         mapViewModel.isTourStart.observe(viewLifecycleOwner) { isTourStart ->
             if (isTourStart) {
@@ -252,12 +269,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
             Log.d("이벤트 리스트 변경","과거")
         }
-        mapViewModel.peopleMarkerList.observe(viewLifecycleOwner) {
-            updatedMarkerList ->
-            val valuesCollection = updatedMarkerList.values
-            peopleClustering?.clearItems()
-            peopleClustering?.addItems(valuesCollection)
-        }
+//        mapViewModel.peopleMarkerList.observe(viewLifecycleOwner) {
+//            updatedMarkerList ->
+//            val valuesCollection = updatedMarkerList.values
+//            peopleMarker.clear()
+//            peopleMarker.addAll(valuesCollection)
+//        }
         historyViewModel.route.observe(viewLifecycleOwner) { list ->
             if (pathLine != null) pathLine!!.map = null
             setPathLine(list)
@@ -424,13 +441,91 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     /** Button Click & Callback Functions **/
     private fun realTimeBtnOnClick(){
         if(realTimeOnOffBtn.isChecked){
-            stompManager.subscribeTopic("/sub/chats/1"){ message ->
-                toast(message)
-                Log.d("웹소켓 1", "Received message: $message")
+            //TODO 추후 메세지 형식에 따라 변경
+            stompManager.subscribeCelebrity(favoriteSettingViewModel.selectedCelebrity.value!!.id){
+                message -> coordinateMessageCallback(message)
+            }
+            // 추후 삭제
+            stompManager.subscribeChat(1){
+                message -> tempCoordinateMessageCallback(message)
             }
         }
         else{
-            stompManager.unsubscribeTopic("/sub/chats/1")
+            stompManager.unsubscribeCelebrity(favoriteSettingViewModel.selectedCelebrity.value!!.id)
+            stompManager.unsubscribeChat(1)
+            deleteAllMarkers()
+        }
+    }
+    private fun coordinateMessageCallback(message: String){
+       //TODO 추후 메세지 형식에 따라 변경
+        val location = Gson().fromJson(message, CoordinateResponse::class.java).toCoordinate()
+//        mapViewModel.updatePeopleMarker(location)
+    }
+    // 좌표를 json 형태로 채팅방으로 보낼 때 사용하는 메서드 (추후 삭제 가능)
+    private fun tempCoordinateMessageCallback(message: String){
+        val response = Gson().fromJson(message, TempCoordinateResponse::class.java)
+        val coordinateResponse = Gson().fromJson(response.content, CoordinateResponse::class.java)
+        if(!coordinateResponse.userId.equals(mainViewModel.guid.value)){
+            updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
+        }
+    }
+    fun updatePeopleMarker(coordinate: Coordinate, type:String){
+        when(type){
+            MessageKind.MESSAGE.toString() -> {
+                peopleMarkers[coordinate.userId]?.map = null
+                val marker = Marker()
+                marker.position = LatLng(coordinate.latitude, coordinate.longitude)
+                marker.icon = peopleMarkerOverlay!!
+                marker.alpha = 0.5f
+                marker.map = naverMap
+                marker.height = markerSize
+                marker.width = markerSize
+                peopleMarkers[coordinate.userId] = marker
+            }
+            MessageKind.LEAVE.toString() -> {
+                peopleMarkers[coordinate.userId]!!.map = null
+                peopleMarkers.remove(coordinate.userId)
+            }
+        }
+    }
+    private fun initPeopleMarkerImage(): OverlayImage{
+        val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
+        circleDrawable.setStroke(0, 0)
+
+        val markerBitmap = Bitmap.createBitmap(
+            dpToPx(30, requireContext()), // 마커 너비
+            dpToPx(30, requireContext()), // 마커 높이
+            Bitmap.Config.ARGB_8888
+        )
+
+        val canvas = Canvas(markerBitmap)
+        circleDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        circleDrawable.draw(canvas)
+        return OverlayImage.fromBitmap(markerBitmap)
+    }
+
+    private fun changeTourBtn() {
+        if (binding.tourStart.text == "투어\n종료") {
+            binding.tourStart.background = tourStartCircle
+            binding.tourStart.text = "투어\n시작"
+            mapViewModel.setTourStatus(false)
+            // 실시간 위치 공유에서 종료 알림
+            stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,0.0, 0.0, mainViewModel.guid.value!!, MessageKind.LEAVE.toString())))
+            // 투어 기록 전송
+            CoroutineScope(Dispatchers.IO).launch {
+                historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList.value!!)
+            }
+            mapViewModel.initTourList()
+            deleteAllMarkers()
+        } else if (binding.tourStart.text == "투어\n시작") {
+            binding.tourStart.background = tourEndCircle
+            binding.tourStart.text = "투어\n종료"
+            mapViewModel.setTourStatus(true)
+            // 기록된 투어 post 요청
+            CoroutineScope(Dispatchers.IO).launch {
+                historyViewModel.createHistory(favoriteSettingViewModel.selectedCelebrity.value!!.id)
+            }
         }
     }
 
@@ -493,29 +588,43 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    /** Testing Functions **/
+    /**  Organization in Progress **/
     private fun toast(message: String) {
-        val questDto = Gson().fromJson(message, Message::class.java)
-        Toast.makeText(requireContext(), "${questDto.content}이 생성되었습니다", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
             .show()
-    }
-
-    private fun changeTourBtn() {
-        if (binding.tourStart.text == "투어\n종료") {
-            binding.tourStart.background = tourStartCircle
-            binding.tourStart.text = "투어\n시작"
-            mapViewModel.setTourStatus(false)
-        } else if (binding.tourStart.text == "투어\n시작") {
-            binding.tourStart.background = tourEndCircle
-            binding.tourStart.text = "투어\n종료"
-            mapViewModel.setTourStatus(true)
-        }
     }
 
     fun changeViewPagerPage(pageIdx: Int) {
         componentBottomSheetBinding.viewPager.setCurrentItem(pageIdx, true)
     }
 
+    private fun updateMarkerSize(zoom: Double){
+        getMarkerSize(zoom)
+        for ((_, marker) in peopleMarkers) {
+            marker?.let {
+                it.width = markerSize
+                it.height = markerSize
+            }
+        }
+    }
+    private fun deleteAllMarkers(){
+        for ((_,marker) in peopleMarkers){
+            marker?.let {
+                it.map = null
+            }
+        }
+        peopleMarkers.clear()
+    }
+    fun getMarkerSize(zoom: Double) {
+        val baseZoomLevel = 17.0
+        val baseSize = 30
+
+        // 줌 레벨 변화에 따른 크기 조정
+        val sizeChange = (zoom - baseZoomLevel)*7
+        var size = baseSize + sizeChange
+        size = size.coerceAtMost(50.0).coerceAtLeast(1.0)
+        markerSize = dpToPx(size.toInt(), requireContext())
+    }
 
     override fun onMapReady(naverMap: NaverMap) {
         val statusBarDp = getStatusBarHeightToDp(requireContext())
@@ -541,6 +650,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         uiSettings.isZoomControlEnabled = false
         uiSettings.isCompassEnabled = false
+
+        naverMap.addOnCameraChangeListener{ reason, animated ->
+            val zoom = naverMap.cameraPosition.zoom
+            updateMarkerSize(zoom)
+        }
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -573,25 +687,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
                 }
+
                 initClusterTest()
                 getEventList()
-
-//                initCluster()
-//                mapViewModel.getItems(naverMap, 10)
-
-                // People Cluster + WebSocket
-//                initPeopleCluster()
-//                webSocketManager.connect()
-//                webSocketManager.subscribe("/topic/coors"){
-//                    message ->
-//                    mapViewModel.updatePeopleMarker(messageToCoordination(message))
-//                }
             }
     }
-    private fun messageToCoordination(message: String): Coordinate{
-        return Gson().fromJson(message, Coordinate::class.java)
-    }
-
     // 권한 설정 알림
     private fun requestPermission(permissionListener: PermissionListener) {
         TedPermission.create()
@@ -640,36 +740,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             eventListViewModel.getEventList(197, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
         }
     }
-
-    // 지도 사용자들 실시간 위치 초기화
-    private fun initPeopleCluster(){
-        peopleClustering = TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
-            .customMarker{
-                clusterItem ->
-                val circleDrawable = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.shape_circle
-                ) as GradientDrawable
-                circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
-                circleDrawable.setStroke(0,0)
-
-                val markerBitmap = Bitmap.createBitmap(
-                    dpToPx(15, requireContext()), // 마커 너비
-                    dpToPx(15, requireContext()), // 마커 높이
-                    Bitmap.Config.ARGB_8888
-                )
-
-                val canvas = Canvas(markerBitmap)
-                circleDrawable.setBounds(0, 0, canvas.width, canvas.height)
-                circleDrawable.draw(canvas)
-
-                Marker(clusterItem.position).apply {
-                    icon = OverlayImage.fromBitmap(markerBitmap)
-                }
-            }
-            .make()
-    }
-
 
     // 클러스터 관리 메소드
     private fun initCluster() {
@@ -1071,6 +1141,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         Log.d("로그", "doWorkWithPeriodic() 호출됨")
 
         // TODO. GPSWorker 클래스에서 위치 기록 저장 및 전송 로직 추가 필요
+        // [메모]
+        // GPSWorker 클래스에서 뷰모델의 데이터에 접근 하려면 어떻게 해야 하나요?
+        // 선택된 아이돌 id, 당일 열리는 이벤트 리스트(today event)가 필요할 것 같은데
+        // GPSWorker가 받은 좌표를 아니면 MapFragment에서 받을 수 았나?
 
         workRequest = PeriodicWorkRequestBuilder<GPSWorker>(15, TimeUnit.MINUTES).build()
 
@@ -1090,20 +1164,47 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun sendPosition() {
         timer = Timer()
         timer?.scheduleAtFixedRate(object : TimerTask() {
+            val favorite = favoriteSettingViewModel.selectedCelebrity.value?.id
             override fun run() {
                 if (TedPermissionUtil.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
                             Log.d("로그", "lastLocation : ${location?.latitude} ${location?.longitude}")
+                            if(location!= null){
+                                // 좌표 리스트에 등록
 
-                            val headers = listOf(
-                                com.idle.togeduck.websocketcustomlibrary.dto.StompHeader("Authorization", "guest")
-                            )
-                            stompManager.send("/pub/chats/1/message",1,"lastLocation : ${location?.latitude} ${location?.longitude}")
+                                if(mapViewModel.addTourRecord(location.latitude, location.longitude)){
+                                    // 웹소켓 전송 (추후 url, 전송 형식 백엔드에 맞춰 변경)
+//                                    stompManager.sendLocation(favoriteSettingViewModel.selectedCelebrity.value!!.id, location.latitude, location.longitude)
+                                    stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,location.latitude, location.longitude, mainViewModel.guid.value!!, MessageKind.MESSAGE.toString())))
+                                }
+                                else{
+//                                    stompManager.sendLocation(favoriteSettingViewModel.selectedCelebrity.value!!.id, location.latitude, location.longitude)
+                                    stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,location.latitude, location.longitude, mainViewModel.guid.value!!, MessageKind.MESSAGE.toString())))
+                                }
+                                // 이벤트 리스트 확인, 가까운 리스트 갱신
+                                figureCloseEvents(location.latitude, location.longitude)
+                            }
                         }
                 }
             }
         }, 0 , 10 * 1000)
+    }
+
+    private fun figureCloseEvents(lat:Double, lng:Double) {
+        val eventList = mutableListOf<Event>()
+        eventListViewModel.listToday.value?.let { list ->
+            for (event in list) {
+                if(CalcDistance.idsDistanceOk(lat, lng, event.latitude, event.longitude)){
+                   eventList.add(event)
+                }
+            }
+        }
+        eventListViewModel.closeEvents.value = eventList
+        Log.d("가까운 이벤트 탐색 결과", eventList.toString())
+        if(!eventList.isEmpty()){
+            toast("이벤트 있음")
+        }
     }
 
     override fun onStart() {
