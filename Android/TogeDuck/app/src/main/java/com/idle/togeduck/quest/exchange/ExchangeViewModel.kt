@@ -9,8 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.idle.togeduck.QuestType
 import com.idle.togeduck.R
 import com.idle.togeduck.common.model.DefaultResponse
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.model.ExchangeRequest
@@ -18,6 +20,9 @@ import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.model.toExchange
 import com.idle.togeduck.quest.share.model.Share
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
@@ -28,6 +33,8 @@ import javax.inject.Inject
 class ExchangeViewModel @Inject constructor(
     private val exchangeRepository: DefaultExchangeRepository
 ) : ViewModel() {
+    @Inject
+    lateinit var stompManager: StompManager
     private val _exchangeList = MutableLiveData<List<Exchange>>()
     val exchangeList: LiveData<List<Exchange>>
         get() = _exchangeList
@@ -53,12 +60,14 @@ class ExchangeViewModel @Inject constructor(
 
     suspend fun getExchangeList(eventId: Long, page: Int, size: Int){
         val response = exchangeRepository.getExchangeList(eventId, page, size)
+        Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨")
         if (response.isSuccessful) {
             val exchangeListResponse = response.body()
             val exchanges = exchangeListResponse?.data?.content ?: emptyList()
             _exchangeList.postValue(exchanges.map{it.toExchange()})
+            Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 성공")
         } else {
-
+            Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 실패")
         }
     }
 
@@ -74,7 +83,7 @@ class ExchangeViewModel @Inject constructor(
         }
     }
 
-    suspend fun postExchange(eventId: Long, image:MultipartBody.Part, tradeRequestDto: MultipartBody.Part){
+    suspend fun postExchange(eventId: Long, image:MultipartBody.Part, tradeRequestDto: MultipartBody.Part, celebrityId:Long){
         val responseResult = exchangeRepository.postExchange(eventId, image, tradeRequestDto)
         Log.d("로그", "ExchangeViewModel - postExchange() 호출됨 - ${responseResult}")
 
@@ -83,6 +92,11 @@ class ExchangeViewModel @Inject constructor(
                 responseResult.errorBody()?.string()!!
             )
             Log.d("로그", "ExchangeViewModel - postExchange() 응답 실패 - $errorBody")
+        }
+        else{
+            // 웹소켓 교환 발생 알림 전송
+            delay(1000)
+            stompManager.sendQuestAlert(QuestType.SHARE.toString(),eventId,celebrityId)
         }
     }
 

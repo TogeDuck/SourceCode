@@ -32,6 +32,6 @@ data class QuestAlert(
 @Serializable
 data class Chat(
     val userId: String,
-    val chatId: String,
+    val chatId: Long,
     val message: String
 )

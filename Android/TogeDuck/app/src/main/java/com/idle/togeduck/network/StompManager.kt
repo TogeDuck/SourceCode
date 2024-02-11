@@ -44,7 +44,7 @@ class StompManager {
         stompClient.connect(headers)
     }
 
-    fun sendChat(chatId: String, userId: String, message:String, celebrityId: Long){
+    fun sendChat(chatId: Long, userId: String, message:String, celebrityId: Long){
         Log.d("웹소켓 헤더", headers.toString())
 //        val destination = "/pub/chats/$chatId/message"
         val destination = "/pub/chats/1/message"

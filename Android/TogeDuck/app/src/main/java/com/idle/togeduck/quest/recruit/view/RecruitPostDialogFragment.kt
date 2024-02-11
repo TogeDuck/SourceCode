@@ -112,19 +112,17 @@ class RecruitPostDialogFragment: DialogFragment() {
             val destinationId = eventIds[selectedPosition]
 
             val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
-
             if(title.isNotEmpty() && destinationName.isNotEmpty()
-                && maximum > 0 && maximum <= 5
-                && duration > 0 && duration <= 60) {
+                && maximum > 0 && maximum <= 10
+                && duration > 0 && duration <= 60
+                && eventListViewModel.selectedEvent.value != null) {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("모집 등록", "모집 등록 호출됨")
-                    recruitViewModel.createRecruit(2, recruitRequest)
+                    recruitViewModel.createRecruit(eventListViewModel.selectedEvent.value!!.eventId, recruitRequest, favoriteSettingViewModel.selectedCelebrity.value!!.id)
                 }
             }
-
             findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
         }
-
     }
 
     //todo. 검색 으로 변경 할것
