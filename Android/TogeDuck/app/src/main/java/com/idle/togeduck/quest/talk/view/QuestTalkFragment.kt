@@ -11,28 +11,37 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.MainViewModel
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ComponentQuestTalkInputBinding
 import com.idle.togeduck.databinding.FragmentQuestTalkBinding
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.talk.view.talk_rv.IQuestTalkDetail
 import com.idle.togeduck.quest.talk.view.talk_rv.QuestTalkAdapter
 import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuestTalkFragment : Fragment(), IQuestTalkDetail {
     private var _binding: FragmentQuestTalkBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var stompManager: StompManager
+
     private var _componentQuestTalkInputBinding: ComponentQuestTalkInputBinding? = null
     private val componentQuestTalkInputBinding get() = _componentQuestTalkInputBinding!!
 
     private val talkViewModel: TalkViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private lateinit var questTalkAdapter: QuestTalkAdapter
 
     override fun onCreateView(
@@ -51,15 +60,35 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
         setTheme()
 
         talkViewModel.talkList.observe(viewLifecycleOwner) { talkList ->
-            questTalkAdapter.submitList(talkList)
+            questTalkAdapter.submitList(talkList) {
+                if(!talkList.isEmpty()){
+                    binding.questTalkRecycle.smoothScrollToPosition(talkList.size - 1)
+                }
+            }
         }
         eventListViewModel.selectedEvent.observe(viewLifecycleOwner) {event ->
             talkViewModel.clearTalkList()
         }
 
         componentQuestTalkInputBinding.talkSend.setOnClickListener {
-            // TODO. 여기에 전송 기능 추가하면 됨!!
+            sendChat()
         }
+    }
+
+    fun sendChat(){
+        val message = componentQuestTalkInputBinding.etTalkInput.text.toString()
+        if(message.isNotEmpty()
+            && eventListViewModel.selectedEvent.value != null
+            && mainViewModel.guid.value != null
+            && favoriteSettingViewModel.selectedCelebrity.value != null){
+            stompManager.sendQuestChat(
+                eventListViewModel.selectedEvent.value!!.eventId,
+                mainViewModel.guid.value!!,
+                message,
+                favoriteSettingViewModel.selectedCelebrity.value!!.id
+            )
+        }
+        componentQuestTalkInputBinding.etTalkInput.text?.clear()
     }
 
     override fun onDestroyView() {

@@ -10,13 +10,23 @@
               <deviceKey>
                 <Key>
                   <type value="SERIAL_NUMBER" />
-                  <value value="adb-R5CR40P3NNM-H1rNUL._adb-tls-connect._tcp" />
+                  <value value="adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp." />
                 </Key>
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-11T12:57:56.622956500Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-02-11T14:39:45.333355Z" />
+          <multipleDevicesSelectedInDropDown value="true" />
           <runningDeviceTargetsSelectedWithDialog>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="R39M20CCJKD" />
+                </Key>
+              </deviceKey>
+            </Target>
             <Target>
               <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
