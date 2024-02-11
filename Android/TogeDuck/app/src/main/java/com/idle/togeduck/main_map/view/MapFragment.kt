@@ -258,7 +258,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
         mapViewModel.isQuestAlert.observe(viewLifecycleOwner) { questAlert ->
-            SnackBarFactory.show(this, binding, questAlert.questType)
+            if(mainViewModel.isRealTimeOn) {
+                SnackBarFactory.show(this, binding, questAlert.questType)
+            }
         }
         eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
             todayClustering?.clearItems()

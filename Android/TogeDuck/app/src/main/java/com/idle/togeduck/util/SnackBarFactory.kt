@@ -24,7 +24,7 @@ object SnackBarFactory {
     @SuppressLint("RestrictedApi", "ShowToast")
     fun show(
         fragment: Fragment,
-        binding: FragmentMapBinding,
+        bindi,
         type: String,
         time: Int = 2000
     ) {
