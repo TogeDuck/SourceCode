@@ -99,11 +99,6 @@ class MainFragment : Fragment() {
         }
 
         binding.btn3.setOnClickListener {
-            SnackBarFactory.show(
-                this,
-                binding,
-                "새로운 OO 퀘스트가 등록되었습니다",
-            )
         }
         //----------------------------------------------------
     }
