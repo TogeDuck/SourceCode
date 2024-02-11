@@ -96,7 +96,7 @@ class ExchangeViewModel @Inject constructor(
         else{
             // 웹소켓 교환 발생 알림 전송
             delay(1000)
-            stompManager.sendQuestAlert(QuestType.SHARE.toString(),eventId,celebrityId)
+            stompManager.sendQuestAlert(QuestType.EXCHANGE.toString(),eventId,celebrityId)
         }
     }
 
