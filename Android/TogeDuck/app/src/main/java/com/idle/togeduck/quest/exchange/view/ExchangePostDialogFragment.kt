@@ -14,7 +14,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.idle.togeduck.QuestType
 import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
@@ -22,12 +24,15 @@ import com.idle.togeduck.databinding.DialogQuestExchangeBinding
 import com.idle.togeduck.databinding.DialogQuestExchangePostBinding
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.model.Event
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.ExchangeReq
 import com.idle.togeduck.quest.exchange.model.ExchangeRequest
 import com.idle.togeduck.quest.exchange.model.toMultipartBody
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.MultiPartUtil
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,13 +42,19 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ExchangePostDialogFragment: DialogFragment() {
     private var _binding: DialogQuestExchangePostBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var stompManager: StompManager
+
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val exchangeViewModel: ExchangeViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
 //    private lateinit var event: Event
     private var imgPath: String? = null
@@ -109,14 +120,19 @@ class ExchangePostDialogFragment: DialogFragment() {
 
             if(content.isNotEmpty() && duration > 0 && duration < 61){
 
-                if(imgPath?.isNotEmpty() == true){
+                if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null){
                     val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
 
                     CoroutineScope(Dispatchers.IO).launch {
                         Log.d("교환 등록", "교환 등록 호출됨")
                         Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
-                        exchangeViewModel.postExchange(1, exchaneImg, exchangeRequestPart)
-
+                        exchangeViewModel.postExchange(eventListViewModel.selectedEvent.value!!.eventId, exchaneImg, exchangeRequestPart)
+                        // 웹소켓 교환 발생 알림 전송
+                        stompManager.sendQuestAlert(
+                            QuestType.EXCHANGE.toString(),
+                            eventListViewModel.selectedEvent.value!!.eventId,
+                            favoriteSettingViewModel.selectedCelebrity.value!!.id
+                            )
                         launch(Dispatchers.Main) {
                             imgPath = null
                         }

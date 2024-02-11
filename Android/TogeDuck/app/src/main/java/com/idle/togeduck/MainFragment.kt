@@ -126,7 +126,15 @@ class MainFragment : Fragment() {
                     val questAlert = Gson().fromJson(websocketDataResponse.data, QuestAlert::class.java)
                     mapViewModel.isQuestAlert.value = questAlert
                     if(eventListViewModel.selectedEvent.value?.eventId == questAlert.eventId){
-
+                        when(questAlert.questType){
+                            QuestType.SHARE.toString() -> {
+                            }
+                            QuestType.EXCHANGE.toString() -> {
+                                exchangeViewModel.needUpdate.value = true
+                            }
+                            QuestType.GROUP.toString() -> {
+                            }
+                        }
                     }
                 }
                 MessageKind.CHAT.toString() -> {
@@ -241,10 +249,6 @@ class MainFragment : Fragment() {
             viewLifecycleOwner,
             backPressedCallback
         )
-    }
-
-    private fun getShareList(){
-
     }
 
     override fun onDestroyView() {
