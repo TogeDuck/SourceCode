@@ -880,7 +880,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             pathLineList.add(LatLng(latitude, longitude))
         }
 
-        if (pathLine != null) {
+        if (list.isNotEmpty() && pathLine != null) {
             pathLine!!.width = 30
             pathLine!!.outlineWidth = 5
             pathLine!!.coords = pathLineList
