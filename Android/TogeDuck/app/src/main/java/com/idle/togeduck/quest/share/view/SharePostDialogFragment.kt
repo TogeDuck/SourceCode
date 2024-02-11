@@ -27,6 +27,8 @@ import com.idle.togeduck.databinding.DialogQuestExchangeBinding
 import com.idle.togeduck.databinding.DialogQuestExchangePostBinding
 import com.idle.togeduck.databinding.DialogQuestRecruitPostBinding
 import com.idle.togeduck.databinding.DialogQuestSharePostBinding
+import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
@@ -47,6 +49,8 @@ class SharePostDialogFragment: DialogFragment() {
     private val binding get() = _binding!!
 
     val shareViewModel: ShareViewModel by activityViewModels()
+    val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    val eventListViewModel: EventListViewModel by activityViewModels()
 
     private var imgPath: String? = null
 
@@ -112,13 +116,15 @@ class SharePostDialogFragment: DialogFragment() {
             val shareRequest = ShareRequest(title, content, duration)
             val shareRequestPart = shareRequest.toMultipartBody()
 
-            if(title.isNotEmpty() && content.isNotEmpty() && imgPath?.isNotEmpty() == true){
+            if(title.isNotEmpty() && content.isNotEmpty() && imgPath?.isNotEmpty() == true
+                && favoriteSettingViewModel.selectedCelebrity.value != null
+                && eventListViewModel.selectedEvent.value != null){
                 val shareImg = MultiPartUtil.createImagePart(imgPath!!)
 
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("나눔 등록", "나눔 등록 호출됨")
                     Log.d("shareRequest", "shareRequest : ${shareRequestPart}")
-                    shareViewModel.createShare(3, shareImg, shareRequestPart)
+                    shareViewModel.createShare(eventListViewModel.selectedEvent.value!!.eventId, shareImg, shareRequestPart, favoriteSettingViewModel.selectedCelebrity.value!!.id)
 
                     launch(Dispatchers.Main){
                         imgPath = null

@@ -110,7 +110,8 @@ class ExchangePostDialogFragment: DialogFragment() {
 
             if(content.isNotEmpty() && duration > 0 && duration < 61){
 
-                if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null){
+                if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null
+                    && favoriteSettingViewModel.selectedCelebrity.value != null){
                     val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
 
                     CoroutineScope(Dispatchers.IO).launch {
