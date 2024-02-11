@@ -13,13 +13,17 @@ import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.di.PreferenceModule
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.QuestAlert
 import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.network.WebSocketDataResponse
 import com.idle.togeduck.network.WebSocketResponse
+import com.idle.togeduck.quest.exchange.ExchangeViewModel
+import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.share.ShareViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +36,10 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 enum class MessageKind{
     LOCATION, TOURLEAVE, CHAT, QUESTALERT
+}
+
+enum class QuestType{
+    SHARE,EXCHANGE,GROUP
 }
 
 @AndroidEntryPoint
@@ -47,8 +55,12 @@ class MainFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val shareViewModel: ShareViewModel by activityViewModels()
+    private val exchangeViewModel: ExchangeViewModel by activityViewModels()
+    private val recruitViewModel: RecruitViewModel by activityViewModels()
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
+
 
     private lateinit var backPressedCallback: OnBackPressedCallback
 
@@ -110,7 +122,16 @@ class MainFragment : Fragment() {
                         mapViewModel.deletePeopleMarker(coordinate)
                     }
                 }
+                MessageKind.QUESTALERT.toString() -> {
+                    val questAlert = Gson().fromJson(websocketDataResponse.data, QuestAlert::class.java)
+                    mapViewModel.isQuestAlert.value = questAlert
+                    if(eventListViewModel.selectedEvent.value?.eventId == questAlert.eventId){
 
+                    }
+                }
+                MessageKind.CHAT.toString() -> {
+
+                }
             }
         }
     }
@@ -220,6 +241,10 @@ class MainFragment : Fragment() {
             viewLifecycleOwner,
             backPressedCallback
         )
+    }
+
+    private fun getShareList(){
+
     }
 
     override fun onDestroyView() {

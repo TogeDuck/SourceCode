@@ -159,19 +159,8 @@
             android:layout_marginEnd="30dp"
             android:visibility="gone"
             tools:background="@color/bts_sub500" />
-
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <include
-            android:id="@+id/bs_fragment"
-            layout="@layout/component_bottom_sheet" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
     <LinearLayout
-        android:id="@+id/map_quest_alert"
+        android:id="@+id/map_quest_alert_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
@@ -182,6 +171,7 @@
         tools:backgroundTint="@color/blackpink_main100"
         >
         <ImageView
+            android:id="@+id/map_quest_alert_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_share"
@@ -203,6 +193,16 @@
             android:layout_marginEnd="8dp"
             />
     </LinearLayout>
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <include
+            android:id="@+id/bs_fragment"
+            layout="@layout/component_bottom_sheet" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <include
         android:id="@+id/appbar"

@@ -10,6 +10,7 @@ import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.QuestAlert
 import com.idle.togeduck.util.CalcDistance
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.NaverItem
@@ -51,6 +52,7 @@ class MapViewModel @Inject constructor(
     var naverMap:NaverMap? = null
 
     var bottomSheetState: MutableLiveData<Int> = MutableLiveData(0)
+    var isQuestAlert = MutableLiveData<QuestAlert>()
 
     init{
         _peopleMarkerList.value = emptyMap()
