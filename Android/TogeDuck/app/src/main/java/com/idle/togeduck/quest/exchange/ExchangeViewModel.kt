@@ -18,6 +18,8 @@ import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.model.toExchange
 import com.idle.togeduck.quest.share.model.Share
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
@@ -49,14 +51,24 @@ class ExchangeViewModel @Inject constructor(
     val navigationEvent: LiveData<Boolean>
         get() = _navigationEvent
 
+
+    init {
+        _exchangeList.value = listOf()
+        CoroutineScope(Dispatchers.IO).launch{
+            getExchangeList(2, 1, 100)
+        }
+    }
+
     suspend fun getExchangeList(eventId: Long, page: Int, size: Int){
         val response = exchangeRepository.getExchangeList(eventId, page, size)
+        Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨")
         if (response.isSuccessful) {
             val exchangeListResponse = response.body()
             val exchanges = exchangeListResponse?.data?.content ?: emptyList()
             _exchangeList.postValue(exchanges.map{it.toExchange()})
+            Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 성공")
         } else {
-
+            Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 실패")
         }
     }
 

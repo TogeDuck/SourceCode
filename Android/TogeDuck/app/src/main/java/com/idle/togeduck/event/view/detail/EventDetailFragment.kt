@@ -95,6 +95,8 @@ class EventDetailFragment : Fragment(), EventReview {
                 binding.cafeNameDetail.text = event.name
                 binding.eventPeriodDetail.text = makeDateToString(event.startDate, event.endDate)
 
+                eventReviewViewModel.setSelectedEventId(event.eventId)
+
                 Log.d("로그", "이벤트 디테일 페이지 : ${event}")
 
                 val list = mutableListOf<String>().apply {
@@ -134,6 +136,22 @@ class EventDetailFragment : Fragment(), EventReview {
 //        eventReviewInputBinding.etReviewInput.setOnClickListener { mView, keyCode, _ ->
 //            hideKeyboard(mView, keyCode)
 //        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getReviewList()
+    }
+
+
+    private fun getReviewList(){
+        if(eventListViewModel.selectedEvent.value != null){
+            CoroutineScope(Dispatchers.IO).launch {
+                val eventId = eventListViewModel.selectedEvent.value!!.eventId
+                eventReviewViewModel.getReviewList(eventId, 1,100)
+                Log.d("로그", "getReviewList 호출됨")
+            }
+        }
     }
 
     private fun setRecyclerView(){

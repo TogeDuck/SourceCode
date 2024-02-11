@@ -115,7 +115,7 @@ class ExchangePostDialogFragment: DialogFragment() {
                     CoroutineScope(Dispatchers.IO).launch {
                         Log.d("교환 등록", "교환 등록 호출됨")
                         Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
-                        exchangeViewModel.postExchange(1, exchaneImg, exchangeRequestPart)
+                        exchangeViewModel.postExchange(3, exchaneImg, exchangeRequestPart)
 
                         launch(Dispatchers.Main) {
                             imgPath = null

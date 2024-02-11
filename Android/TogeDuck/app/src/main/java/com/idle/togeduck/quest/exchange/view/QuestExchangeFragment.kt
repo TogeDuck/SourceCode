@@ -1,6 +1,7 @@
 package com.idle.togeduck.quest.exchange.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -61,7 +62,8 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            exchangeViewModel.getExchangeList(0,1,10000) // 숫자 변경
+            Log.d("교환리스트", "QuestExchangeFragment - 교환 리스트 호출됨")
+            exchangeViewModel.getExchangeList(10,1,100) // 숫자 변경
         }
     }
 

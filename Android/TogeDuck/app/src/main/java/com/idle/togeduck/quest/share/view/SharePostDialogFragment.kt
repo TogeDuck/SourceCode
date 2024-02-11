@@ -101,7 +101,7 @@ class SharePostDialogFragment: DialogFragment() {
             findNavController().navigate(R.id.action_sharePostDialogFragment_pop)
         }
 
-        //todo. 500에러, message=Required part 'shareRequestDto' is not present
+        //todo. ShareViewModel - createShare() 응답 실패 - DefaultResponse(code=404, message=EVENT-001)
         binding.btnSharePost.setOnClickListener {
 //            val eventId = event.eventId
             val title = binding.etShareTitle.text.toString()
@@ -118,7 +118,7 @@ class SharePostDialogFragment: DialogFragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("나눔 등록", "나눔 등록 호출됨")
                     Log.d("shareRequest", "shareRequest : ${shareRequestPart}")
-                    shareViewModel.createShare(1, shareImg, shareRequestPart)
+                    shareViewModel.createShare(3, shareImg, shareRequestPart)
 
                     launch(Dispatchers.Main){
                         imgPath = null
