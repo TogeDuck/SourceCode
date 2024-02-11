@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -190,6 +192,13 @@ class EventDetailFragment : Fragment(), EventReview {
 
         binding.eventDetailViewpagerIndicator.setDotIndicatorColor(getColor(requireContext(), Theme.theme.sub500))
         binding.eventDetailViewpagerIndicator.setStrokeDotsIndicatorColor(getColor(requireContext(), Theme.theme.sub500))
+
+        val cursorDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
+        cursorDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
+
+        @RequiresApi(Build.VERSION_CODES.Q)
+        eventReviewInputBinding.etReviewInput.textCursorDrawable = cursorDrawable
     }
 
     private fun makeDateToString(startDate: LocalDate, endDate: LocalDate): String{
