@@ -50,6 +50,7 @@ class MapViewModel @Inject constructor(
 
     var naverMap:NaverMap? = null
 
+    var bottomSheetState: MutableLiveData<Int> = MutableLiveData(0)
 
     init{
         _peopleMarkerList.value = emptyMap()
@@ -88,35 +89,39 @@ class MapViewModel @Inject constructor(
         return hasChanged
     }
 
+    fun setBottomSheet(state:Int){
+        bottomSheetState.value = state
+    }
+
     // 더미 지도 마커 생성 코드
     fun getItems(naverMap: NaverMap, num: Int) {
-        val bounds = naverMap.contentBounds
-        _markerList.value = mutableListOf<NaverItem>().apply {
-            repeat(num) {
-                val temp = NaverItem(
-                    (bounds.northLatitude - bounds.southLatitude) * Math.random() + bounds.southLatitude,
-                    (bounds.eastLongitude - bounds.westLongitude) * Math.random() + bounds.westLongitude
-                )
-
-                add(temp)
-            }
-        }
+//        val bounds = naverMap.contentBounds
+//        _markerList.value = mutableListOf<NaverItem>().apply {
+//            repeat(num) {
+//                val temp = NaverItem(
+//                    (bounds.northLatitude - bounds.southLatitude) * Math.random() + bounds.southLatitude,
+//                    (bounds.eastLongitude - bounds.westLongitude) * Math.random() + bounds.westLongitude
+//                )
+//
+//                add(temp)
+//            }
+//        }
     }
 
     fun addItem(naverMap: NaverMap, num: Int) {
-        val list = _markerList.value?.toMutableList() ?: mutableListOf()
-        val bounds = naverMap.contentBounds
-
-        repeat(num) {
-            val temp = NaverItem(
-                (bounds.northLatitude - bounds.southLatitude) * Math.random() + bounds.southLatitude,
-                (bounds.eastLongitude - bounds.westLongitude) * Math.random() + bounds.westLongitude
-            )
-
-            list.add(temp)
-        }
-
-        _markerList.postValue(list)
+//        val list = _markerList.value?.toMutableList() ?: mutableListOf()
+//        val bounds = naverMap.contentBounds
+//
+//        repeat(num) {
+//            val temp = NaverItem(
+//                (bounds.northLatitude - bounds.southLatitude) * Math.random() + bounds.southLatitude,
+//                (bounds.eastLongitude - bounds.westLongitude) * Math.random() + bounds.westLongitude
+//            )
+//
+//            list.add(temp)
+//        }
+//
+//        _markerList.postValue(list)
     }
 
     fun setPickedDate(startDate: LocalDate, endDate: LocalDate) {

@@ -90,23 +90,25 @@ class EventDetailFragment : Fragment(), EventReview {
 
         //리스트의 해당 이벤트 정보 가져오기
         eventListViewModel.selectedEvent.observe(viewLifecycleOwner) { event ->
-            this.event = event
-            binding.cafeNameDetail.text = event.name
-            binding.eventPeriodDetail.text = makeDateToString(event.startDate, event.endDate)
+            if(event != null){
+                this.event = event
+                binding.cafeNameDetail.text = event.name
+                binding.eventPeriodDetail.text = makeDateToString(event.startDate, event.endDate)
 
-            Log.d("로그", "event : ${event}")
+                Log.d("로그", "이벤트 디테일 페이지 : ${event}")
 
-            val list = mutableListOf<String>().apply {
-                if (event.image1 != null && event.image1 != "trash") add(event.image1)
-                if (event.image2 != null && event.image2 != "trash" && event.image2 != event.image1) add(event.image2)
-                if (event.image3 != null && event.image3 != "trash" && event.image3 != event.image1 && event.image3 != event.image2) add(event.image3)
+                val list = mutableListOf<String>().apply {
+                    if (event.image1 != null && event.image1 != "trash") add(event.image1)
+                    if (event.image2 != null && event.image2 != "trash" && event.image2 != event.image1) add(event.image2)
+                    if (event.image3 != null && event.image3 != "trash" && event.image3 != event.image1 && event.image3 != event.image2) add(event.image3)
+                }
+
+                eventPosterAdapter.submitList(list)
+                // TODO. image2, image3 처리 필요
+
+                changeLikeImage(event)
+                changeVisitImage(event)
             }
-
-            eventPosterAdapter.submitList(list)
-            // TODO. image2, image3 처리 필요
-
-            changeLikeImage(event)
-            changeVisitImage(event)
         }
 
         eventReviewViewModel.reviewList.observe(viewLifecycleOwner) { list ->

@@ -26,6 +26,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
+import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -237,19 +239,32 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         /** LiveData Observe **/
+        mapViewModel.bottomSheetState.observe(viewLifecycleOwner) { state ->
+            when(state){
+                0 -> {
+                    sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+                1 -> {
+                    sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                }
+                2 -> {
+                    sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        }
         eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
             todayClustering?.clearItems()
-            todayClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
+            todayClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.TODAY) })
             Log.d("이벤트 리스트 변경","오늘")
         }
         eventListViewModel.listUpcoming.observe(viewLifecycleOwner) { updatedMarkerList ->
             upcomingClustering?.clearItems()
-            upcomingClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
+            upcomingClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.LATER) })
             Log.d("이벤트 리스트 변경","미래")
         }
         eventListViewModel.listPast.observe(viewLifecycleOwner) { updatedMarkerList ->
             pastClustering?.clearItems()
-            pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
+            pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.PAST) })
             Log.d("이벤트 리스트 변경","과거")
         }
         historyViewModel.route.observe(viewLifecycleOwner) { list ->
@@ -557,6 +572,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
         mapViewModel.naverMap = naverMap
+
+        naverMap.setOnMapClickListener { pointF, latLng ->
+            eventListViewModel.clearSelectedEvent()
+        }
+
         // 현재 위치 버튼 표시
         naverMap.uiSettings.isLocationButtonEnabled = true
 
@@ -899,19 +919,63 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         componentBottomAppbarBinding.buttonQuest.setOnClickListener {
             componentBottomSheetBinding.viewPager.setCurrentItem(0, false)
+            mapViewModel.setBottomSheet(1)
             handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonList.setOnClickListener {
             componentBottomSheetBinding.viewPager.setCurrentItem(1, false)
+            mapViewModel.setBottomSheet(1)
             handleButtonClick(fabList, listOf(fabQuest, fabChat, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonChat.setOnClickListener {
             componentBottomSheetBinding.viewPager.setCurrentItem(3, false)
+            mapViewModel.setBottomSheet(1)
             handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonMyrecord.setOnClickListener {
             componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
+            mapViewModel.setBottomSheet(1)
             handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat))
+        }
+    }
+
+    private fun bottomAppBarClick(kind: Int) {
+        // Floating Buttons : Buttons (Main 500)
+        val fabQuest: LinearLayout = componentBottomAppbarBinding.fabQuest
+        val fabList: LinearLayout = componentBottomAppbarBinding.fabList
+        val fabChat: LinearLayout = componentBottomAppbarBinding.fabChat
+        val fabMyrecord: LinearLayout = componentBottomAppbarBinding.fabMyrecord
+        val circle =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        circle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        circle.setStroke(0, 0)
+
+        val fabs: List<LinearLayout> = listOf(fabQuest, fabList, fabChat, fabMyrecord)
+        for (fab in fabs) {
+            fab.background = circle;
+        }
+
+        when(kind){
+            0 -> {
+                componentBottomSheetBinding.viewPager.setCurrentItem(0, false)
+                mapViewModel.setBottomSheet(1)
+                handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord))
+            }
+            1 -> {
+                componentBottomSheetBinding.viewPager.setCurrentItem(1, false)
+                mapViewModel.setBottomSheet(1)
+                handleButtonClick(fabList, listOf(fabQuest, fabChat, fabMyrecord))
+            }
+            2 -> {
+                componentBottomSheetBinding.viewPager.setCurrentItem(3, false)
+                mapViewModel.setBottomSheet(1)
+                handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord))
+            }
+            3 -> {
+                componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
+                mapViewModel.setBottomSheet(1)
+                handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat))
+            }
         }
     }
 
@@ -1065,11 +1129,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     fun TedNaverClustering.Builder<NaverItem>.setupMarkerClickListener() = apply {
         markerClickListener { naverItem ->
-            val position = naverItem.position
+            Log.d("이벤트 클릭", naverItem.event.toString())
+            // 이벤트 화면으로 이동
+            eventListViewModel.setSelectedEvent(naverItem.event!!)
+            val eventListFragment = parentFragmentManager.findFragmentByTag("EventListFragment")
+            if (eventListFragment != null) {
+                if (naverItem.eventType == EventKind.TODAY) {
+                    bottomAppBarClick(0)
+                }
+            } else {
+                bottomAppBarClick(1)
+            }
 
-            naverMap.moveCamera(
-                CameraUpdate.scrollTo(LatLng(position.latitude, position.longitude))
-            )
+            val position = naverItem.position
+            val cameraPosition = CameraPosition(LatLng(position.latitude, position.longitude), 18.0)
+            naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition))
         }
     }
     // ---------------------------------------------------------------------------------------------

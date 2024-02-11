@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.idle.togeduck.R
 
 import com.idle.togeduck.databinding.FragmentEventListBinding
@@ -22,6 +23,7 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.view.detail.EventDetailFragment
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
@@ -46,6 +48,7 @@ class EventListFragment : Fragment(), EventInfo {
     private lateinit var todayEventInfoAdapter: EventInfoAdapter
     private lateinit var upcomingEventInfoAdapter: EventInfoAdapter
     private lateinit var pastEventInfoAdapter: EventInfoAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,6 +80,13 @@ class EventListFragment : Fragment(), EventInfo {
 
         eventListViewModel.listPast.observe(viewLifecycleOwner){list ->
             pastEventInfoAdapter.submitList(list)
+        }
+
+        eventListViewModel.selectedEvent.observe(viewLifecycleOwner){event ->
+            Log.d("이벤트 리스트", "Selected event updated: $event")
+            if(event != null){
+                toDetailPage()
+            }
         }
 
         //todo.즐겨찾기 리스트 호출은 main화면에서 하는 걸로 변경 -> 새로고침은 여기서
@@ -149,13 +159,22 @@ class EventListFragment : Fragment(), EventInfo {
         if(type == 0) {
             eventListViewModel.setSelectedEvent(eventListViewModel.listToday.value!![position])
             (parentFragment as MapFragment).changeViewPagerPage(2)
+            mapViewModel.setBottomSheet(2)
         }else if(type == 1){
             eventListViewModel.setSelectedEvent(eventListViewModel.listUpcoming.value!![position])
             (parentFragment as MapFragment).changeViewPagerPage(2)
+            mapViewModel.setBottomSheet(2)
         }else {
             eventListViewModel.setSelectedEvent(eventListViewModel.listPast.value!![position])
             (parentFragment as MapFragment).changeViewPagerPage(2)
+            mapViewModel.setBottomSheet(2)
         }
+    }
+
+    fun toDetailPage() {
+        Log.d("디테일 페이지로","실행")
+        (parentFragment as MapFragment).changeViewPagerPage(2)
+        mapViewModel.setBottomSheet(2)
     }
 
     override fun likeClick(position: Int, type: Int) {
@@ -184,5 +203,5 @@ class EventListFragment : Fragment(), EventInfo {
             }
         }
     }
-    
+
 }
