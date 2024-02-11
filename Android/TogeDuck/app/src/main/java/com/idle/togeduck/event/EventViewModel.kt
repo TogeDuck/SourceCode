@@ -30,9 +30,12 @@ class EventViewModel @Inject constructor(
     val selectedImg: LiveData<Uri>
         get() = _selectedImg
 
+    private var selectedEventId: Long = -1
+
+
     init {
         viewModelScope.launch {
-            getReviewList(1,1,100)
+            getReviewList(selectedEventId,1,100)
         }
     }
 
@@ -54,6 +57,7 @@ class EventViewModel @Inject constructor(
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
             _reviewList.postValue(body.data.content.map { it.toEventReviewContent() })
+            Log.d("로그", "EventViewModel - getReviewList()호출됨 - 응답 성공  ${body}")
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
@@ -75,5 +79,9 @@ class EventViewModel @Inject constructor(
 
     fun setSelectedImg(uri: Uri){
         _selectedImg.value = uri
+    }
+
+    fun setSelectedEventId(eventId: Long){
+        selectedEventId = eventId
     }
 }
