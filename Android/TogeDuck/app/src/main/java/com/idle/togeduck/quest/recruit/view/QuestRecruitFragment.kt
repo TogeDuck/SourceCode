@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestRecruitBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.recruit.model.Recruit
 import com.idle.togeduck.util.TogeDuckItemDecoration
@@ -30,6 +31,7 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
 
     private val recruitViewModel: RecruitViewModel by activityViewModels()
     private val talkViewModel: TalkViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     private lateinit var questRecruitAdapter: QuestRecruitAdapter
 
@@ -52,9 +54,16 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
         recruitViewModel.recruitList.observe(viewLifecycleOwner){list ->
             questRecruitAdapter.submitList(list)
         }
+        getRecruitList()
+    }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            recruitViewModel.getRecruitList(1,1,100)
+    override fun onResume() {
+        super.onResume()
+        getRecruitList()
+    }
+    private fun getRecruitList(){
+        CoroutineScope(Dispatchers.IO).launch{
+            recruitViewModel.getRecruitList(eventListViewModel.selectedEvent.value!!.eventId, 0, 1000)
         }
     }
 

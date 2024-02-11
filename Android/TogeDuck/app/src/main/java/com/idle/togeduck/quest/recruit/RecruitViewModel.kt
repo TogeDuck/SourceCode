@@ -38,7 +38,7 @@ class RecruitViewModel @Inject constructor(
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
             _recruitList.postValue(body.data.content.map { it.recruitResponseToRecruit() })
-
+            Log.d("모집 조회 완료",body.data.content.toString())
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!

@@ -69,6 +69,10 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         }
         getShareList()
     }
+    override fun onResume() {
+        super.onResume()
+        getShareList()
+    }
     fun getShareList(){
         eventListViewModel.selectedEvent.value?.let { selectedEvent ->
             CoroutineScope(Dispatchers.IO).launch {
