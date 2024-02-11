@@ -441,40 +441,42 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setQuestAlertTheme(type: String){
-        // Layout 설정
-        val questLayout = binding.mapQuestAlertContainer
-        val squareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
-        squareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.white_transparent))
-        questLayout.background = squareCircle
+        if(mainViewModel.isRealTimeOn){
+            // Layout 설정
+            val questLayout = binding.mapQuestAlertContainer
+            val squareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+            squareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.white_transparent))
+            questLayout.background = squareCircle
 
-        // Icon 설정
-        val questIcon = binding.mapQuestAlertIcon
-        val questText = binding.mapQuestAlertText
-        val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        circle.setStroke(0,0)
-        when(type){
-            QuestType.SHARE.toString() ->{
-                circle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-                questIcon.setImageResource(R.drawable.ic_share)
-                questText.text = "새로운 나눔 퀘스트가 등록되었습니다!"
+            // Icon 설정
+            val questIcon = binding.mapQuestAlertIcon
+            val questText = binding.mapQuestAlertText
+            val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+            circle.setStroke(0,0)
+            when(type){
+                QuestType.SHARE.toString() ->{
+                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    questIcon.setImageResource(R.drawable.ic_share)
+                    questText.text = "새로운 나눔 퀘스트가 등록되었습니다!"
+                }
+                QuestType.EXCHANGE.toString() ->{
+                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                    questIcon.setImageResource(R.drawable.ic_exchange)
+                    questText.text = "새로운 교환 퀘스트가 등록되었습니다!"
+                }
+                QuestType.GROUP.toString() ->{
+                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+                    questIcon.setImageResource(R.drawable.ic_person_white)
+                    questText.text = "새로운 모집 퀘스트가 등록되었습니다!"
+                }
             }
-            QuestType.EXCHANGE.toString() ->{
-                circle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
-                questIcon.setImageResource(R.drawable.ic_exchange)
-                questText.text = "새로운 교환 퀘스트가 등록되었습니다!"
-            }
-            QuestType.GROUP.toString() ->{
-                circle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
-                questIcon.setImageResource(R.drawable.ic_person_white)
-                questText.text = "새로운 모집 퀘스트가 등록되었습니다!"
-            }
+            questIcon.background = circle
+
+            questLayout.visibility = View.VISIBLE
+            Handler(Looper.getMainLooper()).postDelayed({
+                questLayout.visibility = View.GONE
+            }, 2000)
         }
-        questIcon.background = circle
-
-        questLayout.visibility = View.VISIBLE
-        Handler(Looper.getMainLooper()).postDelayed({
-            questLayout.visibility = View.GONE
-        }, 2000)
     }
 
     /** Button Click & Callback Functions **/
@@ -1230,7 +1232,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     stompManager.sendLocation(
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
                                         location.latitude,
-                                        location.latitude,
+                                        location.longitude,
                                         mainViewModel.guid.value!!
                                         )
                                 }
@@ -1239,7 +1241,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     stompManager.sendLocation(
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
                                         location.latitude,
-                                        location.latitude,
+                                        location.longitude,
                                         mainViewModel.guid.value!!
                                     )
                                 }

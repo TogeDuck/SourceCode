@@ -32,8 +32,7 @@ class MapViewModel @Inject constructor(
     private val _pickedDate = MutableLiveData<Pair<LocalDate, LocalDate>>()
     val pickedDate: LiveData<Pair<LocalDate, LocalDate>> get() = _pickedDate
 
-    private val _peopleMarkerList = MutableLiveData<Map<String, Marker>>()
-    val peopleMarkerList : MutableLiveData<Map<String, Marker>> get() = _peopleMarkerList
+    val peopleMarkerList = MutableLiveData<Map<String, Marker>>()
 
     private val _isTourStart = MutableLiveData<Boolean>(false)
     val isTourStart get() = _isTourStart
@@ -54,9 +53,6 @@ class MapViewModel @Inject constructor(
     var bottomSheetState: MutableLiveData<Int> = MutableLiveData(0)
     var isQuestAlert = MutableLiveData<QuestAlert>()
 
-    init{
-        _peopleMarkerList.value = emptyMap()
-    }
     fun initPeopleMarkerImage(image: OverlayImage){
         this.peopleMarkerOverlay = image
     }
@@ -132,7 +128,7 @@ class MapViewModel @Inject constructor(
 
     fun updatePeopleMarker(coordinate: Coordinate){
         Log.d("로그","사람 지도 좌표 업데이트")
-        val updateMap = _peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
+        val updateMap = peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
         updateMap[coordinate.userId]?.map = null
         val marker = Marker()
         marker.position = LatLng(coordinate.latitude, coordinate.longitude)
@@ -142,23 +138,21 @@ class MapViewModel @Inject constructor(
         marker.height = markerSize
         marker.width = markerSize
         updateMap[coordinate.userId] = marker
-        _peopleMarkerList.postValue(updateMap)
+        peopleMarkerList.postValue(updateMap)
         updatePeopleNum(updateMap.size)
     }
     fun updatePeopleNum(updatePeople: Int){
         peopleNum.postValue(updatePeople)
     }
     fun deletePeopleMarker(coordinate: Coordinate){
-        val updateMap = _peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
+        val updateMap = peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
         updateMap[coordinate.userId]!!.map = null
         updateMap.remove(coordinate.userId)
-        _peopleMarkerList.postValue(updateMap)
+        peopleMarkerList.postValue(updateMap)
         updatePeopleNum(updateMap.size)
     }
-
-
     fun updateMarkerSize() {
-        _peopleMarkerList.value?.let { peopleMarkers ->
+        peopleMarkerList.value?.let { peopleMarkers ->
             for ((_, marker) in peopleMarkers) {
                 marker?.let {
                     it.width = markerSize
@@ -169,19 +163,19 @@ class MapViewModel @Inject constructor(
     }
 
     fun deleteAllMarkers() {
-        _peopleMarkerList.value?.let { peopleMarkers ->
+        peopleMarkerList.value?.let { peopleMarkers ->
             for ((_, marker) in peopleMarkers) {
                 marker?.let {
                     it.map = null
                 }
             }
         }
-        _peopleMarkerList.postValue(emptyMap())
+        peopleMarkerList.postValue(emptyMap())
     }
     fun setTourStatus(isStart: Boolean) {
         _isTourStart.value = isStart
     }
     fun clearList() {
-        _peopleMarkerList.value = mapOf()
+        peopleMarkerList.value = mutableMapOf()
     }
 }
