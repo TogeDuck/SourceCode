@@ -49,6 +49,8 @@ class ExchangeViewModel @Inject constructor(
     val navigationEvent: LiveData<Boolean>
         get() = _navigationEvent
 
+    var needUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
+
     suspend fun getExchangeList(eventId: Long, page: Int, size: Int){
         val response = exchangeRepository.getExchangeList(eventId, page, size)
         if (response.isSuccessful) {

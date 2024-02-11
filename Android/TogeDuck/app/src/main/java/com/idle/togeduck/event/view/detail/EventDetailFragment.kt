@@ -90,7 +90,6 @@ class EventDetailFragment : Fragment(), EventReview {
 
         //리스트의 해당 이벤트 정보 가져오기
         eventListViewModel.selectedEvent.observe(viewLifecycleOwner) { event ->
-            if(event != null){
                 this.event = event
                 binding.cafeNameDetail.text = event.name
                 binding.eventPeriodDetail.text = makeDateToString(event.startDate, event.endDate)
@@ -108,7 +107,6 @@ class EventDetailFragment : Fragment(), EventReview {
 
                 changeLikeImage(event)
                 changeVisitImage(event)
-            }
         }
 
         eventReviewViewModel.reviewList.observe(viewLifecycleOwner) { list ->

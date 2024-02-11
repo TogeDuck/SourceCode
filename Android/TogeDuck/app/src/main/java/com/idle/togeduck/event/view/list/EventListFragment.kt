@@ -82,10 +82,11 @@ class EventListFragment : Fragment(), EventInfo {
             pastEventInfoAdapter.submitList(list)
         }
 
-        eventListViewModel.selectedEvent.observe(viewLifecycleOwner){event ->
-            Log.d("이벤트 리스트", "Selected event updated: $event")
-            if(event != null){
+        eventListViewModel.isDetailOpen.observe(viewLifecycleOwner){check ->
+            Log.d("디테일 페이지 오픈 요청", "요청 수신")
+            if(check && eventListViewModel.selectedEvent.value != null){
                 toDetailPage()
+                eventListViewModel.isDetailOpen.value = false
             }
         }
 

@@ -185,6 +185,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setRealTimeContainer()
         setTourBtnTheme()
 
+        bottomAppBarClick(1)
+
         mapViewModel.initPeopleMarkerImage(initPeopleMarkerImage())
 
         mapViewModel.isTourStart.observe(viewLifecycleOwner) { isTourStart ->
@@ -572,10 +574,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
         mapViewModel.naverMap = naverMap
-
-        naverMap.setOnMapClickListener { pointF, latLng ->
-            eventListViewModel.clearSelectedEvent()
-        }
 
         // 현재 위치 버튼 표시
         naverMap.uiSettings.isLocationButtonEnabled = true
@@ -1132,15 +1130,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             Log.d("이벤트 클릭", naverItem.event.toString())
             // 이벤트 화면으로 이동
             eventListViewModel.setSelectedEvent(naverItem.event!!)
-            val eventListFragment = parentFragmentManager.findFragmentByTag("EventListFragment")
-            if (eventListFragment != null) {
-                if (naverItem.eventType == EventKind.TODAY) {
-                    bottomAppBarClick(0)
-                }
-            } else {
-                bottomAppBarClick(1)
+            if (naverItem.eventType == EventKind.TODAY) {
+                bottomAppBarClick(0)
             }
-
+            else{
+                eventListViewModel.isDetailOpen.value = true
+            }
             val position = naverItem.position
             val cameraPosition = CameraPosition(LatLng(position.latitude, position.longitude), 18.0)
             naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition))

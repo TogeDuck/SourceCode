@@ -14,6 +14,7 @@ import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
 import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.view.exchange_rv.GirdLayoutItemDecoration
@@ -29,7 +30,7 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
     private var _binding: FragmentQuestExchangeBinding? = null
     private val binding get() = _binding!!
     val exchangeViewModel: ExchangeViewModel by activityViewModels()
-//    val eventViewModel: EventViewModel by activityViewModels()
+    val eventListViewModel: EventListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,15 +60,30 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         exchangeViewModel.exchangeList.observe(viewLifecycleOwner) {list ->
             questExchangeAdapter.submitList(list)
         }
-
-        CoroutineScope(Dispatchers.IO).launch {
-            exchangeViewModel.getExchangeList(0,1,10000) // 숫자 변경
+        exchangeViewModel.needUpdate.observe(viewLifecycleOwner){check ->
+            if(check){
+                getExchangeList()
+                exchangeViewModel.needUpdate.value = false
+            }
         }
-    }
 
+        getExchangeList()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getExchangeList()
+    }
+    fun getExchangeList(){
+        eventListViewModel.selectedEvent.value?.let { selectedEvent ->
+            CoroutineScope(Dispatchers.IO).launch {
+                exchangeViewModel.getExchangeList(selectedEvent.eventId, 0, 1000)
+            }
+        }
     }
 
     override fun myQuestExchangeClicked(questExchange: Exchange) {
