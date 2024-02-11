@@ -19,7 +19,6 @@ import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentQuestShareBinding
-import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.quest.share.model.Share
 import com.idle.togeduck.util.TogeDuckItemDecoration
@@ -36,7 +35,7 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     private var _binding: FragmentQuestShareBinding? = null
     private val binding get() = _binding!!
     val shareViewModel: ShareViewModel by activityViewModels()
-    val eventListViewModel: EventListViewModel by activityViewModels()
+//    val eventViewModel: EventViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,23 +60,8 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         shareViewModel.shareList.observe(viewLifecycleOwner) {list ->
             questShareAdapter.submitList(list)
         }
-        shareViewModel.needUpdate.observe(viewLifecycleOwner){check ->
-            if(check){
-                getShareList()
-                shareViewModel.needUpdate.value = false
-            }
-        }
-        getShareList()
-    }
-    override fun onResume() {
-        super.onResume()
-        getShareList()
-    }
-    fun getShareList(){
-        eventListViewModel.selectedEvent.value?.let { selectedEvent ->
-            CoroutineScope(Dispatchers.IO).launch {
-                shareViewModel.getShareList(selectedEvent.eventId, 0, 1000)
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            shareViewModel.getShareList(10,1,100)
         }
     }
 

@@ -20,7 +20,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.idle.togeduck.QuestType
 import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
@@ -28,9 +27,6 @@ import com.idle.togeduck.databinding.DialogQuestExchangeBinding
 import com.idle.togeduck.databinding.DialogQuestExchangePostBinding
 import com.idle.togeduck.databinding.DialogQuestRecruitPostBinding
 import com.idle.togeduck.databinding.DialogQuestSharePostBinding
-import com.idle.togeduck.event.EventListViewModel
-import com.idle.togeduck.favorite.FavoriteSettingViewModel
-import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
@@ -42,24 +38,15 @@ import com.idle.togeduck.quest.share.model.toMultipartBody
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.MultiPartUtil
 import com.idle.togeduck.util.TogeDuckItemDecoration
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class SharePostDialogFragment: DialogFragment() {
     private var _binding: DialogQuestSharePostBinding? = null
     private val binding get() = _binding!!
 
-    @Inject
-    lateinit var stompManager: StompManager
-
     val shareViewModel: ShareViewModel by activityViewModels()
-    private val exchangeViewModel: ExchangeViewModel by activityViewModels()
-    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
-    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     private var imgPath: String? = null
 
@@ -113,26 +100,28 @@ class SharePostDialogFragment: DialogFragment() {
         binding.btnShareCancel.setOnClickListener {
             findNavController().navigate(R.id.action_sharePostDialogFragment_pop)
         }
-        //TODO EVENT-001 에러 확인 필요
+
+        //todo. ShareViewModel - createShare() 응답 실패 - DefaultResponse(code=404, message=EVENT-001)
         binding.btnSharePost.setOnClickListener {
+//            val eventId = event.eventId
             val title = binding.etShareTitle.text.toString()
             val content = binding.etShareContent.text.toString()
-            val duration = 120 // 하 이거 아직도 왜 있냐고
+            val duration = 120
+            // todo. => 임시로 120분 지정
 
             val shareRequest = ShareRequest(title, content, duration)
             val shareRequestPart = shareRequest.toMultipartBody()
 
             if(title.isNotEmpty() && content.isNotEmpty() && imgPath?.isNotEmpty() == true){
                 val shareImg = MultiPartUtil.createImagePart(imgPath!!)
-                if(eventListViewModel.selectedEvent.value != null && favoriteSettingViewModel.selectedCelebrity.value != null){
-                    CoroutineScope(Dispatchers.IO).launch {
-                        Log.d("나눔 등록", "나눔 등록 호출됨")
-                        Log.d("shareRequest", "shareRequest : ${shareRequestPart}")
-                        Log.d("나눔 등록 시도",eventListViewModel.selectedEvent.value.toString())
-                        shareViewModel.createShare(eventListViewModel.selectedEvent.value!!.eventId, shareImg, shareRequestPart, favoriteSettingViewModel.selectedCelebrity.value!!.id)
-                        launch(Dispatchers.Main){
-                            imgPath = null
-                        }
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("나눔 등록", "나눔 등록 호출됨")
+                    Log.d("shareRequest", "shareRequest : ${shareRequestPart}")
+                    shareViewModel.createShare(3, shareImg, shareRequestPart)
+
+                    launch(Dispatchers.Main){
+                        imgPath = null
                     }
                 }
             }
