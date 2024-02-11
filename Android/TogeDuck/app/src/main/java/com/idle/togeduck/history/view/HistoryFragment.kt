@@ -62,6 +62,7 @@ class HistoryFragment : Fragment(), IHistory {
 
     override fun onResume() {
         super.onResume()
+        Log.d("로그", "HistoryFragment - onResume() 호출됨")
         getHistoryList()
     }
 

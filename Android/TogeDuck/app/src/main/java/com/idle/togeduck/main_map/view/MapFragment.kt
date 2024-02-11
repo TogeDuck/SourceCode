@@ -10,6 +10,8 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -26,8 +28,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
-import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -42,6 +42,7 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermissionUtil
 import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.MainViewModel
+import com.idle.togeduck.QuestType
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
@@ -62,6 +63,7 @@ import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.util.CalcDistance
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.NaverItem
+import com.idle.togeduck.util.SnackBarFactory
 import com.idle.togeduck.util.builder
 import com.idle.togeduck.util.getColor
 import com.naver.maps.geometry.LatLng
@@ -184,6 +186,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setUpFloatingButton()
         setRealTimeContainer()
         setTourBtnTheme()
+        initQuestAlert()
+
+        bottomAppBarClick(1)
 
         mapViewModel.initPeopleMarkerImage(initPeopleMarkerImage())
 
@@ -198,7 +203,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
         mapViewModel.peopleNum.observe(viewLifecycleOwner) {
-            number -> binding.mapPeoplecntText.text = "${number}명의 팬들이 함께하고 있습니다!"
+                number -> binding.mapPeoplecntText.text = "${number}명의 팬들이 함께하고 있습니다!"
         }
 
         /** 버튼 동작 연결 **/
@@ -250,6 +255,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 2 -> {
                     sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
+            }
+        }
+        mapViewModel.isQuestAlert.observe(viewLifecycleOwner) { questAlert ->
+            if(mainViewModel.isRealTimeOn) {
+                SnackBarFactory.show(this, binding, questAlert.questType)
             }
         }
         eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
@@ -394,6 +404,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.realTimeBtn.trackTintList = trackColorStateList
         binding.realTimeBtn.thumbTintList = thumbColorStateList
     }
+    private fun initQuestAlert(){
+        binding.mapQuestAlertContainer.visibility = View.GONE
+    }
 
     /** Theme Settings **/
     private fun setTourBtnTheme() {
@@ -430,6 +443,46 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.plusRecruit.setColorFilter(getColor(requireContext(), R.color.white))
     }
 
+    // TODO. 삭제 예정
+    private fun setQuestAlertTheme(type: String){
+        if(mainViewModel.isRealTimeOn){
+            // Layout 설정
+            val questLayout = binding.mapQuestAlertContainer
+            val squareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+            squareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.white_transparent))
+            questLayout.background = squareCircle
+
+            // Icon 설정
+            val questIcon = binding.mapQuestAlertIcon
+            val questText = binding.mapQuestAlertText
+            val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+            circle.setStroke(0,0)
+            when(type){
+                QuestType.SHARE.toString() ->{
+                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    questIcon.setImageResource(R.drawable.ic_share)
+                    questText.text = "새로운 나눔 퀘스트가 등록되었습니다!"
+                }
+                QuestType.EXCHANGE.toString() ->{
+                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                    questIcon.setImageResource(R.drawable.ic_exchange)
+                    questText.text = "새로운 교환 퀘스트가 등록되었습니다!"
+                }
+                QuestType.GROUP.toString() ->{
+                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
+                    questIcon.setImageResource(R.drawable.ic_person_white)
+                    questText.text = "새로운 모집 퀘스트가 등록되었습니다!"
+                }
+            }
+            questIcon.background = circle
+
+            questLayout.visibility = View.VISIBLE
+            Handler(Looper.getMainLooper()).postDelayed({
+                questLayout.visibility = View.GONE
+            }, 2000)
+        }
+    }
+
     /** Button Click & Callback Functions **/
     private fun realTimeBtnOnClick(){
         if(realTimeOnOffBtn.isChecked){
@@ -443,7 +496,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
     private fun coordinateMessageCallback(message: String){
-       //TODO 추후 메세지 형식에 따라 변경
+        //TODO 추후 메세지 형식에 따라 변경
     }
 
     private fun initPeopleMarkerImage(): OverlayImage{
@@ -572,10 +625,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
         mapViewModel.naverMap = naverMap
-
-        naverMap.setOnMapClickListener { pointF, latLng ->
-            eventListViewModel.clearSelectedEvent()
-        }
 
         // 현재 위치 버튼 표시
         naverMap.uiSettings.isLocationButtonEnabled = true
@@ -1132,15 +1181,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             Log.d("이벤트 클릭", naverItem.event.toString())
             // 이벤트 화면으로 이동
             eventListViewModel.setSelectedEvent(naverItem.event!!)
-            val eventListFragment = parentFragmentManager.findFragmentByTag("EventListFragment")
-            if (eventListFragment != null) {
-                if (naverItem.eventType == EventKind.TODAY) {
-                    bottomAppBarClick(0)
-                }
-            } else {
-                bottomAppBarClick(1)
+            if (naverItem.eventType == EventKind.TODAY) {
+                bottomAppBarClick(0)
             }
-
+            else{
+                eventListViewModel.isDetailOpen.value = true
+            }
             val position = naverItem.position
             val cameraPosition = CameraPosition(LatLng(position.latitude, position.longitude), 18.0)
             naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition))
@@ -1190,16 +1236,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     stompManager.sendLocation(
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
                                         location.latitude,
-                                        location.latitude,
+                                        location.longitude,
                                         mainViewModel.guid.value!!
-                                        )
+                                    )
                                 }
                                 //TODO else문 삭제
                                 else{
                                     stompManager.sendLocation(
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
                                         location.latitude,
-                                        location.latitude,
+                                        location.longitude,
                                         mainViewModel.guid.value!!
                                     )
                                 }
@@ -1217,7 +1263,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         eventListViewModel.listToday.value?.let { list ->
             for (event in list) {
                 if(CalcDistance.idsDistanceOk(lat, lng, event.latitude, event.longitude)){
-                   eventList.add(event)
+                    eventList.add(event)
                 }
             }
         }
@@ -1235,7 +1281,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (mapViewModel.isTourStart.value == true && timer == null) sendPosition()
         if (workManager != null) cancelWorkWithPeriodic()
     }
-    
+
     override fun onStop() {
         super.onStop()
         Log.d("로그", "MapFragment - onStop() 호출됨")

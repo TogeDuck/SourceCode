@@ -113,9 +113,9 @@ class QuestExchangeViewHolder(
     }
 
     private fun setTheme(questExchange: Exchange, context: Context) {
-        if(elapsedTimeInSeconds <= 0){
-            questExchangeDetail.removeItemFromViewModel(questExchange)
-        }
+//        if(elapsedTimeInSeconds <= 0){
+//            questExchangeDetail.removeItemFromViewModel(questExchange)
+//        }
 
         val roundSmall =
             ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable

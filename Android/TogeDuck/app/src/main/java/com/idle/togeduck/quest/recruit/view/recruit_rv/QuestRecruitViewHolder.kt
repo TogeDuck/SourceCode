@@ -62,9 +62,9 @@ class QuestRecruitViewHolder(
     }
 
     private fun setTheme(questRecruit: Recruit, context: Context) {
-        if(elapsedTimeInSeconds <= 0){
-            iQuestRecruit.removeItem(questRecruit)
-        }
+//        if(elapsedTimeInSeconds <= 0){
+//            iQuestRecruit.removeItem(questRecruit)
+//        }
 
         val greenCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable
         greenCircleDrawable.setColor(getColor(context, R.color.green))

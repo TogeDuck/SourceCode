@@ -39,11 +39,13 @@ class EventListViewModel @Inject constructor(
     val listPast: LiveData<List<Event>>
         get() = _listPast
 
-    private val _selectedEvent = MutableLiveData<Event?>()
-    val selectedEvent: LiveData<Event?>
+    private val _selectedEvent = MutableLiveData<Event>()
+    val selectedEvent: LiveData<Event>
         get() = _selectedEvent
 
     val closeEvents = MutableLiveData<List<Event>>()
+
+    var isDetailOpen: MutableLiveData<Boolean> = MutableLiveData(false)
 
     init {
         _listToday.value = listOf()
@@ -128,7 +130,4 @@ class EventListViewModel @Inject constructor(
         _listUpcoming.value = listOf()
     }
 
-    fun clearSelectedEvent(){
-        _selectedEvent.value = null
-    }
 }
