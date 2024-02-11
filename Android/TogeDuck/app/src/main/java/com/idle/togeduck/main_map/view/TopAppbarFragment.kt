@@ -98,7 +98,7 @@ class TopAppbarFragment : Fragment() {
             val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
             val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
             eventListViewModel.getEventList(
-                2,
+                celebrityId,
                 startDate.toKotlinLocalDate(),
                 endDate.toKotlinLocalDate()
             )
