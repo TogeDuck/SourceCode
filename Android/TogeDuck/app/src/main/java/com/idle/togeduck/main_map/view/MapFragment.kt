@@ -732,7 +732,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         CoroutineScope(Dispatchers.IO).launch {
             val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
             val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
-            eventListViewModel.getEventList(197, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
+            eventListViewModel.getEventList(celebrityId, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
         }
     }
 
@@ -880,7 +880,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             pathLineList.add(LatLng(latitude, longitude))
         }
 
-        if (pathLine != null) {
+        if (list.isNotEmpty() && pathLine != null) {
             pathLine!!.width = 30
             pathLine!!.outlineWidth = 5
             pathLine!!.coords = pathLineList
