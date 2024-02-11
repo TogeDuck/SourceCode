@@ -36,12 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.Json.Default.encodeToString
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -124,15 +118,15 @@ class ExchangePostDialogFragment: DialogFragment() {
                     val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        Log.d("교환 등록", "교환 등록 호출됨")
-                        Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
-                        exchangeViewModel.postExchange(eventListViewModel.selectedEvent.value!!.eventId, exchaneImg, exchangeRequestPart)
                         // 웹소켓 교환 발생 알림 전송
                         stompManager.sendQuestAlert(
                             QuestType.EXCHANGE.toString(),
                             eventListViewModel.selectedEvent.value!!.eventId,
                             favoriteSettingViewModel.selectedCelebrity.value!!.id
-                            )
+                        )
+                        Log.d("교환 등록", "교환 등록 호출됨")
+                        Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
+                        exchangeViewModel.postExchange(eventListViewModel.selectedEvent.value!!.eventId, exchaneImg, exchangeRequestPart)
                         launch(Dispatchers.Main) {
                             imgPath = null
                         }
