@@ -104,7 +104,6 @@ class MainFragment : Fragment() {
     }
     /** 웹소켓 수신 메세지 한번에 처리 **/
     private fun socketCallback(message: String){
-        Log.d("웹소켓 수신", message)
         val response = Gson().fromJson(message, WebSocketResponse::class.java)
         val websocketDataResponse = Gson().fromJson(response.content, WebSocketDataResponse::class.java)
         if(websocketDataResponse.celebrityId == favoriteSettingViewModel.selectedCelebrity.value?.id){

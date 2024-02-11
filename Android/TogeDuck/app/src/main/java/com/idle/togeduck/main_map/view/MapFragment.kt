@@ -1028,6 +1028,37 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun changeBottomAppBarIcon(kind: Int) {
+        // Floating Buttons : Buttons (Main 500)
+        val fabQuest: LinearLayout = componentBottomAppbarBinding.fabQuest
+        val fabList: LinearLayout = componentBottomAppbarBinding.fabList
+        val fabChat: LinearLayout = componentBottomAppbarBinding.fabChat
+        val fabMyrecord: LinearLayout = componentBottomAppbarBinding.fabMyrecord
+        val circle =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        circle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        circle.setStroke(0, 0)
+
+        val fabs: List<LinearLayout> = listOf(fabQuest, fabList, fabChat, fabMyrecord)
+        for (fab in fabs) {
+            fab.background = circle;
+        }
+
+        when(kind){
+            0 -> {
+                handleButtonClick(fabQuest, listOf(fabList, fabChat, fabMyrecord))
+            }
+            1 -> {
+                handleButtonClick(fabList, listOf(fabQuest, fabChat, fabMyrecord))
+            }
+            2 -> {
+                handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord))
+            }
+            3 -> {
+                handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat))
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -1185,6 +1216,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 bottomAppBarClick(0)
             }
             else{
+                changeBottomAppBarIcon(1)
                 eventListViewModel.isDetailOpen.value = true
             }
             val position = naverItem.position

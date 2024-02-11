@@ -43,9 +43,6 @@ class ExchangePostDialogFragment: DialogFragment() {
     private var _binding: DialogQuestExchangePostBinding? = null
     private val binding get() = _binding!!
 
-    @Inject
-    lateinit var stompManager: StompManager
-
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val exchangeViewModel: ExchangeViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
@@ -105,7 +102,6 @@ class ExchangePostDialogFragment: DialogFragment() {
         }
 
         binding.btnExchangePost.setOnClickListener {
-//            val eventId = event.eventId
             val content = binding.etExchangeInput.text.toString()
             val duration = binding.npExchangeDuration.value
 
@@ -118,15 +114,14 @@ class ExchangePostDialogFragment: DialogFragment() {
                     val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        // 웹소켓 교환 발생 알림 전송
-                        stompManager.sendQuestAlert(
-                            QuestType.EXCHANGE.toString(),
-                            eventListViewModel.selectedEvent.value!!.eventId,
-                            favoriteSettingViewModel.selectedCelebrity.value!!.id
-                        )
                         Log.d("교환 등록", "교환 등록 호출됨")
                         Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
-                        exchangeViewModel.postExchange(eventListViewModel.selectedEvent.value!!.eventId, exchaneImg, exchangeRequestPart)
+                        exchangeViewModel.postExchange(
+                            eventListViewModel.selectedEvent.value!!.eventId,
+                            exchaneImg,
+                            exchangeRequestPart,
+                            favoriteSettingViewModel.selectedCelebrity.value!!.id
+                            )
                         launch(Dispatchers.Main) {
                             imgPath = null
                         }

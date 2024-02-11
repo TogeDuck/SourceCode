@@ -118,10 +118,9 @@ class RecruitPostDialogFragment: DialogFragment() {
                 && duration > 0 && duration <= 60) {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("모집 등록", "모집 등록 호출됨")
-                    recruitViewModel.createRecruit(2, recruitRequest)
+                    recruitViewModel.createRecruit(2, recruitRequest, favoriteSettingViewModel.selectedCelebrity.value!!.id)
                 }
             }
-
             findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
         }
 
