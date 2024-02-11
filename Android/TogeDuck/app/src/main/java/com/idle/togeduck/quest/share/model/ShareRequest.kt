@@ -23,7 +23,7 @@ data class ShareReq(
 fun ShareRequest.toMultipartBody(): MultipartBody.Part {
     val json = Json.encodeToString(ShareRequest.serializer(), this)
     val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
-    return MultipartBody.Part.createFormData("tradeRequestDto", json, requestBody)
+    return MultipartBody.Part.createFormData("shareRequestDto", json, requestBody)
 }
 
 fun ShareReq.toShareRequest() = ShareRequest(title, content, duration)
