@@ -202,7 +202,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
         mapViewModel.peopleNum.observe(viewLifecycleOwner) {
-            number -> binding.mapPeoplecntText.text = "${number}명의 팬들이 함께하고 있습니다!"
+                number -> binding.mapPeoplecntText.text = "${number}명의 팬들이 함께하고 있습니다!"
         }
 
         /** 버튼 동작 연결 **/
@@ -492,7 +492,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
     private fun coordinateMessageCallback(message: String){
-       //TODO 추후 메세지 형식에 따라 변경
+        //TODO 추후 메세지 형식에 따라 변경
     }
 
     private fun initPeopleMarkerImage(): OverlayImage{
@@ -1234,7 +1234,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                         location.latitude,
                                         location.longitude,
                                         mainViewModel.guid.value!!
-                                        )
+                                    )
                                 }
                                 //TODO else문 삭제
                                 else{
@@ -1259,7 +1259,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         eventListViewModel.listToday.value?.let { list ->
             for (event in list) {
                 if(CalcDistance.idsDistanceOk(lat, lng, event.latitude, event.longitude)){
-                   eventList.add(event)
+                    eventList.add(event)
                 }
             }
         }
@@ -1277,7 +1277,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (mapViewModel.isTourStart.value == true && timer == null) sendPosition()
         if (workManager != null) cancelWorkWithPeriodic()
     }
-    
+
     override fun onStop() {
         super.onStop()
         Log.d("로그", "MapFragment - onStop() 호출됨")

@@ -25,6 +25,7 @@ import com.idle.togeduck.network.WebSocketResponse
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.share.ShareViewModel
+import com.idle.togeduck.util.SnackBarFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,6 +99,11 @@ class MainFragment : Fragment() {
         }
 
         binding.btn3.setOnClickListener {
+            SnackBarFactory.show(
+                this,
+                binding,
+                "새로운 OO 퀘스트가 등록되었습니다",
+            )
         }
         //----------------------------------------------------
     }
