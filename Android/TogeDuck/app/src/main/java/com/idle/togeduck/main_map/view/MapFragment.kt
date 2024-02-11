@@ -63,6 +63,7 @@ import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.util.CalcDistance
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.NaverItem
+import com.idle.togeduck.util.SnackBarFactory
 import com.idle.togeduck.util.builder
 import com.idle.togeduck.util.getColor
 import com.naver.maps.geometry.LatLng
@@ -257,7 +258,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
         mapViewModel.isQuestAlert.observe(viewLifecycleOwner) { questAlert ->
-            setQuestAlertTheme(questAlert.questType)
+            SnackBarFactory.show(this, binding, questAlert.questType)
         }
         eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
             todayClustering?.clearItems()
@@ -440,6 +441,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.plusRecruit.setColorFilter(getColor(requireContext(), R.color.white))
     }
 
+    // TODO. 삭제 예정
     private fun setQuestAlertTheme(type: String){
         if(mainViewModel.isRealTimeOn){
             // Layout 설정
