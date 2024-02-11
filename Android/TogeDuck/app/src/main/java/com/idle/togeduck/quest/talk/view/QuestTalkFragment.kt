@@ -1,11 +1,13 @@
 package com.idle.togeduck.quest.talk.view
 
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -80,6 +82,11 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
         sendDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
         componentQuestTalkInputBinding.talkSend.background = sendDrawable
 
+        val cursorDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.shape_cursor) as GradientDrawable
+        cursorDrawable.setColor(getColor(requireContext(), Theme.theme.main500))
+        @RequiresApi(Build.VERSION_CODES.Q)
+        componentQuestTalkInputBinding.etTalkInput.textCursorDrawable = cursorDrawable
     }
 
     private fun setUpQuestTalkRV() {
