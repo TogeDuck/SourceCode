@@ -35,3 +35,10 @@ data class Chat(
     val chatId: Long,
     val message: String
 )
+
+@Serializable
+data class QuestChat(
+    val eventId: Long,
+    val userId: String,
+    val message: String
+)

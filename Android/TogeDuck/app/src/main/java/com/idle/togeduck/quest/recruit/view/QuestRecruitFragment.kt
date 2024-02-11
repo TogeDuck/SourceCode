@@ -19,6 +19,7 @@ import com.idle.togeduck.util.getColor
 import com.idle.togeduck.quest.recruit.view.recruit_rv.IQuestRecruit
 import com.idle.togeduck.quest.recruit.view.recruit_rv.QuestRecruitAdapter
 import com.idle.togeduck.quest.talk.TalkViewModel
+import com.idle.togeduck.quest.talk.model.TalkRoom
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +53,18 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
         setTheme()
 
         recruitViewModel.recruitList.observe(viewLifecycleOwner){list ->
+            //TODO 내가 만든 모집인지 확인 후 채팅방 아이디 보관
+//            for(recruit in list){
+//                if(recruit.){
+//                }
+//            }
             questRecruitAdapter.submitList(list)
+        }
+        recruitViewModel.needUpdate.observe(viewLifecycleOwner){check ->
+            if(check){
+                getRecruitList()
+                recruitViewModel.needUpdate.value = false
+            }
         }
         getRecruitList()
     }
@@ -89,7 +101,8 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
     }
 
     override fun joinBtnClicked(questRecruit: Recruit) {
-        talkViewModel.setChatRoomInfo(questRecruit.title, questRecruit.chatId)
+        talkViewModel.addTalkRoom(TalkRoom(questRecruit.chatId, questRecruit.title, mutableMapOf()))
+        talkViewModel.currentChatRoomId.value = questRecruit.chatId
         findNavController().navigate(R.id.action_mapFragment_to_chatRoomFragment)
     }
 

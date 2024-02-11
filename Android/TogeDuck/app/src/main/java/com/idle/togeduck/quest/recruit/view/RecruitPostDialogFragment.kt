@@ -36,6 +36,8 @@ import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.MyExchangeAdapter
 import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.recruit.model.RecruitRequest
+import com.idle.togeduck.quest.talk.TalkViewModel
+import com.idle.togeduck.quest.talk.model.TalkRoom
 import com.idle.togeduck.util.DpPxUtil
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import kotlinx.coroutines.CoroutineScope
@@ -53,6 +55,7 @@ class RecruitPostDialogFragment: DialogFragment() {
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val talkViewModel: TalkViewModel by activityViewModels()
 
     private lateinit var spinnerAdapter: ArrayAdapter<String>
     private lateinit var eventNames: List<String>

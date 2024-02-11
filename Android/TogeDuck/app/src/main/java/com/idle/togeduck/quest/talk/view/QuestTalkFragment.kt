@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentQuestTalkBinding
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.talk.view.talk_rv.IQuestTalkDetail
@@ -22,6 +23,7 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
     private val binding get() = _binding!!
 
     private val talkViewModel: TalkViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
     private lateinit var questTalkAdapter: QuestTalkAdapter
 
     override fun onCreateView(
@@ -40,6 +42,9 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
 
         talkViewModel.talkList.observe(viewLifecycleOwner) { talkList ->
             questTalkAdapter.submitList(talkList)
+        }
+        eventListViewModel.selectedEvent.observe(viewLifecycleOwner) {event ->
+            talkViewModel.clearTalkList()
         }
     }
 

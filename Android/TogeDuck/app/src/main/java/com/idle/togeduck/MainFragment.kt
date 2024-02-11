@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.idle.togeduck.databinding.FragmentMainBinding
@@ -17,18 +18,23 @@ import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.main_map.MapViewModel
+import com.idle.togeduck.network.Chat
 import com.idle.togeduck.network.Coordinate
 import com.idle.togeduck.network.QuestAlert
+import com.idle.togeduck.network.QuestChat
 import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.network.WebSocketDataResponse
 import com.idle.togeduck.network.WebSocketResponse
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.share.ShareViewModel
+import com.idle.togeduck.quest.talk.TalkViewModel
+import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.util.SnackBarFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -36,7 +42,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 enum class MessageKind{
-    LOCATION, TOURLEAVE, CHAT, QUESTALERT
+    LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT
 }
 
 enum class QuestType{
@@ -61,6 +67,7 @@ class MainFragment : Fragment() {
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val talkViewModel: TalkViewModel by activityViewModels()
 
 
     private lateinit var backPressedCallback: OnBackPressedCallback
@@ -84,8 +91,6 @@ class MainFragment : Fragment() {
         setDate()
         loadSelectedCelebrity()
         getFavorites()
-
-
 
         // 삭제 예정 ========================================
         binding.btn0.setOnClickListener {
@@ -128,17 +133,40 @@ class MainFragment : Fragment() {
                     if(eventListViewModel.selectedEvent.value?.eventId == questAlert.eventId){
                         when(questAlert.questType){
                             QuestType.SHARE.toString() -> {
+                                shareViewModel.needUpdate.value = true
                             }
                             QuestType.EXCHANGE.toString() -> {
                                 exchangeViewModel.needUpdate.value = true
                             }
                             QuestType.GROUP.toString() -> {
+                                recruitViewModel.needUpdate.value = true
                             }
                         }
                     }
                 }
                 MessageKind.CHAT.toString() -> {
-
+                    val chat = Gson().fromJson(websocketDataResponse.data, Chat::class.java)
+                    if (talkViewModel.chatRoomList.value?.containsKey(chat.chatId) == true) {
+                        talkViewModel.addTalkRoomTalk(chat.chatId,
+                            Talk(
+                                chatId = chat.chatId,
+                                userId = chat.userId,
+                                content = chat.message,
+                                isMine = chat.userId == mainViewModel.guid.value
+                            )
+                        )
+                    }
+                }
+                MessageKind.QUESTCHAT.toString() -> {
+                    val questChat = Gson().fromJson(websocketDataResponse.data, QuestChat::class.java)
+                    if(eventListViewModel.selectedEvent.value?.eventId == questChat.eventId){
+                        val chat = Talk(
+                            0,
+                            questChat.userId,
+                            questChat.message,
+                            questChat.userId.equals(mainViewModel.guid.value))
+                        talkViewModel.addTalk(chat)
+                    }
                 }
             }
         }
@@ -156,10 +184,13 @@ class MainFragment : Fragment() {
     }
 
     private fun connectSocket(){
-        stompManager.setHeader(mainViewModel.accessToken.value!!)
-        stompManager.connect()
-        stompManager.subscribeChat(1){
-                message -> socketCallback(message)
+        lifecycleScope.launch {
+            delay(1000)
+            stompManager.setHeader(mainViewModel.accessToken.value!!)
+            stompManager.connect()
+            stompManager.subscribeChat(1) { message ->
+                socketCallback(message)
+            }
         }
     }
 

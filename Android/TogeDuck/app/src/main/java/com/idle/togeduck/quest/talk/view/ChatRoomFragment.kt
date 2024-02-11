@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MediatorLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.common.RandomCupcake
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentChatRoomBinding
 import com.idle.togeduck.quest.talk.TalkViewModel
+import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.quest.talk.view.talk_rv.IQuestTalkDetail
 import com.idle.togeduck.quest.talk.view.talk_rv.QuestTalkAdapter
 import com.idle.togeduck.util.TogeDuckItemDecoration
@@ -43,8 +45,19 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
         setUpQuestTalkRV()
         setTheme()
 
-        talkViewModel.talkList.observe(viewLifecycleOwner) { talkList ->
-            questTalkAdapter.submitList(talkList)
+        val filteredTalkList = MediatorLiveData<List<Talk>>()
+        filteredTalkList.addSource(talkViewModel.currentChatRoomId) { chatRoomId ->
+            talkViewModel.chatRoomTalkList.value?.let { chatRoomTalkMap ->
+                filteredTalkList.value = chatRoomTalkMap[chatRoomId]
+            }
+        }
+        filteredTalkList.addSource(talkViewModel.chatRoomTalkList) { chatRoomTalkMap ->
+            talkViewModel.currentChatRoomId.value?.let { chatRoomId ->
+                filteredTalkList.value = chatRoomTalkMap[chatRoomId]
+            }
+        }
+        filteredTalkList.observe(viewLifecycleOwner) { talkList ->
+            questTalkAdapter.submitList(talkList ?: emptyList())
         }
     }
 
@@ -69,8 +82,7 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
         binding.chatroomMainIcon.background = whiteCircleDrawable
         binding.chatroomMainIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), RandomCupcake.getImage()))
         // Header Text
-        binding.chatroomTitle.text = talkViewModel.chatTitle.value
-        // Post Icon
+        binding.chatroomTitle.text = talkViewModel.chatRoomList.value?.get(talkViewModel.currentChatRoomId.value)?.title ?: "익명의 채팅방"        // Post Icon
         val squareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
         squareCircle.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.chatroomPost.background = squareCircle

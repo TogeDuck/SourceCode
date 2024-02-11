@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.quest.talk.model.TalkRepository
+import com.idle.togeduck.quest.talk.model.TalkRoom
 import com.idle.togeduck.quest.talk.model.toTalk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,17 +22,38 @@ class TalkViewModel @Inject constructor(
     private val _talkList = MutableLiveData<List<Talk>>()
     val talkList: LiveData<List<Talk>> get() = _talkList
 
-    private val _chatTitle = MutableLiveData<String>()
-    val chatTitle: LiveData<String> get() = _chatTitle
+    private val _chatRoomList = MutableLiveData<MutableMap<Long, TalkRoom>>()
+    val chatRoomList: LiveData<MutableMap<Long, TalkRoom>> get() = _chatRoomList
 
-    private val _chatId = MutableLiveData<Long>()
-    val chatId: LiveData<Long> get() = _chatId
+    private val _chatRoomTalkList = MutableLiveData<MutableMap<Long, MutableList<Talk>>>()
+    val chatRoomTalkList: LiveData<MutableMap<Long, MutableList<Talk>>> get() = _chatRoomTalkList
 
+    var currentChatRoomId: MutableLiveData<Long> = MutableLiveData(0L)
 
     init {
         viewModelScope.launch {
 //            getTalkList(1)
         }
+    }
+
+    fun clearTalkList(){
+        _talkList.postValue(mutableListOf())
+    }
+    fun addTalk(talk: Talk) {
+        val currentList = _talkList.value ?: emptyList()
+        val updatedList = currentList + talk
+        _talkList.postValue(updatedList)
+    }
+    fun addTalkRoom(talkRoom: TalkRoom){
+        val chatRoomList = _chatRoomList.value ?: mutableMapOf()
+        chatRoomList[talkRoom.chatId] = talkRoom
+        _chatRoomList.postValue(chatRoomList)
+    }
+    fun addTalkRoomTalk(chatRoomId: Long, talk: Talk) {
+        val currentTalks = _chatRoomTalkList.value ?: mutableMapOf()
+        val talksForRoom = currentTalks.getOrPut(chatRoomId) { mutableListOf() }
+        talksForRoom.add(talk)
+        _chatRoomTalkList.postValue(currentTalks)
     }
 
     suspend fun getTalkList(eventId: Long) {
@@ -51,12 +73,6 @@ class TalkViewModel @Inject constructor(
     }
 
     suspend fun getChatRoomTalkList(chatRoomId: Long){
-
-
     }
 
-    fun setChatRoomInfo(title:String, id:Long){
-        _chatId.value = id
-        _chatTitle.value = title
-    }
 }

@@ -121,7 +121,8 @@ class ExchangePostDialogFragment: DialogFragment() {
                             eventListViewModel.selectedEvent.value!!.eventId,
                             exchaneImg,
                             exchangeRequestPart,
-                            favoriteSettingViewModel.selectedCelebrity.value!!.id
+                            favoriteSettingViewModel.selectedCelebrity.value!!.id,
+
                             )
                         launch(Dispatchers.Main) {
                             imgPath = null
