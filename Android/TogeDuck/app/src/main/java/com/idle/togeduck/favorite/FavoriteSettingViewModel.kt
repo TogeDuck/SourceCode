@@ -52,6 +52,9 @@ class FavoriteSettingViewModel @Inject constructor(
              val responseResult = favoriteRepository.getFavorites()
              if (responseResult.isSuccessful) {
                  val body = responseResult.body()!!
+
+                 Log.d("로그", "FavoriteSettingViewModel - getFavoriteList() / ${body.data}")
+
                  _favoriteIdolList.value = body.data.map { celebrityResponse ->
                     val celebrity = celebrityResponse.celebrityResponseToCelebrity()
                      if (selectedCelebrity.value != null && selectedCelebrity.value!!.id == celebrity.id) {
@@ -98,27 +101,49 @@ class FavoriteSettingViewModel @Inject constructor(
     suspend fun addFavoriteIdol(celebrity: Celebrity) {
         val newList = _favoriteIdolList.value!!.toMutableList()
         newList.add(celebrity)
-//        _favoriteIdolList.value = newList
         _favoriteIdolList.postValue(newList)
 
         _tempFavoriteIdolList.postValue(
             tempFavoriteIdolList.value!!.toMutableList().apply { add(celebrity) }
         )
 
-        favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+        val responseResult = favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+
+        if (responseResult.isSuccessful) {
+            val body = responseResult.body()!!
+
+            Log.d("로그", "FavoriteSettingViewModel - addFavoriteIdol() 응답 성공 / ${body}")
+        } else {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+
+            Log.d("로그", "FavoriteSettingViewModel - addFavoriteIdol() 응답 실패 / ${errorBody}")
+        }
     }
 
     suspend fun removeMyFavoriteIdol(celebrity: Celebrity) {
         val newList = _favoriteIdolList.value!!.toMutableList()
         newList.remove(celebrity)
-//        _favoriteIdolList.value = newList
         _favoriteIdolList.postValue(newList)
 
         _tempFavoriteIdolList.postValue(
             _tempFavoriteIdolList.value!!.toMutableList().apply { remove(celebrity) }
         )
 
-        favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+        val responseResult = favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+
+        if (responseResult.isSuccessful) {
+            val body = responseResult.body()!!
+
+            Log.d("로그", "FavoriteSettingViewModel - removeMyFavoriteIdol() 응답 성공 / ${body}")
+        } else {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+
+            Log.d("로그", "FavoriteSettingViewModel - addFavoriteIdol() 응답 실패 / ${errorBody}")
+        }
     }
 
     fun clickedCelebrity(position: Int) {
