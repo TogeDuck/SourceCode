@@ -193,6 +193,7 @@
             tools:background="@drawable/shape_circle"
             tools:backgroundTint="@color/green"
             />
+
         <TextView
             android:id="@+id/map_quest_alert_text"
             android:layout_width="wrap_content"
@@ -202,6 +203,7 @@
             android:textSize="@dimen/text_large"
             android:layout_marginEnd="8dp"
             />
+
     </LinearLayout>
 
     <include
