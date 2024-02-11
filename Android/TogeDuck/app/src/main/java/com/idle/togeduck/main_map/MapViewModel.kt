@@ -123,33 +123,32 @@ class MapViewModel @Inject constructor(
         _pickedDate.value = startDate to endDate
     }
 
-    fun updatePeopleMarker(coordinate: Coordinate, type:String){
+    fun updatePeopleMarker(coordinate: Coordinate){
+        Log.d("로그","사람 지도 좌표 업데이트")
         val updateMap = _peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
-        when(type){
-            MessageKind.MESSAGE.toString() -> {
-                updateMap[coordinate.userId]?.map = null
-                val marker = Marker()
-                marker.position = LatLng(coordinate.latitude, coordinate.longitude)
-                marker.icon = peopleMarkerOverlay!!
-                marker.alpha = 0.5f
-                marker.map = naverMap
-                marker.height = markerSize
-                marker.width = markerSize
-                updateMap[coordinate.userId] = marker
-            }
-            MessageKind.LEAVE.toString() -> {
-                updateMap[coordinate.userId]!!.map = null
-                updateMap.remove(coordinate.userId)
-            }
-        }
-        val currentPeopleMarkerMap = peopleMarkerList.value
-        peopleNum.value = if (currentPeopleMarkerMap != null) {
-            currentPeopleMarkerMap.size
-        } else {
-            0
-        }
+        updateMap[coordinate.userId]?.map = null
+        val marker = Marker()
+        marker.position = LatLng(coordinate.latitude, coordinate.longitude)
+        marker.icon = peopleMarkerOverlay!!
+        marker.alpha = 0.5f
+        marker.map = naverMap
+        marker.height = markerSize
+        marker.width = markerSize
+        updateMap[coordinate.userId] = marker
         _peopleMarkerList.postValue(updateMap)
+        updatePeopleNum(updateMap.size)
     }
+    fun updatePeopleNum(updatePeople: Int){
+        peopleNum.postValue(updatePeople)
+    }
+    fun deletePeopleMarker(coordinate: Coordinate){
+        val updateMap = _peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
+        updateMap[coordinate.userId]!!.map = null
+        updateMap.remove(coordinate.userId)
+        _peopleMarkerList.postValue(updateMap)
+        updatePeopleNum(updateMap.size)
+    }
+
 
     fun updateMarkerSize() {
         _peopleMarkerList.value?.let { peopleMarkers ->

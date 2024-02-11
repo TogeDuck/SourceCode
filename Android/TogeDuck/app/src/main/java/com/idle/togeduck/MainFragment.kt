@@ -1,7 +1,5 @@
 package com.idle.togeduck
 
-import android.content.ContentValues.TAG
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,15 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.di.PreferenceModule
@@ -25,30 +17,21 @@ import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Coordinate
-import com.idle.togeduck.network.CoordinateResponse
-import com.idle.togeduck.network.Message
-import com.idle.togeduck.network.Quest
 import com.idle.togeduck.network.StompManager
-import com.idle.togeduck.network.TempCoordinateResponse
-import com.idle.togeduck.network.toCoordinate
+import com.idle.togeduck.network.WebSocketDataResponse
+import com.idle.togeduck.network.WebSocketResponse
 import com.idle.togeduck.quest.share.ShareViewModel
-import com.idle.togeduck.util.GPSWorker
-import com.idle.togeduck.util.LoginUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.toKotlinLocalDate
-import ua.naiksoftware.stomp.dto.StompHeader
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 enum class MessageKind{
-    MESSAGE, JOIN, LEAVE, CHAT, QUEST
+    LOCATION, TOURLEAVE, CHAT, QUESTALERT
 }
 
 @AndroidEntryPoint
@@ -106,21 +89,25 @@ class MainFragment : Fragment() {
         }
         //----------------------------------------------------
     }
-
+    /** 웹소켓 수신 메세지 한번에 처리 **/
     private fun socketCallback(message: String){
         Log.d("웹소켓 수신", message)
-        val response = Gson().fromJson(message, TempCoordinateResponse::class.java)
-        val coordinateResponse = Gson().fromJson(response.content, CoordinateResponse::class.java)
-        if(coordinateResponse.celebrityId.equals(favoriteSettingViewModel.selectedCelebrity.value?.id)){
-            when(coordinateResponse.type){
-                MessageKind.MESSAGE.toString() -> {
-                    if(mainViewModel.isRealTimeOn && !coordinateResponse.userId.equals(mainViewModel.guid.value)){
-                        mapViewModel.updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
+        val response = Gson().fromJson(message, WebSocketResponse::class.java)
+        val websocketDataResponse = Gson().fromJson(response.content, WebSocketDataResponse::class.java)
+        if(websocketDataResponse.celebrityId == favoriteSettingViewModel.selectedCelebrity.value?.id){
+            when(websocketDataResponse.type){
+                // 좌표 수신
+                MessageKind.LOCATION.toString() -> {
+                    val coordinate = Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
+                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid.value)){
+                        mapViewModel.updatePeopleMarker(coordinate)
                     }
                 }
-                MessageKind.LEAVE.toString() -> {
-                    if(mainViewModel.isRealTimeOn && !coordinateResponse.userId.equals(mainViewModel.guid.value)){
-                        mapViewModel.updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
+                // 다른 사람의 투어 종료 수신
+                MessageKind.TOURLEAVE.toString() -> {
+                    val coordinate = Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
+                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid.value)){
+                        mapViewModel.deletePeopleMarker(coordinate)
                     }
                 }
 
@@ -133,13 +120,17 @@ class MainFragment : Fragment() {
             if (!mainViewModel.isAccessTokenPresent()) {
                 val guid = mainViewModel.makeGUID()
                 if(mainViewModel.login("GUEST", guid)){
-                    stompManager.setHeader(mainViewModel.accessToken.value!!)
-                    stompManager.connect()
-                    stompManager.subscribeChat(1){
-                            message -> socketCallback(message)
-                    }
+                    connectSocket()
                 }
             }
+        }
+    }
+
+    private fun connectSocket(){
+        stompManager.setHeader(mainViewModel.accessToken.value!!)
+        stompManager.connect()
+        stompManager.subscribeChat(1){
+                message -> socketCallback(message)
         }
     }
 
@@ -234,7 +225,6 @@ class MainFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        stompManager.disconnect()
         backPressedCallback.remove()
     }
 }

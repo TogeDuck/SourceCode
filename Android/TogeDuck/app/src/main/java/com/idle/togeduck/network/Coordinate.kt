@@ -1,34 +1,37 @@
 package com.idle.togeduck.network
 
 import kotlinx.serialization.Serializable
-@Serializable
-data class Coordinate(
-    val celebrityId: Long,
-    val latitude: Double,
-    val longitude: Double,
-    val userId: String
-)
-@Serializable
-data class CoordinateResponse(
-    val celebrityId: Long,
-    val latitude: Double,
-    val longitude: Double,
-    val userId: String,
-    val type: String
-)
-@Serializable
-data class CoordinateRequest(
-    val celebrityId: Long,
-    val latitude: Double,
-    val longitude: Double,
-    val userId: String,
-    val type: String
-)
+
 
 @Serializable
-data class TempCoordinateResponse(
+data class WebSocketResponse(
     val chatId: Long,
     val content: String
 )
 
-fun CoordinateResponse.toCoordinate() = Coordinate(celebrityId, latitude, longitude, userId)
+@Serializable
+data class WebSocketDataResponse(
+    val type: String,
+    val celebrityId: Long,
+    val data: String
+)
+
+@Serializable
+data class Coordinate(
+    val latitude: Double,
+    val longitude: Double,
+    val userId: String
+)
+
+@Serializable
+data class QuestAlert(
+    val questType: String,
+    val eventId: Long
+)
+
+@Serializable
+data class Chat(
+    val userId: String,
+    val chatId: String,
+    val message: String
+)

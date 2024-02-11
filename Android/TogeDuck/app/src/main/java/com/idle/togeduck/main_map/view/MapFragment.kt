@@ -9,26 +9,22 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -38,15 +34,12 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermissionUtil
 import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.MainViewModel
-import com.idle.togeduck.MessageKind
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ComponentBottomAppbarBinding
 import com.idle.togeduck.databinding.ComponentBottomSheetBinding
@@ -63,13 +56,7 @@ import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
-import com.idle.togeduck.network.Coordinate
-import com.idle.togeduck.network.CoordinateRequest
-import com.idle.togeduck.network.CoordinateResponse
-import com.idle.togeduck.network.Message
 import com.idle.togeduck.network.StompManager
-import com.idle.togeduck.network.TempCoordinateResponse
-import com.idle.togeduck.network.toCoordinate
 import com.idle.togeduck.util.CalcDistance
 import com.idle.togeduck.util.GPSWorker
 import com.idle.togeduck.util.NaverItem
@@ -92,11 +79,7 @@ import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import ted.gun0912.clustering.naver.TedNaverClustering
@@ -104,8 +87,6 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.math.E
-import kotlin.math.ln
 
 enum class EventKind {
     PAST, TODAY, LATER
@@ -202,8 +183,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         setRealTimeContainer()
         setTourBtnTheme()
 
-        mainViewModel.accessToken.value?.let { stompManager.setHeader(it) }
-        stompManager.connect()
         mapViewModel.initPeopleMarkerImage(initPeopleMarkerImage())
 
         mapViewModel.isTourStart.observe(viewLifecycleOwner) { isTourStart ->
@@ -273,12 +252,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude) })
             Log.d("이벤트 리스트 변경","과거")
         }
-//        mapViewModel.peopleMarkerList.observe(viewLifecycleOwner) {
-//            updatedMarkerList ->
-//            val valuesCollection = updatedMarkerList.values
-//            peopleMarker.clear()
-//            peopleMarker.addAll(valuesCollection)
-//        }
         historyViewModel.route.observe(viewLifecycleOwner) { list ->
             if (pathLine != null) pathLine!!.map = null
             setPathLine(list)
@@ -445,10 +418,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     /** Button Click & Callback Functions **/
     private fun realTimeBtnOnClick(){
         if(realTimeOnOffBtn.isChecked){
-            // 추후 삭제
-//            stompManager.subscribeChat(1){
-//                message -> tempCoordinateMessageCallback(message)
-//            }
             mainViewModel.isRealTimeOn = true
             binding.mapPeoplecntContainer.visibility = View.VISIBLE
         }
@@ -460,19 +429,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
     private fun coordinateMessageCallback(message: String){
        //TODO 추후 메세지 형식에 따라 변경
-        val location = Gson().fromJson(message, CoordinateResponse::class.java).toCoordinate()
-//        mapViewModel.updatePeopleMarker(location)
     }
-    // 좌표를 json 형태로 채팅방으로 보낼 때 사용하는 메서드 (추후 삭제 가능)
-    private fun tempCoordinateMessageCallback(message: String){
-        Log.d("웹소켓 수신", message)
-        val response = Gson().fromJson(message, TempCoordinateResponse::class.java)
-        val coordinateResponse = Gson().fromJson(response.content, CoordinateResponse::class.java)
-        if(!coordinateResponse.userId.equals(mainViewModel.guid.value)){
-            mapViewModel.updatePeopleMarker(coordinateResponse.toCoordinate(), coordinateResponse.type)
 
-        }
-    }
     private fun initPeopleMarkerImage(): OverlayImage{
         val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
@@ -496,7 +454,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             binding.tourStart.text = "투어\n시작"
             mapViewModel.setTourStatus(false)
             // 실시간 위치 공유에서 종료 알림
-            stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,0.0, 0.0, mainViewModel.guid.value!!, MessageKind.LEAVE.toString())))
+            stompManager.sendTourEnd( favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1, mainViewModel.guid.value!!)
             // 투어 기록 전송
             CoroutineScope(Dispatchers.IO).launch {
                 historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList.value!!)
@@ -1155,12 +1113,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                                 if(mapViewModel.addTourRecord(location.latitude, location.longitude)){
                                     // 웹소켓 전송 (추후 url, 전송 형식 백엔드에 맞춰 변경)
-//                                    stompManager.sendLocation(favoriteSettingViewModel.selectedCelebrity.value!!.id, location.latitude, location.longitude)
-                                    stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,location.latitude, location.longitude, mainViewModel.guid.value!!, MessageKind.MESSAGE.toString())))
+                                    stompManager.sendLocation(
+                                        favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
+                                        location.latitude,
+                                        location.latitude,
+                                        mainViewModel.guid.value!!
+                                        )
                                 }
+                                //TODO else문 삭제
                                 else{
-//                                    stompManager.sendLocation(favoriteSettingViewModel.selectedCelebrity.value!!.id, location.latitude, location.longitude)
-                                    stompManager.sendChat(1,Gson().toJson(CoordinateRequest(1,location.latitude, location.longitude, mainViewModel.guid.value!!, MessageKind.MESSAGE.toString())))
+                                    stompManager.sendLocation(
+                                        favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
+                                        location.latitude,
+                                        location.latitude,
+                                        mainViewModel.guid.value!!
+                                    )
                                 }
                                 // 이벤트 리스트 확인, 가까운 리스트 갱신
                                 figureCloseEvents(location.latitude, location.longitude)

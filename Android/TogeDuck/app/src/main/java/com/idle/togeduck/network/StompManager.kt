@@ -3,6 +3,7 @@ package com.idle.togeduck.network
 import android.content.ContentValues
 import android.util.Log
 import com.google.gson.Gson
+import com.idle.togeduck.MessageKind
 import com.idle.togeduck.websocketcustomlibrary.Stomp
 import com.idle.togeduck.websocketcustomlibrary.StompClient
 import com.idle.togeduck.websocketcustomlibrary.dto.StompHeader
@@ -43,20 +44,45 @@ class StompManager {
         stompClient.connect(headers)
     }
 
-    fun send(destination: String, message: MessageRequest) {
-        stompClient.send(destination, Gson().toJson(message), headers).subscribe()
-    }
-    fun sendChat(chatId: Long, message:String){
+    fun sendChat(chatId: String, userId: String, message:String, celebrityId: Long){
         Log.d("웹소켓 헤더", headers.toString())
-        val destination = "/pub/chats/$chatId/message"
-        stompClient.send(destination, Gson().toJson(MessageRequest(chatId, message)), headers).subscribe()
-        Log.d("웹소켓 전송", destination+" "+Gson().toJson(MessageRequest(chatId, message)))
+//        val destination = "/pub/chats/$chatId/message"
+        val destination = "/pub/chats/1/message"
+        val chat = Chat(userId, chatId, message)
+        val webSocketDataResponse = WebSocketDataResponse(MessageKind.CHAT.toString(),celebrityId, Gson().toJson(chat))
+        val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
+        stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
     }
-    fun sendLocation(celebrityId: Long, lat:Double, lng:Double, userId:String, type:String){
+    fun sendLocation(celebrityId: Long, lat:Double, lng:Double, userId:String){
         Log.d("웹소켓 헤더", headers.toString())
-        val destination = "/pub/celebrities/$celebrityId/message"
-        stompClient.send(destination, Gson().toJson(CoordinateRequest(celebrityId,lat,lng,userId,type)), headers).subscribe()
-        Log.d("웹소켓 전송", destination+" "+Gson().toJson(CoordinateRequest(celebrityId,lat,lng,userId,type)))
+//        val destination = "/pub/celebrities/$celebrityId/message"
+        val destination = "/pub/chats/1/message"
+        val coordinate = Coordinate(lat, lng, userId)
+        val webSocketDataResponse = WebSocketDataResponse(MessageKind.LOCATION.toString(),celebrityId,Gson().toJson(coordinate))
+        val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
+        stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
+    }
+    fun sendTourEnd(celebrityId: Long, userId: String){
+        Log.d("웹소켓 헤더", headers.toString())
+//        val destination = "/pub/celebrities/$celebrityId/message"
+        val destination = "/pub/chats/1/message"
+        val coordinate = Coordinate(0.0, 0.0, userId)
+        val webSocketDataResponse = WebSocketDataResponse(MessageKind.TOURLEAVE.toString(),celebrityId,Gson().toJson(coordinate))
+        val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
+        stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
+    }
+    fun sendQuestAlert(questType: String, eventId: Long, celebrityId: Long){
+        Log.d("웹소켓 헤더", headers.toString())
+//        val destination = "/pub/celebrities/$celebrityId/message"
+        val destination = "/pub/chats/1/message"
+        val questAlert = QuestAlert(questType, eventId)
+        val webSocketDataResponse = WebSocketDataResponse(MessageKind.TOURLEAVE.toString(),celebrityId,Gson().toJson(questAlert))
+        val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
+        stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
     }
 
     private fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
