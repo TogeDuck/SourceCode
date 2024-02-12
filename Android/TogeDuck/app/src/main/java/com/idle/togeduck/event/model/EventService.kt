@@ -24,7 +24,10 @@ interface EventService {
 
 
     // TODO. 이벤트 정보 검색 추가 필요
-
+    @GET("events/info/{event_id}")
+    suspend fun getEventById(
+        @Path("event_id") eventId: Long,
+    ) : Response<SingleEventResponse>
 
     @GET("events/likes")
     suspend fun getLikesList(): Response<EventDataResponse>
