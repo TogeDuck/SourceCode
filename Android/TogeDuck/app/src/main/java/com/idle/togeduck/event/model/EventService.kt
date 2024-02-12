@@ -34,7 +34,7 @@ interface EventService {
 
     @POST("events/likes")
     suspend fun likeEvent(
-        @Body likeEventRequest: LikeEventRequest,
+        @Query("event_id") eventId: Long,
     ): Response<DefaultResponse>
 
     @DELETE("events/likes/{event_id}")

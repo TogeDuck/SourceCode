@@ -19,7 +19,7 @@ interface EventRepository {
 
     suspend fun getEventById(eventId: Long) : Response<SingleEventResponse>
 
-    suspend fun likeEvent(likeEventRequest: LikeEventRequest): Response<DefaultResponse>
+    suspend fun likeEvent(eventId: Long): Response<DefaultResponse>
 
     suspend fun unlikeEvent(eventId: Long): Response<DefaultResponse>
 
@@ -60,8 +60,8 @@ class DefaultEventRepository @Inject constructor(
         return eventService.getEventById(eventId)
     }
 
-    override suspend fun likeEvent(likeEventRequest: LikeEventRequest): Response<DefaultResponse> {
-        return eventService.likeEvent(likeEventRequest)
+    override suspend fun likeEvent(eventId: Long): Response<DefaultResponse> {
+        return eventService.likeEvent(eventId)
     }
 
     override suspend fun unlikeEvent(eventId: Long): Response<DefaultResponse> {

@@ -245,7 +245,7 @@ class EventDetailFragment : Fragment(), EventReview {
         CoroutineScope(Dispatchers.IO).launch {
             if(event.isStar) {
                 val likeEventRequest = LikeEventRequest(1)
-                eventListViewModel.likeEvent(likeEventRequest)
+                eventListViewModel.likeEvent(eventListViewModel.selectedEvent.value!!.eventId)
                 Log.d("log", "eventDetailfragment - 즐겨찾기 추가 ")
             }else {
                 eventListViewModel.unlikeEvent(1)
