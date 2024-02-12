@@ -199,10 +199,10 @@ class EventListFragment : Fragment(), EventInfo {
             if(event != null){
                 if(event.isStar){
                     val likeEventRequest = LikeEventRequest(1)
-                    eventListViewModel.likeEvent(likeEventRequest)
+                    eventListViewModel.likeEvent(event.eventId)
                     Log.d("log", "eventlistfragment - 즐겨찾기 추가 ")
                 }else{
-                    eventListViewModel.unlikeEvent(1)
+                    eventListViewModel.unlikeEvent(event.eventId)
                     Log.d("log", "eventlistfragment - 즐겨찾기 삭제")
                 }
             }

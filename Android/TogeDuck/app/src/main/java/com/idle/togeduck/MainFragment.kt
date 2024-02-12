@@ -98,6 +98,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn1.setOnClickListener {
+            Log.d("최애",favoriteSettingViewModel.selectedCelebrity.value.toString())
         }
 
         binding.btn2.setOnClickListener {

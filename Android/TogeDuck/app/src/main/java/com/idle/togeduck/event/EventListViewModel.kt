@@ -96,8 +96,8 @@ class EventListViewModel @Inject constructor(
         }
     }
 
-    suspend fun likeEvent(likeEventRequest: LikeEventRequest){
-        val responseResult = eventRepository.likeEvent(likeEventRequest)
+    suspend fun likeEvent(eventId: Long){
+        val responseResult = eventRepository.likeEvent(eventId)
         Log.d("로그", "EventListViewModel - likeEvent() 응답 성공 - $responseResult")
 
         if(!responseResult.isSuccessful){
