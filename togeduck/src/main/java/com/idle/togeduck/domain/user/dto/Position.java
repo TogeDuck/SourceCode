@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenDto {
-	private String grantType;
-	private Long userId;
-	private String accessToken;
-	private String refreshToken;
-	private Long accessTokenExpireDate;
+public class Position {
+	private Double latitude;
+	private Double longitude;
 }

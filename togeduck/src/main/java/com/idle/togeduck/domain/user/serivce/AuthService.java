@@ -77,7 +77,7 @@ public class AuthService {
 
 		if (userRepository.findBySocialId(socialId) == 0) { // DB 에 정보 없으면 회원가입
 			/*
-			 GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
+			 	GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
 			 */
 			join(
 				UserRequestDto.builder()
@@ -88,10 +88,10 @@ public class AuthService {
 		}
 
 		User user = userRepository.findUserBySocialId(socialId); // 유저 정보
-		
+
 		// 1. Login 정보를 기반으로 AuthenticationToken 생성
 		UsernamePasswordAuthenticationToken authenticationToken =
-			new UsernamePasswordAuthenticationToken(user.getSocialId(), "", user.getAuthorities());
+			new UsernamePasswordAuthenticationToken(user.getId(), "", user.getAuthorities());
 
 		// 2. 실제로 검증이 이루어지는 부분
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -101,8 +101,6 @@ public class AuthService {
 
 		// 4. RefreshToken redis 저장
 		String refreshToken = tokenDto.getRefreshToken();
-		String accessToken = tokenDto.getAccessToken();
-		// Long refreshTokenExpired = tokenDto.getAccessTokenExpireDate();
 
 		redisService.setValues(String.valueOf(user.getSocialId()), refreshToken);
 

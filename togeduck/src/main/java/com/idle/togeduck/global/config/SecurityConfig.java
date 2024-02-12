@@ -33,22 +33,23 @@ public class SecurityConfig { // 스프링 시큐리티에 필요한 설정
 
 		// CSRF 설정 Disable
 		http
-			.csrf(AbstractHttpConfigurer::disable)
-
-			.addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-
-			.headers((headers) ->
-				headers.frameOptions(
-					HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-
-			// exception handling 할 때 우리가 만든 클래스를 추가
-			.exceptionHandling((authenticationEntryPoint) ->
-				authenticationEntryPoint.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-					.accessDeniedHandler(jwtAccessDeniedHandler))
-
+			.csrf(AbstractHttpConfigurer::disable);
+		// JWT 인증 방식 세팅
+		http
+			.formLogin(AbstractHttpConfigurer::disable)
+			.httpBasic(AbstractHttpConfigurer::disable)
 			.sessionManagement((sessionManagement) ->
 				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+			// exception handling 할 때 우리가 만든 클래스를 추가
+			.exceptionHandling(exception ->
+				exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+					.accessDeniedHandler(jwtAccessDeniedHandler));
 
+		http
+			// .headers((headers) ->
+			// 	headers.frameOptions(
+			// 		HeadersConfigurer.FrameOptionsConfig::sameOrigin))
 			.authorizeHttpRequests(authorizeRequests ->
 				authorizeRequests
 					.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()

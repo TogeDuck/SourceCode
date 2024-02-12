@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import com.idle.togeduck.domain.celebrity.dto.LocationRequestDto;
 import com.idle.togeduck.domain.celebrity.dto.LocationResponseDto;
 import com.idle.togeduck.domain.celebrity.service.CelebrityService;
 import com.idle.togeduck.domain.celebrity.service.CelebrityUserService;
+import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.global.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -34,13 +36,18 @@ public class CelebrityController {
 	private final CelebrityUserService celebrityUserService;
 	private final SimpMessagingTemplate simpMessagingTemplate;
 
-	@GetMapping
-	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(@RequestParam String name,
-		String nickname, String teamName) throws IOException {
+	@GetMapping("/search")
+	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(@RequestParam String keyword
+	) throws IOException {
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", celebrityService.getAllCelebrity(name, nickname, teamName)));
+			.body(new BaseResponse<>(200, "success", celebrityService.getCelebrityByKeyword(keyword)));
+	}
+
+	@GetMapping("/user")
+	public User currentUserName(@AuthenticationPrincipal User user) {
+		return user;
 	}
 
 	@MessageMapping("/celebrities/{celebrityId}/join")
