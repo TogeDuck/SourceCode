@@ -49,23 +49,26 @@
             android:textSize="@dimen/text_title_small"/>
     </LinearLayout>
 
-        <!-- textCursorDrawable 제작, 수정 -->
-        <com.idle.togeduck.util.ClearFocusEditText
-            android:id="@+id/et_recruit_title"
-            android:layout_width="200dp"
-            android:layout_height="@dimen/circle_xsmall"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:hint="제목을 입력하세요"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="2dp"
-            android:textCursorDrawable="@drawable/shape_cursor"
-            android:textSize="@dimen/text_large"
-            tools:ignore="RtlSymmetry"/>
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_recruit_title"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:hint="제목을 입력하세요"
+                android:inputType="text"
+                android:maxLines="1"
+                android:maxLength="20"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="10dp"
+                android:textSize="@dimen/text_large" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 <!--        <com.idle.togeduck.util.ClearFocusEditText-->
 <!--            android:id="@+id/et_recruit_destination"-->
