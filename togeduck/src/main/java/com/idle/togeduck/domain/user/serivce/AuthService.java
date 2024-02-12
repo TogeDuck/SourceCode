@@ -111,13 +111,13 @@ public class AuthService {
 		// 4. RefreshToken redis 저장
 		String refreshToken = tokenDto.getRefreshToken();
 
-		redisService.setValues(String.valueOf(user.getSocialId()), refreshToken);
+		redisService.setValues(user.getSocialId(), refreshToken);
 
 		return tokenDto;
 	}
 
 	@Transactional
-	public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+	public TokenDto reissue(TokenRequestDto tokenRequestDto, User user) {
 
 		// 1. Refresh Token 검증
 		if (!jwtProvider.validateToken(tokenRequestDto.getRefreshToken())) {
@@ -139,12 +139,17 @@ public class AuthService {
 		}
 
 		// 5. 새로운 토큰 생성
-		TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
+		TokenDto tokenDto = jwtProvider.createTokenDtoWithUserId(user.getId(), authentication);
 
 		// 6. 저장소 정보 업데이트
 		redisService.setValues(authentication.getName(), tokenDto.getRefreshToken());
 
 		// 토큰 발급
 		return tokenDto;
+	}
+
+	@Transactional
+	public void logout(String socialId) {
+		redisService.delValues(socialId);
 	}
 }
