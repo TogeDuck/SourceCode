@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.idle.togeduck.domain.chat.dto.ChatRoomResponseDto;
-import com.idle.togeduck.domain.chat.dto.MessageDto;
+import com.idle.togeduck.domain.chat.dto.MessageRequestDto;
+import com.idle.togeduck.domain.chat.dto.MessageResponseDto;
 import com.idle.togeduck.domain.chat.service.ChatService;
 import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.global.response.BaseResponse;
@@ -38,31 +39,30 @@ public class ChatController {
 	//모집 참여
 	@MessageMapping("/chats/{chatId}/join")
 	@SendTo("/sub/chats/{chatId}")
-	public MessageDto join(@DestinationVariable Long chatId,
-		MessageDto messageDto,
+	public MessageResponseDto join(@DestinationVariable Long chatId,
+		MessageRequestDto messageRequestDto,
 		@Header("Authorization") String Authorization) {
-		//유저 아이디 추후 토큰에서 받아오기
-		chatService.join(messageDto.chatId(), 1L, messageDto.content());
-		return messageDto;
+		chatService.join(messageRequestDto.chatId(), 1L, messageRequestDto.content());
+		return new MessageResponseDto(messageRequestDto.chatId(), 1L, messageRequestDto.content());
 	}
 
 	@MessageMapping("/chats/{chatId}/message")
 	@SendTo("/sub/chats/{chatId}")
-	public MessageDto send(@DestinationVariable Long chatId,
-		MessageDto messageDto,
+	public MessageResponseDto send(@DestinationVariable Long chatId,
+		MessageRequestDto messageRequestDto,
 		@Header("Authorization") String Authorization) {
 		//유저 아이디 추후 토큰에서 받아오기
-		chatService.message(messageDto.chatId(), 1L, messageDto.content());
-		return messageDto;
+		chatService.message(messageRequestDto.chatId(), 1L, messageRequestDto.content());
+		return new MessageResponseDto(messageRequestDto.chatId(), 1L, messageRequestDto.content());
 	}
 
 	@MessageMapping("/chats/{chatId}/leave")
 	@SendTo("/sub/chats/{chatId}")
-	public MessageDto leave(@DestinationVariable Long chatId,
-		MessageDto messageDto,
+	public MessageResponseDto leave(@DestinationVariable Long chatId,
+		MessageRequestDto messageRequestDto,
 		@Header("Authorization") String Authorization) {
 		//유저 아이디 추후 토큰에서 받아오기
-		chatService.leave(messageDto.chatId(), 1L, messageDto.content());
-		return messageDto;
+		chatService.leave(messageRequestDto.chatId(), 1L, messageRequestDto.content());
+		return new MessageResponseDto(messageRequestDto.chatId(), 1L, messageRequestDto.content());
 	}
 }
