@@ -124,7 +124,11 @@ class SharePostDialogFragment: DialogFragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("나눔 등록", "나눔 등록 호출됨")
                     Log.d("shareRequest", "shareRequest : ${shareRequestPart}")
-                    shareViewModel.createShare(eventListViewModel.selectedEvent.value!!.eventId, shareImg, shareRequestPart, favoriteSettingViewModel.selectedCelebrity.value!!.id)
+                    shareViewModel.createShare(
+                        eventListViewModel.selectedEvent.value!!.eventId,
+                        shareImg,
+                        shareRequestPart,
+                        favoriteSettingViewModel.selectedCelebrity.value!!.id)
 
                     launch(Dispatchers.Main){
                         imgPath = null

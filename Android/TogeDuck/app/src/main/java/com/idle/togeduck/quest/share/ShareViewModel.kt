@@ -48,6 +48,7 @@ class ShareViewModel @Inject constructor(
     }
 
     suspend fun createShare(eventId: Long, image: MultipartBody.Part, shareRequestDto: MultipartBody.Part, celebrityId:Long){
+        Log.d("로그", "ShareViewModel - createShare()호출됨 - eventId 값: ${eventId}")
         val responseResult = shareRepository.createShare(eventId, image, shareRequestDto)
         Log.d("로그", "ShareViewModel - createShare() 호출됨 - ${responseResult}")
 
