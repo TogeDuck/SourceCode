@@ -23,6 +23,7 @@ import com.idle.togeduck.domain.celebrity.dto.LocationResponseDto;
 import com.idle.togeduck.domain.celebrity.service.CelebrityService;
 import com.idle.togeduck.domain.celebrity.service.CelebrityUserService;
 import com.idle.togeduck.domain.user.entity.User;
+import com.idle.togeduck.domain.user.jwt.JwtProvider;
 import com.idle.togeduck.global.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class CelebrityController {
 	private final CelebrityService celebrityService;
 	private final CelebrityUserService celebrityUserService;
 	private final SimpMessagingTemplate simpMessagingTemplate;
+	private final JwtProvider jwtProvider;
 
 	@GetMapping("/search")
 	public ResponseEntity<BaseResponse<List<CelebrityResponseDto>>> getAllCelebrity(@RequestParam String keyword
@@ -56,10 +58,12 @@ public class CelebrityController {
 		LocationRequestDto locationRequestDto,
 		@Header("Authorization") String Authorization) {
 		//유저 아이디 추후 토큰에서 받아오기
-		celebrityUserService.join(celebrityId, locationRequestDto, 1L);
+		Long userId = jwtProvider.getUserIdFromToken(Authorization);
+		celebrityUserService.join(celebrityId, locationRequestDto, userId);
 		simpMessagingTemplate.convertAndSend("/sub/celebrities/" + celebrityId + "/count",
 			new CountResponseDto(celebrityUserService.count(celebrityId)));
-		return new LocationResponseDto(celebrityId, 1L, locationRequestDto.latitude(), locationRequestDto.longitude());
+		return new LocationResponseDto(celebrityId, userId, locationRequestDto.latitude(),
+			locationRequestDto.longitude());
 	}
 
 	@MessageMapping("/celebrities/{celebrityId}/message")
@@ -68,8 +72,10 @@ public class CelebrityController {
 		LocationRequestDto locationRequestDto,
 		@Header("Authorization") String Authorization) {
 		//유저 아이디 추후 토큰에서 받아오기
-		celebrityUserService.message(celebrityId, locationRequestDto, 1L);
-		return new LocationResponseDto(celebrityId, 1L, locationRequestDto.latitude(), locationRequestDto.longitude());
+		Long userId = jwtProvider.getUserIdFromToken(Authorization);
+		celebrityUserService.message(celebrityId, locationRequestDto, userId);
+		return new LocationResponseDto(celebrityId, userId, locationRequestDto.latitude(),
+			locationRequestDto.longitude());
 	}
 
 	@MessageMapping("/celebrities/{celebrityId}/leave")
@@ -78,9 +84,11 @@ public class CelebrityController {
 		LocationRequestDto locationRequestDto,
 		@Header("Authorization") String Authorization) {
 		//유저 아이디 추후 토큰에서 받아오기
-		celebrityUserService.leave(celebrityId, locationRequestDto, 1L);
+		Long userId = jwtProvider.getUserIdFromToken(Authorization);
+		celebrityUserService.leave(celebrityId, locationRequestDto, userId);
 		simpMessagingTemplate.convertAndSend("/sub/celebrities/" + celebrityId + "/count",
 			new CountResponseDto(celebrityUserService.count(celebrityId)));
-		return new LocationResponseDto(celebrityId, 1L, locationRequestDto.latitude(), locationRequestDto.longitude());
+		return new LocationResponseDto(celebrityId, userId, locationRequestDto.latitude(),
+			locationRequestDto.longitude());
 	}
 }

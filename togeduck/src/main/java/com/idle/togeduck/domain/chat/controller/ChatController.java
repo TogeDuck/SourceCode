@@ -17,6 +17,7 @@ import com.idle.togeduck.domain.chat.dto.MessageRequestDto;
 import com.idle.togeduck.domain.chat.dto.MessageResponseDto;
 import com.idle.togeduck.domain.chat.service.ChatService;
 import com.idle.togeduck.domain.user.entity.User;
+import com.idle.togeduck.domain.user.jwt.JwtProvider;
 import com.idle.togeduck.global.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatController {
 
 	private final ChatService chatService;
+	private final JwtProvider jwtProvider;
 
 	@GetMapping("/events/chats")
 	public ResponseEntity<BaseResponse<List<ChatRoomResponseDto>>> getChatRooms(@AuthenticationPrincipal User user) {
@@ -42,8 +44,9 @@ public class ChatController {
 	public MessageResponseDto join(@DestinationVariable Long chatId,
 		MessageRequestDto messageRequestDto,
 		@Header("Authorization") String Authorization) {
-		chatService.join(messageRequestDto.chatId(), 1L, messageRequestDto.content());
-		return new MessageResponseDto(messageRequestDto.chatId(), 1L, messageRequestDto.content());
+		Long userId = jwtProvider.getUserIdFromToken(Authorization);
+		chatService.join(messageRequestDto.chatId(), userId, messageRequestDto.content());
+		return new MessageResponseDto(messageRequestDto.chatId(), userId, messageRequestDto.content());
 	}
 
 	@MessageMapping("/chats/{chatId}/message")
@@ -51,9 +54,9 @@ public class ChatController {
 	public MessageResponseDto send(@DestinationVariable Long chatId,
 		MessageRequestDto messageRequestDto,
 		@Header("Authorization") String Authorization) {
-		//유저 아이디 추후 토큰에서 받아오기
-		chatService.message(messageRequestDto.chatId(), 1L, messageRequestDto.content());
-		return new MessageResponseDto(messageRequestDto.chatId(), 1L, messageRequestDto.content());
+		Long userId = jwtProvider.getUserIdFromToken(Authorization);
+		chatService.message(messageRequestDto.chatId(), userId, messageRequestDto.content());
+		return new MessageResponseDto(messageRequestDto.chatId(), userId, messageRequestDto.content());
 	}
 
 	@MessageMapping("/chats/{chatId}/leave")
@@ -61,8 +64,8 @@ public class ChatController {
 	public MessageResponseDto leave(@DestinationVariable Long chatId,
 		MessageRequestDto messageRequestDto,
 		@Header("Authorization") String Authorization) {
-		//유저 아이디 추후 토큰에서 받아오기
-		chatService.leave(messageRequestDto.chatId(), 1L, messageRequestDto.content());
-		return new MessageResponseDto(messageRequestDto.chatId(), 1L, messageRequestDto.content());
+		Long userId = jwtProvider.getUserIdFromToken(Authorization);
+		chatService.leave(messageRequestDto.chatId(), userId, messageRequestDto.content());
+		return new MessageResponseDto(messageRequestDto.chatId(), userId, messageRequestDto.content());
 	}
 }
