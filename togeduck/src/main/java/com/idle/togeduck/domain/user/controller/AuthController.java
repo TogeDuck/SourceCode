@@ -41,11 +41,9 @@ public class AuthController {
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<BaseResponse<?>> logout(@AuthenticationPrincipal User user) {
+	public ResponseEntity<BaseResponse<?>> logout(@RequestBody TokenRequestDto tokenRequestDtoDto) {
 
-		log.info(user.getSocialId());
-
-		authService.logout(user.getSocialId());
+		authService.logout(tokenRequestDtoDto);
 		return ResponseEntity
 			.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "success", null));

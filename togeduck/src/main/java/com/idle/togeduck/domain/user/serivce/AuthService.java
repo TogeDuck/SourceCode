@@ -19,6 +19,8 @@ import com.idle.togeduck.domain.user.entity.SocialType;
 import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.domain.user.jwt.JwtProvider;
 import com.idle.togeduck.domain.user.repository.UserRepository;
+import com.idle.togeduck.global.response.BaseException;
+import com.idle.togeduck.global.response.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -149,7 +151,15 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void logout(String socialId) {
-		redisService.delValues(socialId);
+	public void logout(TokenRequestDto tokenRequestDto) {
+		if (!jwtProvider.validateToken(tokenRequestDto.getAccessToken())) {
+			throw new BaseException(ErrorCode.TOKEN_NOT_EXISTS);
+		}
+
+		Authentication authentication = jwtProvider.getAuthentication(tokenRequestDto.getAccessToken());
+		Long expiration = jwtProvider.getExpiration(tokenRequestDto.getAccessToken());
+
+		redisService.delValues(authentication.getName());
+		redisService.setBlackList(tokenRequestDto.getAccessToken(), "access_token", expiration);
 	}
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.idle.togeduck.domain.user.dto.TokenDto;
 import com.idle.togeduck.domain.user.serivce.CustomUserDetailsService;
+import com.idle.togeduck.domain.user.serivce.RedisService;
 import com.idle.togeduck.global.YamlPropertySourceFactory;
 import com.idle.togeduck.global.response.BaseException;
 import com.idle.togeduck.global.response.ErrorCode;
@@ -58,6 +59,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 	// @Value("${jwt.refresh-token-validity-in-seconds}")
 	// private Long refreshTokenValidTime;
 
+	private final RedisService redisService;
 	private final CustomUserDetailsService customUserDetailsService;
 
 	@PostConstruct
@@ -156,6 +158,15 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		}
 	}
 
+	public Long getExpiration(String accessToken) {
+		// accessToken 남은 유효시간
+		Date expiration = parseClaims(accessToken)
+			.getExpiration();
+		// 현재 시간
+		long now = new Date().getTime();
+		return (expiration.getTime() - now);
+	}
+
 	public Authentication getAuthentication(String accessToken) { // 토큰 정보 추출
 
 		// 토큰 복호화
@@ -182,7 +193,12 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 	public Boolean validateToken(String token) { // 토큰 검증
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			if (redisService.hasKeyBlackList(token)) {
+				log.info("로그아웃 된 토큰");
+				throw new BaseException(ErrorCode.TOKEN_EXPIRED);
+			}
 			return true;
+			// return !redisService.hasKeyBlackList(token);
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			log.info("잘못된 JWT 서명입니다.");
 		} catch (ExpiredJwtException e) {
