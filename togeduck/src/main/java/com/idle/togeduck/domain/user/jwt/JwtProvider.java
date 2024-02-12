@@ -44,7 +44,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String BEARER_TYPE = "Bearer";
 
-	private static final Long accessTokenValidTime = 1L; //1000L * 60 * 60;
+	private static final Long accessTokenValidTime = 1000L * 60 * 60 * 24 * 7; //1000L * 60 * 60;
 	private static final Long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7;
 
 	private Key key;
