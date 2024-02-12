@@ -91,13 +91,13 @@ public class AuthService {
 
 		// 1. Login 정보를 기반으로 AuthenticationToken 생성
 		UsernamePasswordAuthenticationToken authenticationToken =
-			new UsernamePasswordAuthenticationToken(user.getId(), "", user.getAuthorities());
+			new UsernamePasswordAuthenticationToken(user.getSocialId(), "", user.getAuthorities());
 
 		// 2. 실제로 검증이 이루어지는 부분
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
 		// 3. 인증 정보를 기반으로 JWT 토큰 생성
-		TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
+		TokenDto tokenDto = jwtProvider.createTokenDtoWithUserId(user.getId(), authentication);
 
 		// 4. RefreshToken redis 저장
 		String refreshToken = tokenDto.getRefreshToken();
