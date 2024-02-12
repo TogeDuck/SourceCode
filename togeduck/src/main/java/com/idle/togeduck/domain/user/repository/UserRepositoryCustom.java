@@ -3,7 +3,10 @@ package com.idle.togeduck.domain.user.repository;
 import com.idle.togeduck.domain.user.entity.User;
 
 public interface UserRepositoryCustom {
-	// List<User> findBySocialType(SocialType socialType);
+
+	Long updateDeleted(String socialId);
+
+	Long isDeleted(String socialId);
 
 	Long findBySocialId(String socialId);
 

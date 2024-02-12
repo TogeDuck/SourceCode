@@ -3,6 +3,7 @@ package com.idle.togeduck.domain.user.entity;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE user_id = ?")
 public class User extends BaseEntity implements UserDetails {
 
 	@Id
@@ -40,6 +42,8 @@ public class User extends BaseEntity implements UserDetails {
 	private String socialId;
 
 	private String deviceToken;
+
+	private boolean deleted = Boolean.FALSE; // 삭제 여부 기본값 false
 
 	public void updateUser(Authority authority, String socialId, SocialType socialType) {
 		this.authority = authority;
