@@ -193,17 +193,15 @@ class EventListFragment : Fragment(), EventInfo {
     }
 
     private fun likeEventPerAdapterType (adapter: EventInfoAdapter, position: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val event = adapter.currentList.get(position)
+        val event = adapter.currentList.get(position)
+        event.isStar = !event.isStar
 
+        CoroutineScope(Dispatchers.IO).launch {
             if(event != null){
                 if(event.isStar){
-                    val likeEventRequest = LikeEventRequest(1)
                     eventListViewModel.likeEvent(event.eventId)
-                    Log.d("log", "eventlistfragment - 즐겨찾기 추가 ")
-                }else{
+                }else {
                     eventListViewModel.unlikeEvent(event.eventId)
-                    Log.d("log", "eventlistfragment - 즐겨찾기 삭제")
                 }
             }
         }

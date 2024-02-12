@@ -238,18 +238,15 @@ class EventDetailFragment : Fragment(), EventReview {
     }
 
     override fun likeClick(event: Event) {
+//        val selectedEvent = eventListViewModel.selectedEvent.value!!
         event.isStar = !event.isStar
-
         changeLikeImage(event)
 
         CoroutineScope(Dispatchers.IO).launch {
             if(event.isStar) {
-                val likeEventRequest = LikeEventRequest(1)
-                eventListViewModel.likeEvent(eventListViewModel.selectedEvent.value!!.eventId)
-                Log.d("log", "eventDetailfragment - 즐겨찾기 추가 ")
+                eventListViewModel.likeEvent(event.eventId)
             }else {
-                eventListViewModel.unlikeEvent(1)
-                Log.d("log", "eventDetailfragment - 즐겨찾기 삭제")
+                eventListViewModel.unlikeEvent(event.eventId)
             }
         }
     }
