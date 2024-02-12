@@ -90,6 +90,30 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 			.compact();
 	}
 
+	public String createTokenWithUserId(Authentication authentication, Long userId, Long tokenValidTime) {
+		// 권한 가져오기
+		String authorities = authentication.getAuthorities()
+			.stream()
+			.map(GrantedAuthority::getAuthority)
+			.collect(Collectors.joining(","));
+
+		Date now = new Date(); // 생성날짜
+		Date expiration = new Date(now.getTime() + tokenValidTime); // 만료날짜
+
+		Claims claims = Jwts.claims()
+			.setSubject(authentication.getName()) // payload "sub" : "username" (토큰제목)
+			.setIssuedAt(now) // payload "iss" : 147621021 (토큰발급자)
+			.setExpiration(expiration);  // payload "exp" : 151621022 (토큰만료시간)
+
+		claims.put("userId", userId);
+		claims.put(AUTHORITIES_KEY, authorities); // payload "AUTHORITIES_KEY" : 'ROLE_USER' (권한)
+
+		return Jwts.builder()
+			.setClaims(claims)
+			.signWith(key, SignatureAlgorithm.HS256) // header "alg" : "HS512"
+			.compact();
+	}
+
 	// Access Token 생성
 	public String createAccessToken(Authentication authentication) {
 		return createToken(authentication, accessTokenValidTime);
@@ -107,6 +131,16 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 			.userId(Long.valueOf(authentication.getName()))
 			.accessToken(createAccessToken(authentication))
 			.refreshToken(createRefreshToken(authentication))
+			.accessTokenExpireDate(accessTokenValidTime)
+			.build();
+	}
+
+	public TokenDto createTokenDtoWithUserId(Long userId, Authentication authentication) {
+		return TokenDto.builder()
+			.grantType(BEARER_TYPE)
+			.userId(userId)
+			.accessToken(createTokenWithUserId(authentication, userId, accessTokenValidTime))
+			.refreshToken(createTokenWithUserId(authentication, userId, refreshTokenValidTime))
 			.accessTokenExpireDate(accessTokenValidTime)
 			.build();
 	}
