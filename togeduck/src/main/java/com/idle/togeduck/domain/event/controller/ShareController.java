@@ -49,8 +49,8 @@ public class ShareController {
 		@RequestPart ShareRequestDto shareRequestDto,
 		@AuthenticationPrincipal User user) {
 		shareService.createShare(
-			eventId,
 			user.getId(),
+			eventId,
 			image,
 			shareRequestDto.title(),
 			shareRequestDto.content(),
