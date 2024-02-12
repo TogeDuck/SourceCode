@@ -36,4 +36,9 @@ public class AuthController {
 			.status(HttpStatus.OK)
 			.body(new BaseResponse<>(200, "success", authService.reissue(tokenRequestDtoDto)));
 	}
+
+	// @GetMapping("/oauth2/code/google")
+	// public void googleLogin(@RequestParam String code) {
+	// 	authService.socialLogin(code);
+	// }
 }

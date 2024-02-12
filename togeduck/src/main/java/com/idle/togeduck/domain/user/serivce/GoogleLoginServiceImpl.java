@@ -47,7 +47,6 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 	}
 
 	@Override
-
 	public SocialAuthResponseDto getAccessToken(String authorizationCode) {
 		ResponseEntity<?> response = googleAuthApi.getAccessToken(
 			GoogleRequestAccessTokenDto.builder()
@@ -79,7 +78,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 		GoogleLoginResponseDto googleLoginResponse = gson.fromJson(jsonString, GoogleLoginResponseDto.class);
 
 		return SocialUserResponseDto.builder()
-			.socialId(googleLoginResponse.id())
+			.socialId(googleLoginResponse.getId()) // getEmail()
 			.build();
 	}
 }

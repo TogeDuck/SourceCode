@@ -24,9 +24,10 @@ repositories {
 // Feign Client
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2020.0.3"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.0"
     }
 }
+
 
 dependencies {
 //  implementation 'org.springframework.security:spring-security-crypto:5.7.1'

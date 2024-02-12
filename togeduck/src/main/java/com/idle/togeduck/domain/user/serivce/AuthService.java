@@ -28,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthService {
 
+	// private final GoogleLoginServiceImpl googleLoginService;
+
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final JwtProvider jwtProvider;
 	private final RedisService redisService;
@@ -56,6 +58,13 @@ public class AuthService {
 		);
 	}
 
+	// public void socialLogin(String code) {
+	// 	SocialAuthResponseDto socialAuthResponseDto = googleLoginService.getAccessToken(code);
+	// 	SocialUserResponseDto socialUserResponseDto = googleLoginService.getUserInfo(
+	// 		socialAuthResponseDto.getAccess_token());
+	// 	log.info(socialUserResponseDto.socialId());
+	// }
+
 	// 로그인
 	@Transactional
 	public TokenDto login(LoginRequestDto loginRequestDto) {
@@ -71,7 +80,7 @@ public class AuthService {
 			SocialAuthResponseDto socialAuthResponseDto = loginService.getAccessToken(
 				loginRequestDto.code()); // 인증코드로 토큰 가져오기
 			SocialUserResponseDto socialUserResponseDto = loginService.getUserInfo(
-				socialAuthResponseDto.accessToken()); // 토큰으로 유저 정보 가져오기
+				socialAuthResponseDto.getAccess_token()); // 토큰으로 유저 정보 가져오기
 			socialId = socialUserResponseDto.socialId();
 		}
 
