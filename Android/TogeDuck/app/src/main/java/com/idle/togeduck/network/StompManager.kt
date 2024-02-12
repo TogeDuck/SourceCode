@@ -84,6 +84,16 @@ class StompManager {
         stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
     }
+    fun sendQuestChat(eventId:Long, userId: String, message: String, celebrityId: Long){
+        Log.d("웹소켓 헤더", headers.toString())
+//        val destination = "/pub/celebrities/$celebrityId/message"
+        val destination = "/pub/chats/1/message"
+        val questChat = QuestChat(eventId,userId,message)
+        val webSocketDataResponse = WebSocketDataResponse(MessageKind.QUESTCHAT.toString(),celebrityId,Gson().toJson(questChat))
+        val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
+        stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
+    }
 
     private fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
         val disposable = stompClient.topic(topic)
