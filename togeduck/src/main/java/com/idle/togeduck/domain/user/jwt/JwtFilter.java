@@ -47,6 +47,8 @@ public class JwtFilter extends OncePerRequestFilter {
 			}
 		} catch (BaseException e) {
 			request.setAttribute("exception", e.getCode());
+		} catch (Exception e) {
+			request.setAttribute("exception", "COMMON-002");
 		}
 		filterChain.doFilter(request, response);
 	}
