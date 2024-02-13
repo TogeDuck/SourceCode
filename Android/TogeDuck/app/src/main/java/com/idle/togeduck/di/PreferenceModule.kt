@@ -1,5 +1,6 @@
 package com.idle.togeduck.di
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -133,6 +134,7 @@ class PreferenceModule @Inject constructor(
             }
         }.map { preferences ->
             val gson = GsonBuilder().create()
+            Log.d("로그", "PreferenceModule - () 호출됨 ${preferences[KEY_CHAT_ROOM_LIST]}")
             gson.fromJson(preferences[KEY_CHAT_ROOM_LIST], mutableMapOf<Long, TalkRoom>().javaClass)
         }
 
@@ -158,6 +160,7 @@ class PreferenceModule @Inject constructor(
             }
         }.map { preferences ->
             val gson = GsonBuilder().create()
+            Log.d("로그", "PreferenceModule - () 호출됨 ${preferences[KEY_CHAT_ROOM_TALK_LIST]}")
             gson.fromJson(preferences[KEY_CHAT_ROOM_TALK_LIST], mutableMapOf<Long, MutableList<Talk>>().javaClass)
         }
 
