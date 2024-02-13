@@ -29,7 +29,7 @@ class HistoryViewHolder(
         setTheme(context)
 
         tvDate.text = historyData.date.toString()
-        tvMyRecord.text = historyData.historyName
+        tvMyRecord.text = historyData.historyId.toString()
         ivMyRecordMainImg.setImageDrawable(ContextCompat.getDrawable(context, RandomCupcake.getImage()))
     }
 
