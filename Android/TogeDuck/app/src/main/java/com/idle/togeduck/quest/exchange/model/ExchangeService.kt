@@ -29,7 +29,7 @@ interface ExchangeService {
         @Path("trade_id") tradeId: Int,
     ) : Response<ExchangeDetailResponse>
 
-    @GET("events/{event_id}/my-trades")
+    @GET("events/{event_id}/trades/mytrades")
     suspend fun getMyExchangeList(
         @Path("event_id") eventId: Long
     ) : Response<ExchangeMyListResponse>

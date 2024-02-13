@@ -73,13 +73,14 @@ class ExchangeViewModel @Inject constructor(
 
     suspend fun getMyExchangeList(eventId: Long){
         val response = exchangeRepository.getMyExchangeList(eventId)
+        Log.d("내 교환 리스트 가져오기","응답"+response.toString())
         if(response.isSuccessful){
             val exchangeMyListResponse = response.body()
             val myExchanges = exchangeMyListResponse?.data?.content ?: emptyList()
             _myExchangeList.postValue(myExchanges.map { it.toExchange() })
         }
         else{
-
+            Log.d("내 교환 리스트 가져오기", response.toString())
         }
     }
 
