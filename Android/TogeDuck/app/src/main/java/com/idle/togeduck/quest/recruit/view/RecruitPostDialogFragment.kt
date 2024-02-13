@@ -30,16 +30,9 @@ import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
-import com.idle.togeduck.quest.exchange.ExchangeViewModel
-import com.idle.togeduck.quest.exchange.model.MyExchange
-import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
-import com.idle.togeduck.quest.exchange.view.my_exchange_rv.MyExchangeAdapter
 import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.recruit.model.RecruitRequest
 import com.idle.togeduck.quest.talk.TalkViewModel
-import com.idle.togeduck.quest.talk.model.TalkRoom
-import com.idle.togeduck.util.DpPxUtil
-import com.idle.togeduck.util.TogeDuckItemDecoration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -133,7 +126,7 @@ class RecruitPostDialogFragment: DialogFragment() {
     private fun setSpinner() {
         // 오늘의 이벤트 목록을 관찰하고 해당 목록을 spinner에 설정
         //todo. 지금은 오늘 이벤트 없어서 listPast로 해놓음 (추후 listToday로 수정)
-        eventListViewModel.listToday.observe(viewLifecycleOwner) { event ->
+        eventListViewModel.listPast.observe(viewLifecycleOwner) { event ->
             val eventPairs = event.map { it.eventId to it.name } // Pair 형태로 eventId와 eventName을 연결
             eventIds = eventPairs.map { it.first } // eventId만 추출
             eventNames = eventPairs.map { it.second }

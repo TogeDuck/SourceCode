@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.util.Log
 import com.google.gson.Gson
 import com.idle.togeduck.MessageKind
+import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.websocketcustomlibrary.Stomp
 import com.idle.togeduck.websocketcustomlibrary.StompClient
 import com.idle.togeduck.websocketcustomlibrary.dto.StompHeader
@@ -40,7 +41,7 @@ class StompManager {
     fun connect(headers: List<StompHeader>) {
         stompClient.connect(headers)
     }
-    fun connect() {
+    suspend fun connect() {
         stompClient.connect(headers)
     }
 
@@ -94,6 +95,9 @@ class StompManager {
         val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
         stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
+    }
+    fun sendExchangeRequest(eventId:Long, userId: String, celebrityId: Long, sender: Exchange, receiver: Exchange){
+
     }
 
     fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {

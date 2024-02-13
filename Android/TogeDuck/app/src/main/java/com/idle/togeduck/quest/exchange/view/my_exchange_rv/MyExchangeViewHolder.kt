@@ -12,7 +12,6 @@ import com.idle.togeduck.R
 import com.idle.togeduck.databinding.ItemQuestExchangeMyBinding
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.Exchange
-import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.util.DpPxUtil
 
 class MyExchangeViewHolder (
@@ -24,13 +23,13 @@ class MyExchangeViewHolder (
     private val overlay = binding.questExchangeMyOverlay
     private val checked = binding.questExchangeMyIcon
 
-    private var myExchange: MyExchange? = null
+    private var myExchange: Exchange? = null
 
     init {
         questExchangeMyLayout.setOnClickListener(this)
     }
 
-    fun binding(myExchange: MyExchange, context: Context, isSelected: Boolean) {
+    fun binding(myExchange: Exchange, context: Context, isSelected: Boolean) {
         this.myExchange = myExchange
         setImage(myExchange, context)
         setTheme(myExchange, context, isSelected)
@@ -44,7 +43,7 @@ class MyExchangeViewHolder (
         }
     }
 
-    private fun setImage(myExchange: MyExchange, context: Context){
+    private fun setImage(myExchange: Exchange, context: Context){
         Glide
             .with(image)
             .load(myExchange.image)
@@ -56,7 +55,7 @@ class MyExchangeViewHolder (
             .into(image)
     }
 
-    private fun setTheme(myExchange: MyExchange, context: Context, isSelected: Boolean){
+    private fun setTheme(myExchange: Exchange, context: Context, isSelected: Boolean){
         val roundSmall = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable
         roundSmall.setColor(ContextCompat.getColor(context, R.color.white_transparent))
         overlay.background = roundSmall

@@ -125,18 +125,16 @@ class MainFragment : Fragment() {
     private fun observeConnection() {
         stompManager.stompClient.lifecycle().subscribe { event ->
             when (event.type) {
-                LifecycleEvent.Type.CLOSED, LifecycleEvent.Type.ERROR -> {
+                LifecycleEvent.Type.CLOSED -> {
                     Log.d("MainFragment", "Connection lost. Attempting to reconnect...")
-                    connectSocketWithDelay()
+                    stompManager.disconnect()
+                    lifecycleScope.launch {
+                        delay(2000)
+                        connectSocket()
+                    }
                 }
-                else -> { /* 다른 이벤트 처리 */ }
+                else -> {  }
             }
-        }
-    }
-    private fun connectSocketWithDelay() {
-        lifecycleScope.launch {
-            delay(1000)  // 연결 재시도 전 지연 시간
-            connectSocket()
         }
     }
     /** 웹소켓 수신 메세지 한번에 처리 **/

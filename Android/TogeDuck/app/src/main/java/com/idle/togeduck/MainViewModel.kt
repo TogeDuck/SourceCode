@@ -25,6 +25,7 @@ class MainViewModel @Inject constructor(
     var guid: String? = null
     var accessToken: String? = null
     var refreshToken: String? = null
+    var userId: Long? = null
 
     var isRealTimeOn = false
 
@@ -55,10 +56,6 @@ class MainViewModel @Inject constructor(
         return guidMade
     }
 
-    fun isAccessTokenPresent(): Boolean {
-        return !accessToken.isNullOrEmpty()
-    }
-
     suspend fun login(socialType: String) {
         if (guid != null) {
             val responseResult =
@@ -70,6 +67,7 @@ class MainViewModel @Inject constructor(
                 preference.setRefreshToken(body.data.refreshToken)
                 accessToken = body.data.accessToken
                 refreshToken = body.data.refreshToken
+                userId = body.data.userId
                 delay(1000)
                 Log.d("유저 정보", body.toString())
                 Log.d(
