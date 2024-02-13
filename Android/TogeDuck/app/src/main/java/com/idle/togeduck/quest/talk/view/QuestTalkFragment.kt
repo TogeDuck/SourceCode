@@ -25,6 +25,10 @@ import com.idle.togeduck.quest.talk.view.talk_rv.IQuestTalkDetail
 import com.idle.togeduck.quest.talk.view.talk_rv.QuestTalkAdapter
 import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,10 +64,13 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
         setTheme()
 
         talkViewModel.talkList.observe(viewLifecycleOwner) { talkList ->
-            questTalkAdapter.submitList(talkList) {
-                if(!talkList.isEmpty()){
-                    binding.questTalkRecycle.smoothScrollToPosition(talkList.size - 1)
-                }
+            questTalkAdapter.submitList(talkList)
+
+            if(talkList.isNotEmpty()){
+                binding.talkScrollLayout.postDelayed({
+                    binding.talkScrollLayout.fullScroll(View.FOCUS_DOWN)
+                    componentQuestTalkInputBinding.etTalkInput.requestFocus()
+                }, 100)
             }
         }
         eventListViewModel.selectedEvent.observe(viewLifecycleOwner) {event ->
