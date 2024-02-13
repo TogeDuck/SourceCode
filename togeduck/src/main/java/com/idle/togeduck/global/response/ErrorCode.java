@@ -15,6 +15,7 @@ public enum ErrorCode {
 	USER_NOT_FOUND(404, "USER-004", "유저를 찾을 수 없는 경우"),
 	TOKEN_NOT_EXISTS(404, "USER-005", "토큰이 존재하지 않는 경우"),
 	TOKEN_EXPIRED(403, "USER-006", "토큰이 만료된 경우"),
+	GUEST_LOGIN(405, "USER-007", "게스트가 재로그인 하는 경우"),
 
 	EVENT_NOT_FOUND(404, "EVENT-001", "이벤트를 찾을 수 없는 경우"),
 

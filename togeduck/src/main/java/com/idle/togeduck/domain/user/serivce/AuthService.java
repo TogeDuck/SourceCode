@@ -79,6 +79,14 @@ public class AuthService {
 
 		if (loginService.getServiceName().equals(SocialType.GUEST)) { // GUEST
 			socialId = loginRequestDto.code(); // UID
+
+			/*
+			// GUEST 인 경우에 재로그인 시 에러
+			if (userRepository.findBySocialId(socialId) != 0) {
+				throw new BaseException(ErrorCode.GUEST_LOGIN);
+			}
+			 */
+
 		} else { // GOOGLE, KAKAO ,NAVER
 			SocialAuthResponseDto socialAuthResponseDto = loginService.getAccessToken(
 				loginRequestDto.code()); // 인증코드로 토큰 가져오기
@@ -89,9 +97,6 @@ public class AuthService {
 
 		if (userRepository.findBySocialId(socialId) == 0
 			|| userRepository.isDeleted(socialId) == 0) { // DB 에 정보 없으면 회원가입
-			/*
-			 	GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
-			 */
 			join(
 				UserRequestDto.builder()
 					.socialId(socialId)
