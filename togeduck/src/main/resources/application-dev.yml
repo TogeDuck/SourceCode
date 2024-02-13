@@ -1,5 +1,5 @@
-server:
-  port: 8082
+#server:
+#  port: 8082
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,7 +16,7 @@ spring:
 
   data:
     redis:
-      host: 172.17.0.1
+      host: redis
       port: 6379
 
   security:

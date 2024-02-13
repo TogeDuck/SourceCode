@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+  springboot:
+    image: barded/togeduck:latest
+    container_name: togeduck
+    depends_on:
+      - redis
+    ports:
+      - "8083:8083"
