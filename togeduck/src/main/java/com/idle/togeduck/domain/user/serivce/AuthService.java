@@ -84,6 +84,7 @@ public class AuthService {
 				UserRequestDto.builder()
 					.socialId(socialId)
 					.socialType(loginRequestDto.socialType())
+					.deviceToken(loginRequestDto.deviceToken())
 					.build()
 			);
 		}
