@@ -15,19 +15,12 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
 	private final JPAQueryFactory jpaQueryFactory;
 
-	public Long updateDeleted(String socialId) {
-		return jpaQueryFactory
-			.update(user)
-			.set(user.deleted, Boolean.FALSE)
-			.where(user.socialId.eq(socialId))
-			.execute();
-	}
-
 	public Long isDeleted(String socialId) {
 		return jpaQueryFactory
 			.select(user.socialId.count())
 			.from(user)
-			.where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
+			// .where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
+			.where(user.socialId.eq(socialId))
 			.fetchOne();
 	}
 
@@ -37,7 +30,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 		return jpaQueryFactory
 			.select(user.socialId.count())
 			.from(user)
-			.where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
+			// .where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
+			.where(user.socialId.eq(socialId))
 			.fetchOne();
 	}
 
@@ -45,7 +39,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 	public User findUserBySocialId(String socialId) {
 		return jpaQueryFactory
 			.selectFrom(user)
-			.where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
+			// .where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
+			.where(user.socialId.eq(socialId))
 			.fetchOne();
 	}
 }

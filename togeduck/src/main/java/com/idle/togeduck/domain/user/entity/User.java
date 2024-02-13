@@ -43,7 +43,8 @@ public class User extends BaseEntity implements UserDetails {
 
 	private String deviceToken;
 
-	private boolean deleted = Boolean.FALSE; // 삭제 여부 기본값 false
+	private boolean deleted = Boolean.FALSE;
+	// private boolean deleted = Boolean.FALSE; // 삭제 여부 기본값 false
 
 	public void updateUser(Authority authority, String socialId, SocialType socialType) {
 		this.authority = authority;

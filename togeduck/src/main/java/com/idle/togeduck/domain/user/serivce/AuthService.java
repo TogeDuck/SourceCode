@@ -86,8 +86,8 @@ public class AuthService {
 			socialId = socialUserResponseDto.socialId();
 		}
 
-		if (userRepository.findBySocialId(socialId) == 0
-			|| userRepository.isDeleted(socialId) == 0) { // DB 에 정보 없으면 회원가입
+		if (userRepository.findBySocialId(socialId) == 0) {
+			// || userRepository.isDeleted(socialId) == 0) { // DB 에 정보 없으면 회원가입
 			/*
 			 	GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
 			 */
