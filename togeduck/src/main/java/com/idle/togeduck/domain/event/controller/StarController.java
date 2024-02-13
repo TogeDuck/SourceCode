@@ -44,7 +44,7 @@ public class StarController {
 
 	@DeleteMapping("/likes/{eventId}")
 	public ResponseEntity<BaseResponse<?>> deleteStar(@PathVariable Long eventId, @AuthenticationPrincipal User user) {
-		starService.deleteStar(eventId);
+		starService.deleteStar(eventId, user.getId());
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
