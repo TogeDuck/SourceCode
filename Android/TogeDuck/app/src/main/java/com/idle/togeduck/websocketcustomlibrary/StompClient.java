@@ -55,7 +55,6 @@ public class StompClient {
     private List<StompHeader> headers;
     private HeartBeatTask heartBeatTask;
 
-    private static final long RECONNECT_DELAY = 2000;
 
     public StompClient(ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
@@ -65,7 +64,6 @@ public class StompClient {
         heartBeatTask = new HeartBeatTask(this::sendHeartBeat, () -> {
             lifecyclePublishSubject.onNext(new LifecycleEvent(LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT));
         });
-        setupReconnectLogic();
     }
 
     /**
@@ -104,20 +102,6 @@ public class StompClient {
      *
      * @param _headers HTTP headers to send in the INITIAL REQUEST, i.e. during the protocol upgrade
      */
-    private void setupReconnectLogic() {
-        lifecycle().subscribe(lifecycleEvent -> {
-            if (lifecycleEvent.getType() == LifecycleEvent.Type.CLOSED) {
-                Log.d(TAG, "Connection closed, scheduling reconnect in " + RECONNECT_DELAY + " ms");
-                // 재연결 로직을 스케줄링합니다.
-                Flowable.timer(RECONNECT_DELAY, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(aLong -> {
-                            Log.d(TAG, "Reconnecting...");
-                            reconnect();
-                        }, throwable -> Log.e(TAG, "Error scheduling reconnect", throwable));
-            }
-        });
-    }
     public void connect(@Nullable List<StompHeader> _headers) {
 
         Log.d(TAG, "Connect");

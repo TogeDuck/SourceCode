@@ -84,8 +84,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 웹소켓 최초 연결
-        stompManager.connect()
         // 초기 정보 설정
         initGUID()
         setDate()
@@ -178,12 +176,12 @@ class MainFragment : Fragment() {
 
     private fun initGUID() {
         CoroutineScope(Dispatchers.IO).launch {
-            if (!mainViewModel.isAccessTokenPresent()) {
-                val guid = mainViewModel.makeGUID()
-                if(mainViewModel.login("GUEST", guid)){
-                    connectSocket()
-                }
+            if (mainViewModel.guid.value == null) {
+                mainViewModel.makeGUID()
             }
+            delay(1000)
+            mainViewModel.login("GUEST")
+            connectSocket()
         }
     }
 
@@ -194,6 +192,9 @@ class MainFragment : Fragment() {
             stompManager.connect()
             stompManager.subscribeChat(1) { message ->
                 socketCallback(message)
+            }
+            stompManager.subscribeTopic("/user/sub/errors"){
+               messge -> Log.d("웹소켓 에러 코드", messge)
             }
         }
     }

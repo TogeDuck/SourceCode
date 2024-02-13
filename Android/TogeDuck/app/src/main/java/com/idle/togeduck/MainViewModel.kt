@@ -33,7 +33,6 @@ class MainViewModel @Inject constructor(
 
     init {
         getFromLocalData()
-
     }
 
     fun getFromLocalData(){
@@ -69,10 +68,9 @@ class MainViewModel @Inject constructor(
 
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
-
             preference.setAccessToken(body.data.accessToken)
             preference.setRefreshToken(body.data.refreshToken)
-
+            Log.d("유저 정보", body.toString())
             Log.d("로그", "MainViewModel - login() 호출됨 accessToken : ${preference.getAccessToken.first()}")
             Log.d("로그", "MainViewModel - login() 호출됨 refreshToken : ${preference.getRefreshToken.first()}")
         } else {

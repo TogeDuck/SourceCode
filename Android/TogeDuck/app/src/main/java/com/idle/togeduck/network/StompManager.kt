@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
 class StompManager {
     private val SERVER_URL = "wss://i10a301.p.ssafy.io/ws-stomp"
 
-    private val stompClient: StompClient
+    val stompClient: StompClient
     private val compositeDisposable = CompositeDisposable()
     private val topicSubscriptions = mutableMapOf<String, Disposable>()
     private var headers: List<StompHeader> = listOf()
@@ -55,6 +55,7 @@ class StompManager {
         stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
     }
+
     fun sendLocation(celebrityId: Long, lat:Double, lng:Double, userId:String){
         Log.d("웹소켓 헤더", headers.toString())
 //        val destination = "/pub/celebrities/$celebrityId/message"
@@ -96,7 +97,7 @@ class StompManager {
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
     }
 
-    private fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
+    fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
         val disposable = stompClient.topic(topic)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
