@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestBinding
 import com.idle.togeduck.common.Theme
@@ -85,7 +86,37 @@ class QuestFragment : Fragment() {
         questPagerAdapter = QuestPagerAdapter(this)
         binding.viewPager.adapter = questPagerAdapter
         binding.viewPager.isUserInputEnabled = false
-        binding.viewPager.setCurrentItem(0, false)
+
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 ->  {
+                        onExchangeClicked(true)
+                        onShareClicked(false)
+                        onRecruitClicked(false)
+                        onTalkClicked(false)
+                    }
+                    1 -> {
+                        onExchangeClicked(false)
+                        onShareClicked(true)
+                        onRecruitClicked(false)
+                        onTalkClicked(false)
+                    }
+                    2 -> {
+                        onExchangeClicked(false)
+                        onShareClicked(false)
+                        onRecruitClicked(true)
+                        onTalkClicked(false)
+                    }
+                    3 -> {
+                        onExchangeClicked(false)
+                        onShareClicked(false)
+                        onRecruitClicked(false)
+                        onTalkClicked(true)
+                    }
+                }
+            }
+        })
     }
 
     private fun setTheme() {
