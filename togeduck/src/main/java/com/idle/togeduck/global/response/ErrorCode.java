@@ -43,7 +43,7 @@ public enum ErrorCode {
 
 	FIREBASE_INTERRUPTED(500, "FIREBASE-001", "파이어베이스 메시지 전송 중단"),
 	FIREBASE_EXECUTION(500, "FIREBASE-002", "파이어베이스 메시지 전송 중단"),
-	;
+	CELEBRITY_USER_NOT_FOUND(404, "CELEBRITY-USER-001", "유저가 참여하지 않았을 경우");
 
 	private final int status;
 	private final String code;

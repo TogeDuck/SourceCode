@@ -196,4 +196,13 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		}
 		return false;
 	}
+
+	public Long getUserIdFromToken(String token) {
+		Claims claims = Jwts.parserBuilder()
+			.setSigningKey(key)
+			.build()
+			.parseClaimsJws(token)
+			.getBody();
+		return Long.parseLong(claims.get("userId").toString());
+	}
 }
