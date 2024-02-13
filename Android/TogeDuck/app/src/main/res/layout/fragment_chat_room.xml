@@ -22,12 +22,12 @@
 
         <ImageView
             android:id="@+id/chatroom_main_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginEnd="15dp"
             android:background="@drawable/shape_circle"
-            android:padding="10dp"
+            android:padding="7dp"
             android:src="@drawable/common_cupcake1" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_gravity="center"
             android:text="test"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_title_medium" />
+            android:textSize="@dimen/text_title_small" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
