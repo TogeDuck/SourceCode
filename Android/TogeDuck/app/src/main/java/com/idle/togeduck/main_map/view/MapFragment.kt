@@ -306,6 +306,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         })
+
+        componentBottomSheetBinding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                if (position != 5) {
+                    if (pathLine != null) {
+                        pathLine!!.map = null
+                        pathLine = null
+                    }
+                }
+            }
+        })
     }
     private fun initChildFragment() {
         childFragmentManager.beginTransaction()
@@ -526,6 +537,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             // 투어 기록 전송
             CoroutineScope(Dispatchers.IO).launch {
                 historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList)
+                historyViewModel.getHistoryList(favoriteSettingViewModel.selectedCelebrity.value!!.id)
             }
             mapViewModel.initTourList()
         } else if (binding.tourStart.text == "투어\n시작") {

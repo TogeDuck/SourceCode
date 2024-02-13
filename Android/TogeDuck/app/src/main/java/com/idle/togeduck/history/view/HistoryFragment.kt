@@ -79,8 +79,7 @@ class HistoryFragment : Fragment(), IHistory {
             addItemDecoration(TogeDuckItemDecoration(10, 0))
             adapter = historyAdapter
             layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
-                    .apply { stackFromEnd = true }
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
     }
 
