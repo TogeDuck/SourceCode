@@ -87,12 +87,14 @@ class PreferenceModule @Inject constructor(
                 emit(emptyPreferences())
             }
         }.map { preferences ->
+            Log.d("로그", "PreferenceModule - getGuid() 호출됨 ${preferences[KEY_GUID]}")
             preferences[KEY_GUID]
         }
 
     suspend fun setGuid(token: String) {
         dataStore.edit { preferences ->
             preferences[KEY_GUID] = token
+            Log.d("로그", "PreferenceModule - setGuid() 호출됨 ${preferences[KEY_GUID]}")
         }
     }
 
@@ -134,7 +136,7 @@ class PreferenceModule @Inject constructor(
             }
         }.map { preferences ->
             val gson = GsonBuilder().create()
-            Log.d("로그", "PreferenceModule - () 호출됨 ${preferences[KEY_CHAT_ROOM_LIST]}")
+            Log.d("로그", "PreferenceModule - getChatRoomList() 호출됨 ${preferences[KEY_CHAT_ROOM_LIST]}")
             gson.fromJson(preferences[KEY_CHAT_ROOM_LIST], mutableMapOf<Long, TalkRoom>().javaClass)
         }
 
@@ -160,7 +162,7 @@ class PreferenceModule @Inject constructor(
             }
         }.map { preferences ->
             val gson = GsonBuilder().create()
-            Log.d("로그", "PreferenceModule - () 호출됨 ${preferences[KEY_CHAT_ROOM_TALK_LIST]}")
+            Log.d("로그", "PreferenceModule - getChatRoomTalkList() 호출됨 ${preferences[KEY_CHAT_ROOM_TALK_LIST]}")
             gson.fromJson(preferences[KEY_CHAT_ROOM_TALK_LIST], mutableMapOf<Long, MutableList<Talk>>().javaClass)
         }
 
