@@ -75,7 +75,9 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
     }
     private fun getRecruitList(){
         CoroutineScope(Dispatchers.IO).launch{
-            recruitViewModel.getRecruitList(eventListViewModel.selectedEvent.value!!.eventId, 0, 1000)
+            if(eventListViewModel.selectedEvent.value != null){
+                recruitViewModel.getRecruitList(eventListViewModel.selectedEvent.value!!.eventId, 0, 1000)
+            }
         }
     }
 

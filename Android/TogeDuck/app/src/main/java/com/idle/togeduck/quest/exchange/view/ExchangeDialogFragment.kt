@@ -22,6 +22,7 @@ import com.idle.togeduck.R
 import com.idle.togeduck.common.ScreenSize
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogQuestExchangeBinding
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
@@ -37,6 +38,7 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
     private val binding get() = _binding!!
 
     val exchangeViewModel: ExchangeViewModel by activityViewModels()
+    val eventListViewModel: EventListViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,16 +106,11 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
         exchangeViewModel.myExchangeList.observe(viewLifecycleOwner){
             list -> myExchangeAdapter.submitList(list)
         }
-        CoroutineScope(Dispatchers.IO).launch {
-            exchangeViewModel.getMyExchangeList(0)
-        }
 
         exchangeViewModel.mySelectedExchange.observe(viewLifecycleOwner){
             myExchangeAdapter.setSelectedMyExchange(exchangeViewModel.mySelectedExchange.value!!)
             myExchangeAdapter.notifyDataSetChanged()
         }
-
-
         exchangeViewModel.navigationEvent.observe(viewLifecycleOwner){
             if(exchangeViewModel.navigationEvent.value == true){
                 findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
@@ -121,6 +118,29 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
                 Toast.makeText(requireContext(), "교환이 신청되었습니다", Toast.LENGTH_SHORT).show()
             }
         }
+        exchangeViewModel.needUpdate.observe(viewLifecycleOwner){check ->
+            if(check){
+                getExchangeList()
+                exchangeViewModel.needUpdate.value = false
+            }
+        }
+        getExchangeList()
+    }
+    private fun getExchangeList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (eventListViewModel.selectedEvent != null) {
+                exchangeViewModel.getExchangeList(
+                    eventListViewModel.selectedEvent.value!!.eventId,
+                    0,
+                    1000
+                )
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getExchangeList()
     }
 
     private fun setImgSize() {

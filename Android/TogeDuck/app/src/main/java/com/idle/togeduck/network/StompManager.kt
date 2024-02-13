@@ -20,6 +20,7 @@ class StompManager {
     private val compositeDisposable = CompositeDisposable()
     private val topicSubscriptions = mutableMapOf<String, Disposable>()
     private var headers: List<StompHeader> = listOf()
+    private val reconnectInterval = 1L
 
     init {
         val headerMap: Map<String,String> = mapOf(Pair("Authorization", "guest"))

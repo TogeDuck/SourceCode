@@ -19,11 +19,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.BehaviorSubject;
@@ -53,6 +55,8 @@ public class StompClient {
     private List<StompHeader> headers;
     private HeartBeatTask heartBeatTask;
 
+    private static final long RECONNECT_DELAY = 2000;
+
     public StompClient(ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
         streamMap = new ConcurrentHashMap<>();
@@ -61,6 +65,7 @@ public class StompClient {
         heartBeatTask = new HeartBeatTask(this::sendHeartBeat, () -> {
             lifecyclePublishSubject.onNext(new LifecycleEvent(LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT));
         });
+        setupReconnectLogic();
     }
 
     /**
@@ -99,6 +104,20 @@ public class StompClient {
      *
      * @param _headers HTTP headers to send in the INITIAL REQUEST, i.e. during the protocol upgrade
      */
+    private void setupReconnectLogic() {
+        lifecycle().subscribe(lifecycleEvent -> {
+            if (lifecycleEvent.getType() == LifecycleEvent.Type.CLOSED) {
+                Log.d(TAG, "Connection closed, scheduling reconnect in " + RECONNECT_DELAY + " ms");
+                // 재연결 로직을 스케줄링합니다.
+                Flowable.timer(RECONNECT_DELAY, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> {
+                            Log.d(TAG, "Reconnecting...");
+                            reconnect();
+                        }, throwable -> Log.e(TAG, "Error scheduling reconnect", throwable));
+            }
+        });
+    }
     public void connect(@Nullable List<StompHeader> _headers) {
 
         Log.d(TAG, "Connect");

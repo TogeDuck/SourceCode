@@ -42,7 +42,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 enum class MessageKind{
-    LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT
+    LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT, EXCHANGEREQUEST
 }
 
 enum class QuestType{
@@ -168,6 +168,9 @@ class MainFragment : Fragment() {
                             questChat.userId.equals(mainViewModel.guid.value))
                         talkViewModel.addTalk(chat)
                     }
+                }
+                MessageKind.EXCHANGEREQUEST.toString() -> {
+
                 }
             }
         }
