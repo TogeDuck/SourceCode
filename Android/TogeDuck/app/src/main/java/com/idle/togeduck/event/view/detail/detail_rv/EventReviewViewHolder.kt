@@ -39,7 +39,7 @@ class EventReviewViewHolder (
             Glide
                 .with(reviewImg)
                 .load(review.reviewImageUrl)
-                .override(500,500)
+                .override(700,700)
                 .into(reviewImg)
 
             reviewImg.visibility = View.VISIBLE

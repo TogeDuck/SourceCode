@@ -185,6 +185,7 @@ class EventDetailFragment : Fragment(), EventReview {
 
         val registDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
         registDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
+        registDrawable.setStroke(0, Theme.theme.sub500)
         eventReviewInputBinding.reviewPost.background = registDrawable
 
         binding.eventDetailViewpagerIndicator.setDotIndicatorColor(getColor(requireContext(), Theme.theme.sub500))
