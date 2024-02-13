@@ -11,14 +11,18 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.activityViewModels
+import com.idle.togeduck.common.ForcedFinishService
 import com.idle.togeduck.common.ScreenSize.heightDp
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.common.ScreenSize.widthPx
 import com.idle.togeduck.databinding.ActivityMainBinding
 import com.idle.togeduck.di.PreferenceModule
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.util.CalcNavigationBarSize.getNavigationBarHeightToPx
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +33,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val talkViewModel: TalkViewModel by viewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
+    private val mapViewModel: MapViewModel by viewModels()
 
     @Inject
     lateinit var preference: PreferenceModule
@@ -79,8 +86,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        Log.d("로그", "MainActivity - onStop() 호출됨")
         talkViewModel.setChatPreference()
+
+        if (mapViewModel.isTourStart.value != null && mapViewModel.isTourStart.value!!) {
+            val intent = Intent(this, ForcedFinishService::class.java)
+            intent.putExtra("id", favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1)
+            intent.putExtra("guid", mainViewModel.guid)
+            startForegroundService(intent)
+        }
     }
     override fun onDestroy() {
         super.onDestroy()
