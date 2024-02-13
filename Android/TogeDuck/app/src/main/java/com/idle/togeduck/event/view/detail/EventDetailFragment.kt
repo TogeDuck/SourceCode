@@ -36,6 +36,7 @@ import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.model.HistoryData
 import com.idle.togeduck.history.model.HistoryDataResponse
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.util.MultiPartUtil
 import com.idle.togeduck.util.TogeDuckItemDecoration
@@ -45,6 +46,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toKotlinLocalDate
 
 @AndroidEntryPoint
 class EventDetailFragment : Fragment(), EventReview {
@@ -57,6 +59,8 @@ class EventDetailFragment : Fragment(), EventReview {
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val eventReviewViewModel: EventViewModel by activityViewModels()
     private val historyViewModel: HistoryViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     private lateinit var eventReviewAdapter: EventReviewAdapter
     private lateinit var eventPosterAdapter: EventPosterAdapter
@@ -236,22 +240,31 @@ class EventDetailFragment : Fragment(), EventReview {
     }
 
     override fun likeClick(event: Event) {
-//        val selectedEvent = eventListViewModel.selectedEvent.value!!
         event.isStar = !event.isStar
         changeLikeImage(event)
 
         CoroutineScope(Dispatchers.IO).launch {
             if(event.isStar) {
                 eventListViewModel.likeEvent(event.eventId)
+                eventListViewModel.initList()
+                eventListViewModel.getEventList(
+                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                    mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
+                    mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
             }else {
                 eventListViewModel.unlikeEvent(event.eventId)
+                eventListViewModel.initList()
+                eventListViewModel.getEventList(
+                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                    mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
+                    mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
             }
         }
     }
 
     override fun visitClick(event: Event) {
-        event.isVisited = !event.isVisited
-        changeVisitImage(event)
+//        event.isVisited = !event.isVisited
+//        changeVisitImage(event)
 //        Log.d("로그", "EventDetailFragment - visitClick()호출됨 - ${historyViewModel.selectedHistory.value!!.historyId}")
 //        CoroutineScope(Dispatchers.IO).launch {
 //            if(event.isVisited){

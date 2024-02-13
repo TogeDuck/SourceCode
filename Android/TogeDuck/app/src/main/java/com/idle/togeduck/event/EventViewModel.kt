@@ -34,9 +34,9 @@ class EventViewModel @Inject constructor(
 
 
     init {
-        viewModelScope.launch {
-            getReviewList(selectedEventId,1,100)
-        }
+//        viewModelScope.launch {
+//            getReviewList(selectedEventId,0,1000)
+//        }
     }
 
     suspend fun postReview(eventId: Long, image: MultipartBody.Part?, content: MultipartBody.Part) {
