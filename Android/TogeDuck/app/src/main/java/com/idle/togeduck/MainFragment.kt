@@ -1,5 +1,8 @@
 package com.idle.togeduck
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,11 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
@@ -43,12 +51,13 @@ import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
-enum class MessageKind{
+
+enum class MessageKind {
     LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT, EXCHANGEREQUEST
 }
 
-enum class QuestType{
-    SHARE,EXCHANGE,GROUP
+enum class QuestType {
+    SHARE, EXCHANGE, GROUP
 }
 
 @AndroidEntryPoint
@@ -86,6 +95,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            setPermissionListener()
+        }
+
         // 초기 정보 설정
         initGUID()
         setDate()
@@ -98,7 +111,7 @@ class MainFragment : Fragment() {
         }
 
         binding.btn1.setOnClickListener {
-            Log.d("최애",favoriteSettingViewModel.selectedCelebrity.value.toString())
+            Log.d("최애", favoriteSettingViewModel.selectedCelebrity.value.toString())
         }
 
         binding.btn2.setOnClickListener {
@@ -108,6 +121,39 @@ class MainFragment : Fragment() {
         }
         //----------------------------------------------------
     }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun setPermissionListener() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+                Log.d("로그", "MainFragment - onPermissionGranted() 호출됨")
+            }
+
+            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                Toast.makeText(
+                    requireContext(),
+                    "권한 거부\n${deniedPermissions.toString()}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        requestPermission(permissionListener)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestPermission(permissionListener: PermissionListener) {
+        TedPermission.create()
+            .setPermissionListener(permissionListener)
+            .setRationaleMessage("알림 설정이 필요한 서비스입니다.")
+            .setDeniedMessage("[설정] -> [권한]에서 권한 변경이 가능합니다.")
+            .setDeniedCloseButtonText("닫기")
+            .setGotoSettingButtonText("설정")
+            .setPermissions(
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+            .check()
+    }
+
     private fun connectSocket() {
         lifecycleScope.launch {
             mainViewModel.accessToken?.let { token ->
@@ -122,6 +168,8 @@ class MainFragment : Fragment() {
             } ?: Log.d("MainFragment", "AccessToken is null")
         }
     }
+
+    @SuppressLint("CheckResult")
     private fun observeConnection() {
         stompManager.stompClient.lifecycle().subscribe { event ->
             when (event.type) {
@@ -129,57 +177,70 @@ class MainFragment : Fragment() {
                     Log.d("MainFragment", "Connection lost. Attempting to reconnect...")
                     connectSocketWithDelay()
                 }
-                else -> { /* 다른 이벤트 처리 */ }
+
+                else -> { /* 다른 이벤트 처리 */
+                }
             }
         }
     }
+
     private fun connectSocketWithDelay() {
         lifecycleScope.launch {
             delay(1000)  // 연결 재시도 전 지연 시간
             connectSocket()
         }
     }
+
     /** 웹소켓 수신 메세지 한번에 처리 **/
-    private fun socketCallback(message: String){
+    private fun socketCallback(message: String) {
         val response = Gson().fromJson(message, WebSocketResponse::class.java)
-        val websocketDataResponse = Gson().fromJson(response.content, WebSocketDataResponse::class.java)
-        if(websocketDataResponse.celebrityId == favoriteSettingViewModel.selectedCelebrity.value?.id){
-            when(websocketDataResponse.type){
+        val websocketDataResponse =
+            Gson().fromJson(response.content, WebSocketDataResponse::class.java)
+        if (websocketDataResponse.celebrityId == favoriteSettingViewModel.selectedCelebrity.value?.id) {
+            when (websocketDataResponse.type) {
                 // 좌표 수신
                 MessageKind.LOCATION.toString() -> {
-                    val coordinate = Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
-                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)){
+                    val coordinate =
+                        Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
+                    if (mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)) {
                         mapViewModel.updatePeopleMarker(coordinate)
                     }
                 }
                 // 다른 사람의 투어 종료 수신
                 MessageKind.TOURLEAVE.toString() -> {
-                    val coordinate = Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
-                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)){
+                    val coordinate =
+                        Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
+                    if (mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)) {
                         mapViewModel.deletePeopleMarker(coordinate)
                     }
                 }
+
                 MessageKind.QUESTALERT.toString() -> {
-                    val questAlert = Gson().fromJson(websocketDataResponse.data, QuestAlert::class.java)
+                    val questAlert =
+                        Gson().fromJson(websocketDataResponse.data, QuestAlert::class.java)
                     mapViewModel.isQuestAlert.value = questAlert
-                    if(eventListViewModel.selectedEvent.value?.eventId == questAlert.eventId){
-                        when(questAlert.questType){
+                    if (eventListViewModel.selectedEvent.value?.eventId == questAlert.eventId) {
+                        when (questAlert.questType) {
                             QuestType.SHARE.toString() -> {
                                 shareViewModel.needUpdate.value = true
                             }
+
                             QuestType.EXCHANGE.toString() -> {
                                 exchangeViewModel.needUpdate.value = true
                             }
+
                             QuestType.GROUP.toString() -> {
                                 recruitViewModel.needUpdate.value = true
                             }
                         }
                     }
                 }
+
                 MessageKind.CHAT.toString() -> {
                     val chat = Gson().fromJson(websocketDataResponse.data, Chat::class.java)
                     if (talkViewModel.chatRoomList.value?.containsKey(chat.chatId) == true) {
-                        talkViewModel.addTalkRoomTalk(chat.chatId,
+                        talkViewModel.addTalkRoomTalk(
+                            chat.chatId,
                             Talk(
                                 chatId = chat.chatId,
                                 userId = chat.userId,
@@ -189,25 +250,31 @@ class MainFragment : Fragment() {
                         )
                     }
                 }
+
                 MessageKind.QUESTCHAT.toString() -> {
-                    val questChat = Gson().fromJson(websocketDataResponse.data, QuestChat::class.java)
-                    if(eventListViewModel.selectedEvent.value?.eventId == questChat.eventId){
+                    val questChat =
+                        Gson().fromJson(websocketDataResponse.data, QuestChat::class.java)
+                    if (eventListViewModel.selectedEvent.value?.eventId == questChat.eventId) {
                         val chat = Talk(
                             0,
                             questChat.userId,
                             questChat.message,
-                            questChat.userId.equals(mainViewModel.guid))
+                            questChat.userId.equals(mainViewModel.guid)
+                        )
                         talkViewModel.addTalk(chat)
                     }
                 }
+
                 MessageKind.EXCHANGEREQUEST.toString() -> {
-                    val questChat = Gson().fromJson(websocketDataResponse.data, QuestChat::class.java)
-                    if(eventListViewModel.selectedEvent.value?.eventId == questChat.eventId){
+                    val questChat =
+                        Gson().fromJson(websocketDataResponse.data, QuestChat::class.java)
+                    if (eventListViewModel.selectedEvent.value?.eventId == questChat.eventId) {
                         val chat = Talk(
                             0,
                             questChat.userId,
                             questChat.message,
-                            questChat.userId.equals(mainViewModel.guid))
+                            questChat.userId.equals(mainViewModel.guid)
+                        )
                         talkViewModel.addTalk(chat)
                     }
                 }
@@ -222,9 +289,21 @@ class MainFragment : Fragment() {
                 mainViewModel.makeGUID()
             }
 
-            mainViewModel.login("GUEST")
-            connectSocket()
-            observeConnection()
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.d("로그", "MainFragment - getFCMToken() 실패")
+                    return@OnCompleteListener
+                }
+
+                val token = task.result
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("로그", "MainFragment - initGUID() fcm 토큰 : ${token}")
+                    mainViewModel.login("GUEST", token!!)
+                    connectSocket()
+                    observeConnection()
+                }
+            })
         }
     }
 

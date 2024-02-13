@@ -709,7 +709,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .setGotoSettingButtonText("설정")
             .setPermissions(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
             )
             .check()
     }

@@ -59,10 +59,10 @@ class MainViewModel @Inject constructor(
         return !accessToken.isNullOrEmpty()
     }
 
-    suspend fun login(socialType: String) {
+    suspend fun login(socialType: String, fcmToken: String) {
         if (guid != null) {
             val responseResult =
-                loginRepository.login(LoginRequest(socialType, guid!!))
+                loginRepository.login(LoginRequest(socialType, guid!!, fcmToken))
 
             if (responseResult.isSuccessful) {
                 val body = responseResult.body()!!
@@ -89,8 +89,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun login(socialType: String, code: String): Boolean {
-        val responseResult = loginRepository.login(LoginRequest(socialType, code))
+    suspend fun login(socialType: String, code: String, fcmToken: String): Boolean {
+        val responseResult = loginRepository.login(LoginRequest(socialType, code, fcmToken))
 
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
