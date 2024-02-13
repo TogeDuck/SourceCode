@@ -1301,12 +1301,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }, 0 , 10 * 1000)
     }
-
+    val eventList = mutableListOf<Event>()
     private fun figureCloseEvents(lat:Double, lng:Double) {
-        val eventList = mutableListOf<Event>()
         eventListViewModel.listToday.value?.let { list ->
             for (event in list) {
-                if(CalcDistance.idsDistanceOk(lat, lng, event.latitude, event.longitude)){
+                if(CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
                     eventList.add(event)
                 }
             }

@@ -24,7 +24,7 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogQuestExchangeBinding
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
-import com.idle.togeduck.quest.exchange.model.MyExchange
+import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.IMyExchangeDetail
 import com.idle.togeduck.quest.exchange.view.my_exchange_rv.MyExchangeAdapter
 import com.idle.togeduck.util.DpPxUtil
@@ -165,7 +165,7 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
         _binding = null
     }
 
-    override fun myExchangeItemClicked(myExchange: MyExchange) {
+    override fun myExchangeItemClicked(myExchange: Exchange) {
         Log.d("교환","내 교환 선택"+myExchange.id)
         exchangeViewModel.setMySelectedExchange(myExchange)
     }

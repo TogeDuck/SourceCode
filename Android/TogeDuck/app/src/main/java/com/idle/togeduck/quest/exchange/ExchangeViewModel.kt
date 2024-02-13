@@ -1,32 +1,21 @@
 package com.idle.togeduck.quest.exchange
 
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.idle.togeduck.QuestType
-import com.idle.togeduck.R
 import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
-import com.idle.togeduck.quest.exchange.model.ExchangeRequest
-import com.idle.togeduck.quest.exchange.model.MyExchange
 import com.idle.togeduck.quest.exchange.model.toExchange
-import com.idle.togeduck.quest.share.model.Share
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,8 +28,8 @@ class ExchangeViewModel @Inject constructor(
     val exchangeList: LiveData<List<Exchange>>
         get() = _exchangeList
 
-    private val _myExchangeList = MutableLiveData<List<MyExchange>>()
-    val myExchangeList: LiveData<List<MyExchange>>
+    private val _myExchangeList = MutableLiveData<List<Exchange>>()
+    val myExchangeList: LiveData<List<Exchange>>
         get() = _myExchangeList
 
 
@@ -48,8 +37,8 @@ class ExchangeViewModel @Inject constructor(
     val selectedExchange: LiveData<Exchange>
         get() = _selectedExchange
 
-    private val _myselectedExchange = MutableLiveData<MyExchange>()
-    val mySelectedExchange: LiveData<MyExchange>
+    private val _myselectedExchange = MutableLiveData<Exchange>()
+    val mySelectedExchange: LiveData<Exchange>
         get() = _myselectedExchange
 
     private val _navigationEvent = MutableLiveData<Boolean>(false)
@@ -126,7 +115,7 @@ class ExchangeViewModel @Inject constructor(
         _selectedExchange.value = exchange
     }
 
-    fun setMySelectedExchange(myExchange: MyExchange){
+    fun setMySelectedExchange(myExchange: Exchange){
         _myselectedExchange.value = myExchange
     }
 

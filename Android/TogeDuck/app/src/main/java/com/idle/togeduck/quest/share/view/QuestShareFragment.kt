@@ -76,8 +76,10 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     }
 
     private fun getShareList(){
-        CoroutineScope(Dispatchers.IO).launch{
-            shareViewModel.getShareList(eventListViewModel.selectedEvent.value!!.eventId, 0, 1000)
+        eventListViewModel.selectedEvent.value?.let { selectedEvent ->
+            CoroutineScope(Dispatchers.IO).launch{
+                shareViewModel.getShareList(selectedEvent.eventId, 0, 1000)
+            }
         }
     }
 
