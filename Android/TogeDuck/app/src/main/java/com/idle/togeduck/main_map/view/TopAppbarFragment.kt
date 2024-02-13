@@ -2,9 +2,12 @@ package com.idle.togeduck.main_map.view
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
@@ -87,9 +90,14 @@ class TopAppbarFragment : Fragment() {
         favoriteSettingViewModel.selectedCelebrity.observe(viewLifecycleOwner) { celebrity ->
             CoroutineScope(Dispatchers.IO).launch {
                 preference.setSelectedCelebrity(celebrity)
-                val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
+                val celebrityId =
+                    favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
                 val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
-                eventListViewModel.getEventList(celebrityId, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
+                eventListViewModel.getEventList(
+                    celebrityId,
+                    startDate.toKotlinLocalDate(),
+                    endDate.toKotlinLocalDate()
+                )
             }
 
             setIdolProfile()
@@ -111,6 +119,11 @@ class TopAppbarFragment : Fragment() {
     private fun showSelectCelebrity() {
         topAppbarBinding.llIdol.setOnClickListener {
             findNavController().navigate(R.id.action_mapFragment_to_selectCelebrityFragment)
+            topAppbarBinding.llIdol.isClickable = false
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                topAppbarBinding.llIdol.isClickable = true
+            }, 500L)
         }
     }
 
