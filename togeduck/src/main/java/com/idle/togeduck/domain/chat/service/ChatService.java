@@ -67,7 +67,18 @@ public class ChatService {
 	public void message(Long chatId, Long userId, String message) {
 		//유저챗 찾기
 		UserChat userChat = userChatRepository.findByUserIdAndChatId(userId, chatId)
-			.orElseThrow(() -> new BaseException(ErrorCode.USERCHAT_NOT_FOUND));
+			.orElseGet(() -> {
+				User user = userRepository.findById(userId)
+					.orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+				Chat chat = chatRepository.findById(chatId)
+					.orElseThrow(() -> new BaseException(ErrorCode.CHAT_NOT_FOUND));
+				UserChat uc = UserChat.builder()
+					.chat(chat)
+					.user(user)
+					.build();
+				return userChatRepository.save(uc);
+			});
+
 		//메세지 저장
 		Message m = Message.builder()
 			.userChat(userChat)
