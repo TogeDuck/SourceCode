@@ -30,6 +30,7 @@ import com.idle.togeduck.quest.recruit.RecruitViewModel
 import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.quest.talk.model.Talk
+import com.idle.togeduck.util.LoginUtil.guid
 import com.idle.togeduck.util.SnackBarFactory
 import com.idle.togeduck.websocketcustomlibrary.dto.LifecycleEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -109,7 +110,7 @@ class MainFragment : Fragment() {
     }
     private fun connectSocket() {
         lifecycleScope.launch {
-            mainViewModel.accessToken.value?.let { token ->
+            mainViewModel.accessToken?.let { token ->
                 stompManager.setHeader(token)
                 stompManager.connect()
                 stompManager.subscribeChat(1) { message ->
@@ -147,14 +148,14 @@ class MainFragment : Fragment() {
                 // 좌표 수신
                 MessageKind.LOCATION.toString() -> {
                     val coordinate = Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
-                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid.value)){
+                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)){
                         mapViewModel.updatePeopleMarker(coordinate)
                     }
                 }
                 // 다른 사람의 투어 종료 수신
                 MessageKind.TOURLEAVE.toString() -> {
                     val coordinate = Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
-                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid.value)){
+                    if(mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)){
                         mapViewModel.deletePeopleMarker(coordinate)
                     }
                 }
@@ -183,7 +184,7 @@ class MainFragment : Fragment() {
                                 chatId = chat.chatId,
                                 userId = chat.userId,
                                 content = chat.message,
-                                isMine = chat.userId == mainViewModel.guid.value
+                                isMine = chat.userId == mainViewModel.guid
                             )
                         )
                     }
@@ -195,7 +196,7 @@ class MainFragment : Fragment() {
                             0,
                             questChat.userId,
                             questChat.message,
-                            questChat.userId.equals(mainViewModel.guid.value))
+                            questChat.userId.equals(mainViewModel.guid))
                         talkViewModel.addTalk(chat)
                     }
                 }
@@ -206,7 +207,7 @@ class MainFragment : Fragment() {
                             0,
                             questChat.userId,
                             questChat.message,
-                            questChat.userId.equals(mainViewModel.guid.value))
+                            questChat.userId.equals(mainViewModel.guid))
                         talkViewModel.addTalk(chat)
                     }
                 }
@@ -217,9 +218,10 @@ class MainFragment : Fragment() {
     private fun initGUID() {
         mainViewModel.getFromLocalData()
         CoroutineScope(Dispatchers.IO).launch {
-            if (mainViewModel.guid.value == null) {
+            if (mainViewModel.guid == null) {
                 mainViewModel.makeGUID()
             }
+
             mainViewModel.login("GUEST")
             connectSocket()
             observeConnection()

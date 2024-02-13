@@ -5,17 +5,21 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.idle.togeduck.common.TogeDuckColor
+import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_CAKE_COUNT
 import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_CHAT_ROOM_LIST
 import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_CHAT_ROOM_TALK_LIST
 import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_GUID
 import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_JWT_ACCESS_TOKEN_TOKEN
 import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_JWT_REFRESH_TOKEN
 import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_SELECTED_CELEBRITY
+import com.idle.togeduck.di.PreferenceModule.PreferenceKeys.KEY_THEME
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.quest.talk.model.TalkRoom
@@ -33,7 +37,8 @@ const val GUID_NAME = "GUID"
 const val SELECTED_CELEBRITY_NAME = "SELECTED_CELEBRITY"
 const val CHAT_ROOM_LIST_NAME = "CHAT_ROOM_LIST"
 const val CHAT_ROOM_TALK_LIST_NAME = "CHAT_ROOM_TALK_LIST"
-
+const val CAKE_COUNT_NAME = "CAKE_COUNT_NAME"
+const val THEME_NAME = "THEME_NAME"
 
 @Singleton
 class PreferenceModule @Inject constructor(
@@ -87,12 +92,14 @@ class PreferenceModule @Inject constructor(
                 emit(emptyPreferences())
             }
         }.map { preferences ->
+            Log.d("로그", "PreferenceModule - getGuid() 호출됨 ${preferences[KEY_GUID]}")
             preferences[KEY_GUID]
         }
 
     suspend fun setGuid(token: String) {
         dataStore.edit { preferences ->
             preferences[KEY_GUID] = token
+            Log.d("로그", "PreferenceModule - setGuid() 호출됨 ${preferences[KEY_GUID]}")
         }
     }
 
@@ -134,7 +141,7 @@ class PreferenceModule @Inject constructor(
             }
         }.map { preferences ->
             val gson = GsonBuilder().create()
-            Log.d("로그", "PreferenceModule - () 호출됨 ${preferences[KEY_CHAT_ROOM_LIST]}")
+            Log.d("로그", "PreferenceModule - getChatRoomList() 호출됨 ${preferences[KEY_CHAT_ROOM_LIST]}")
             gson.fromJson(preferences[KEY_CHAT_ROOM_LIST], mutableMapOf<Long, TalkRoom>().javaClass)
         }
 
@@ -160,7 +167,7 @@ class PreferenceModule @Inject constructor(
             }
         }.map { preferences ->
             val gson = GsonBuilder().create()
-            Log.d("로그", "PreferenceModule - () 호출됨 ${preferences[KEY_CHAT_ROOM_TALK_LIST]}")
+            Log.d("로그", "PreferenceModule - getChatRoomTalkList() 호출됨 ${preferences[KEY_CHAT_ROOM_TALK_LIST]}")
             gson.fromJson(preferences[KEY_CHAT_ROOM_TALK_LIST], mutableMapOf<Long, MutableList<Talk>>().javaClass)
         }
 
@@ -179,6 +186,52 @@ class PreferenceModule @Inject constructor(
         }
     }
 
+    val getCakeCount = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            }
+        }.map { preferences ->
+            preferences[KEY_CAKE_COUNT]
+        }
+
+    suspend fun setCakeCount(cakeCount: Int) {
+        dataStore.edit { preferences ->
+            preferences[KEY_CAKE_COUNT] = cakeCount
+        }
+    }
+
+    suspend fun removeCakeCount() {
+        dataStore.edit { preferences ->
+            preferences.remove(KEY_CAKE_COUNT)
+        }
+    }
+
+    val getTheme = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            }
+        }.map { preferences ->
+            val gson = GsonBuilder().create()
+            gson.fromJson(preferences[KEY_THEME], TogeDuckColor::class.java)
+        }
+
+    suspend fun setTheme(theme: TogeDuckColor) {
+        val gson = GsonBuilder().create()
+        val json = gson.toJson(theme)
+
+        dataStore.edit { preferences ->
+            preferences[KEY_THEME] = json
+        }
+    }
+
+    suspend fun removeTheme() {
+        dataStore.edit { preferences ->
+            preferences.remove(KEY_THEME)
+        }
+    }
+
     private object PreferenceKeys {
         val KEY_JWT_REFRESH_TOKEN = stringPreferencesKey(JWT_REFRESH_TOKEN_NAME)
         val KEY_JWT_ACCESS_TOKEN_TOKEN = stringPreferencesKey(JWT_ACCESS_TOKEN_NAME)
@@ -186,5 +239,7 @@ class PreferenceModule @Inject constructor(
         val KEY_SELECTED_CELEBRITY = stringPreferencesKey(SELECTED_CELEBRITY_NAME)
         val KEY_CHAT_ROOM_LIST = stringPreferencesKey(CHAT_ROOM_LIST_NAME)
         val KEY_CHAT_ROOM_TALK_LIST = stringPreferencesKey(CHAT_ROOM_TALK_LIST_NAME)
+        val KEY_CAKE_COUNT = intPreferencesKey(CAKE_COUNT_NAME)
+        val KEY_THEME = stringPreferencesKey(THEME_NAME)
     }
 }

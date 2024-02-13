@@ -22,13 +22,9 @@ class MainViewModel @Inject constructor(
     private val preference: PreferenceModule,
 ) : ViewModel() {
 
-    private val _guid = MutableLiveData<String>()
-    val guid: LiveData<String> get() = _guid
-
-    private val _accessToken = MutableLiveData<String>()
-    val accessToken: LiveData<String> get() = _accessToken
-    private val _refreshToken = MutableLiveData<String>()
-    val refreshToken: LiveData<String> get() = _refreshToken
+    var guid: String? = null
+    var accessToken: String? = null
+    var refreshToken: String? = null
 
     var isRealTimeOn = false
 
@@ -36,69 +32,81 @@ class MainViewModel @Inject constructor(
         getFromLocalData()
     }
 
-    fun getFromLocalData(){
-        _guid.postValue(runBlocking {
+    fun getFromLocalData() {
+        guid = runBlocking {
             preference.getGuid.first()
-        })
-        _accessToken.postValue(runBlocking {
+        }
+        accessToken = runBlocking {
             preference.getAccessToken.first()
-        })
-        _refreshToken.postValue(runBlocking {
+        }
+        refreshToken = runBlocking {
             preference.getRefreshToken.first()
-        })
+        }
     }
 
-     suspend fun makeGUID(): String {
-         val guidMade = UUID.randomUUID().toString()
-         _guid.postValue(guidMade)
-         Log.d("로그","makeGuid 호출"+guidMade.toString())
+    suspend fun makeGUID(): String {
+        val guidMade = UUID.randomUUID().toString()
+        guid = guidMade
+        Log.d("로그", "makeGuid 호출" + guidMade)
         runBlocking {
             preference.setGuid(guidMade)
         }
-         delay(1000)
-         return guidMade
+        delay(1000)
+        return guidMade
     }
 
-     fun isAccessTokenPresent(): Boolean{
-        if(!_accessToken.value.isNullOrEmpty()){
-            return true
-        }
-        return false
+    fun isAccessTokenPresent(): Boolean {
+        return !accessToken.isNullOrEmpty()
     }
 
     suspend fun login(socialType: String) {
-        val responseResult = loginRepository.login(guid.value?.let { LoginRequest(socialType, it) }!!)
+        if (guid != null) {
+            val responseResult =
+                loginRepository.login(LoginRequest(socialType, guid!!))
 
-        if(responseResult.isSuccessful){
-            val body = responseResult.body()!!
-            preference.setAccessToken(body.data.accessToken)
-            preference.setRefreshToken(body.data.refreshToken)
-            _accessToken.postValue(body.data.accessToken)
-            _refreshToken.postValue(body.data.refreshToken)
-            delay(1000)
-            Log.d("유저 정보", body.toString())
-            Log.d("로그", "MainViewModel - login() 호출됨 accessToken : ${preference.getAccessToken.first()}")
-            Log.d("로그", "MainViewModel - login() 호출됨 refreshToken : ${preference.getRefreshToken.first()}")
-        } else {
-            val errorBody = Json.decodeFromString<DefaultResponse>(
-                responseResult.errorBody()?.string()!!
-            )
-            Log.d("로그", "응답 실패 ${errorBody}")
+            if (responseResult.isSuccessful) {
+                val body = responseResult.body()!!
+                preference.setAccessToken(body.data.accessToken)
+                preference.setRefreshToken(body.data.refreshToken)
+                accessToken = body.data.accessToken
+                refreshToken = body.data.refreshToken
+                delay(1000)
+                Log.d("유저 정보", body.toString())
+                Log.d(
+                    "로그",
+                    "MainViewModel - login() 호출됨 accessToken : ${preference.getAccessToken.first()}"
+                )
+                Log.d(
+                    "로그",
+                    "MainViewModel - login() 호출됨 refreshToken : ${preference.getRefreshToken.first()}"
+                )
+            } else {
+                val errorBody = Json.decodeFromString<DefaultResponse>(
+                    responseResult.errorBody()?.string()!!
+                )
+                Log.d("로그", "응답 실패 ${errorBody}")
+            }
         }
     }
 
-    suspend fun login(socialType: String, code: String):Boolean {
+    suspend fun login(socialType: String, code: String): Boolean {
         val responseResult = loginRepository.login(LoginRequest(socialType, code))
 
-        if(responseResult.isSuccessful){
+        if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
 
             preference.setAccessToken(body.data.accessToken)
             preference.setRefreshToken(body.data.refreshToken)
             getFromLocalData()
 
-            Log.d("로그", "MainViewModel - login() 호출됨 accessToken : ${preference.getAccessToken.first()}")
-            Log.d("로그", "MainViewModel - login() 호출됨 refreshToken : ${preference.getRefreshToken.first()}")
+            Log.d(
+                "로그",
+                "MainViewModel - login() 호출됨 accessToken : ${preference.getAccessToken.first()}"
+            )
+            Log.d(
+                "로그",
+                "MainViewModel - login() 호출됨 refreshToken : ${preference.getRefreshToken.first()}"
+            )
             return true
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(
