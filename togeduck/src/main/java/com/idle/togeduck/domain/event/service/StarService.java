@@ -51,8 +51,8 @@ public class StarService {
 	}
 
 	@Transactional
-	public void deleteStar(Long eventId) {
-		Star star = starRepository.findByEventId(eventId)
+	public void deleteStar(Long eventId, Long userId) {
+		Star star = starRepository.findByUserIdAndEventId(userId, eventId)
 			.orElseThrow(() -> new BaseException(STAR_NOT_FOUND));
 
 		starRepository.delete(star);
