@@ -145,7 +145,7 @@ class EventDetailFragment : Fragment(), EventReview {
         if(eventListViewModel.selectedEvent.value != null){
             CoroutineScope(Dispatchers.IO).launch {
                 val eventId = eventListViewModel.selectedEvent.value!!.eventId
-                eventReviewViewModel.getReviewList(eventId, 0,100)
+                eventReviewViewModel.getReviewList(eventId, 0,1000)
                 Log.d("로그", "getReviewList 호출됨")
             }
         }
@@ -275,7 +275,7 @@ class EventDetailFragment : Fragment(), EventReview {
                     Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
                     Log.d("리뷰 등록 값", ": ${reviewText}")
                     eventReviewViewModel.postReview(selectedEventId, reviewImg, reviewText)
-                    eventReviewViewModel.getReviewList(selectedEventId, 1, 10)
+                    eventReviewViewModel.getReviewList(selectedEventId, 0, 1000)
 
                     launch(Dispatchers.Main) {
                         eventReviewInputBinding.etReviewInput.text?.clear()
@@ -287,7 +287,7 @@ class EventDetailFragment : Fragment(), EventReview {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("리뷰 등록", "이미지 없는 리뷰 등록")
                     eventReviewViewModel.postReview(selectedEventId, null, reviewText)
-                    eventReviewViewModel.getReviewList(selectedEventId, 1, 10)
+                    eventReviewViewModel.getReviewList(selectedEventId, 0, 1000)
 
                     launch(Dispatchers.Main) {
                         eventReviewInputBinding.etReviewInput.text?.clear()
