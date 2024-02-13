@@ -522,7 +522,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             binding.tourStart.text = "투어\n시작"
             mapViewModel.setTourStatus(false)
             // 실시간 위치 공유에서 종료 알림
-            stompManager.sendTourEnd( favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1, mainViewModel.guid.value!!)
+            stompManager.sendTourEnd( favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1, mainViewModel.guid!!)
             // 투어 기록 전송
             CoroutineScope(Dispatchers.IO).launch {
                 historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList.value!!)
@@ -1269,7 +1269,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
                                         location.latitude,
                                         location.longitude,
-                                        mainViewModel.guid.value!!
+                                        mainViewModel.guid!!
                                     )
                                 }
                                 //TODO else문 삭제
@@ -1278,7 +1278,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
                                         location.latitude,
                                         location.longitude,
-                                        mainViewModel.guid.value!!
+                                        mainViewModel.guid!!
                                     )
                                 }
                                 // 이벤트 리스트 확인, 가까운 리스트 갱신
