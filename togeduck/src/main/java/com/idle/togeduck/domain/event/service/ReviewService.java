@@ -37,7 +37,11 @@ public class ReviewService {
 
 		Event event = eventRepository.findById(eventId).orElseThrow(() -> new BaseException(EVENT_NOT_FOUND));
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-		String imagePath = s3Service.saveFile(image);
+
+		String imagePath = null;
+		if (image != null) {
+			imagePath = s3Service.saveFile(image);
+		}
 
 		reviewRepository.save(Review.builder()
 			.content(content)
