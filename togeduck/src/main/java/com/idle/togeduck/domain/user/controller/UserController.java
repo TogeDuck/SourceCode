@@ -25,7 +25,7 @@ public class UserController {
 
 	private final UserService userService;
 
-	@GetMapping("/favorities")
+	@GetMapping("/favorites")
 	public ResponseEntity<BaseResponse<?>> getFavorite(
 		@AuthenticationPrincipal User user) {
 
@@ -36,7 +36,7 @@ public class UserController {
 			));
 	}
 
-	@PostMapping("/favorities")
+	@PostMapping("/favorites")
 	public ResponseEntity<BaseResponse<?>> upsertFavorite(
 		@RequestBody FavoriteRequestDto favoriteRequestDto, @AuthenticationPrincipal User user) { // update + insert
 
