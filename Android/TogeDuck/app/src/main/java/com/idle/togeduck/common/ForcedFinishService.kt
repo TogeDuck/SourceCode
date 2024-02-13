@@ -10,15 +10,10 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.ViewModelProvider
 import com.idle.togeduck.MainActivity
-import com.idle.togeduck.MainViewModel
 import com.idle.togeduck.R
-import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.network.StompManager
-import com.idle.togeduck.util.LoginUtil.guid
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +23,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ForcedFinishService : Service() {
-    private val TAG = javaClass.simpleName
     private val channelId = "TOGEDUCK_NOTIFICATION_CHANNEL"
     private val notificationId = 43
     private var id: Long? = null
@@ -78,16 +72,12 @@ class ForcedFinishService : Service() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
 
-        Log.d("로그", "ForcedFinishService - onTaskRemoved() 호출됨")
-
-        // TODO. 투어 종료
         CoroutineScope(Dispatchers.IO).launch {
             val result = async {
                 stompManager.sendTourEnd(id!!, guid!!)
             }
 
             if (result.await()) {
-                Log.d("로그", "ForcedFinishService - onTaskRemoved() 호출됨2")
                 stopSelf()
             }
         }
