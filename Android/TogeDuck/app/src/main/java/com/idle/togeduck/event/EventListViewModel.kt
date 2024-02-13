@@ -56,6 +56,11 @@ class EventListViewModel @Inject constructor(
     fun initClostEvents(){
         closeEvents.value = listOf()
     }
+    fun initList(){
+        _listPast.postValue(listOf())
+        _listToday.postValue(listOf())
+        _listUpcoming.postValue(listOf())
+    }
 
     suspend fun getEventList(celebrityId: Long, startDate: LocalDate, endDate: LocalDate){
         val responseResult = eventRepository.getEventList(celebrityId, startDate, endDate)
@@ -98,25 +103,25 @@ class EventListViewModel @Inject constructor(
 
     suspend fun likeEvent(eventId: Long){
         val responseResult = eventRepository.likeEvent(eventId)
-        Log.d("로그", "EventListViewModel - likeEvent() 응답 성공 - $responseResult")
+        Log.d("로그", "EventListViewModel - likeEvent() 호출됨 - $responseResult")
 
         if(!responseResult.isSuccessful){
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-            Log.d("로그", "EventListViewModel - likeEvent() 응답 실패 - $errorBody")
+            Log.d("로그", "EventListViewModel - likeEvent() 호출됨 - 응답 실패 - $errorBody")
         }
     }
 
     suspend fun unlikeEvent(eventId: Long) {
         val responseResult = eventRepository.unlikeEvent(eventId)
-        Log.d("로그", "EventListViewModel - unlikeEvent() 응답 성공 - $responseResult")
+        Log.d("로그", "EventListViewModel - unlikeEvent() 호출됨 - $responseResult")
 
         if (!responseResult.isSuccessful) {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-            Log.d("로그", "EventListViewModel - unlikeEvent() 응답 실패 - $errorBody")
+            Log.d("로그", "EventListViewModel - unlikeEvent() 호출됨 - 응답 실패 - $errorBody")
         }
     }
 
