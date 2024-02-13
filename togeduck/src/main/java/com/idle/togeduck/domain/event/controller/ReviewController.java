@@ -35,7 +35,7 @@ public class ReviewController {
 
 	@PostMapping("/{eventId}/reviews")
 	public ResponseEntity<BaseResponse<?>> saveReview(@PathVariable Long eventId, @AuthenticationPrincipal User user,
-		@RequestPart String content, @RequestPart MultipartFile image) {
+		@RequestPart String content, @RequestPart(required = false) MultipartFile image) {
 
 		reviewService.saveReview(eventId, user.getId(), content, image);
 
