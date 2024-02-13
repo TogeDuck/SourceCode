@@ -35,6 +35,7 @@ public enum ErrorCode {
 	CHAT_NOT_FOUND(404, "CHAT-001", "퀘스트을 찾을 수 없는 경우"),
 
 	STAR_NOT_FOUND(404, "STAR-001", "해당 즐겨찾기가 없습니다"),
+	STAR_DUPLICATED(404, "STAR-002", "이미 등록된 즐겨찾기 입니다"),
 
 	HISTORY_NOT_FOUND(404, "HISTORY-001", "방문 기록을 찾을 수 없는 경우"),
 
