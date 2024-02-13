@@ -98,12 +98,12 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
         val message = componentChatInputBinding.etTalkInput.text.toString()
         if (message.isNotEmpty()
             && talkViewModel.currentChatRoomId != null
-            && mainViewModel.guid.value != null
+            && mainViewModel.guid != null
             && favoriteSettingViewModel.selectedCelebrity.value != null
         ) {
             stompManager.sendChat(
                 talkViewModel.currentChatRoomId.value!!,
-                mainViewModel.guid.value!!,
+                mainViewModel.guid!!,
                 message,
                 favoriteSettingViewModel.selectedCelebrity.value!!.id
             )

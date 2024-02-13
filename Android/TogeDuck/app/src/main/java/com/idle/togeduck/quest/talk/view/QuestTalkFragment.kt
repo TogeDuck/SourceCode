@@ -86,11 +86,11 @@ class QuestTalkFragment : Fragment(), IQuestTalkDetail {
         val message = componentQuestTalkInputBinding.etTalkInput.text.toString()
         if(message.isNotEmpty()
             && eventListViewModel.selectedEvent.value != null
-            && mainViewModel.guid.value != null
+            && mainViewModel.guid != null
             && favoriteSettingViewModel.selectedCelebrity.value != null){
             stompManager.sendQuestChat(
                 eventListViewModel.selectedEvent.value!!.eventId,
-                mainViewModel.guid.value!!,
+                mainViewModel.guid!!,
                 message,
                 favoriteSettingViewModel.selectedCelebrity.value!!.id
             )
