@@ -52,6 +52,7 @@ public class AuthService {
 				.socialId(userRequestDto.socialId()) // 소셜 아이디
 				.socialType(userRequestDto.socialType()) // 소셜 타입
 				.authority(Authority.ROLE_USER) // 권한
+				.deviceToken(userRequestDto.deviceToken())
 				.build()
 		);
 	}
