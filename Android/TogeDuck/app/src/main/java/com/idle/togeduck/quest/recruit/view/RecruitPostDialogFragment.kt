@@ -104,8 +104,6 @@ class RecruitPostDialogFragment: DialogFragment() {
         }
 
         binding.btnRecruitPost.setOnClickListener {
-            //todo. eventId 받아오는 걸로 수정 지금은 임시로 2
-//            val eventId = event.eventId
             val title = binding.etRecruitTitle.text.toString()
             val maximum = binding.npRecruitPeopleNum.value
             val duration = binding.npRecruitDuration.value
@@ -121,7 +119,10 @@ class RecruitPostDialogFragment: DialogFragment() {
                 && eventListViewModel.selectedEvent.value != null) {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("모집 등록", "모집 등록 호출됨")
-                    recruitViewModel.createRecruit(eventListViewModel.selectedEvent.value!!.eventId, recruitRequest, favoriteSettingViewModel.selectedCelebrity.value!!.id)
+                    recruitViewModel.createRecruit(
+                        eventListViewModel.selectedEvent.value!!.eventId,
+                        recruitRequest,
+                        favoriteSettingViewModel.selectedCelebrity.value!!.id)
                 }
             }
             findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
@@ -132,7 +133,7 @@ class RecruitPostDialogFragment: DialogFragment() {
     private fun setSpinner() {
         // 오늘의 이벤트 목록을 관찰하고 해당 목록을 spinner에 설정
         //todo. 지금은 오늘 이벤트 없어서 listPast로 해놓음 (추후 listToday로 수정)
-        eventListViewModel.listPast.observe(viewLifecycleOwner) { event ->
+        eventListViewModel.listToday.observe(viewLifecycleOwner) { event ->
             val eventPairs = event.map { it.eventId to it.name } // Pair 형태로 eventId와 eventName을 연결
             eventIds = eventPairs.map { it.first } // eventId만 추출
             eventNames = eventPairs.map { it.second }

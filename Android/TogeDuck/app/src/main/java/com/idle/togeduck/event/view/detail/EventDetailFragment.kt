@@ -32,6 +32,10 @@ import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.view.detail.detail_rv.EventPosterAdapter
 import com.idle.togeduck.event.view.detail.detail_rv.EventReview
 import com.idle.togeduck.event.view.detail.detail_rv.EventReviewAdapter
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.history.HistoryViewModel
+import com.idle.togeduck.history.model.HistoryData
+import com.idle.togeduck.history.model.HistoryDataResponse
 import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.util.MultiPartUtil
 import com.idle.togeduck.util.TogeDuckItemDecoration
@@ -52,22 +56,19 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val eventReviewViewModel: EventViewModel by activityViewModels()
+    private val historyViewModel: HistoryViewModel by activityViewModels()
 
     private lateinit var eventReviewAdapter: EventReviewAdapter
+    private lateinit var eventPosterAdapter: EventPosterAdapter
     private lateinit var event: Event
     private var imgPath: String? = null
 
-    private lateinit var eventPosterAdapter: EventPosterAdapter
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             eventReviewInputBinding.reviewImgThumb.visibility = View.VISIBLE
             eventReviewInputBinding.reviewImgThumb.setImageURI(uri)
             imgPath = MultiPartUtil.uriToFilePath(requireContext(), uri)
-
-            //용량 줄이는 버전
-//            val bitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
-//            imgPath = MultiPartUtil.uriToFilePath2(requireContext(), bitmap, uri)
 
         } else {
             Log.d("로그", "EventDetailFragment - pickMedia - 이미지 선택 실패")
@@ -117,7 +118,6 @@ class EventDetailFragment : Fragment(), EventReview {
             eventReviewAdapter.submitList(list)
         }
 
-
         binding.bookmarkCheck.setOnClickListener { likeClick(event) }
         binding.visitCheck.setOnClickListener { visitClick(event) }
 
@@ -133,9 +133,6 @@ class EventDetailFragment : Fragment(), EventReview {
             (parentFragment as MapFragment).changeViewPagerPage(1)
         }
 
-//        eventReviewInputBinding.etReviewInput.setOnClickListener { mView, keyCode, _ ->
-//            hideKeyboard(mView, keyCode)
-//        }
     }
 
     override fun onResume() {
@@ -148,7 +145,7 @@ class EventDetailFragment : Fragment(), EventReview {
         if(eventListViewModel.selectedEvent.value != null){
             CoroutineScope(Dispatchers.IO).launch {
                 val eventId = eventListViewModel.selectedEvent.value!!.eventId
-                eventReviewViewModel.getReviewList(eventId, 1,100)
+                eventReviewViewModel.getReviewList(eventId, 0,100)
                 Log.d("로그", "getReviewList 호출됨")
             }
         }
@@ -254,10 +251,14 @@ class EventDetailFragment : Fragment(), EventReview {
     override fun visitClick(event: Event) {
         event.isVisited = !event.isVisited
         changeVisitImage(event)
-
-        //todo.방문 체크 api 추가
+//        Log.d("로그", "EventDetailFragment - visitClick()호출됨 - ${historyViewModel.selectedHistory.value!!.historyId}")
 //        CoroutineScope(Dispatchers.IO).launch {
 //            if(event.isVisited){
+//                if(historyViewModel.selectedHistory.value != null){
+//                    historyViewModel.addHistory(event.eventId, historyViewModel.selectedHistory.value!!.historyId)
+//                } else{
+//                    Log.d("로그", "selectedHistory가 null")
+//                }
 //            }
 //        }
     }
@@ -296,16 +297,6 @@ class EventDetailFragment : Fragment(), EventReview {
         }
     }
 
-//    private fun hideKeyboard(view: View, keyCode: Int): Boolean {
-//        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-//            val inputManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE)
-//                    as InputMethodManager
-//            inputManager.hideSoftInputFromWindow(view.windowToken, 0)
-//            eventReviewInputBinding.etReviewInput.clearFocus()
-//            return true
-//        }
-//        return false
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
