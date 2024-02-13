@@ -525,7 +525,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             stompManager.sendTourEnd( favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1, mainViewModel.guid!!)
             // 투어 기록 전송
             CoroutineScope(Dispatchers.IO).launch {
-                historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList.value!!)
+                historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList)
             }
             mapViewModel.initTourList()
         } else if (binding.tourStart.text == "투어\n시작") {

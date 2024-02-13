@@ -37,8 +37,7 @@ class MapViewModel @Inject constructor(
     private val _isTourStart = MutableLiveData<Boolean>(false)
     val isTourStart get() = _isTourStart
 
-    private val _tourList = MutableLiveData<List<Position>>()
-    val tourList: LiveData<List<Position>> get() = _tourList
+    var tourList = mutableListOf<Position>()
 
     private val _closeEvents = MutableLiveData<List<Event>>()
     val closeEvents: LiveData<List<Event>> get() = _closeEvents
@@ -58,14 +57,14 @@ class MapViewModel @Inject constructor(
     }
 
     fun initTourList(){
-        _tourList.value = emptyList()
     }
     fun initCloseEvnets(){
         _closeEvents.value = emptyList()
     }
 
     fun addTourRecord(lat:Double, lng:Double): Boolean{
-        val currentList = _tourList.value?.toMutableList() ?: mutableListOf()
+        Log.d("로그", "MapViewModel - addTourRecord() 호출됨 ${lat} / ${lng}")
+        val currentList = tourList.toMutableList()
         val newPosition = Position(lat, lng)
 
         var hasChanged = false
@@ -82,8 +81,8 @@ class MapViewModel @Inject constructor(
                 hasChanged = true
             }
         }
-        _tourList.value = currentList
-        Log.d("투어 기록 리스트 업데이트", tourList.value.toString())
+        tourList = currentList
+        Log.d("투어 기록 리스트 업데이트", tourList.toString())
         return hasChanged
     }
 

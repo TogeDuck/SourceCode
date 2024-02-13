@@ -105,6 +105,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     suspend fun getHistory(historyId: Long) {
+        Log.d("로그", "HistoryViewModel - getHistory() 호출됨 ${historyId}")
         val responseResult = historyRepository.getHistory(historyId)
 
         if (responseResult.isSuccessful) {
@@ -140,6 +141,9 @@ class HistoryViewModel @Inject constructor(
     }
 
     suspend fun sendHistory(historyId: Long, historyList: List<Position>) {
+        Log.d("로그", "HistoryViewModel - sendHistory() 호출됨 ${historyId}")
+        Log.d("로그", "HistoryViewModel - sendHistory() 호출됨 ${historyList}")
+
         val responseResult = historyRepository.sendHistory(historyId, SendHistoryRequest(historyList))
 
         if (responseResult.isSuccessful) {
