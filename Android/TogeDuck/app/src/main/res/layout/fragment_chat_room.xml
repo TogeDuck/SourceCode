@@ -40,11 +40,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatroom_recycle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constrainedHeight="true"
         app:layout_constraintTop_toBottomOf="@id/chatroom_head_container"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/chatroom_input_container"
         android:overScrollMode="never"
         android:nestedScrollingEnabled="false"
         tools:background="@color/yellow"

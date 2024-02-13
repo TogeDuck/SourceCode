@@ -6,21 +6,32 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.activityViewModels
 import com.idle.togeduck.common.ScreenSize.heightDp
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.common.ScreenSize.widthPx
 import com.idle.togeduck.databinding.ActivityMainBinding
+import com.idle.togeduck.di.PreferenceModule
+import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.util.CalcNavigationBarSize.getNavigationBarHeightToPx
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    private val talkViewModel: TalkViewModel by viewModels()
+
+    @Inject
+    lateinit var preference: PreferenceModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         binding.navHostFragment.setPadding(0, 0, 0, getNavigationBarHeightToPx(this))
 
         checkGPSSetting()
+
+        talkViewModel.getChatPreference()
     }
 
     private fun checkGPSSetting() {
@@ -62,5 +75,15 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= 30) {    // API 30 에 적용
             WindowCompat.setDecorFitsSystemWindows(window, false)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("로그", "MainActivity - onStop() 호출됨")
+        talkViewModel.setChatPreference()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+//        talkViewModel.setChatPreference()
     }
 }

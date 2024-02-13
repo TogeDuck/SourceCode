@@ -6,18 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.idle.togeduck.common.model.DefaultResponse
+import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.quest.talk.model.TalkRepository
 import com.idle.togeduck.quest.talk.model.TalkRoom
 import com.idle.togeduck.quest.talk.model.toTalk
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
 class TalkViewModel @Inject constructor(
-    private val talkRepository: TalkRepository
+    private val talkRepository: TalkRepository,
+    private val preference: PreferenceModule
 ) : ViewModel() {
     private val _talkList = MutableLiveData<List<Talk>>()
     val talkList: LiveData<List<Talk>> get() = _talkList
@@ -78,4 +82,35 @@ class TalkViewModel @Inject constructor(
     suspend fun getChatRoomTalkList(chatRoomId: Long){
     }
 
+    fun getChatPreference() {
+        Log.d("로그", "TalkViewModel - getChatPreference() 호출됨")
+        val chatRoomListPreference = runBlocking {
+            preference.getChatRoomList.first()
+        }
+
+        val chatRoomTalkListPreference = runBlocking {
+            preference.getChatRoomTalkList.first()
+        }
+
+        if (chatRoomListPreference != null) {
+            _chatRoomList.postValue(chatRoomListPreference)
+        }
+
+        if (chatRoomTalkListPreference != null) {
+            _chatRoomTalkList.postValue(chatRoomTalkListPreference)
+        }
+    }
+
+    fun setChatPreference() {
+        Log.d("로그", "TalkViewModel - setChatPreference() 호출됨")
+        viewModelScope.launch {
+            if (_chatRoomList.value != null) {
+                preference.setChatRoomList(_chatRoomList.value!!)
+            }
+
+            if (_chatRoomTalkList.value != null) {
+                preference.setChatRoomTalkList(_chatRoomTalkList.value!!)
+            }
+        }
+    }
 }

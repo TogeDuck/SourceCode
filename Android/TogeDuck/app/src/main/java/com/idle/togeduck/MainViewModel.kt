@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
-    private val preference: PreferenceModule
+    private val preference: PreferenceModule,
 ) : ViewModel() {
 
     private val _guid = MutableLiveData<String>()
@@ -33,6 +33,7 @@ class MainViewModel @Inject constructor(
 
     init {
         getFromLocalData()
+
     }
 
     fun getFromLocalData(){
