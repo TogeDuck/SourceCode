@@ -3,6 +3,7 @@ package com.idle.togeduck.domain.user.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,14 +50,14 @@ public class AuthController {
 			.body(new BaseResponse<>(200, "success", null));
 	}
 
-	// @DeleteMapping("unregister")
-	// public ResponseEntity<BaseResponse<?>> withdrawal(@AuthenticationPrincipal User user) {
-	//
-	// 	authService.withdrawal(user);
-	// 	return ResponseEntity
-	// 		.status(HttpStatus.OK)
-	// 		.body(new BaseResponse<>(200, "success", null));
-	// }
+	@DeleteMapping("unregister")
+	public ResponseEntity<BaseResponse<?>> withdrawal(@AuthenticationPrincipal User user) {
+
+		authService.withdrawal(user);
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(new BaseResponse<>(200, "success", null));
+	}
 
 	// @GetMapping("/oauth2/code/google")
 	// public void googleLogin(@RequestParam String code) {

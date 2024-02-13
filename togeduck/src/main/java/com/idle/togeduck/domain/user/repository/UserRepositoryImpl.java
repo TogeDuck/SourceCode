@@ -19,8 +19,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 		return jpaQueryFactory
 			.select(user.socialId.count())
 			.from(user)
-			// .where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
-			.where(user.socialId.eq(socialId))
+			.where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
 			.fetchOne();
 	}
 
@@ -30,8 +29,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 		return jpaQueryFactory
 			.select(user.socialId.count())
 			.from(user)
-			// .where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
-			.where(user.socialId.eq(socialId))
+			.where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
 			.fetchOne();
 	}
 
@@ -39,8 +37,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 	public User findUserBySocialId(String socialId) {
 		return jpaQueryFactory
 			.selectFrom(user)
-			// .where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
-			.where(user.socialId.eq(socialId))
+			.where(user.socialId.eq(socialId).and(user.deleted.eq(Boolean.FALSE)))
 			.fetchOne();
 	}
 }

@@ -56,6 +56,7 @@ public class AuthService {
 				.socialId(userRequestDto.socialId()) // 소셜 아이디
 				.socialType(userRequestDto.socialType()) // 소셜 타입
 				.authority(Authority.ROLE_USER) // 권한
+				.deleted(Boolean.FALSE)
 				.build()
 		);
 	}
@@ -86,8 +87,8 @@ public class AuthService {
 			socialId = socialUserResponseDto.socialId();
 		}
 
-		if (userRepository.findBySocialId(socialId) == 0) {
-			// || userRepository.isDeleted(socialId) == 0) { // DB 에 정보 없으면 회원가입
+		if (userRepository.findBySocialId(socialId) == 0
+			|| userRepository.isDeleted(socialId) == 0) { // DB 에 정보 없으면 회원가입
 			/*
 			 	GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
 			 */
@@ -160,8 +161,8 @@ public class AuthService {
 		Authentication authentication = jwtProvider.getAuthentication(tokenRequestDto.getAccessToken());
 		Long expiration = jwtProvider.getExpiration(tokenRequestDto.getAccessToken());
 
+		redisService.setBlackList(tokenRequestDto.getAccessToken(), "accessToken", expiration);
 		redisService.delValues(authentication.getName());
-		redisService.setBlackList(tokenRequestDto.getAccessToken(), "access_token", expiration);
 	}
 
 	@Transactional
