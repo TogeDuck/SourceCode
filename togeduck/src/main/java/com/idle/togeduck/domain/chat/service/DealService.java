@@ -53,7 +53,7 @@ public class DealService {
 
 		dealRepository.save(deal);
 
-		// sendDealNotification(target.getUser().getDeviceToken(), deal.getId(), "거래 요청 도착");
+		sendDealNotification(target.getUser().getDeviceToken(), deal.getId(), "거래 요청 도착");
 	}
 
 	//거래 수락
@@ -85,7 +85,7 @@ public class DealService {
 		userChatRepository.save(myUserChat);
 
 		//거래 수락 성공 요청 전송
-		// sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨");
+		sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨");
 	}
 
 	//거래 거절
@@ -95,7 +95,7 @@ public class DealService {
 		deal.setStatus(DealStatus.REJECTED);
 
 		//거래 수락 성공 요청 전송
-		// sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 거절됨");
+		sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 거절됨");
 	}
 
 	private void sendDealNotification(String deviceToken, Long dealId, String body) {
