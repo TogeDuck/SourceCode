@@ -20,11 +20,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d("FCM", "MyFirebaseMessagingService - onNewToken() 호출됨 ${token}")
     }
 
-    // 클라우드 서버에서 메시지를 전송하면 자동으로 호출
-    // 이 메서드 안에서 메시지를 처리하여 사용자에게 알림을 보내거나 할 수 있다
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        // 수신한 메시지를 처리
+        // TODO. 수신한 메시지를 처리
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.notification!!.title}")
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.notification!!.body}")
     }

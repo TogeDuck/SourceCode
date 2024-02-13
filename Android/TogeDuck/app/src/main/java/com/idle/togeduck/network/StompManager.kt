@@ -66,7 +66,8 @@ class StompManager {
         stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
     }
-    fun sendTourEnd(celebrityId: Long, userId: String){
+    fun sendTourEnd(celebrityId: Long, userId: String): Boolean {
+        Log.d("로그", "StompManager - sendTourEnd() 호출됨")
         Log.d("웹소켓 헤더", headers.toString())
 //        val destination = "/pub/celebrities/$celebrityId/message"
         val destination = "/pub/chats/1/message"
@@ -75,6 +76,7 @@ class StompManager {
         val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
         stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
+        return true
     }
     fun sendQuestAlert(questType: String, eventId: Long, celebrityId: Long){
         Log.d("웹소켓 헤더", headers.toString())

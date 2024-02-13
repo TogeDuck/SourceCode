@@ -73,11 +73,11 @@ class HistoryViewModel @Inject constructor(
     }
 
     suspend fun addHistory(eventId: Long, historyId: Long) {
+        Log.d("방문 이벤트 추가", eventId.toString()+" "+historyId.toString())
         val responseResult = historyRepository.addHistory(AddHistoryRequest(eventId, historyId))
-
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
-
+            Log.d("로그","HistoryViewModel - addHistory() 응답 성공")
             // TODO. 작업 추가 필요
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(

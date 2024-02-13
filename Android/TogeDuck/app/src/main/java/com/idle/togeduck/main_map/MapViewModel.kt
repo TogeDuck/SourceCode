@@ -51,6 +51,8 @@ class MapViewModel @Inject constructor(
 
     var bottomSheetState: MutableLiveData<Int> = MutableLiveData(0)
     var isQuestAlert = MutableLiveData<QuestAlert>()
+    var eventList = mutableListOf<Event>()
+    var isCloseDialogOpen = false
 
     fun initPeopleMarkerImage(image: OverlayImage){
         this.peopleMarkerOverlay = image
