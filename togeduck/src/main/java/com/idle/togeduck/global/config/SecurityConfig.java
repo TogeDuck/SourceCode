@@ -6,12 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.idle.togeduck.domain.user.jwt.CustomAuthenticaftionProvider;
+import com.idle.togeduck.domain.user.jwt.CustomAuthenticationProvider;
 import com.idle.togeduck.domain.user.jwt.JwtAccessDeniedHandler;
 import com.idle.togeduck.domain.user.jwt.JwtAuthenticationEntryPoint;
 import com.idle.togeduck.domain.user.jwt.JwtFilter;
@@ -67,7 +66,7 @@ public class SecurityConfig { // 스프링 시큐리티에 필요한 설정
 	// }
 
 	@Bean
-	public AuthenticationManager authenticationManager(CustomAuthenticaftionProvider authenticationProvider) {
-		return authentication -> authenticationProvider.authenticate(authentication);
+	public AuthenticationManager authenticationManager(CustomAuthenticationProvider authenticationProvider) {
+		return authenticationProvider::authenticate;
 	}
 }

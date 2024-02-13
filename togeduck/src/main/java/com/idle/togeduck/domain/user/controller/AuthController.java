@@ -34,11 +34,10 @@ public class AuthController {
 	}
 
 	@PostMapping("/reissue")
-	public ResponseEntity<BaseResponse<?>> reissue(@RequestBody TokenRequestDto tokenRequestDtoDto,
-		@AuthenticationPrincipal User user) {
+	public ResponseEntity<BaseResponse<?>> reissue(@RequestBody TokenRequestDto tokenRequestDtoDto) {
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new BaseResponse<>(200, "success", authService.reissue(tokenRequestDtoDto, user)));
+			.body(new BaseResponse<>(200, "success", authService.reissue(tokenRequestDtoDto)));
 	}
 
 	@PostMapping("/logout")

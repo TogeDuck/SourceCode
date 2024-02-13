@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.idle.togeduck.domain.user.dto.TokenDto;
+import com.idle.togeduck.domain.user.entity.User;
 import com.idle.togeduck.domain.user.serivce.CustomUserDetailsService;
 import com.idle.togeduck.domain.user.serivce.RedisService;
 import com.idle.togeduck.global.YamlPropertySourceFactory;
@@ -52,13 +53,6 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 
 	@Value("${jwt.secret}")
 	private String secretKey;
-
-	// @Value("${jwt.access-token-validity-in-seconds}")
-	// private Long accessTokenValidTime;
-	//
-	// @Value("${jwt.refresh-token-validity-in-seconds}")
-	// private Long refreshTokenValidTime;
-
 	private final RedisService redisService;
 	private final CustomUserDetailsService customUserDetailsService;
 
@@ -75,28 +69,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.joining(","));
 
-		Date now = new Date(); // 생성날짜
-		Date expiration = new Date(now.getTime() + tokenValidTime); // 만료날짜
-
-		Claims claims = Jwts.claims()
-			.setSubject(authentication.getName()) // payload "sub" : "username" (토큰제목)
-			.setIssuedAt(now) // payload "iss" : 147621021 (토큰발급자)
-			.setExpiration(expiration);  // payload "exp" : 151621022 (토큰만료시간)
-
-		claims.put(AUTHORITIES_KEY, authorities); // payload "AUTHORITIES_KEY" : 'ROLE_USER' (권한)
-
-		return Jwts.builder()
-			.setClaims(claims)
-			.signWith(key, SignatureAlgorithm.HS256) // header "alg" : "HS512"
-			.compact();
-	}
-
-	public String createTokenWithUserId(Authentication authentication, Long userId, Long tokenValidTime) {
-		// 권한 가져오기
-		String authorities = authentication.getAuthorities()
-			.stream()
-			.map(GrantedAuthority::getAuthority)
-			.collect(Collectors.joining(","));
+		User user = (User)authentication.getPrincipal();
 
 		Date now = new Date(); // 생성날짜
 		Date expiration = new Date(now.getTime() + tokenValidTime); // 만료날짜
@@ -106,7 +79,7 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 			.setIssuedAt(now) // payload "iss" : 147621021 (토큰발급자)
 			.setExpiration(expiration);  // payload "exp" : 151621022 (토큰만료시간)
 
-		claims.put("userId", userId);
+		claims.put("userId", user.getId());
 		claims.put(AUTHORITIES_KEY, authorities); // payload "AUTHORITIES_KEY" : 'ROLE_USER' (권한)
 
 		return Jwts.builder()
@@ -125,23 +98,15 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 		return createToken(authentication, refreshTokenValidTime);
 	}
 
-	// public TokenDto createTok/enDto(Authentication authentication, Long userId) {
 	public TokenDto createTokenDto(Authentication authentication) {
+
+		User user = (User)authentication.getPrincipal();
+
 		return TokenDto.builder()
 			.grantType(BEARER_TYPE)
-			.userId(Long.valueOf(authentication.getName()))
+			.userId(user.getId())
 			.accessToken(createAccessToken(authentication))
 			.refreshToken(createRefreshToken(authentication))
-			.accessTokenExpireDate(accessTokenValidTime)
-			.build();
-	}
-
-	public TokenDto createTokenDtoWithUserId(Long userId, Authentication authentication) {
-		return TokenDto.builder()
-			.grantType(BEARER_TYPE)
-			.userId(userId)
-			.accessToken(createTokenWithUserId(authentication, userId, accessTokenValidTime))
-			.refreshToken(createTokenWithUserId(authentication, userId, refreshTokenValidTime))
 			.accessTokenExpireDate(accessTokenValidTime)
 			.build();
 	}
@@ -183,11 +148,9 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 				.collect(Collectors.toList());
 
 		// UserDetails 객체를 만들어서 Authentication 리턴
-		// UserDetails principal = new User(claims.getSubject(), "", authorities);
 		UserDetails user = customUserDetailsService.loadUserByUsername(claims.getSubject());
 
 		return new UsernamePasswordAuthenticationToken(user, accessToken, authorities);
-		// return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
 	}
 
 	public Boolean validateToken(String token) { // 토큰 검증
@@ -198,7 +161,6 @@ public class JwtProvider { // 유저 정보로 JWT 토큰을 만들거나 토큰
 				throw new BaseException(ErrorCode.TOKEN_EXPIRED);
 			}
 			return true;
-			// return !redisService.hasKeyBlackList(token);
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			log.info("잘못된 JWT 서명입니다.");
 		} catch (ExpiredJwtException e) {

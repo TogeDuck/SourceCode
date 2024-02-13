@@ -8,5 +8,5 @@ import com.idle.togeduck.domain.user.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 	@Override
-	Optional<User> findById(Long Long);
+	Optional<User> findById(Long id);
 }
