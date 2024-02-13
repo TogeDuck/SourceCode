@@ -40,8 +40,8 @@
         <!-- 이미지 있으면 visible -->
         <ImageView
             android:id="@+id/review_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:visibility="visible"
             android:layout_marginStart="11dp"
             android:src="@drawable/ic_event_poster" />

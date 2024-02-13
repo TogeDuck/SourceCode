@@ -35,7 +35,7 @@ class EventReviewViewHolder (
         reviewText.text = review.content
         reviewText.setTextColor(ContextCompat.getColor(context, R.color.black))
 
-        if(review.reviewImageUrl != ""){
+        if(review.reviewImageUrl != null){
             Glide
                 .with(reviewImg)
                 .load(review.reviewImageUrl)
