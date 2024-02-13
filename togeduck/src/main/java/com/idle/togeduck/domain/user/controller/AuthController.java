@@ -50,7 +50,7 @@ public class AuthController {
 			.body(new BaseResponse<>(200, "success", null));
 	}
 
-	@DeleteMapping("unregister")
+	@DeleteMapping("/unregister")
 	public ResponseEntity<BaseResponse<?>> withdrawal(@AuthenticationPrincipal User user) {
 
 		authService.withdrawal(user);
