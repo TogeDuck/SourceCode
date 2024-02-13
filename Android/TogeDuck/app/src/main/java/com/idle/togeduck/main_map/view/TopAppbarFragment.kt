@@ -24,6 +24,7 @@ import com.idle.togeduck.databinding.FragmentTopAppbarBinding
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
@@ -55,6 +56,7 @@ class TopAppbarFragment : Fragment() {
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val historyViewModel: HistoryViewModel by activityViewModels()
 
     @Inject
     lateinit var preference: PreferenceModule
@@ -98,6 +100,7 @@ class TopAppbarFragment : Fragment() {
                     startDate.toKotlinLocalDate(),
                     endDate.toKotlinLocalDate()
                 )
+                historyViewModel.getHistoryList(celebrityId)
             }
 
             setIdolProfile()
@@ -113,6 +116,7 @@ class TopAppbarFragment : Fragment() {
                 startDate.toKotlinLocalDate(),
                 endDate.toKotlinLocalDate()
             )
+            historyViewModel.getHistoryList(celebrityId)
         }
     }
 

@@ -313,6 +313,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     if (pathLine != null) {
                         pathLine!!.map = null
                         pathLine = null
+
+                        if(favoriteSettingViewModel.selectedCelebrity.value != null){
+                            CoroutineScope(Dispatchers.IO).launch{
+                                eventListViewModel.getEventList(
+                                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                                    mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
+                                    mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
+                            }
+                        }
                     }
                 }
             }

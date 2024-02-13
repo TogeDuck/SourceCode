@@ -53,7 +53,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         )
         notificationManager.createNotificationChannel(channel)
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(0, notificationBuilder.build())
     }
 
     companion object {
