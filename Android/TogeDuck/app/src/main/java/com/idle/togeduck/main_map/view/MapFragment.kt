@@ -1304,6 +1304,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     val eventList = mutableListOf<Event>()
     private fun figureCloseEvents(lat:Double, lng:Double) {
         eventListViewModel.listToday.value?.let { list ->
+            Log.d("오늘 이벤트", list.toString())
             for (event in list) {
                 if(CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
                     eventList.add(event)
