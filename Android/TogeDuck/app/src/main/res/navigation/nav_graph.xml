@@ -119,6 +119,9 @@
         <action
             android:id="@+id/action_mapFragment_to_recruitPostDialogFragment"
             app:destination="@id/recruitPostDialogFragment"/>
+        <action
+            android:id="@+id/action_mapFragment_to_eventCloseDialog"
+            app:destination="@id/eventCloseDialog" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -242,7 +245,15 @@
             app:popUpTo="@id/recruitPostDialogFragment"
             app:popUpToInclusive="true" />
     </dialog>
-
+    <dialog
+        android:id="@+id/eventCloseDialog"
+        android:name="com.idle.togeduck.event.view.EventCloseDialog"
+        android:label="EventCloseDialog" >
+        <action
+            android:id="@+id/action_eventCloseDialog_pop"
+            app:popUpTo="@id/eventCloseDialog"
+            app:popUpToInclusive="true" />
+    </dialog>
 
 
 </navigation>
