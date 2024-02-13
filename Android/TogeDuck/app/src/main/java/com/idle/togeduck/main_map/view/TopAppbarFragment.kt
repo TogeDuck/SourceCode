@@ -48,7 +48,6 @@ class TopAppbarFragment : Fragment() {
     private var _topAppBarBinding: ComponentTopAppbarBinding? = null
     private val topAppbarBinding get() = _topAppBarBinding!!
 
-
 //    private var _searchBarBinding: ComponentSearchBarTopAppbarBinding? = null
 //    private val searchBarBinding get() = _searchBarBinding!!
 
@@ -101,6 +100,12 @@ class TopAppbarFragment : Fragment() {
             }
 
             setIdolProfile()
+        }
+
+        topAppbarBinding.ivFavorite.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                eventListViewModel.getLikesList()
+            }
         }
     }
 
@@ -219,10 +224,12 @@ class TopAppbarFragment : Fragment() {
 
         topAppbarBinding.llTopAppbar.background = bottomRoundDrawable
 
+        //todo. 즐겨찾기 이미지랑 동일하게 변경 (확인 후 확정하기)
         val yellowCircleDrawable =
             ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         yellowCircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
-        yellowCircleDrawable.setStroke(4, getColor(requireContext(), R.color.yellow))
+//        yellowCircleDrawable.setStroke(4, getColor(requireContext(), R.color.yellow))
+        yellowCircleDrawable.setStroke(4, getColor(requireContext(), Theme.theme.sub400))
 
         topAppbarBinding.ivLogo.background = yellowCircleDrawable
         topAppbarBinding.ivFavorite.background = yellowCircleDrawable
