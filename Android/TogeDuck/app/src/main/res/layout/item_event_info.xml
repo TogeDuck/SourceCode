@@ -7,12 +7,12 @@
     android:orientation="horizontal"
     android:layout_marginBottom="15dp"
     android:background="@drawable/shape_all_round_20"
-    android:elevation="5dp"
+    android:elevation="2dp"
     android:gravity="center"
     xmlns:tools="http://schemas.android.com/tools"
     tools:backgroundTint="@color/bts_main400"
     >
-    <!-- 이벤트 포스터 이미지 -->
+
     <ImageView
         android:id="@+id/poster_img"
         android:layout_width="70dp"
@@ -25,7 +25,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_event_poster" />
 
-    <!-- 이벤트 정보 (카페 이름, 이벤트 이름, 진행 기간) -->
     <LinearLayout
         android:id="@+id/event_info"
         android:layout_width="0dp"
@@ -40,7 +39,6 @@
             android:layout_height="wrap_content"
             android:text="카페 코그"
             android:textSize="@dimen/text_title_small"
-            android:textStyle="bold"
             android:textColor="@color/white"/>
 
         <TextView
@@ -53,7 +51,6 @@
             android:textColor="@color/white"/>
     </LinearLayout>
 
-    <!-- 즐겨찾기 -->
     <ImageView
         android:id="@+id/isStar_btn"
         android:layout_width="70dp"

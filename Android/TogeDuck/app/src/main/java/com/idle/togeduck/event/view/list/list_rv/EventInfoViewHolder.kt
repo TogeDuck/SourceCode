@@ -42,11 +42,24 @@ class EventInfoViewHolder(
         this.event = event
 
         val eventDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable
-        eventDrawable.setColor(ContextCompat.getColor(context, Theme.theme.sub400))
+
+        if(type == 0){
+            eventDrawable.setColor(ContextCompat.getColor(context, Theme.theme.sub400))
+            cafeName.setTextColor(ContextCompat.getColor(context, R.color.white))
+            eventPeriod.setTextColor(ContextCompat.getColor(context, R.color.white))
+        }else if(type == 1){
+            eventDrawable.setColor(ContextCompat.getColor(context, Theme.theme.sub100))
+            cafeName.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
+            eventPeriod.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
+        }else {
+            eventDrawable.setColor(ContextCompat.getColor(context, R.color.gray_bg))
+            cafeName.setTextColor(ContextCompat.getColor(context, R.color.black))
+            eventPeriod.setTextColor(ContextCompat.getColor(context, R.color.black))
+        }
+
         eventLinearLayout.background = eventDrawable
 
         cafeName.text = event.name
-
         eventPeriod.text = makeDateToString(event.startDate, event.endDate)
 
         //포스터
