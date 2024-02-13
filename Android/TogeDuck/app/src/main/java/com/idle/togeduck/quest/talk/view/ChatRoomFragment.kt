@@ -73,6 +73,10 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
         filteredTalkList.observe(viewLifecycleOwner) { talkList ->
             Log.d("채팅 리스트 observer 업데이트","업데이트")
             questTalkAdapter.submitList(talkList ?: emptyList())
+
+            if (talkList.isNotEmpty()) {
+                binding.chatroomRecycle.scrollToPosition(talkList.lastIndex)
+            }
         }
     }
     fun sendChat(){
