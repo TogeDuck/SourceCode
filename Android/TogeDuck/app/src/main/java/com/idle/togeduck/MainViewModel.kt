@@ -9,6 +9,7 @@ import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.login.model.LoginRepository
 import com.idle.togeduck.login.model.LoginRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -47,12 +48,14 @@ class MainViewModel @Inject constructor(
         })
     }
 
-     fun makeGUID(): String {
+     suspend fun makeGUID(): String {
          val guidMade = UUID.randomUUID().toString()
          _guid.postValue(guidMade)
+         Log.d("로그","makeGuid 호출"+guidMade.toString())
         runBlocking {
             preference.setGuid(guidMade)
         }
+         delay(1000)
          return guidMade
     }
 
@@ -70,6 +73,9 @@ class MainViewModel @Inject constructor(
             val body = responseResult.body()!!
             preference.setAccessToken(body.data.accessToken)
             preference.setRefreshToken(body.data.refreshToken)
+            _accessToken.postValue(body.data.accessToken)
+            _refreshToken.postValue(body.data.refreshToken)
+            delay(1000)
             Log.d("유저 정보", body.toString())
             Log.d("로그", "MainViewModel - login() 호출됨 accessToken : ${preference.getAccessToken.first()}")
             Log.d("로그", "MainViewModel - login() 호출됨 refreshToken : ${preference.getRefreshToken.first()}")

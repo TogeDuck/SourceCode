@@ -31,6 +31,7 @@ import com.idle.togeduck.quest.share.ShareViewModel
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.util.SnackBarFactory
+import com.idle.togeduck.websocketcustomlibrary.dto.LifecycleEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -106,6 +107,37 @@ class MainFragment : Fragment() {
         }
         //----------------------------------------------------
     }
+    private fun connectSocket() {
+        lifecycleScope.launch {
+            mainViewModel.accessToken.value?.let { token ->
+                stompManager.setHeader(token)
+                stompManager.connect()
+                stompManager.subscribeChat(1) { message ->
+                    socketCallback(message)
+                }
+                stompManager.subscribeTopic("/user/sub/errors") { message ->
+                    Log.d("웹소켓 에러 코드", message)
+                }
+            } ?: Log.d("MainFragment", "AccessToken is null")
+        }
+    }
+    private fun observeConnection() {
+        stompManager.stompClient.lifecycle().subscribe { event ->
+            when (event.type) {
+                LifecycleEvent.Type.CLOSED, LifecycleEvent.Type.ERROR -> {
+                    Log.d("MainFragment", "Connection lost. Attempting to reconnect...")
+                    connectSocketWithDelay()
+                }
+                else -> { /* 다른 이벤트 처리 */ }
+            }
+        }
+    }
+    private fun connectSocketWithDelay() {
+        lifecycleScope.launch {
+            delay(1000)  // 연결 재시도 전 지연 시간
+            connectSocket()
+        }
+    }
     /** 웹소켓 수신 메세지 한번에 처리 **/
     private fun socketCallback(message: String){
         val response = Gson().fromJson(message, WebSocketResponse::class.java)
@@ -168,7 +200,15 @@ class MainFragment : Fragment() {
                     }
                 }
                 MessageKind.EXCHANGEREQUEST.toString() -> {
-
+                    val questChat = Gson().fromJson(websocketDataResponse.data, QuestChat::class.java)
+                    if(eventListViewModel.selectedEvent.value?.eventId == questChat.eventId){
+                        val chat = Talk(
+                            0,
+                            questChat.userId,
+                            questChat.message,
+                            questChat.userId.equals(mainViewModel.guid.value))
+                        talkViewModel.addTalk(chat)
+                    }
                 }
             }
         }
@@ -179,23 +219,9 @@ class MainFragment : Fragment() {
             if (mainViewModel.guid.value == null) {
                 mainViewModel.makeGUID()
             }
-            delay(1000)
             mainViewModel.login("GUEST")
             connectSocket()
-        }
-    }
-
-    private fun connectSocket(){
-        lifecycleScope.launch {
-            delay(1000)
-            stompManager.setHeader(mainViewModel.accessToken.value!!)
-            stompManager.connect()
-            stompManager.subscribeChat(1) { message ->
-                socketCallback(message)
-            }
-            stompManager.subscribeTopic("/user/sub/errors"){
-               messge -> Log.d("웹소켓 에러 코드", messge)
-            }
+            observeConnection()
         }
     }
 
@@ -277,7 +303,6 @@ class MainFragment : Fragment() {
                 } else {
                     activity?.finish()
                 }
-
             }
         }
 
