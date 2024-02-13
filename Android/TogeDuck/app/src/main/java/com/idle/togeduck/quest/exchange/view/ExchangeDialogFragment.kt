@@ -68,6 +68,7 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
 
         setImgSize()
         setTheme()
+        getMyExchangeList()
 
         exchangeViewModel.selectedExchange.observe(viewLifecycleOwner) { exchange ->
             binding.tvContent.text = exchange.content
@@ -120,29 +121,22 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
         }
         exchangeViewModel.needUpdate.observe(viewLifecycleOwner){check ->
             if(check){
-                getExchangeList()
+                getMyExchangeList()
                 exchangeViewModel.needUpdate.value = false
             }
         }
-        getExchangeList()
     }
-    private fun getExchangeList() {
+    private fun getMyExchangeList() {
+        Log.d("내 교환 리스트 가져오기","호출")
         CoroutineScope(Dispatchers.IO).launch {
             if (eventListViewModel.selectedEvent != null) {
-                exchangeViewModel.getExchangeList(
-                    eventListViewModel.selectedEvent.value!!.eventId,
-                    0,
-                    1000
-                )
+                exchangeViewModel.getMyExchangeList(eventListViewModel.selectedEvent.value!!.eventId)
+            }
+            else{
+                Log.d("내 교환 리스트 가져오기","이벤트 선택 안됨")
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        getExchangeList()
-    }
-
     private fun setImgSize() {
         val newSize = (DpPxUtil.dpToPx(ScreenSize.heightDp - 360, requireContext()) * 0.5).toInt()
         val layoutParams = binding.ivMainImg.layoutParams as LinearLayout.LayoutParams

@@ -21,9 +21,14 @@ data class ExchangeResponse(
 @Serializable
 data class ExchangeMyResponse(
     val id: Long,
-    val image: String,
     val content: String,
-    val duration: Int
+    val image: String,
+    val duration: Int,
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
+    val createdAt: LocalDateTime,
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
+    val expiredAt: LocalDateTime,
+    val isMine: Boolean
 )
 
 data class Exchange(

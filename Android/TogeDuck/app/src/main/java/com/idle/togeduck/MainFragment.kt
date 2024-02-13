@@ -215,6 +215,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initGUID() {
+        mainViewModel.getFromLocalData()
         CoroutineScope(Dispatchers.IO).launch {
             if (mainViewModel.guid.value == null) {
                 mainViewModel.makeGUID()

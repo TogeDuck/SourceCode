@@ -20,5 +20,13 @@ data class ExchangeDataResponse(
 
 @Serializable
 data class ExchangeDataMyResponse(
-    val content: List<ExchangeMyResponse>
+    val size: Int,
+    val content: List<ExchangeMyResponse>,
+    val number: Int,
+    val sort: SortResponse,
+    val pageable: PageableResponse,
+    val numberOfElements: Int,
+    val first: Boolean,
+    val last: Boolean,
+    val empty: Boolean
 )
