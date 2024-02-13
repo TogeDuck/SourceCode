@@ -53,6 +53,7 @@ public class UserService {
 			favoriteRepository.save(Favorite.builder()
 				.user(user)
 				.celebrity(celebrity)
+				.delCheck(0)
 				.build());
 		} else { // 관심 연예인 디비에 있음
 			if (favoriteRepository.findFavoriteByDelCheck(favoriteRequestDto, userId) == 0) { // delcheck == 0 이면 삭제

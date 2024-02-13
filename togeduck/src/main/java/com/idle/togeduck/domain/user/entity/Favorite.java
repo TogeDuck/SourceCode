@@ -35,7 +35,7 @@ public class Favorite extends BaseEntity {
 	@JoinColumn(name = "celebrity_id")
 	private Celebrity celebrity;
 
-	private Integer delCheck;
+	private Integer delCheck = 0;
 
 	public void updateFavorite(Integer delCheck) {
 		this.delCheck = delCheck;
