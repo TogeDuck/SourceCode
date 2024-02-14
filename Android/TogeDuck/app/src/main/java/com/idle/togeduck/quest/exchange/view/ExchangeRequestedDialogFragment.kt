@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
@@ -85,12 +86,14 @@ class ExchangeRequestedDialogFragment: DialogFragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                 exchangeViewModel.acceptExchange(dealId)
                 }
+                findNavController().navigate(R.id.action_exchangeRequestedDialogFragment_pop)
             }
 
             binding.btnRefuse.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                 exchangeViewModel.rejectExchange(dealId)
                 }
+                findNavController().navigate(R.id.action_exchangeRequestedDialogFragment_pop)
             }
         }
     }
