@@ -52,6 +52,9 @@ class FavoriteSettingViewModel @Inject constructor(
             val body = responseResult.body()!!
 
             Log.d("로그", "FavoriteSettingViewModel - getFavoriteList() / ${body.data}")
+            if(body.data.isEmpty()){
+                return false
+            }
             _favoriteIdolList.postValue(body.data.map { celebrityResponse ->
                 val celebrity = celebrityResponse.celebrityResponseToCelebrity()
                 if (selectedCelebrity.value != null && selectedCelebrity.value!!.id == celebrity.id) {

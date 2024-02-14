@@ -69,7 +69,6 @@ class StompManager {
     fun sendTourEnd(celebrityId: Long, userId: String): Boolean {
         Log.d("로그", "StompManager - sendTourEnd() 호출됨")
         Log.d("웹소켓 헤더", headers.toString())
-//        val destination = "/pub/celebrities/$celebrityId/message"
         val destination = "/pub/chats/1/message"
         val coordinate = Coordinate(0.0, 0.0, userId)
         val webSocketDataResponse = WebSocketDataResponse(MessageKind.TOURLEAVE.toString(),celebrityId,Gson().toJson(coordinate))
@@ -80,7 +79,6 @@ class StompManager {
     }
     fun sendQuestAlert(questType: String, eventId: Long, celebrityId: Long){
         Log.d("웹소켓 헤더", headers.toString())
-//        val destination = "/pub/celebrities/$celebrityId/message"
         val destination = "/pub/chats/1/message"
         val questAlert = QuestAlert(questType, eventId)
         val webSocketDataResponse = WebSocketDataResponse(MessageKind.QUESTALERT.toString(),celebrityId,Gson().toJson(questAlert))
@@ -90,10 +88,18 @@ class StompManager {
     }
     fun sendQuestChat(eventId:Long, userId: String, message: String, celebrityId: Long){
         Log.d("웹소켓 헤더", headers.toString())
-//        val destination = "/pub/celebrities/$celebrityId/message"
         val destination = "/pub/chats/1/message"
         val questChat = QuestChat(eventId,userId,message)
         val webSocketDataResponse = WebSocketDataResponse(MessageKind.QUESTCHAT.toString(),celebrityId,Gson().toJson(questChat))
+        val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
+        stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
+        Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
+    }
+    fun sendExchangeComplete(exchangeId:Long, exchangeId1: Long, celebrityId: Long){
+        Log.d("웹소켓 헤더", headers.toString())
+        val destination = "/pub/chats/1/message"
+        val exchangeComplete = ExchangeComplete(exchangeId, exchangeId1)
+        val webSocketDataResponse = WebSocketDataResponse(MessageKind.EXCHANGECOMPLETE.toString(),celebrityId,Gson().toJson(exchangeComplete))
         val websocketResponse = WebSocketResponse(1, Gson().toJson(webSocketDataResponse))
         stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)

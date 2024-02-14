@@ -53,9 +53,13 @@ class TalkViewModel @Inject constructor(
         _chatRoomList.postValue(chatRoomList)
     }
     fun addTalkRoomTalk(chatRoomId: Long, talk: Talk) {
+        val userId = talk.userId
+        val number = chatName[userId] ?: (chatName.size+1)
+        chatName.putIfAbsent(userId, number)
+        val newTalk = Talk(talk.chatId,"익명의 유저"+number.toString(),talk.content, talk.isMine )
         val updatedMap = _chatRoomTalkList.value?.toMutableMap() ?: mutableMapOf()
         val talksForRoom = updatedMap[chatRoomId]?.toMutableList() ?: mutableListOf()
-        talksForRoom.add(talk)
+        talksForRoom.add(newTalk)
         updatedMap[chatRoomId] = talksForRoom
         _chatRoomTalkList.postValue(updatedMap)
         Log.d("새로운 채팅 업데이트", talksForRoom.toString())

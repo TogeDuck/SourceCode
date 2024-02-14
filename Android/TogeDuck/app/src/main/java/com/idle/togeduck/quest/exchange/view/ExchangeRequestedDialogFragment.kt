@@ -21,6 +21,7 @@ import com.idle.togeduck.databinding.DialogQuestExchangeRequestedBinding
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.fcm.FCMData
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.model.ExchangeResponse
@@ -29,13 +30,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExchangeRequestedDialogFragment: DialogFragment() {
     private var _binding: DialogQuestExchangeRequestedBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var stompManager: StompManager
+
     private val exchangeViewModel: ExchangeViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +90,14 @@ class ExchangeRequestedDialogFragment: DialogFragment() {
         FCMData.dealId.observe(viewLifecycleOwner) { dealId ->
             binding.btnAccept.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    exchangeViewModel.acceptExchange(dealId)
+                    if(exchangeViewModel.myExchangeData.value != null
+                        && exchangeViewModel.yourExchangeData.value != null
+                        && favoriteSettingViewModel.selectedCelebrity.value != null){
+                        exchangeViewModel.acceptExchange(dealId,
+                            exchangeViewModel.myExchangeData.value!!.id,
+                            exchangeViewModel.yourExchangeData.value!!.id,
+                            favoriteSettingViewModel.selectedCelebrity.value!!.id)
+                    }
                 }
                 findNavController().navigate(R.id.action_exchangeRequestedDialogFragment_pop)
             }

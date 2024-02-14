@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.idle.togeduck.QuestType
 import com.idle.togeduck.common.model.DefaultResponse
+import com.idle.togeduck.network.ExchangeComplete
 import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
@@ -134,6 +135,18 @@ class ExchangeViewModel @Inject constructor(
         _exchangeList.value = currentList
     }
 
+    fun removeCompletedExchanges(exchangeComplete: ExchangeComplete) {
+        val currentList = _exchangeList.value?.toMutableList() ?: mutableListOf()
+        val iterator = currentList.iterator()
+        while (iterator.hasNext()) {
+            val exchange = iterator.next()
+            if (exchange.id == exchangeComplete.myExchangeId || exchange.id == exchangeComplete.yourExchangeId) {
+                iterator.remove()
+            }
+        }
+        _exchangeList.postValue(currentList)
+    }
+
     fun setSelectedExchange(exchange: Exchange){
         _selectedExchange.value = exchange
     }
@@ -178,12 +191,14 @@ class ExchangeViewModel @Inject constructor(
         }
     }
 
-    suspend fun acceptExchange(dealId: Long) {
+    suspend fun acceptExchange(dealId: Long, myExchangeId:Long, yourExchangeId: Long, celebrityId: Long) {
         val responseResult = exchangeRepository.acceptExchange(dealId)
 
         if(responseResult.isSuccessful){
             val body = responseResult.body()
-
+            // 웹소켓 교환 발생 알림 전송
+            delay(1000)
+            stompManager.sendExchangeComplete( myExchangeId, yourExchangeId, celebrityId)
         } else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!

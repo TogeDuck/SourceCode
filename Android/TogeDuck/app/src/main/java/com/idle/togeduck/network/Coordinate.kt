@@ -42,3 +42,9 @@ data class QuestChat(
     val userId: String,
     val message: String
 )
+
+@Serializable
+data class ExchangeComplete(
+    val myExchangeId: Long,
+    val yourExchangeId: Long
+)

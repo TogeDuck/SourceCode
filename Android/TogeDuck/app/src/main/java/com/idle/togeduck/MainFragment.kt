@@ -31,6 +31,7 @@ import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Chat
 import com.idle.togeduck.network.Coordinate
+import com.idle.togeduck.network.ExchangeComplete
 import com.idle.togeduck.network.QuestAlert
 import com.idle.togeduck.network.QuestChat
 import com.idle.togeduck.network.StompManager
@@ -58,7 +59,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 enum class MessageKind {
-    LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT
+    LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT, EXCHANGECOMPLETE
 }
 
 enum class QuestType {
@@ -276,6 +277,11 @@ class MainFragment : Fragment() {
                         )
                         talkViewModel.addTalk(chat)
                     }
+                }
+                MessageKind.EXCHANGECOMPLETE.toString() -> {
+                    val exchangeComplete =
+                        Gson().fromJson(websocketDataResponse.data, ExchangeComplete::class.java)
+                    exchangeViewModel.removeCompletedExchanges(exchangeComplete)
                 }
             }
         }
