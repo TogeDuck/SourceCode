@@ -33,7 +33,7 @@ class TalkViewModel @Inject constructor(
     val chatRoomTalkList: LiveData<MutableMap<Long, MutableList<Talk>>> get() = _chatRoomTalkList
 
     var currentChatRoomId: MutableLiveData<Long> = MutableLiveData(0L)
-
+    var chatName = mutableMapOf<String,Int>()
 
     init {
         viewModelScope.launch {
@@ -45,8 +45,12 @@ class TalkViewModel @Inject constructor(
         _talkList.postValue(mutableListOf())
     }
     fun addTalk(talk: Talk) {
+        val userId = talk.userId
+        val number = chatName[userId] ?: (chatName.size+1)
+        chatName.putIfAbsent(userId, number)
+        val newTalk = Talk(talk.chatId,"익명의 유저"+number.toString(),talk.content, talk.isMine )
         val currentList = _talkList.value ?: emptyList()
-        val updatedList = currentList + talk
+        val updatedList = currentList + newTalk
         _talkList.postValue(updatedList)
     }
     fun addTalkRoom(talkRoom: TalkRoom){
