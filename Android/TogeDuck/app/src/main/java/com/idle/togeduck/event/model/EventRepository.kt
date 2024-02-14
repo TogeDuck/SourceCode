@@ -3,7 +3,9 @@ package com.idle.togeduck.event.model
 import com.idle.togeduck.common.model.DefaultResponse
 import kotlinx.datetime.LocalDate
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Path
 import javax.inject.Inject
 
 interface EventRepository {
@@ -13,9 +15,11 @@ interface EventRepository {
         endDate: LocalDate,
     ): Response<EventListResponse>
 
-    suspend fun getLikesList(): Response<EventDataResponse>
+    suspend fun getLikesList(): Response<EventListResponse>
 
-    suspend fun likeEvent(likeEventRequest: LikeEventRequest): Response<DefaultResponse>
+    suspend fun getEventById(eventId: Long) : Response<SingleEventResponse>
+
+    suspend fun likeEvent(eventId: Long): Response<DefaultResponse>
 
     suspend fun unlikeEvent(eventId: Long): Response<DefaultResponse>
 
@@ -48,12 +52,16 @@ class DefaultEventRepository @Inject constructor(
         return eventService.getEventList(celebrityId, startDate, endDate)
     }
 
-    override suspend fun getLikesList(): Response<EventDataResponse> {
+    override suspend fun getLikesList(): Response<EventListResponse> {
         return eventService.getLikesList()
     }
 
-    override suspend fun likeEvent(likeEventRequest: LikeEventRequest): Response<DefaultResponse> {
-        return eventService.likeEvent(likeEventRequest)
+    override suspend fun getEventById(eventId: Long): Response<SingleEventResponse> {
+        return eventService.getEventById(eventId)
+    }
+
+    override suspend fun likeEvent(eventId: Long): Response<DefaultResponse> {
+        return eventService.likeEvent(eventId)
     }
 
     override suspend fun unlikeEvent(eventId: Long): Response<DefaultResponse> {
@@ -67,6 +75,14 @@ class DefaultEventRepository @Inject constructor(
     ): Response<DefaultResponse> {
         return eventService.postReview(eventId, image, content)
     }
+
+//    override suspend fun postReview(
+//        eventId: Long,
+//        image: MultipartBody.Part?,
+//        content: RequestBody,
+//    ): Response<DefaultResponse> {
+//        return eventService.postReview(eventId, image, content)
+//    }
 
     override suspend fun getReviewList(
         eventId: Long,

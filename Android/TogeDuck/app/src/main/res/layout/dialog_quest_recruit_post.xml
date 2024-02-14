@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:id="@+id/llBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@android:color/transparent"
     android:orientation="vertical"
@@ -13,8 +14,20 @@
     android:gravity="center">
 
     <LinearLayout
+        android:id="@+id/ll_dialog_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/shape_all_round_20"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="20dp"
+        >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <ImageView
@@ -30,52 +43,47 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingHorizontal="25dp"
+            android:layout_marginStart="10dp"
             android:paddingVertical="8dp"
-            android:text="모집 글을 작성해 주세요 !"
+            android:text="모집 글을 작성해 주세요"
             android:textSize="@dimen/text_title_small"/>
     </LinearLayout>
 
-        <!-- textCursorDrawable 제작, 수정 -->
-        <com.idle.togeduck.util.ClearFocusEditText
-            android:id="@+id/et_recruit_title"
-            android:layout_width="200dp"
-            android:layout_height="@dimen/circle_xsmall"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:hint="제목을 입력하세요"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="2dp"
-            android:textCursorDrawable="@drawable/shape_cursor"
-            android:textSize="@dimen/text_large"
-            tools:ignore="RtlSymmetry"/>
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp">
 
-        <com.idle.togeduck.util.ClearFocusEditText
-            android:id="@+id/et_recruit_destination"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_recruit_title"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:hint="제목을 입력하세요"
+                android:inputType="text"
+                android:maxLines="1"
+                android:maxLength="20"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="10dp"
+                android:textSize="@dimen/text_large" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="200dp"
-            android:layout_height="@dimen/circle_xsmall"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:hint="목적지를 검색하세요"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="2dp"
-            android:textCursorDrawable="@drawable/shape_cursor"
-            android:textSize="@dimen/text_large"
-            tools:ignore="RtlSymmetry"/>
+            android:spinnerMode="dropdown"
+            android:dropDownWidth="200dp"
+             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-
             android:layout_gravity="center">
 
             <LinearLayout
@@ -92,9 +100,8 @@
                 <NumberPicker
                     android:id="@+id/np_recruit_peopleNum"
                     android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:value="50" />
+                    android:layout_height="120dp"
+                    android:layout_gravity="center" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -118,9 +125,8 @@
                 <NumberPicker
                     android:id="@+id/np_recruit_duration"
                     android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:value="50" />
+                    android:layout_height="120dp"
+                    android:layout_gravity="center" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -132,14 +138,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_share_btn_container"
+            android:id="@+id/cl_recruit_btn_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center">
 
             <TextView
-                android:id="@+id/btn_share_cancel"
+                android:id="@+id/btn_recruit_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -149,12 +155,12 @@
                 android:text="취소"
                 android:textSize="@dimen/text_large"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_share_post"
+                app:layout_constraintEnd_toStartOf="@id/btn_recruit_post"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/btn_share_post"
+                android:id="@+id/btn_recruit_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
@@ -165,7 +171,8 @@
                 android:textSize="@dimen/text_large"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_share_cancel"
+                app:layout_constraintStart_toEndOf="@id/btn_recruit_cancel"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </LinearLayout>

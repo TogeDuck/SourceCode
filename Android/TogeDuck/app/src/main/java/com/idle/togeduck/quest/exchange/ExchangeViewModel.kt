@@ -1,34 +1,37 @@
 package com.idle.togeduck.quest.exchange
 
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.idle.togeduck.R
+import com.idle.togeduck.QuestType
+import com.idle.togeduck.common.model.DefaultResponse
+import com.idle.togeduck.network.ExchangeComplete
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
-import com.idle.togeduck.quest.exchange.model.MyExchange
+import com.idle.togeduck.quest.exchange.model.ExchangeResponse
 import com.idle.togeduck.quest.exchange.model.toExchange
-import com.idle.togeduck.quest.share.model.Share
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
 class ExchangeViewModel @Inject constructor(
     private val exchangeRepository: DefaultExchangeRepository
 ) : ViewModel() {
+    @Inject
+    lateinit var stompManager: StompManager
     private val _exchangeList = MutableLiveData<List<Exchange>>()
     val exchangeList: LiveData<List<Exchange>>
         get() = _exchangeList
 
-    private val _myExchangeList = MutableLiveData<List<MyExchange>>()
-    val myExchangeList: LiveData<List<MyExchange>>
+    private val _myExchangeList = MutableLiveData<List<Exchange>>()
+    val myExchangeList: LiveData<List<Exchange>>
         get() = _myExchangeList
 
 
@@ -36,36 +39,69 @@ class ExchangeViewModel @Inject constructor(
     val selectedExchange: LiveData<Exchange>
         get() = _selectedExchange
 
-    private val _myselectedExchange = MutableLiveData<MyExchange>()
-    val mySelectedExchange: LiveData<MyExchange>
+    private val _myselectedExchange = MutableLiveData<Exchange>()
+    val mySelectedExchange: LiveData<Exchange>
         get() = _myselectedExchange
 
     private val _navigationEvent = MutableLiveData<Boolean>(false)
     val navigationEvent: LiveData<Boolean>
         get() = _navigationEvent
 
+    var needUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    private val _yourExchangeData = MutableLiveData<Exchange>()
+    val yourExchangeData: LiveData<Exchange>
+        get() = _yourExchangeData
+
+    private val _myExchangeData = MutableLiveData<Exchange>()
+    val myExchangeData: LiveData<Exchange>
+        get() = _myExchangeData
+
+
     suspend fun getExchangeList(eventId: Long, page: Int, size: Int){
         val response = exchangeRepository.getExchangeList(eventId, page, size)
+        Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨")
         if (response.isSuccessful) {
             val exchangeListResponse = response.body()
             val exchanges = exchangeListResponse?.data?.content ?: emptyList()
             _exchangeList.postValue(exchanges.map{it.toExchange()})
+            Log.d("교환 로그", exchanges.toString())
+            Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 성공")
         } else {
-
+            Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 실패")
         }
     }
 
     suspend fun getMyExchangeList(eventId: Long){
         val response = exchangeRepository.getMyExchangeList(eventId)
+        Log.d("내 교환 리스트 가져오기","응답"+response.toString())
         if(response.isSuccessful){
             val exchangeMyListResponse = response.body()
             val myExchanges = exchangeMyListResponse?.data?.content ?: emptyList()
             _myExchangeList.postValue(myExchanges.map { it.toExchange() })
         }
         else{
-
+            Log.d("내 교환 리스트 가져오기", response.toString())
         }
     }
+
+    suspend fun postExchange(eventId: Long, image:MultipartBody.Part, tradeRequestDto: MultipartBody.Part, celebrityId:Long){
+        val responseResult = exchangeRepository.postExchange(eventId, image, tradeRequestDto)
+        Log.d("로그", "ExchangeViewModel - postExchange() 호출됨 - ${responseResult}")
+
+        if (!responseResult.isSuccessful) {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - postExchange() 응답 실패 - $errorBody")
+        }
+        else{
+            // 웹소켓 교환 발생 알림 전송
+            delay(1000)
+            stompManager.sendQuestAlert(QuestType.EXCHANGE.toString(),eventId,celebrityId)
+        }
+    }
+
     suspend fun sendExchangeRequest(eventId: Long){
         val selectedExchangeValue = selectedExchange.value
         val mySelectedExchangeValue = mySelectedExchange.value
@@ -81,21 +117,93 @@ class ExchangeViewModel @Inject constructor(
         }
     }
 
+    suspend fun deleteExchange(eventId: Long, tradeId: Long) {
+        val responseResult = exchangeRepository.deleteExchange(eventId, tradeId)
+        Log.d("로그", "ExchangeViewModel - deleteExchange() 호출됨")
+
+        if (!responseResult.isSuccessful) {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - deleteExchange() 응답 실패 - $errorBody")
+        }
+    }
+
     fun removeItemFromList(questExchange: Exchange) {
         val currentList = _exchangeList.value?.toMutableList() ?: mutableListOf()
         currentList.remove(questExchange)
         _exchangeList.value = currentList
     }
 
+    fun removeCompletedExchanges(exchangeComplete: ExchangeComplete) {
+        val currentList = _exchangeList.value?.toMutableList() ?: mutableListOf()
+        val iterator = currentList.iterator()
+        while (iterator.hasNext()) {
+            val exchange = iterator.next()
+            if (exchange.id == exchangeComplete.myExchangeId || exchange.id == exchangeComplete.yourExchangeId) {
+                iterator.remove()
+            }
+        }
+        _exchangeList.postValue(currentList)
+    }
+
     fun setSelectedExchange(exchange: Exchange){
         _selectedExchange.value = exchange
     }
 
-    fun setMySelectedExchange(myExchange: MyExchange){
+    fun setMySelectedExchange(myExchange: Exchange){
         _myselectedExchange.value = myExchange
     }
 
     fun setNavigatjionEvent(){
         _navigationEvent.value = false
+    }
+
+    suspend fun getQuestExchangeById(dealId: Long) {
+        val responseResult = exchangeRepository.getExchangeQuestByDealId(dealId)
+
+        if(responseResult.isSuccessful){
+            val dealData = responseResult.body()?.data
+            Log.d("로그", "ExchangeViewModel - getQuestExchangeById() 호출됨 trade ${dealData!!.trade}")
+            Log.d("로그", "ExchangeViewModel - getQuestExchangeById() 호출됨 myTrade ${dealData!!.myTrade}")
+
+            _yourExchangeData.postValue(dealData!!.trade.toExchange())
+            _myExchangeData.postValue(dealData!!.myTrade.toExchange())
+        } else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - getQuestExchangeById() 응답 실패 ${errorBody}")
+        }
+    }
+
+    suspend fun rejectExchange(dealId: Long) {
+        val responseResult = exchangeRepository.rejectExchange(dealId)
+
+        if(responseResult.isSuccessful){
+            val body = responseResult.body()
+
+        } else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - rejectExchange() 응답 실패 ${errorBody}")
+        }
+    }
+
+    suspend fun acceptExchange(dealId: Long, myExchangeId:Long, yourExchangeId: Long, celebrityId: Long) {
+        val responseResult = exchangeRepository.acceptExchange(dealId)
+
+        if(responseResult.isSuccessful){
+            val body = responseResult.body()
+            // 웹소켓 교환 발생 알림 전송
+            delay(1000)
+            stompManager.sendExchangeComplete( myExchangeId, yourExchangeId, celebrityId)
+        } else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - acceptExchange() 응답 실패 ${errorBody}")
+        }
     }
 }

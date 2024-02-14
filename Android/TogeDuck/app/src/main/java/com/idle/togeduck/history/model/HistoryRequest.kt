@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HistoryRequest(
-    @SerialName("celebrity_id") val celebrityId: Long
+    @SerialName("celebrity-id") val celebrityId: Long
 )

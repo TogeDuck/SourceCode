@@ -1,5 +1,6 @@
 package com.idle.togeduck.quest.view
 
+import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.quest.view.quest_rv.QuestPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +25,7 @@ class QuestFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var questPagerAdapter: QuestPagerAdapter
+    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     lateinit var yellowPickDrawable: GradientDrawable
     lateinit var yellowUnPickDrawable: GradientDrawable
@@ -45,6 +51,12 @@ class QuestFragment : Fragment() {
         setTheme()
         initViewPager()
         setBtnClickedListener()
+        setEvent()
+        changeEvent()
+
+        eventListViewModel.selectedEvent.observe(viewLifecycleOwner){event ->
+            changeEvent()
+        }
     }
 
     private fun setBtnClickedListener() {
@@ -85,7 +97,37 @@ class QuestFragment : Fragment() {
         questPagerAdapter = QuestPagerAdapter(this)
         binding.viewPager.adapter = questPagerAdapter
         binding.viewPager.isUserInputEnabled = false
-        binding.viewPager.setCurrentItem(0, false)
+
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 ->  {
+                        onExchangeClicked(true)
+                        onShareClicked(false)
+                        onRecruitClicked(false)
+                        onTalkClicked(false)
+                    }
+                    1 -> {
+                        onExchangeClicked(false)
+                        onShareClicked(true)
+                        onRecruitClicked(false)
+                        onTalkClicked(false)
+                    }
+                    2 -> {
+                        onExchangeClicked(false)
+                        onShareClicked(false)
+                        onRecruitClicked(true)
+                        onTalkClicked(false)
+                    }
+                    3 -> {
+                        onExchangeClicked(false)
+                        onShareClicked(false)
+                        onRecruitClicked(false)
+                        onTalkClicked(true)
+                    }
+                }
+            }
+        })
     }
 
     private fun setTheme() {
@@ -125,6 +167,37 @@ class QuestFragment : Fragment() {
         onShareClicked(false)
         onRecruitClicked(false)
         onTalkClicked(false)
+    }
+    private fun setEvent(){
+        val squareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        squareCircle.setColor(getColor(requireContext(), Theme.theme.sub200))
+        squareCircle.setStroke(0,0)
+        binding.questEventContainer.background = squareCircle
+        val squareCircle1 = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        squareCircle1.setColor(getColor(requireContext(), R.color.gray_bg))
+        squareCircle.setStroke(0,0)
+        binding.questEventEmptyText.background = squareCircle1
+        val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
+        circle.setStroke(0,0)
+        binding.questEventIcon.background = circle
+    }
+    private fun changeEvent(){
+        if(eventListViewModel.selectedEvent.value != null){
+            binding.questEventEmptyText.visibility = View.GONE
+            binding.questEventContainer.visibility = View.VISIBLE
+            val image = binding.questEventIcon
+            eventListViewModel.selectedEvent.value?.image1?.let { imageUrl ->
+                Glide.with(image)
+                    .load(imageUrl)
+                    .circleCrop()
+                    .into(image)
+            }
+            binding.questEventTitle.text = "선택된 이벤트: ${eventListViewModel.selectedEvent.value!!.name}"
+        }
+        else {
+            binding.questEventContainer.visibility = View.GONE
+            binding.questEventEmptyText.visibility = View.VISIBLE
+        }
     }
 
     private fun onExchangeClicked(selected: Boolean) {

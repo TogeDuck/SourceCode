@@ -57,6 +57,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_theme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -75,6 +76,7 @@
                     android:padding="5dp"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="1sp"
+                    android:autoSizeMaxTextSize="@dimen/text_large"
                     android:maxLines="1"
                     android:layout_marginBottom="5dp"
                     tools:targetApi="o" />

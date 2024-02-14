@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,17 +11,16 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogSelectCelebrityBinding
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
-import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.select_celebrity.ISelectCelebrity
 import com.idle.togeduck.main_map.view.select_celebrity.SelectCelebrityAdapter
 import com.idle.togeduck.util.TogeDuckItemDecoration
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,12 +61,12 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
         setRecyclerView()
         setTheme()
 
-        binding.llEmptyLayout.setOnClickListener {
-            findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
-        }
-
         favoriteSettingViewModel.favoriteIdolList.observe(viewLifecycleOwner) { favoriteIdolList ->
             selectCelebrityAdapter.submitList(favoriteIdolList)
+        }
+
+        binding.llEmptyLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
         }
 
         binding.btnCancel.setOnClickListener {
@@ -82,11 +80,17 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
         binding.btnSelect.setOnClickListener {
             favoriteSettingViewModel.favoriteIdolList.value?.forEach { celebrity ->
                 celebrity.isSelected = celebrity.isClicked
+
+                if (celebrity.isClicked) {
+                    favoriteSettingViewModel.setSelectedCelebrity(celebrity)
+                }
             }
 
-            favoriteSettingViewModel.setSelectedCelebrity()
-
             findNavController().navigate(R.id.action_selectCelebrityFragment_pop)
+        }
+
+        binding.btnEditCelebrity.setOnClickListener {
+            findNavController().navigate(R.id.action_selectCelebrityFragment_to_favoriteSettingFragment)
         }
     }
 
@@ -100,7 +104,7 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
 
-        favoriteSettingViewModel.setClickedCelebrity()
+//        favoriteSettingViewModel.setClickedCelebrity()
 
         if (favoriteSettingViewModel.selectedCelebrity.value != null) {
             favoriteSettingViewModel.favoriteIdolList.value?.forEach { celebrity ->
@@ -121,12 +125,18 @@ class SelectCelebrityFragment : DialogFragment(), ISelectCelebrity {
 
         binding.btnCancel.background = squareCircleDrawable
         binding.btnSelect.background = squareCircleDrawable
+
+        val allRoundEditCelebrityDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_5) as GradientDrawable
+        allRoundEditCelebrityDrawable.setColor(getColor(requireContext(), Theme.theme.sub200))
+        allRoundEditCelebrityDrawable.setStroke(0, getColor(requireContext(), Theme.theme.main500))
+
+        binding.btnEditCelebrity.background = allRoundEditCelebrityDrawable
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun celebrityClicked(position: Int) {
-        if ((favoriteSettingViewModel.clickedCelebrity.value?.id
-                ?: -1) != favoriteSettingViewModel.favoriteIdolList.value!![position].id
+        if ((favoriteSettingViewModel.clickedCelebrity.value?.id ?: -1)
+            != favoriteSettingViewModel.favoriteIdolList.value!![position].id
         ) {
             favoriteSettingViewModel.clickedCelebrity(position)
             favoriteSettingViewModel.setClickedCelebrity(favoriteSettingViewModel.favoriteIdolList.value!![position])

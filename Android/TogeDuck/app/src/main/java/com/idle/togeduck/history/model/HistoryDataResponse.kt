@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HistoryDataResponse(
-    @SerialName("history_id") val historyId: Long,
-    @SerialName("history_name") val historyName: String,
+    val historyId: Long,
+    val historyName: String,
     @Serializable(with = LocalDateIso8601Serializer::class)
     val date: LocalDate
 )

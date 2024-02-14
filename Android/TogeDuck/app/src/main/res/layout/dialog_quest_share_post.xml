@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@android:color/transparent"
+    android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="30dp"
-    android:paddingVertical="20dp"
-    android:gravity="center">
+    android:paddingVertical="20dp">
 
     <LinearLayout
         android:id="@+id/ll_dialog_layout"
@@ -22,57 +22,99 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-    <ImageView
-        android:id="@+id/share_post_img"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="fitCenter"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/common_cupcake3"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:layout_gravity="center">
-
-        <!-- textCursorDrawable 제작, 수정 -->
-        <com.idle.togeduck.util.ClearFocusEditText
-            android:id="@+id/et_share_title"
-            android:layout_width="200dp"
-            android:layout_height="@dimen/circle_xsmall"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:hint="제목을 입력하세요"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="2dp"
-            android:textCursorDrawable="@drawable/shape_cursor"
-            android:textSize="@dimen/text_large"
-            tools:ignore="RtlSymmetry">
-        </com.idle.togeduck.util.ClearFocusEditText>
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
-        <com.idle.togeduck.util.ClearFocusEditText
-            android:id="@+id/et_share_content"
-            android:layout_width="200dp"
+            <ImageView
+                android:id="@+id/share_img_cupCake"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/common_cupcake3" />
+
+            <TextView
+                android:id="@+id/share_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:paddingVertical="8dp"
+                android:text="나눔 글을 작성해 주세요"
+                android:textSize="@dimen/text_title_small"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/share_img_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이미지 첨부"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:visibility="visible"
+            android:backgroundTint="@color/bts_main500"/>
+
+        <ImageView
+            android:id="@+id/share_post_img"
+            android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:hint="내용을 입력하세요"
-            android:inputType="text"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="2dp"
-            android:textCursorDrawable="@drawable/shape_cursor"
-            android:textSize="@dimen/text_large"
-            tools:ignore="RtlSymmetry">
-        </com.idle.togeduck.util.ClearFocusEditText>
+            android:scaleType="fitCenter"
+            android:src="@drawable/common_cupcake3"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_share_title"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:hint="제목을 입력하세요"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:maxLength="20"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    android:textSize="@dimen/text_large" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_share_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:hint="내용을 입력하세요"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5"
+                    android:maxLength="100"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    android:textSize="@dimen/text_large" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_share_btn_container"
@@ -112,6 +154,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

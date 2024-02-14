@@ -6,29 +6,39 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.idle.togeduck.common.model.DefaultResponse
+import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.favorite.model.Celebrity
 import com.idle.togeduck.favorite.model.CelebrityRepository
 import com.idle.togeduck.favorite.model.FavoriteRepository
 import com.idle.togeduck.favorite.model.celebrityResponseToCelebrity
 import com.idle.togeduck.favorite.model.celebrityToFavoriteRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import java.lang.Exception
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteSettingViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
-    private val celebrityRepository: CelebrityRepository
+    private val celebrityRepository: CelebrityRepository,
+    private val preference: PreferenceModule,
 ) : ViewModel() {
-    private val _favoriteIdolList = MutableLiveData<List<Celebrity>>()
+    private val _favoriteIdolList = MutableLiveData<List<Celebrity>>(listOf())
     val favoriteIdolList: LiveData<List<Celebrity>>
         get() = _favoriteIdolList
 
-    private val _searchIdolList = MutableLiveData<List<Celebrity>>()
+    private val _tempFavoriteIdolList = MutableLiveData<List<Celebrity>>(listOf())
+    val tempFavoriteIdolList: LiveData<List<Celebrity>>
+        get() = _tempFavoriteIdolList
+
+    private val _searchIdolList = MutableLiveData<List<Celebrity>>(listOf())
     val searchIdolList: LiveData<List<Celebrity>>
         get() = _searchIdolList
-
 
     private val _selectedCelebrity = MutableLiveData<Celebrity>()
     val selectedCelebrity: LiveData<Celebrity> get() = _selectedCelebrity
@@ -36,28 +46,34 @@ class FavoriteSettingViewModel @Inject constructor(
     private val _clickedCelebrity = MutableLiveData<Celebrity>()
     val clickedCelebrity: LiveData<Celebrity> get() = _clickedCelebrity
 
-    init {
-        _favoriteIdolList.value = mutableListOf()
-        _searchIdolList.value = mutableListOf()
-
-        viewModelScope.launch {
-            getFavoriteList()
-        }
-    }
-
-    private suspend fun getFavoriteList() {
+    suspend fun getFavoriteList(): Boolean {
         val responseResult = favoriteRepository.getFavorites()
-
         if (responseResult.isSuccessful) {
             val body = responseResult.body()!!
 
-            _favoriteIdolList.value = body.data.map { it.celebrityResponseToCelebrity() }
+            Log.d("로그", "FavoriteSettingViewModel - getFavoriteList() / ${body.data}")
+            if(body.data.isEmpty()){
+                return false
+            }
+            _favoriteIdolList.postValue(body.data.map { celebrityResponse ->
+                val celebrity = celebrityResponse.celebrityResponseToCelebrity()
+                if (selectedCelebrity.value != null && selectedCelebrity.value!!.id == celebrity.id) {
+                    celebrity.isSelected = true
+                    syncClickedCelebrity()
+                    setClickedCelebrity(celebrity)
+                }
+                celebrity
+            })
+            return true
         } else {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-
-            Log.d("로그", "FavoriteSettingViewModel - getFavoriteList() 호출됨 - 응답 실패 - $errorBody")
+            Log.d(
+                "로그",
+                "FavoriteSettingViewModel - getFavoriteList() 호출됨 - 응답 실패 - $errorBody"
+            )
+            return false
         }
     }
 
@@ -80,19 +96,51 @@ class FavoriteSettingViewModel @Inject constructor(
     suspend fun addFavoriteIdol(celebrity: Celebrity) {
         val newList = _favoriteIdolList.value!!.toMutableList()
         newList.add(celebrity)
-//        _favoriteIdolList.value = newList
         _favoriteIdolList.postValue(newList)
 
-        favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+        _tempFavoriteIdolList.postValue(
+            tempFavoriteIdolList.value!!.toMutableList().apply { add(celebrity) }
+        )
+
+        val responseResult =
+            favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+
+        if (responseResult.isSuccessful) {
+            val body = responseResult.body()!!
+
+            Log.d("로그", "FavoriteSettingViewModel - addFavoriteIdol() 응답 성공 / ${body}")
+        } else {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+
+            Log.d("로그", "FavoriteSettingViewModel - addFavoriteIdol() 응답 실패 / ${errorBody}")
+        }
     }
 
     suspend fun removeMyFavoriteIdol(celebrity: Celebrity) {
         val newList = _favoriteIdolList.value!!.toMutableList()
         newList.remove(celebrity)
-//        _favoriteIdolList.value = newList
         _favoriteIdolList.postValue(newList)
 
-        favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+        _tempFavoriteIdolList.postValue(
+            _tempFavoriteIdolList.value!!.toMutableList().apply { remove(celebrity) }
+        )
+
+        val responseResult =
+            favoriteRepository.updateFavorites(celebrity.celebrityToFavoriteRequest())
+
+        if (responseResult.isSuccessful) {
+            val body = responseResult.body()!!
+
+            Log.d("로그", "FavoriteSettingViewModel - removeMyFavoriteIdol() 응답 성공 / ${body}")
+        } else {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+
+            Log.d("로그", "FavoriteSettingViewModel - addFavoriteIdol() 응답 실패 / ${errorBody}")
+        }
     }
 
     fun clickedCelebrity(position: Int) {
@@ -103,14 +151,56 @@ class FavoriteSettingViewModel @Inject constructor(
     }
 
     fun setClickedCelebrity(celebrity: Celebrity) {
-        _clickedCelebrity.value = celebrity
+        _clickedCelebrity.postValue(celebrity)
     }
 
-    fun setClickedCelebrity() {
-        _clickedCelebrity.value = _selectedCelebrity.value
+    fun syncClickedCelebrity() {
+        _clickedCelebrity.postValue(_selectedCelebrity.value)
     }
 
-    fun setSelectedCelebrity() {
-        _selectedCelebrity.value = _clickedCelebrity.value
+    fun setSelectedCelebrity(celebrity: Celebrity) {
+        _selectedCelebrity.value = celebrity
     }
+
+    fun completeBtnClicked() {
+        if (!tempFavoriteIdolList.value.isNullOrEmpty()) {
+            _tempFavoriteIdolList.value = listOf()
+        }
+        if (selectedCelebrity.value == null) {
+            getBirthdayClosest()
+        }
+    }
+
+    fun getBirthdayClosest() {
+        val savedCelebrity = runBlocking {
+            preference.getSelectedCelebrity.first()
+        }
+
+        if (savedCelebrity == null) {
+            val favoriteIdolList = favoriteIdolList.value
+            var closestBirthdayCelebrity: Celebrity? = null
+            var minDaysDifference = Int.MAX_VALUE
+            val today = LocalDate.now()
+            if (favoriteIdolList != null) {
+                for (celebrity in favoriteIdolList) {
+                    // 달이 이전인 경우 || 달과 일이 이전인 경우
+                    var year = celebrity.birthday.year
+                    if (today.month < celebrity.birthday.month || (today.month <= celebrity.birthday.month && today.dayOfMonth < celebrity.birthday.dayOfMonth)) {
+                        year++
+                    }
+                    val celebrityBirthday = java.time.LocalDate.of(
+                        year,
+                        celebrity.birthday.month,
+                        celebrity.birthday.dayOfMonth
+                    )
+                    val dayDifference = ChronoUnit.DAYS.between(today, celebrityBirthday)
+                    if (dayDifference < minDaysDifference) {
+                        closestBirthdayCelebrity = celebrity
+                    }
+                }
+                setSelectedCelebrity(closestBirthdayCelebrity!!)
+            }
+        }
+    }
+
 }

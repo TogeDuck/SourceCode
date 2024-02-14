@@ -22,7 +22,7 @@ class QuestTalkAdapter (
     override fun getItemViewType(position: Int): Int {
         val questTalkItem = getItem(position)
         if (questTalkItem != null) {
-            if (questTalkItem.userId == 1) {
+            if (questTalkItem.isMine) {
                 return VIEW_TYPE_MY
             } else {
                 return VIEW_TYPE_NORMAL

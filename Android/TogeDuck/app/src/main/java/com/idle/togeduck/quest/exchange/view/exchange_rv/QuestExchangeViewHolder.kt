@@ -84,8 +84,9 @@ class QuestExchangeViewHolder(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun configurePassedTime(expiredAt: LocalDateTime) {
+        val expiredChanged = expiredAt.toJavaLocalDateTime().plusHours(9)
         val currentTime = java.time.LocalDateTime.now()
-        val durationInMillis = expiredAt.toJavaLocalDateTime().toInstant(ZoneOffset.UTC).toEpochMilli() - currentTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+        val durationInMillis = expiredChanged.toInstant(ZoneOffset.UTC).toEpochMilli() - currentTime.toInstant(ZoneOffset.UTC).toEpochMilli()
         elapsedTimeInSeconds = (durationInMillis / 1000).toInt()
     }
 
@@ -113,9 +114,9 @@ class QuestExchangeViewHolder(
     }
 
     private fun setTheme(questExchange: Exchange, context: Context) {
-        if(elapsedTimeInSeconds <= 0){
-            questExchangeDetail.removeItemFromViewModel(questExchange)
-        }
+//        if(elapsedTimeInSeconds <= 0){
+//            questExchangeDetail.removeItemFromViewModel(questExchange)
+//        }
 
         val roundSmall =
             ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable

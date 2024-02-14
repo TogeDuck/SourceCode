@@ -6,14 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestRecruitBinding
 import com.idle.togeduck.common.Theme
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.quest.recruit.RecruitViewModel
+import com.idle.togeduck.quest.recruit.model.Recruit
 import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.quest.recruit.view.recruit_rv.IQuestRecruit
 import com.idle.togeduck.quest.recruit.view.recruit_rv.QuestRecruitAdapter
+import com.idle.togeduck.quest.talk.TalkViewModel
+import com.idle.togeduck.quest.talk.model.TalkRoom
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +31,8 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
     private val binding get() = _binding!!
 
     private val recruitViewModel: RecruitViewModel by activityViewModels()
+    private val talkViewModel: TalkViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
 
     private lateinit var questRecruitAdapter: QuestRecruitAdapter
 
@@ -47,9 +55,24 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
         recruitViewModel.recruitList.observe(viewLifecycleOwner){list ->
             questRecruitAdapter.submitList(list)
         }
+        recruitViewModel.needUpdate.observe(viewLifecycleOwner){check ->
+            if(check){
+                getRecruitList()
+                recruitViewModel.needUpdate.value = false
+            }
+        }
+        getRecruitList()
+    }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            recruitViewModel.getRecruitList(1,1,100)
+    override fun onResume() {
+        super.onResume()
+        getRecruitList()
+    }
+    private fun getRecruitList(){
+        eventListViewModel.selectedEvent.value?.let {selectedEvent ->
+            CoroutineScope(Dispatchers.IO).launch{
+                recruitViewModel.getRecruitList(selectedEvent.eventId, 0, 1000)
+            }
         }
     }
 
@@ -74,6 +97,13 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
         _binding = null
     }
 
-    override fun joinBtnClicked(position: Int) {
+    override fun joinBtnClicked(questRecruit: Recruit) {
+        talkViewModel.addTalkRoom(TalkRoom(questRecruit.chatId, questRecruit.title, mutableMapOf()))
+        talkViewModel.currentChatRoomId.value = questRecruit.chatId
+        findNavController().navigate(R.id.action_mapFragment_to_chatRoomFragment)
+    }
+
+    override fun removeItem(questRecruit: Recruit) {
+        recruitViewModel.removeItem(questRecruit)
     }
 }

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HistoryListResponse(
-    val code: Int,
+    val code: Long,
     val message: String,
     val data: List<HistoryDataResponse>
 )

@@ -1,5 +1,7 @@
 package com.idle.togeduck.util
 
+import com.idle.togeduck.event.model.Event
+import com.idle.togeduck.main_map.view.EventKind
 import com.naver.maps.geometry.LatLng
 import ted.gun0912.clustering.clustering.TedClusterItem
 import ted.gun0912.clustering.geometry.TedLatLng
@@ -12,16 +14,21 @@ data class NaverItem(var position: LatLng) : TedClusterItem {
 
     var title: String? = null
     var snippet: String? = null
+    var event: Event? = null
+    var eventType:EventKind? = null
 
-    constructor(lat: Double, lng: Double) : this(LatLng(lat, lng)) {
+    constructor(lat: Double, lng: Double, event: Event, eventType: EventKind) : this(LatLng(lat, lng)) {
         title = null
         snippet = null
+        this.event = event
+        this.eventType = eventType
     }
 
-    constructor(lat: Double, lng: Double, title: String?, snippet: String?) : this(
+    constructor(lat: Double, lng: Double, title: String?, snippet: String?, event: Event?) : this(
         LatLng(lat, lng)
     ) {
         this.title = title
         this.snippet = snippet
+        this.event = event
     }
 }

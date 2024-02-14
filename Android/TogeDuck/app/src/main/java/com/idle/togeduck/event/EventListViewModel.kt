@@ -13,6 +13,7 @@ import com.idle.togeduck.event.model.DefaultEventRepository
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.model.toEvent
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.quest.recruit.model.recruitResponseToRecruit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -41,23 +42,47 @@ class EventListViewModel @Inject constructor(
     private val _selectedEvent = MutableLiveData<Event>()
     val selectedEvent: LiveData<Event>
         get() = _selectedEvent
+    private val _likeListToday= MutableLiveData<List<Event>>()
+    val likeListToday: LiveData<List<Event>>
+        get() = _likeListToday
 
+    private val _likeListUpcoming= MutableLiveData<List<Event>>()
+    val likeListUpcoming: LiveData<List<Event>>
+        get() = _likeListUpcoming
+
+    private val _likeListPast = MutableLiveData<List<Event>>()
+    val likeListPast: LiveData<List<Event>>
+        get() = _likeListPast
+
+    val closeEvents = MutableLiveData<List<Event>>()
+
+    var isDetailOpen: MutableLiveData<Boolean> = MutableLiveData(false)
 
     init {
-        viewModelScope.launch {
-            val startDate = LocalDate.parse("2024-01-01")
-            val endDate = LocalDate.parse("2025-01-05")
-            getEventList(1, startDate, endDate)
-        }
+        _listToday.value = listOf()
+        _listPast.value = listOf()
+        _listUpcoming.value = listOf()
+    }
+
+    fun initClostEvents(){
+        closeEvents.value = listOf()
+    }
+    fun initList(){
+        _listPast.postValue(listOf())
+        _listToday.postValue(listOf())
+        _listUpcoming.postValue(listOf())
     }
 
     suspend fun getEventList(celebrityId: Long, startDate: LocalDate, endDate: LocalDate){
         val responseResult = eventRepository.getEventList(celebrityId, startDate, endDate)
 
+        Log.d("로그", "EventListViewModel - getEventList() 호출됨")
+        
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
             val data = body.data
 
+            _listPast.postValue(data.past.map { it.toEvent() })
             _listToday.postValue(data.today.map { it.toEvent() })
             _listUpcoming.postValue(data.later.map { it.toEvent() })
             Log.d("로그", "EventListViewModel - getEventList() 응답 성공 $body" )
@@ -70,48 +95,75 @@ class EventListViewModel @Inject constructor(
         }
     }
 
+    suspend fun getEventById(eventId: Long): Event? {
+        val responseResult = eventRepository.getEventById(eventId)
+
+        return if(responseResult.isSuccessful){
+            val body = responseResult.body()!!
+            val event = body.data.toEvent()
+
+            Log.d("로그", "EventListViewModel - getEventById() 응답 성공 $body" )
+
+            event
+        }else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "EventListViewModel - getEventById() 응답 실패 - $errorBody")
+            null
+        }
+    }
+
     suspend fun getLikesList(){
         val responseResult = eventRepository.getLikesList()
 
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
-            _listPast.postValue(body.past.map { it.toEvent() })
-            _listToday.postValue(body.today.map { it.toEvent() })
-            _listUpcoming.postValue(body.later.map { it.toEvent() })
+            val data = body.data
+            _likeListPast.postValue(data.past.map { it.toEvent() })
+            _likeListToday.postValue(data.today.map { it.toEvent() })
+            _likeListUpcoming.postValue(data.later.map { it.toEvent() })
+            Log.d("로그", "EventListViewModel - getLikesList() 응답 성공 - $body")
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-
             Log.d("로그", "EventListViewModel - getLikesList() 응답 실패 - $errorBody")
         }
     }
 
-    suspend fun likeEvent(likeEventRequest: LikeEventRequest){
-        val responseResult = eventRepository.likeEvent(likeEventRequest)
-        Log.d("로그", "EventListViewModel - likeEvent() 응답 성공 - $responseResult")
+    suspend fun likeEvent(eventId: Long){
+        val responseResult = eventRepository.likeEvent(eventId)
+        Log.d("로그", "EventListViewModel - likeEvent() 호출됨 - $responseResult")
 
         if(!responseResult.isSuccessful){
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-            Log.d("로그", "EventListViewModel - likeEvent() 응답 실패 - $errorBody")
+            Log.d("로그", "EventListViewModel - likeEvent() 호출됨 - 응답 실패 - $errorBody")
         }
     }
 
     suspend fun unlikeEvent(eventId: Long) {
         val responseResult = eventRepository.unlikeEvent(eventId)
-        Log.d("로그", "EventListViewModel - unlikeEvent() 응답 성공 - $responseResult")
+        Log.d("로그", "EventListViewModel - unlikeEvent() 호출됨 - $responseResult")
 
         if (!responseResult.isSuccessful) {
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-            Log.d("로그", "EventListViewModel - unlikeEvent() 응답 실패 - $errorBody")
+            Log.d("로그", "EventListViewModel - unlikeEvent() 호출됨 - 응답 실패 - $errorBody")
         }
     }
 
     fun setSelectedEvent(event: Event) {
         _selectedEvent.value = event
     }
+
+    fun clearList() {
+        _listPast.value = listOf()
+        _listToday.value = listOf()
+        _listUpcoming.value = listOf()
+    }
+
 }

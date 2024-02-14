@@ -11,15 +11,6 @@
         android:label="main_fragment"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_ahyoungFragment"
-            app:destination="@id/ahyoungFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_jiwooFragment"
-            app:destination="@id/jiwooFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_jichanFragment"
-            app:destination="@id/jichanFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_FavoriteSettingFragment"
             app:destination="@id/favoriteSettingFragment" />
         <action
@@ -52,31 +43,17 @@
     </fragment>
 
     <fragment
-        android:id="@+id/ahyoungFragment"
-        android:name="com.idle.togeduck.test.AhyoungFragment"
-        android:label="ahyoung_fragment"
-        tools:layout="@layout/fragment_ahyoung" >
-    </fragment>
-
-    <fragment
-        android:id="@+id/jiwooFragment"
-        android:name="com.idle.togeduck.test.JiwooFragment"
-        android:label="jiwoo_fragment"
-        tools:layout="@layout/fragment_jiwoo" >
-    </fragment>
-
-    <fragment
-        android:id="@+id/jichanFragment"
-        android:name="com.idle.togeduck.test.JichanFragment"
-        android:label="jichan_fragment"
-        tools:layout="@layout/fragment_jichan" >
-    </fragment>
-
-    <fragment
         android:id="@+id/favoriteSettingFragment"
         android:name="com.idle.togeduck.favorite.view.FavoriteSettingFragment"
         android:label="favorite_setting_fragment"
         tools:layout="@layout/fragment_favorite_setting" >
+        <action
+            android:id="@+id/action_favoriteSettingFragment_pop"
+            app:popUpTo="@id/favoriteSettingFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_favoriteSettingFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 
     <fragment
@@ -103,6 +80,27 @@
         <action
             android:id="@+id/action_mapFragment_to_EventReviewDialogFragment"
             app:destination="@id/eventReviewDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_chatRoomFragment"
+            app:destination="@id/chatRoomFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangePostDialogFragment"
+            app:destination="@id/exchangePostDialogFragment"/>
+        <action
+            android:id="@+id/action_mapFragment_to_sharePostDialogFragment"
+            app:destination="@id/sharePostDialogFragment"/>
+        <action
+            android:id="@+id/action_mapFragment_to_recruitPostDialogFragment"
+            app:destination="@id/recruitPostDialogFragment"/>
+        <action
+            android:id="@+id/action_mapFragment_to_eventCloseDialog"
+            app:destination="@id/eventCloseDialog" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangeRequestedDialogFragment"
+            app:destination="@id/exchangeRequestedDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangeAcceptDialogFragment"
+            app:destination="@id/exchangeAcceptDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -182,7 +180,79 @@
             android:id="@+id/action_selectCelebrityFragment_pop"
             app:popUpTo="@id/selectCelebrityFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_selectCelebrityFragment_to_favoriteSettingFragment"
+            app:destination="@id/favoriteSettingFragment"
+            app:popUpToInclusive="false" />
     </dialog>
-
+    <fragment
+        android:id="@+id/chatRoomFragment"
+        android:name="com.idle.togeduck.quest.talk.view.ChatRoomFragment"
+        android:label="ChatRoomFragment" >
+        <action
+            android:id="@+id/action_chatRoomFragment_pop"
+            app:popUpTo="@id/chatRoomFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <dialog
+        android:id="@+id/exchangePostDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangePostDialogFragment"
+        android:label="ExchangePostDialogFragment"
+        tools:layout="@layout/dialog_quest_exchange_post">
+        <action
+            android:id="@+id/action_exchangePostDialogFragment_pop"
+            app:popUpTo="@id/exchangePostDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/sharePostDialogFragment"
+        android:name="com.idle.togeduck.quest.share.view.SharePostDialogFragment"
+        android:label="SharePostDialogFragment"
+        tools:layout="@layout/dialog_quest_share_post" >
+        <action
+            android:id="@+id/action_sharePostDialogFragment_pop"
+            app:popUpTo="@id/sharePostDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/recruitPostDialogFragment"
+        android:name="com.idle.togeduck.quest.recruit.view.RecruitPostDialogFragment"
+        android:label="RecruitPostDialogFragment"
+        tools:layout="@layout/dialog_quest_recruit_post" >
+        <action
+            android:id="@+id/action_recruitPostDialogFragment_pop"
+            app:popUpTo="@id/recruitPostDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/eventCloseDialog"
+        android:name="com.idle.togeduck.event.view.EventCloseDialog"
+        android:label="EventCloseDialog" >
+        <action
+            android:id="@+id/action_eventCloseDialog_pop"
+            app:popUpTo="@id/eventCloseDialog"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/exchangeRequestedDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangeRequestedDialogFragment"
+        android:label="ExchangeRequestedDialogFragment" >
+        <action
+            android:id="@+id/action_exchangeRequestedDialogFragment_pop"
+            app:popUpTo="@id/exchangeRequestedDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/exchangeAcceptDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangeAcceptDialogFragment"
+        android:label="ExchangeAcceptDialogFragment" >
+        <action
+            android:id="@+id/action_exchangeAcceptDialogFragment_pop"
+            app:popUpTo="@id/exchangeAcceptDialogFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_exchangeAcceptDialogFragment_to_chatRoomFragment"
+            app:destination="@id/chatRoomFragment" />
+    </dialog>
 
 </navigation>

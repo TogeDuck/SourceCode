@@ -1,8 +1,10 @@
 package com.idle.togeduck.quest.share.model
 
 import com.idle.togeduck.common.model.DefaultResponse
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.Part
 import javax.inject.Inject
 
 interface ShareRepository {
@@ -14,7 +16,8 @@ interface ShareRepository {
 
     suspend fun createShare(
         eventId: Long,
-        body: ShareRequest
+        image: MultipartBody.Part,
+        shareRequestDto: MultipartBody.Part
     ): Response<DefaultResponse>
 
     suspend fun updateShare(
@@ -42,9 +45,10 @@ class DefaultShareRepository @Inject constructor(
 
     override suspend fun createShare(
         eventId: Long,
-        body: ShareRequest
+        image: MultipartBody.Part,
+        shareRequestDto: MultipartBody.Part
     ): Response<DefaultResponse> {
-        return shareService.createShare(eventId, body)
+        return shareService.createShare(eventId, image, shareRequestDto)
     }
 
     override suspend fun updateShare(

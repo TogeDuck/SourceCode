@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.idle.togeduck.R
 
 import com.idle.togeduck.databinding.FragmentEventListBinding
@@ -22,14 +23,19 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.event.model.LikeEventRequest
 import com.idle.togeduck.event.view.detail.EventDetailFragment
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toKotlinLocalDate
 
 @AndroidEntryPoint
 class EventListFragment : Fragment(), EventInfo {
@@ -37,16 +43,21 @@ class EventListFragment : Fragment(), EventInfo {
     private val binding get() = _binding!!
 
     private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     private lateinit var todayEventInfoAdapter: EventInfoAdapter
     private lateinit var upcomingEventInfoAdapter: EventInfoAdapter
     private lateinit var pastEventInfoAdapter: EventInfoAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("로그", "EventListFragment - onCreateView() 호출됨")
+
         _binding = FragmentEventListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,6 +65,8 @@ class EventListFragment : Fragment(), EventInfo {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("로그", "EventListFragment - onViewCreated() 호출됨")
 
         setTheme()
         setRecyclerview()
@@ -70,10 +83,35 @@ class EventListFragment : Fragment(), EventInfo {
             pastEventInfoAdapter.submitList(list)
         }
 
-        //todo.즐겨찾기 리스트 호출은 main화면에서 하는 걸로 변경
-//        CoroutineScope(Dispatchers.IO).launch {
-//            eventListViewModel.getLikesList()
-//
+        eventListViewModel.isDetailOpen.observe(viewLifecycleOwner){check ->
+            Log.d("디테일 페이지 오픈 요청", "요청 수신")
+            if(check && eventListViewModel.selectedEvent.value != null){
+                toDetailPage()
+                eventListViewModel.isDetailOpen.value = false
+            }
+        }
+    }
+
+    override fun onResume() {
+        Log.d("로그", "EventListFragment - onResume() 호출됨")
+        super.onResume()
+        getEventList()
+    }
+
+    private fun getEventList(){
+        if(favoriteSettingViewModel.selectedCelebrity.value != null){
+            CoroutineScope(Dispatchers.IO).launch{
+                eventListViewModel.getEventList(
+                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                    mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
+                    mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
+            }
+        }
+    }
+
+    override fun onPause() {
+        Log.d("로그", "EventListFragment - onPause() 호출됨")
+        super.onPause()
     }
 
     private fun setRecyclerview() {
@@ -102,12 +140,14 @@ class EventListFragment : Fragment(), EventInfo {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setTheme() {
+        binding.tvTitle.setTextColor(ContextCompat.getColor(requireContext(),Theme.theme.main500))
         binding.today.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
         binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
     }
 
     override fun onDestroyView() {
+        Log.d("로그", "EventListFragment - onDestroyView() 호출됨")
         super.onDestroyView()
         _binding = null
     }
@@ -117,12 +157,24 @@ class EventListFragment : Fragment(), EventInfo {
         if(type == 0) {
             eventListViewModel.setSelectedEvent(eventListViewModel.listToday.value!![position])
             (parentFragment as MapFragment).changeViewPagerPage(2)
+            mapViewModel.setBottomSheet(2)
         }else if(type == 1){
             eventListViewModel.setSelectedEvent(eventListViewModel.listUpcoming.value!![position])
             (parentFragment as MapFragment).changeViewPagerPage(2)
+            mapViewModel.setBottomSheet(2)
         }else {
             eventListViewModel.setSelectedEvent(eventListViewModel.listPast.value!![position])
             (parentFragment as MapFragment).changeViewPagerPage(2)
+            mapViewModel.setBottomSheet(2)
+        }
+    }
+
+    fun toDetailPage() {
+        Log.d("디테일 페이지로","실행")
+        CoroutineScope(Dispatchers.Main).launch {
+            (parentFragment as MapFragment).changeViewPagerPage(2)
+            delay(100L)
+            mapViewModel.setBottomSheet(2)
         }
     }
 
@@ -137,20 +189,17 @@ class EventListFragment : Fragment(), EventInfo {
     }
 
     private fun likeEventPerAdapterType (adapter: EventInfoAdapter, position: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val event = adapter.currentList.get(position)
+        val event = adapter.currentList.get(position)
+        event.isStar = !event.isStar
 
+        CoroutineScope(Dispatchers.IO).launch {
             if(event != null){
                 if(event.isStar){
-                    val likeEventRequest = LikeEventRequest(1)
-                    eventListViewModel.likeEvent(likeEventRequest)
-                    Log.d("log", "eventlistfragment - 즐겨찾기 추가 ")
-                }else{
-                    eventListViewModel.unlikeEvent(1)
-                    Log.d("log", "eventlistfragment - 즐겨찾기 삭제")
+                    eventListViewModel.likeEvent(event.eventId)
+                }else {
+                    eventListViewModel.unlikeEvent(event.eventId)
                 }
             }
         }
     }
-    
 }

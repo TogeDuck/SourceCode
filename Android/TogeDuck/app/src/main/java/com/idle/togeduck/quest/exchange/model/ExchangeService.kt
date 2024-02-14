@@ -2,6 +2,7 @@ package com.idle.togeduck.quest.exchange.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import okhttp3.MultipartBody
+import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -28,7 +29,7 @@ interface ExchangeService {
         @Path("trade_id") tradeId: Int,
     ) : Response<ExchangeDetailResponse>
 
-    @GET("events/{event_id}/my-trades")
+    @GET("events/{event_id}/trades/mytrades")
     suspend fun getMyExchangeList(
         @Path("event_id") eventId: Long
     ) : Response<ExchangeMyListResponse>
@@ -38,8 +39,7 @@ interface ExchangeService {
     suspend fun postExchange(
         @Path("event_id") eventId: Long,
         @Part image: MultipartBody.Part,
-        @Part content: String,
-        @Part duration: Int
+        @Part tradeRequestDto: MultipartBody.Part
     ) : Response<DefaultResponse>
 
     @Multipart
@@ -75,5 +75,20 @@ interface ExchangeService {
     suspend fun requestRejectExchange(
         @Path("event_id") eventId: Long,
         @Path("trade_id") tradeId: Long,
+    ) : Response<DefaultResponse>
+
+    @GET("events/deals/{deal_id}")
+    suspend fun getExchangeQuestByDealId(
+        @Path("deal_id") dealId: Long
+    ) : Response<ExchangeRequestedResponse>
+
+    @POST("events/deals/{deal_id}/reject")
+    suspend fun rejectExchange(
+        @Path("deal_id") dealId: Long
+    ) : Response<DefaultResponse>
+
+    @POST("events/deals/{deal_id}/accept")
+    suspend fun acceptExchange(
+        @Path("deal_id") dealId: Long
     ) : Response<DefaultResponse>
 }

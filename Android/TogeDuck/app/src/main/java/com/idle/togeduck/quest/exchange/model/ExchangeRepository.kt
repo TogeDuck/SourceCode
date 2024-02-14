@@ -2,7 +2,10 @@ package com.idle.togeduck.quest.exchange.model
 
 import com.idle.togeduck.common.model.DefaultResponse
 import okhttp3.MultipartBody
+import okhttp3.Request
+import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -29,8 +32,7 @@ interface ExchangeRepository {
     suspend fun postExchange(
         eventId: Long,
         image: MultipartBody.Part,
-        content: String,
-        duration: Int
+        tradeRequestDto: MultipartBody.Part
     ) : Response<DefaultResponse>
 
     suspend fun updateExchange(
@@ -61,6 +63,12 @@ interface ExchangeRepository {
         eventId: Long,
         tradeId: Long,
     ) : Response<DefaultResponse>
+
+    suspend fun getExchangeQuestByDealId(dealId: Long) : Response<ExchangeRequestedResponse>
+
+    suspend fun rejectExchange(dealId: Long) : Response<DefaultResponse>
+
+    suspend fun acceptExchange(dealId: Long) : Response<DefaultResponse>
 }
 
 class DefaultExchangeRepository @Inject constructor(
@@ -90,10 +98,9 @@ class DefaultExchangeRepository @Inject constructor(
     override suspend fun postExchange(
         eventId: Long,
         image: MultipartBody.Part,
-        content: String,
-        duration: Int,
+        tradeRequestDto: MultipartBody.Part
     ): Response<DefaultResponse> {
-        return exchangeService.postExchange(eventId, image, content, duration)
+        return exchangeService.postExchange(eventId, image, tradeRequestDto)
     }
 
     override suspend fun updateExchange(
@@ -126,5 +133,17 @@ class DefaultExchangeRepository @Inject constructor(
         tradeId: Long,
     ): Response<DefaultResponse> {
         return exchangeService.requestRejectExchange(eventId, tradeId)
+    }
+
+    override suspend fun getExchangeQuestByDealId(dealId: Long): Response<ExchangeRequestedResponse> {
+        return exchangeService.getExchangeQuestByDealId(dealId)
+    }
+
+    override suspend fun rejectExchange(dealId: Long): Response<DefaultResponse> {
+        return exchangeService.rejectExchange(dealId)
+    }
+
+    override suspend fun acceptExchange(dealId: Long): Response<DefaultResponse> {
+        return exchangeService.acceptExchange(dealId)
     }
 }

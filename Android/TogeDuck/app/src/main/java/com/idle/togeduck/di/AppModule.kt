@@ -22,6 +22,7 @@ import com.idle.togeduck.login.model.LoginService
 import com.idle.togeduck.myquest.model.MyQuestService
 import com.idle.togeduck.myquest.view.myquest_rv.DefaultMyQuestRepository
 import com.idle.togeduck.myquest.view.myquest_rv.MyQuestRepository
+import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeRepository
 import com.idle.togeduck.quest.exchange.model.ExchangeService
@@ -60,6 +61,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 @InstallIn(SingletonComponent::class)
 object AppModule {
 //    private const val BASE_URL = "https://a1025c31-1b70-43fc-85ae-a9f7b81404ce.mock.pstmn.io"
+    var isServiceRunning = false
     private const val BASE_URL = "https://i10a301.p.ssafy.io"
 
     @Singleton
@@ -248,5 +250,9 @@ object AppModule {
             return chain.proceed(newRequest)
         }
     }
+
+    @Singleton
+    @Provides
+    fun provideStompManager(): StompManager = StompManager()
 }
 
