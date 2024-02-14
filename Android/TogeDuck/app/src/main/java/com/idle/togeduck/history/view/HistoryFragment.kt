@@ -69,8 +69,8 @@ class HistoryFragment : Fragment(), IHistory {
             historyAdapter.submitList(historyList)
         }
 
-        binding.tvMyThemeContent.text = Theme.theme.name
         binding.tvMyCakeCnt.text = Theme.myCake.toString()
+        binding.tvMyThemeContent.text = Theme.theme.name
 
         binding.ivThemeDraw.setOnClickListener {
             binding.ivThemeDraw.isClickable = false
@@ -79,10 +79,11 @@ class HistoryFragment : Fragment(), IHistory {
             }, 500L)
 
             if (Theme.myCake > 0) {
+                Theme.myCake--
                 binding.tvMyCakeCnt.text = Theme.myCake.toString()
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    preference.setCakeCount(--Theme.myCake)
+                    preference.setCakeCount(Theme.myCake)
                 }
 
                 var newTheme = Theme.themeList.random()
@@ -113,7 +114,7 @@ class HistoryFragment : Fragment(), IHistory {
 
     override fun onResume() {
         super.onResume()
-        Log.d("로그", "HistoryFragment - onResume() 호출됨")
+        binding.tvMyCakeCnt.text = Theme.myCake.toString()
         getHistoryList()
     }
 

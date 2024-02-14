@@ -97,7 +97,7 @@ class FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {
 
         binding.btnComplete.setOnClickListener {
             favoriteSettingViewModel.completeBtnClicked()
-            findNavController().navigate(R.id.action_favoriteSettingFragment_pop)
+            findNavController().navigate(R.id.action_favoriteSettingFragment_to_mapFragment)
         }
     }
 

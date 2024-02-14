@@ -1,58 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainFragment">
-
-    <Button
-        android:id="@+id/btn0"
+    tools:context=".MainFragment"
+    tools:background="@color/blackpink_main300">
+    <TextView
+        android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="합친화면"
+        android:text="최애야 생일 축하해!"
+        app:layout_constraintTop_toBottomOf="@+id/img_cake"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="35dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_title_small" />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TogeDuck"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="35dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_title_large" />
+
+    <ImageView
+        android:id="@+id/img_cake"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/common_main_cake"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="-10dp"
         />
 
-    <Button
-        android:id="@+id/btn1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="김아영"
-        app:layout_constraintTop_toBottomOf="@id/btn0"
-        app:layout_constraintBottom_toTopOf="@id/btn2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        />
-
-    <Button
-        android:id="@+id/btn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="이지우"
-        app:layout_constraintTop_toBottomOf="@id/btn1"
-        app:layout_constraintBottom_toTopOf="@id/btn3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-    <Button
-        android:id="@+id/btn3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="최지찬"
-        app:layout_constraintTop_toBottomOf="@id/btn2"
+    <ImageView
+        android:id="@+id/img_duck"
+        android:layout_width="380dp"
+        android:layout_height="380dp"
+        android:src="@drawable/duck_transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="-110dp"
+        android:layout_marginBottom="50dp"
         />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

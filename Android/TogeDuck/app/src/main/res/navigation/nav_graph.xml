@@ -11,15 +11,6 @@
         android:label="main_fragment"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_ahyoungFragment"
-            app:destination="@id/ahyoungFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_jiwooFragment"
-            app:destination="@id/jiwooFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_jichanFragment"
-            app:destination="@id/jichanFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_FavoriteSettingFragment"
             app:destination="@id/favoriteSettingFragment" />
         <action
@@ -52,27 +43,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/ahyoungFragment"
-        android:name="com.idle.togeduck.test.AhyoungFragment"
-        android:label="ahyoung_fragment"
-        tools:layout="@layout/fragment_ahyoung" >
-    </fragment>
-
-    <fragment
-        android:id="@+id/jiwooFragment"
-        android:name="com.idle.togeduck.test.JiwooFragment"
-        android:label="jiwoo_fragment"
-        tools:layout="@layout/fragment_jiwoo" >
-    </fragment>
-
-    <fragment
-        android:id="@+id/jichanFragment"
-        android:name="com.idle.togeduck.test.JichanFragment"
-        android:label="jichan_fragment"
-        tools:layout="@layout/fragment_jichan" >
-    </fragment>
-
-    <fragment
         android:id="@+id/favoriteSettingFragment"
         android:name="com.idle.togeduck.favorite.view.FavoriteSettingFragment"
         android:label="favorite_setting_fragment"
@@ -81,6 +51,9 @@
             android:id="@+id/action_favoriteSettingFragment_pop"
             app:popUpTo="@id/favoriteSettingFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_favoriteSettingFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 
     <fragment
@@ -254,6 +227,5 @@
             app:popUpTo="@id/eventCloseDialog"
             app:popUpToInclusive="true" />
     </dialog>
-
 
 </navigation>
