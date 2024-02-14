@@ -34,9 +34,6 @@ class MapViewModel @Inject constructor(
 
     val peopleMarkerList = MutableLiveData<Map<String, Marker>>()
 
-    private val _isTourStart = MutableLiveData<Boolean>(false)
-    val isTourStart get() = _isTourStart
-
     var tourList = mutableListOf<Position>()
 
     private val _closeEvents = MutableLiveData<List<Event>>()
@@ -53,6 +50,7 @@ class MapViewModel @Inject constructor(
     var isQuestAlert = MutableLiveData<QuestAlert>()
     var eventList = mutableListOf<Event>()
     var isCloseDialogOpen = false
+    var isTourStart = false
 
     fun initPeopleMarkerImage(image: OverlayImage){
         this.peopleMarkerOverlay = image
@@ -79,7 +77,7 @@ class MapViewModel @Inject constructor(
             val lastPosition = currentList[currentList.size - 1]
             val disFromLastCoor = CalcDistance.getDistance(lastPosition.latitude, lastPosition.longitude, lat, lng)
             // 일정 거리 내인지 판별하는 메서드, 슷자는 조절 필요
-            if(disFromLastCoor in 10..50){
+            if(disFromLastCoor in 5..30){
                 currentList.add(newPosition)
                 hasChanged = true
             }
@@ -92,38 +90,6 @@ class MapViewModel @Inject constructor(
     fun setBottomSheet(state:Int){
         bottomSheetState.value = state
     }
-
-    // 더미 지도 마커 생성 코드
-    fun getItems(naverMap: NaverMap, num: Int) {
-//        val bounds = naverMap.contentBounds
-//        _markerList.value = mutableListOf<NaverItem>().apply {
-//            repeat(num) {
-//                val temp = NaverItem(
-//                    (bounds.northLatitude - bounds.southLatitude) * Math.random() + bounds.southLatitude,
-//                    (bounds.eastLongitude - bounds.westLongitude) * Math.random() + bounds.westLongitude
-//                )
-//
-//                add(temp)
-//            }
-//        }
-    }
-
-    fun addItem(naverMap: NaverMap, num: Int) {
-//        val list = _markerList.value?.toMutableList() ?: mutableListOf()
-//        val bounds = naverMap.contentBounds
-//
-//        repeat(num) {
-//            val temp = NaverItem(
-//                (bounds.northLatitude - bounds.southLatitude) * Math.random() + bounds.southLatitude,
-//                (bounds.eastLongitude - bounds.westLongitude) * Math.random() + bounds.westLongitude
-//            )
-//
-//            list.add(temp)
-//        }
-//
-//        _markerList.postValue(list)
-    }
-
     fun setPickedDate(startDate: LocalDate, endDate: LocalDate) {
         _pickedDate.value = startDate to endDate
     }
@@ -173,9 +139,6 @@ class MapViewModel @Inject constructor(
             }
         }
         peopleMarkerList.postValue(emptyMap())
-    }
-    fun setTourStatus(isStart: Boolean) {
-        _isTourStart.value = isStart
     }
     fun clearList() {
         peopleMarkerList.value = mutableMapOf()

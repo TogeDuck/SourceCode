@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         talkViewModel.setChatPreference()
 
-        if (mapViewModel.isTourStart.value != null && mapViewModel.isTourStart.value!!) {
+        if (mapViewModel.isTourStart != null && mapViewModel.isTourStart!!) {
             val intent = Intent(this, ForcedFinishService::class.java)
             intent.putExtra("id", favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1)
             intent.putExtra("guid", mainViewModel.guid)

@@ -197,16 +197,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         mapViewModel.initPeopleMarkerImage(initPeopleMarkerImage())
 
-        mapViewModel.isTourStart.observe(viewLifecycleOwner) { isTourStart ->
-            if (isTourStart) {
-                sendPosition()
-            } else {
-                if (timer != null) {
-                    timer!!.cancel()
-                    timer = null
-                }
-            }
-        }
         mapViewModel.peopleNum.observe(viewLifecycleOwner) {
                 number -> binding.mapPeoplecntText.text = "${number}명의 팬들이 함께하고 있습니다!"
         }
@@ -551,46 +541,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.plusRecruit.setColorFilter(getColor(requireContext(), R.color.white))
     }
 
-    // TODO. 삭제 예정
-    private fun setQuestAlertTheme(type: String){
-        if(mainViewModel.isRealTimeOn){
-            // Layout 설정
-            val questLayout = binding.mapQuestAlertContainer
-            val squareCircle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
-            squareCircle.setColor(ContextCompat.getColor(requireContext(), R.color.white_transparent))
-            questLayout.background = squareCircle
-
-            // Icon 설정
-            val questIcon = binding.mapQuestAlertIcon
-            val questText = binding.mapQuestAlertText
-            val circle = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-            circle.setStroke(0,0)
-            when(type){
-                QuestType.SHARE.toString() ->{
-                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    questIcon.setImageResource(R.drawable.ic_share)
-                    questText.text = "새로운 나눔 퀘스트가 등록되었습니다!"
-                }
-                QuestType.EXCHANGE.toString() ->{
-                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.yellow))
-                    questIcon.setImageResource(R.drawable.ic_exchange)
-                    questText.text = "새로운 교환 퀘스트가 등록되었습니다!"
-                }
-                QuestType.GROUP.toString() ->{
-                    circle.setColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    questIcon.setImageResource(R.drawable.ic_person_white)
-                    questText.text = "새로운 모집 퀘스트가 등록되었습니다!"
-                }
-            }
-            questIcon.background = circle
-
-            questLayout.visibility = View.VISIBLE
-            Handler(Looper.getMainLooper()).postDelayed({
-                questLayout.visibility = View.GONE
-            }, 2000)
-        }
-    }
-
     /** Button Click & Callback Functions **/
     private fun realTimeBtnOnClick(){
         if(realTimeOnOffBtn.isChecked){
@@ -603,32 +553,30 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             binding.mapPeoplecntContainer.visibility = View.GONE
         }
     }
-    private fun coordinateMessageCallback(message: String){
-        //TODO 추후 메세지 형식에 따라 변경
-    }
 
     private fun initPeopleMarkerImage(): OverlayImage{
-        val circleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
-        circleDrawable.setColor(getColor(requireContext(), Theme.theme.sub500))
-        circleDrawable.setStroke(0, 0)
-
-        val markerBitmap = Bitmap.createBitmap(
-            dpToPx(30, requireContext()), // 마커 너비
-            dpToPx(30, requireContext()), // 마커 높이
-            Bitmap.Config.ARGB_8888
-        )
-
-        val canvas = Canvas(markerBitmap)
-        circleDrawable.setBounds(0, 0, canvas.width, canvas.height)
-        circleDrawable.draw(canvas)
-        return OverlayImage.fromBitmap(markerBitmap)
+        val imageView = ImageView(requireContext()).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                dpToPx(30, requireContext()),
+                dpToPx(30, requireContext())
+            )
+            setImageResource(R.drawable.common_duck)
+        }
+        val bitmap = Bitmap.createBitmap(imageView.width, imageView.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        imageView.layout(0, 0, imageView.width, imageView.height)
+        imageView.draw(canvas)
+        return OverlayImage.fromBitmap(bitmap)
     }
-
     private fun changeTourBtn() {
         if (binding.tourStart.text == "투어\n종료") {
             binding.tourStart.background = tourStartCircle
             binding.tourStart.text = "투어\n시작"
-            mapViewModel.setTourStatus(false)
+            mapViewModel.isTourStart = false
+            if (timer != null) {
+                timer!!.cancel()
+                timer = null
+            }
             val toast = Toast.makeText(requireContext(), "투어가 종료되었습니다.", Toast.LENGTH_SHORT)
             toast.show()
             // 마지막 종료 지점 좌표 넣기
@@ -660,7 +608,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         } else if (binding.tourStart.text == "투어\n시작") {
             binding.tourStart.background = tourEndCircle
             binding.tourStart.text = "투어\n종료"
-            mapViewModel.setTourStatus(true)
+            mapViewModel.isTourStart = true
+            sendPosition()
             var toast = Toast.makeText(requireContext(), "투어가 시작되었습니다.", Toast.LENGTH_SHORT)
             toast.show()
             toast = Toast.makeText(requireContext(), "투어가 진행되는 동안 상대방에게 위치가 공유됩니다.", Toast.LENGTH_SHORT)
@@ -1432,7 +1381,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         }
                 }
             }
-        }, 0 , 10 * 1000)
+        }, 0 , 5 * 1000)
     }
 
     private fun figureCloseEvents(lat:Double, lng:Double) {
@@ -1456,14 +1405,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onStart()
         Log.d("로그", "MapFragment - onStart() 호출됨")
 
-        if (mapViewModel.isTourStart.value == true && timer == null) sendPosition()
+        if (mapViewModel.isTourStart == true && timer == null) sendPosition()
         if (workManager != null) cancelWorkWithPeriodic()
     }
 
     override fun onStop() {
         super.onStop()
         Log.d("로그", "MapFragment - onStop() 호출됨")
-        if (mapViewModel.isTourStart.value == true) doWorkWithPeriodic()
+        if (mapViewModel.isTourStart == true) doWorkWithPeriodic()
         if (timer != null) {
             timer!!.cancel()
             timer = null
