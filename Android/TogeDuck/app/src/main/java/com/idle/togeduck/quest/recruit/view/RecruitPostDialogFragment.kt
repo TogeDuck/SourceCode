@@ -109,7 +109,7 @@ class RecruitPostDialogFragment: DialogFragment() {
             val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
             if(title.isNotEmpty() && destinationName.isNotEmpty()
                 && maximum > 0 && maximum <= 10
-                && duration > 0 && duration <= 60
+                && duration > 0 && duration <= 120
                 && eventListViewModel.selectedEvent.value != null) {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("모집 등록", "모집 등록 호출됨")
