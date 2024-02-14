@@ -9,7 +9,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     android:layout_width="110dp"
     android:layout_height="110dp"
-    android:elevation="5dp"
+    android:elevation="2dp"
     android:layout_marginStart="5dp"
     tools:background="@drawable/shape_all_round_10">
 

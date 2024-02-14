@@ -60,7 +60,7 @@ class QuestShareViewHolder (
     @RequiresApi(Build.VERSION_CODES.O)
     fun binding(questShare: Share, context: Context) {
         this.questShare = questShare
-        configurePassedTime(questShare.createdAt)
+        configurePassedTime(questShare.createdAt.toJavaLocalDateTime().plusHours(9))
         setImage(questShare, context)
         setTheme(questShare,context)
         timerTask(questShare,context)
@@ -88,10 +88,10 @@ class QuestShareViewHolder (
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun configurePassedTime(createdAt: LocalDateTime) {
+    private fun configurePassedTime(createdAt: java.time.LocalDateTime) {
         val currentTime = java.time.LocalDateTime.now()
         Log.d("시간",currentTime.toString())
-        val durationInMillis = currentTime.toInstant(ZoneOffset.UTC).toEpochMilli() - createdAt.toJavaLocalDateTime().toInstant(
+        val durationInMillis = currentTime.toInstant(ZoneOffset.UTC).toEpochMilli() - createdAt.toInstant(
             ZoneOffset.UTC).toEpochMilli()
         elapsedTimeInSeconds = (durationInMillis / 1000).toInt()
     }
