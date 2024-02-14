@@ -110,7 +110,7 @@ public class TradeController {
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
 
-	@PostMapping("/{eventId}/trades/{tradeId}/deals/{dealId}/accept")
+	@PostMapping("/deals/{dealId}/accept")
 	public ResponseEntity<BaseResponse<?>> acceptDeal(
 		@PathVariable Long dealId,
 		@AuthenticationPrincipal User user) {
@@ -120,8 +120,8 @@ public class TradeController {
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
 
-	@PostMapping("/{eventId}/trades/{tradeId}/deals/{dealId}/reject")
-	public ResponseEntity<BaseResponse<?>> jectDeal(
+	@PostMapping("/deals/{dealId}/reject")
+	public ResponseEntity<BaseResponse<?>> rejectDeal(
 		@PathVariable Long dealId,
 		@AuthenticationPrincipal User user) {
 
@@ -130,7 +130,7 @@ public class TradeController {
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
 	}
 
-	@GetMapping("/{eventId}/trades/{tradeId}/deals/{dealId}")
+	@GetMapping("/deals/{dealId}")
 	public ResponseEntity<BaseResponse<DealRequestDto>> getDeal(
 		@PathVariable Long dealId,
 		@AuthenticationPrincipal User user) {
