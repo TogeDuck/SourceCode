@@ -2,6 +2,7 @@ package com.idle.togeduck
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -106,9 +107,13 @@ class MainFragment : Fragment() {
         setDate()
         loadSelectedCelebrity()
         getFavorites()
+        setTheme()
     }
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun setTheme(){
-        binding.mainLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), Theme.theme.main200))
+        val gradient = ContextCompat.getDrawable(requireContext(), R.drawable.shape_gradient_background) as GradientDrawable
+        gradient.setColors(intArrayOf(ContextCompat.getColor(requireContext(),Theme.theme.main100),ContextCompat.getColor(requireContext(),Theme.theme.main500)))
+        binding.mainLayout.background = gradient
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
