@@ -68,6 +68,9 @@ public class DealService {
 			.orElseThrow(() -> new BaseException(ErrorCode.DEAL_NOT_FOUND));
 		deal.setStatus(DealStatus.ACCEPTED);
 
+		tradeRepository.delete(deal.getMyTrade());
+		tradeRepository.delete(deal.getTarget());
+
 		//채팅방 생성
 		Chat chat = Chat.builder()
 			.quest(deal.getTarget())
