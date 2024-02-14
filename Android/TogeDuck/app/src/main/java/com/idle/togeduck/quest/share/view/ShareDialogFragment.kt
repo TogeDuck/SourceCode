@@ -93,8 +93,8 @@ class ShareDialogFragment : DialogFragment() {
         squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.sub400))
         squareCircleDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
 
-        binding.btnEdit.background = squareCircleDrawable
-        binding.btnDelete.background = squareCircleDrawable
+//        binding.btnEdit.background = squareCircleDrawable
+//        binding.btnDelete.background = squareCircleDrawable
     }
 
     override fun onDestroyView() {

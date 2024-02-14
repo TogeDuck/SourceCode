@@ -105,6 +105,18 @@ class ExchangeViewModel @Inject constructor(
         }
     }
 
+    suspend fun deleteExchange(eventId: Long, tradeId: Long) {
+        val responseResult = exchangeRepository.deleteExchange(eventId, tradeId)
+        Log.d("로그", "ExchangeViewModel - deleteExchange() 호출됨")
+
+        if (!responseResult.isSuccessful) {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - deleteExchange() 응답 실패 - $errorBody")
+        }
+    }
+
     fun removeItemFromList(questExchange: Exchange) {
         val currentList = _exchangeList.value?.toMutableList() ?: mutableListOf()
         currentList.remove(questExchange)
