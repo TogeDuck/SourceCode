@@ -34,7 +34,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         when (type) {
             "request" -> FCMData.dealId.postValue(message.data["dealId"]?.toLong())
-            "accept" -> FCMData.isAccept.postValue(true)
+            "accept" -> {
+                FCMData.isAccept.postValue(true)
+                FCMData.chatId.postValue(message.data["chatId"]?.toLong())
+            }
             "reject" -> FCMData.isReject.postValue(true)
         }
     }
