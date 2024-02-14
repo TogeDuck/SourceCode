@@ -10,18 +10,24 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idle.togeduck.MainViewModel
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogEventCloseBinding
 import com.idle.togeduck.databinding.DialogQuestSharePostBinding
+import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
+import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.toKotlinLocalDate
 
 class EventCloseDialog: DialogFragment(), EventInfo {
     private var _binding: DialogEventCloseBinding? = null
@@ -29,6 +35,8 @@ class EventCloseDialog: DialogFragment(), EventInfo {
 
     private val mapViewModel: MapViewModel by activityViewModels ()
     private val historyViewModel: HistoryViewModel by activityViewModels()
+    private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +76,11 @@ class EventCloseDialog: DialogFragment(), EventInfo {
     }
 
     override fun eventClicked(position: Int, type: Int) {
+        sendEvent(position)
+        getEventList()
+        exit()
+    }
+    fun sendEvent(position: Int){
         CoroutineScope(Dispatchers.IO).launch {
             val eventId = mapViewModel.eventList.getOrNull(position)?.eventId
             val historyId = historyViewModel.historyId.value
@@ -77,6 +90,20 @@ class EventCloseDialog: DialogFragment(), EventInfo {
                 Log.d("EventClicked", "eventId or historyId is null")
             }
         }
+    }
+    fun getEventList(){
+        CoroutineScope(Dispatchers.IO).launch {
+            if(favoriteSettingViewModel.selectedCelebrity.value != null
+                && mapViewModel.pickedDate.value != null ){
+                eventListViewModel.getEventList(
+                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                    mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
+                    mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
+            }
+        }
+    }
+    fun exit(){
+        findNavController().navigate(R.id.action_eventCloseDialog_pop)
     }
 
     override fun likeClick(position: Int, type: Int) {
