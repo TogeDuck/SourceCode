@@ -1,5 +1,6 @@
 package com.idle.togeduck.quest.recruit.view
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -122,20 +123,18 @@ class RecruitPostDialogFragment: DialogFragment() {
         }
     }
 
-    //todo. 검색 으로 변경 할것
     private fun setSpinner() {
         // 오늘의 이벤트 목록을 관찰하고 해당 목록을 spinner에 설정
         //todo. 지금은 오늘 이벤트 없어서 listPast로 해놓음 (추후 listToday로 수정)
         eventListViewModel.listPast.observe(viewLifecycleOwner) { event ->
-            val eventPairs = event.map { it.eventId to it.name } // Pair 형태로 eventId와 eventName을 연결
-            eventIds = eventPairs.map { it.first } // eventId만 추출
+            val eventPairs = event.map { it.eventId to it.name }
+            eventIds = eventPairs.map { it.first }
             eventNames = eventPairs.map { it.second }
             spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, eventNames)
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinner.adapter = spinnerAdapter
         }
     }
-
 
     private fun setTheme() {
         binding.npRecruitPeopleNum.apply {

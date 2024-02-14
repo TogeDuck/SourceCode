@@ -30,7 +30,7 @@ interface EventService {
     ) : Response<SingleEventResponse>
 
     @GET("events/likes")
-    suspend fun getLikesList(): Response<EventDataResponse>
+    suspend fun getLikesList(): Response<EventListResponse>
 
     @POST("events/likes")
     suspend fun likeEvent(

@@ -217,20 +217,29 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.questPlus.setOnClickListener {
             if (binding.plusExchange.visibility == View.GONE) {
                 binding.plusExchange.visibility = View.VISIBLE
+                binding.plusExchange.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(300).start()
             } else if (binding.plusExchange.visibility == View.VISIBLE) {
-                binding.plusExchange.visibility = View.GONE
+                binding.plusExchange.animate().scaleX(0f).scaleY(0f).alpha(0f).setDuration(300).withEndAction {
+                    binding.plusExchange.visibility = View.GONE
+                }.start()
             }
 
             if (binding.plusRecruit.visibility == View.GONE) {
                 binding.plusRecruit.visibility = View.VISIBLE
+                binding.plusRecruit.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(300).start()
             } else if (binding.plusRecruit.visibility == View.VISIBLE) {
-                binding.plusRecruit.visibility = View.GONE
+                binding.plusRecruit.animate().scaleX(0f).scaleY(0f).alpha(0f).setDuration(300).withEndAction {
+                    binding.plusRecruit.visibility = View.GONE
+                }.start()
             }
 
             if (binding.plusShare.visibility == View.GONE) {
                 binding.plusShare.visibility = View.VISIBLE
+                binding.plusShare.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(300).start()
             } else if (binding.plusShare.visibility == View.VISIBLE) {
-                binding.plusShare.visibility = View.GONE
+                binding.plusShare.animate().scaleX(0f).scaleY(0f).alpha(0f).setDuration(300).withEndAction {
+                    binding.plusShare.visibility = View.GONE
+                }.start()
             }
         }
         binding.plusExchange.setOnClickListener {
@@ -313,6 +322,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     if (pathLine != null) {
                         pathLine!!.map = null
                         pathLine = null
+
+                        if(favoriteSettingViewModel.selectedCelebrity.value != null){
+                            CoroutineScope(Dispatchers.IO).launch{
+                                eventListViewModel.getEventList(
+                                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                                    mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
+                                    mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
+                            }
+                        }
                     }
                 }
             }

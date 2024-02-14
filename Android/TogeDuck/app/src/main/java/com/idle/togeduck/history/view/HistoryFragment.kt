@@ -56,7 +56,9 @@ class HistoryFragment : Fragment(), IHistory {
         getHistoryList()
 
         historyViewModel.historyList.observe(viewLifecycleOwner) { historyList ->
+            Log.d("로그", "HistoryFragment - onViewCreated() 데이터 바뀜")
             historyAdapter.submitList(historyList)
+            historyAdapter.notifyDataSetChanged()
         }
     }
 

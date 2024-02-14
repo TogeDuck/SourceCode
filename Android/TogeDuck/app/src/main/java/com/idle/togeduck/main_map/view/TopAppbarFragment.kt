@@ -24,6 +24,7 @@ import com.idle.togeduck.databinding.FragmentTopAppbarBinding
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
 import com.idle.togeduck.util.DpPxUtil.dpToPx
@@ -48,13 +49,13 @@ class TopAppbarFragment : Fragment() {
     private var _topAppBarBinding: ComponentTopAppbarBinding? = null
     private val topAppbarBinding get() = _topAppBarBinding!!
 
-
 //    private var _searchBarBinding: ComponentSearchBarTopAppbarBinding? = null
 //    private val searchBarBinding get() = _searchBarBinding!!
 
     private val mapViewModel: MapViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val historyViewModel: HistoryViewModel by activityViewModels()
 
     @Inject
     lateinit var preference: PreferenceModule
@@ -98,9 +99,16 @@ class TopAppbarFragment : Fragment() {
                     startDate.toKotlinLocalDate(),
                     endDate.toKotlinLocalDate()
                 )
+                historyViewModel.getHistoryList(celebrityId)
             }
 
             setIdolProfile()
+        }
+
+        topAppbarBinding.ivFavorite.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                eventListViewModel.getLikesList()
+            }
         }
     }
 
@@ -113,6 +121,7 @@ class TopAppbarFragment : Fragment() {
                 startDate.toKotlinLocalDate(),
                 endDate.toKotlinLocalDate()
             )
+            historyViewModel.getHistoryList(celebrityId)
         }
     }
 
@@ -219,10 +228,12 @@ class TopAppbarFragment : Fragment() {
 
         topAppbarBinding.llTopAppbar.background = bottomRoundDrawable
 
+        //todo. 즐겨찾기 이미지랑 동일하게 변경 (확인 후 확정하기)
         val yellowCircleDrawable =
             ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle) as GradientDrawable
         yellowCircleDrawable.setColor(getColor(requireContext(), Theme.theme.main100))
-        yellowCircleDrawable.setStroke(4, getColor(requireContext(), R.color.yellow))
+//        yellowCircleDrawable.setStroke(4, getColor(requireContext(), R.color.yellow))
+        yellowCircleDrawable.setStroke(4, getColor(requireContext(), Theme.theme.sub400))
 
         topAppbarBinding.ivLogo.background = yellowCircleDrawable
         topAppbarBinding.ivFavorite.background = yellowCircleDrawable
