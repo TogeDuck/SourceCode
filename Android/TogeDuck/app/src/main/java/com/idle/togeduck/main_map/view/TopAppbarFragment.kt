@@ -109,11 +109,9 @@ class TopAppbarFragment : Fragment() {
                     endDate.toKotlinLocalDate()
                 )
                 historyViewModel.getHistoryList(celebrityId)
-
-                launch(Dispatchers.Main) {
-                    setIdolProfile()
-                }
             }
+
+            setIdolProfile()
         }
 
         topAppbarBinding.ivFavorite.setOnClickListener {
