@@ -39,7 +39,7 @@ class MapViewModel @Inject constructor(
     private val _closeEvents = MutableLiveData<List<Event>>()
     val closeEvents: LiveData<List<Event>> get() = _closeEvents
 
-    private var peopleMarkerOverlay: OverlayImage? = null
+    var peopleMarkerOverlay: OverlayImage? = null
     var markerSize: Int = 20
 
     var peopleNum: MutableLiveData<Int> = MutableLiveData(0)
@@ -93,30 +93,8 @@ class MapViewModel @Inject constructor(
     fun setPickedDate(startDate: LocalDate, endDate: LocalDate) {
         _pickedDate.value = startDate to endDate
     }
-
-    fun updatePeopleMarker(coordinate: Coordinate){
-        Log.d("로그","사람 지도 좌표 업데이트")
-        val updateMap = peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
-        updateMap[coordinate.userId]?.map = null
-        val marker = Marker()
-        marker.position = LatLng(coordinate.latitude, coordinate.longitude)
-        marker.icon = peopleMarkerOverlay!!
-        marker.map = naverMap
-        marker.height = markerSize
-        marker.width = markerSize
-        updateMap[coordinate.userId] = marker
-        peopleMarkerList.postValue(updateMap)
-        updatePeopleNum(updateMap.size)
-    }
     fun updatePeopleNum(updatePeople: Int){
         peopleNum.postValue(updatePeople)
-    }
-    fun deletePeopleMarker(coordinate: Coordinate){
-        val updateMap = peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
-        updateMap[coordinate.userId]!!.map = null
-        updateMap.remove(coordinate.userId)
-        peopleMarkerList.postValue(updateMap)
-        updatePeopleNum(updateMap.size)
     }
     fun updateMarkerSize() {
         peopleMarkerList.value?.let { peopleMarkers ->
@@ -129,16 +107,6 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun deleteAllMarkers() {
-        peopleMarkerList.value?.let { peopleMarkers ->
-            for ((_, marker) in peopleMarkers) {
-                marker?.let {
-                    it.map = null
-                }
-            }
-        }
-        peopleMarkerList.postValue(emptyMap())
-    }
     fun clearList() {
         peopleMarkerList.value = mutableMapOf()
     }

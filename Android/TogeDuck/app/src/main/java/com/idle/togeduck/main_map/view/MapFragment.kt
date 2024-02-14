@@ -548,9 +548,22 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             binding.mapPeoplecntContainer.visibility = View.VISIBLE
         }
         else{
-            mapViewModel.deleteAllMarkers()
+            deleteAllMarkers()
             mainViewModel.isRealTimeOn = false
             binding.mapPeoplecntContainer.visibility = View.GONE
+        }
+    }
+
+    private fun deleteAllMarkers(){
+        activity?.runOnUiThread {
+            mapViewModel.peopleMarkerList.value?.let { peopleMarkers ->
+                for ((_, marker) in peopleMarkers) {
+                    marker?.let {
+                        it.map = null
+                    }
+                }
+            }
+            mapViewModel.peopleMarkerList.postValue(emptyMap())
         }
     }
 

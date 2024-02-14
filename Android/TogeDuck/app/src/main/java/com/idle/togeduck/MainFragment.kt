@@ -44,6 +44,8 @@ import com.idle.togeduck.quest.talk.model.Talk
 import com.idle.togeduck.util.LoginUtil.guid
 import com.idle.togeduck.util.SnackBarFactory
 import com.idle.togeduck.websocketcustomlibrary.dto.LifecycleEvent
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -196,7 +198,19 @@ class MainFragment : Fragment() {
                     val coordinate =
                         Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
                     if (mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)) {
-                        mapViewModel.updatePeopleMarker(coordinate)
+                        activity?.runOnUiThread {
+                            val updateMap = mapViewModel.peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
+                            updateMap[coordinate.userId]?.map = null
+                            val marker = Marker()
+                            marker.position = LatLng(coordinate.latitude, coordinate.longitude)
+                            marker.icon = mapViewModel.peopleMarkerOverlay!!
+                            marker.map = mapViewModel.naverMap
+                            marker.height = mapViewModel.markerSize
+                            marker.width = mapViewModel.markerSize
+                            updateMap[coordinate.userId] = marker
+                            mapViewModel.peopleMarkerList.postValue(updateMap)
+                            mapViewModel.updatePeopleNum(updateMap.size)
+                        }
                     }
                 }
                 // 다른 사람의 투어 종료 수신
@@ -204,7 +218,13 @@ class MainFragment : Fragment() {
                     val coordinate =
                         Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
                     if (mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)) {
-                        mapViewModel.deletePeopleMarker(coordinate)
+                        activity?.runOnUiThread {
+                            val updateMap = mapViewModel.peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
+                            updateMap[coordinate.userId]!!.map = null
+                            updateMap.remove(coordinate.userId)
+                            mapViewModel.peopleMarkerList.postValue(updateMap)
+                            mapViewModel.updatePeopleNum(updateMap.size)
+                        }
                     }
                 }
 
