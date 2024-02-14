@@ -15,6 +15,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.lang.Exception
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,46 +42,32 @@ class FavoriteSettingViewModel @Inject constructor(
     private val _clickedCelebrity = MutableLiveData<Celebrity>()
     val clickedCelebrity: LiveData<Celebrity> get() = _clickedCelebrity
 
-    init {
-        viewModelScope.launch {
-            getFavoriteList()
-        }
-    }
-
      suspend fun getFavoriteList() :Boolean{
-         var result = false
-         try {
-             val responseResult = favoriteRepository.getFavorites()
-             if (responseResult.isSuccessful) {
-                 val body = responseResult.body()!!
+         val responseResult = favoriteRepository.getFavorites()
+         if (responseResult.isSuccessful) {
+             val body = responseResult.body()!!
 
-                 Log.d("로그", "FavoriteSettingViewModel - getFavoriteList() / ${body.data}")
-
-                 _favoriteIdolList.value = body.data.map { celebrityResponse ->
-                    val celebrity = celebrityResponse.celebrityResponseToCelebrity()
-                     if (selectedCelebrity.value != null && selectedCelebrity.value!!.id == celebrity.id) {
-                         celebrity.isSelected = true
-                         syncClickedCelebrity()
-                         setClickedCelebrity(celebrity)
-                     }
-                     celebrity
+             Log.d("로그", "FavoriteSettingViewModel - getFavoriteList() / ${body.data}")
+             _favoriteIdolList.postValue(body.data.map { celebrityResponse ->
+                 val celebrity = celebrityResponse.celebrityResponseToCelebrity()
+                 if (selectedCelebrity.value != null && selectedCelebrity.value!!.id == celebrity.id) {
+                     celebrity.isSelected = true
+                     syncClickedCelebrity()
+                     setClickedCelebrity(celebrity)
                  }
-                 result = true
-             } else {
-                 val errorBody = Json.decodeFromString<DefaultResponse>(
-                     responseResult.errorBody()?.string()!!
-                 )
-                 Log.d(
-                     "로그",
-                     "FavoriteSettingViewModel - getFavoriteList() 호출됨 - 응답 실패 - $errorBody"
-                 )
-                 result = false
-             }
+                 celebrity
+             })
+             return true
+         } else {
+             val errorBody = Json.decodeFromString<DefaultResponse>(
+                 responseResult.errorBody()?.string()!!
+             )
+             Log.d(
+                 "로그",
+                 "FavoriteSettingViewModel - getFavoriteList() 호출됨 - 응답 실패 - $errorBody"
+             )
+             return false
          }
-        catch (e: Exception){
-            return result
-        }
-         return result
     }
 
     suspend fun getCelebrityList(keyword: String) {
@@ -154,11 +142,11 @@ class FavoriteSettingViewModel @Inject constructor(
     }
 
     fun setClickedCelebrity(celebrity: Celebrity) {
-        _clickedCelebrity.value = celebrity
+        _clickedCelebrity.postValue(celebrity)
     }
 
     fun syncClickedCelebrity() {
-        _clickedCelebrity.value = _selectedCelebrity.value
+        _clickedCelebrity.postValue(_selectedCelebrity.value)
     }
 
     fun setSelectedCelebrity(celebrity: Celebrity) {
@@ -166,6 +154,40 @@ class FavoriteSettingViewModel @Inject constructor(
     }
 
     fun completeBtnClicked() {
-        _tempFavoriteIdolList.value = listOf()
+        if(!tempFavoriteIdolList.value.isNullOrEmpty()){
+            _tempFavoriteIdolList.value = listOf()
+            favoriteIdol()
+        }
     }
+
+    fun favoriteIdol(){
+        _selectedCelebrity.postValue(tempFavoriteIdolList.value?.get(0))
+    }
+
+    fun getBirthdayClosest() {
+        val favoriteIdolList = favoriteIdolList.value
+        var closestBirthdayCelebrity: Celebrity? = null
+        var minDaysDifference = Int.MAX_VALUE
+        val today = LocalDate.now()
+        if (favoriteIdolList != null) {
+            for (celebrity in favoriteIdolList) {
+                // 달이 이전인 경우 || 달과 일이 이전인 경우
+                var year = celebrity.birthday.year
+                if (today.month < celebrity.birthday.month || (today.month <= celebrity.birthday.month && today.dayOfMonth < celebrity.birthday.dayOfMonth)) {
+                    year++
+                }
+                val celebrityBirthday = java.time.LocalDate.of(
+                    year,
+                    celebrity.birthday.month,
+                    celebrity.birthday.dayOfMonth
+                )
+                val dayDifference = ChronoUnit.DAYS.between(today, celebrityBirthday)
+                if (dayDifference < minDaysDifference) {
+                    closestBirthdayCelebrity = celebrity
+                }
+            }
+            setSelectedCelebrity(closestBirthdayCelebrity!!)
+        }
+    }
+
 }
