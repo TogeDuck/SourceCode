@@ -294,7 +294,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             historyViewModel.setMarkerList()
         }
         historyViewModel.markerList.observe(viewLifecycleOwner) { list ->
-            list.forEach { it.map = naverMap }
+            list.forEach {
+                it.map = naverMap
+            }
         }
     }
 
@@ -323,12 +325,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         pathLine!!.map = null
                         pathLine = null
 
-                        if(favoriteSettingViewModel.selectedCelebrity.value != null){
+                        if (favoriteSettingViewModel.selectedCelebrity.value != null){
                             CoroutineScope(Dispatchers.IO).launch{
                                 eventListViewModel.getEventList(
                                     favoriteSettingViewModel.selectedCelebrity.value!!.id,
                                     mapViewModel.pickedDate.value!!.first.toKotlinLocalDate(),
                                     mapViewModel.pickedDate.value!!.second.toKotlinLocalDate())
+                            }
+                        }
+
+                        if (historyViewModel.markerList.value != null) {
+                            historyViewModel.markerList.value!!.forEach {
+                                it.map = null
                             }
                         }
                     }
