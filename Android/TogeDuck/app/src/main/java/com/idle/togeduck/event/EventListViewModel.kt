@@ -42,6 +42,17 @@ class EventListViewModel @Inject constructor(
     private val _selectedEvent = MutableLiveData<Event>()
     val selectedEvent: LiveData<Event>
         get() = _selectedEvent
+    private val _likeListToday= MutableLiveData<List<Event>>()
+    val likeListToday: LiveData<List<Event>>
+        get() = _likeListToday
+
+    private val _likeListUpcoming= MutableLiveData<List<Event>>()
+    val likeListUpcoming: LiveData<List<Event>>
+        get() = _likeListUpcoming
+
+    private val _likeListPast = MutableLiveData<List<Event>>()
+    val likeListPast: LiveData<List<Event>>
+        get() = _likeListPast
 
     val closeEvents = MutableLiveData<List<Event>>()
 
@@ -98,9 +109,7 @@ class EventListViewModel @Inject constructor(
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-
             Log.d("로그", "EventListViewModel - getEventById() 응답 실패 - $errorBody")
-
             null
         }
     }
@@ -111,14 +120,14 @@ class EventListViewModel @Inject constructor(
         if(responseResult.isSuccessful){
             val body = responseResult.body()!!
             val data = body.data
-            _listPast.postValue(data.past.map { it.toEvent() })
-            _listToday.postValue(data.today.map { it.toEvent() })
-            _listUpcoming.postValue(data.later.map { it.toEvent() })
+            _likeListPast.postValue(data.past.map { it.toEvent() })
+            _likeListToday.postValue(data.today.map { it.toEvent() })
+            _likeListUpcoming.postValue(data.later.map { it.toEvent() })
+            Log.d("로그", "EventListViewModel - getLikesList() 응답 성공 - $body")
         }else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
             )
-
             Log.d("로그", "EventListViewModel - getLikesList() 응답 실패 - $errorBody")
         }
     }

@@ -59,6 +59,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun initTourList(){
+        tourList = mutableListOf()
     }
     fun initCloseEvnets(){
         _closeEvents.value = emptyList()
@@ -78,7 +79,7 @@ class MapViewModel @Inject constructor(
             val lastPosition = currentList[currentList.size - 1]
             val disFromLastCoor = CalcDistance.getDistance(lastPosition.latitude, lastPosition.longitude, lat, lng)
             // 일정 거리 내인지 판별하는 메서드, 슷자는 조절 필요
-            if(disFromLastCoor in 3..20){
+            if(disFromLastCoor in 10..50){
                 currentList.add(newPosition)
                 hasChanged = true
             }

@@ -277,32 +277,100 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
         eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
-            todayClustering?.clearItems()
-            todayClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.TODAY) })
-            Log.d("이벤트 리스트 변경","오늘")
+            if(::naverMap.isInitialized){
+                todayClustering?.clearItems()
+                todayClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.TODAY) })
+                Log.d("이벤트 리스트 변경","오늘")
+            }
         }
         eventListViewModel.listUpcoming.observe(viewLifecycleOwner) { updatedMarkerList ->
-            upcomingClustering?.clearItems()
-            upcomingClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.LATER) })
-            Log.d("이벤트 리스트 변경","미래")
+            if(::naverMap.isInitialized) {
+                upcomingClustering?.clearItems()
+                upcomingClustering?.addItems(updatedMarkerList.map { it ->
+                    NaverItem(
+                        it.latitude,
+                        it.longitude,
+                        it,
+                        EventKind.LATER
+                    )
+                })
+                Log.d("이벤트 리스트 변경", "미래")
+            }
         }
         eventListViewModel.listPast.observe(viewLifecycleOwner) { updatedMarkerList ->
-            pastClustering?.clearItems()
-            pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.PAST) })
-            Log.d("이벤트 리스트 변경","과거")
+            if(::naverMap.isInitialized) {
+                pastClustering?.clearItems()
+                pastClustering?.addItems(updatedMarkerList.map { it ->
+                    NaverItem(
+                        it.latitude,
+                        it.longitude,
+                        it,
+                        EventKind.PAST
+                    )
+                })
+                Log.d("이벤트 리스트 변경", "과거")
+            }
+        }
+        eventListViewModel.likeListToday.observe(viewLifecycleOwner) { updatedMarkerList ->
+            if(::naverMap.isInitialized) {
+                todayClustering?.clearItems()
+                todayClustering?.addItems(updatedMarkerList.map { it ->
+                    NaverItem(
+                        it.latitude,
+                        it.longitude,
+                        it,
+                        EventKind.TODAY
+                    )
+                })
+                Log.d("이벤트 리스트 변경", "오늘")
+            }
+        }
+        eventListViewModel.likeListUpcoming.observe(viewLifecycleOwner) { updatedMarkerList ->
+            if(::naverMap.isInitialized) {
+                upcomingClustering?.clearItems()
+                upcomingClustering?.addItems(updatedMarkerList.map { it ->
+                    NaverItem(
+                        it.latitude,
+                        it.longitude,
+                        it,
+                        EventKind.LATER
+                    )
+                })
+                Log.d("이벤트 리스트 변경", "미래")
+            }
+        }
+        eventListViewModel.likeListPast.observe(viewLifecycleOwner) { updatedMarkerList ->
+            if(::naverMap.isInitialized) {
+                pastClustering?.clearItems()
+                pastClustering?.addItems(updatedMarkerList.map { it ->
+                    NaverItem(
+                        it.latitude,
+                        it.longitude,
+                        it,
+                        EventKind.PAST
+                    )
+                })
+                Log.d("이벤트 리스트 변경", "과거")
+            }
         }
         historyViewModel.route.observe(viewLifecycleOwner) { list ->
-            if (pathLine != null) pathLine!!.map = null
-            setPathLine(list)
+            if(::naverMap.isInitialized) {
+                if (pathLine != null) pathLine!!.map = null
+                setPathLine(list)
+            }
         }
         historyViewModel.historyEventList.observe(viewLifecycleOwner) {
-            historyViewModel.setMarkerList()
+            if(::naverMap.isInitialized) {
+                historyViewModel.setMarkerList()
+            }
         }
         historyViewModel.markerList.observe(viewLifecycleOwner) { list ->
-            setHistoryMarker(list)
+            if(::naverMap.isInitialized) {
+                setHistoryMarker(list)
+            }
         }
         historyViewModel.isNeedRefresh.observe(viewLifecycleOwner) { isNeed ->
-            if (isNeed) {
+            if (::naverMap.isInitialized && isNeed) {
                 mapViewModel.setBottomSheet(1)
                 componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
             }
@@ -561,14 +629,32 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             binding.tourStart.background = tourStartCircle
             binding.tourStart.text = "투어\n시작"
             mapViewModel.setTourStatus(false)
+            // 마지막 종료 지점 좌표 넣기
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED) {
+
+                // 권한이 있을 경우, 마지막 위치 정보 가져오기
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        if(location != null){
+                            mapViewModel.tourList.add(Position(location.latitude, location.longitude))
+                        }
+                    }
+            }
             // 실시간 위치 공유에서 종료 알림
             stompManager.sendTourEnd( favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1, mainViewModel.guid!!)
             // 투어 기록 전송
             CoroutineScope(Dispatchers.IO).launch {
+                Log.d("투어 기록", mapViewModel.tourList.toString())
                 historyViewModel.sendHistory(historyViewModel.historyId.value!!, mapViewModel.tourList)
                 historyViewModel.getHistoryList(favoriteSettingViewModel.selectedCelebrity.value!!.id)
+                mapViewModel.initTourList()
             }
-            mapViewModel.initTourList()
         } else if (binding.tourStart.text == "투어\n시작") {
             binding.tourStart.background = tourEndCircle
             binding.tourStart.text = "투어\n종료"
@@ -920,18 +1006,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     // 이동 경로를 경로선으로 표시
     private fun setPathLine(list: List<Position>) {
-        pathLine = PathOverlay()
-        val pathLineList = mutableListOf<LatLng>()
+        if(::naverMap.isInitialized){
+            pathLine = PathOverlay()
+            val pathLineList = mutableListOf<LatLng>()
 
-        list.forEach { (latitude, longitude) ->
-            pathLineList.add(LatLng(latitude, longitude))
-        }
+            list.forEach { (latitude, longitude) ->
+                pathLineList.add(LatLng(latitude, longitude))
+            }
 
-        if (list.isNotEmpty() && pathLine != null) {
-            pathLine!!.width = 30
-            pathLine!!.outlineWidth = 5
-            pathLine!!.coords = pathLineList
-            pathLine!!.map = naverMap
+            if (list.isNotEmpty() && pathLine != null) {
+                pathLine!!.width = 30
+                pathLine!!.outlineWidth = 5
+                pathLine!!.coords = pathLineList
+                pathLine!!.map = naverMap
+            }
         }
     }
 
@@ -993,7 +1081,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
         textQuest.text = "Quest"
         textList.text = "List"
-        textChat.text = "MyQuest"
+        textChat.text = "Likes"
         textMyRecord.text = "History"
     }
 
@@ -1315,6 +1403,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                         mapViewModel.isCloseDialogOpen = true
                                         figureCloseEvents(location.latitude, location.longitude)
                                     }
+                                    // Test
+                                    toast("lat: "+location.latitude.toString()+"lng: "+location.longitude.toString())
                                     // 웹소켓 전송 (추후 url, 전송 형식 백엔드에 맞춰 변경)
                                     stompManager.sendLocation(
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
@@ -1344,7 +1434,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         eventListViewModel.listToday.value?.let { list ->
             Log.d("오늘 이벤트", list.toString())
             for (event in list) {
-                if(CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
+                if(!event.isVisited && CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
                     mapViewModel.eventList.add(event)
                 }
             }

@@ -159,6 +159,7 @@ class HistoryViewModel @Inject constructor(
 
             Log.d("로그", "HistoryViewModel - sendHistory() 응답 실패 - $errorBody")
         }
+
     }
 
     suspend fun deleteHistory(historyId: Long) {

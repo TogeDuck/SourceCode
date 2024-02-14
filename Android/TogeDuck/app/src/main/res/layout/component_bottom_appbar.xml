@@ -50,7 +50,7 @@
             app:layout_constraintRight_toRightOf="@id/fab_list"
             />
         <ImageView
-            android:src="@drawable/ic_chat_bottom_apbar"
+            android:src="@drawable/ic_like_cupcake"
             android:id="@+id/ic_chat"
             android:layout_height="30dp"
             android:layout_width="30dp"
@@ -119,7 +119,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_quest"
             app:layout_constraintRight_toRightOf="@id/fab_quest"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="15dp"
             android:textSize="@dimen/text_small"
             />
         <TextView
@@ -129,7 +130,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_list"
             app:layout_constraintRight_toRightOf="@id/fab_list"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="15dp"
             android:textSize="@dimen/text_small"
             />
         <TextView
@@ -139,7 +141,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_chat"
             app:layout_constraintRight_toRightOf="@id/fab_chat"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="15dp"
             android:textSize="@dimen/text_small"
             />
         <TextView
@@ -149,7 +152,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/fab_myrecord"
             app:layout_constraintRight_toRightOf="@id/fab_myrecord"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="15dp"
             android:textSize="@dimen/text_small"
             />
 
@@ -209,7 +213,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_chat_bottom_apbar"
+                android:src="@drawable/ic_like_cupcake"
                 app:tint="@color/white" />
         </LinearLayout>
         <LinearLayout
