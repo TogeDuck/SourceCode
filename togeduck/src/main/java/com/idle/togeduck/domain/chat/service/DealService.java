@@ -26,7 +26,9 @@ import com.idle.togeduck.global.response.BaseException;
 import com.idle.togeduck.global.response.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -54,7 +56,8 @@ public class DealService {
 			.build();
 
 		dealRepository.save(deal);
-
+		log.info("dealId: {}", deal.getId());
+		log.info("target.getUser().getDeviceToken() : {}", target.getUser().getDeviceToken());
 		sendDealNotification(target.getUser().getDeviceToken(), deal.getId(), "거래 요청 도착");
 	}
 
