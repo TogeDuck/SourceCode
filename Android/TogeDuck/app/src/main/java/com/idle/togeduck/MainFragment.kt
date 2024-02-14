@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.FragmentMainBinding
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
@@ -53,7 +55,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 enum class MessageKind {
-    LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT, EXCHANGEREQUEST
+    LOCATION, TOURLEAVE, CHAT, QUESTALERT, QUESTCHAT
 }
 
 enum class QuestType {
@@ -104,22 +106,9 @@ class MainFragment : Fragment() {
         setDate()
         loadSelectedCelebrity()
         getFavorites()
-
-        // 삭제 예정 ========================================
-        binding.btn0.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
-        }
-
-        binding.btn1.setOnClickListener {
-            Log.d("최애", favoriteSettingViewModel.selectedCelebrity.value.toString())
-        }
-
-        binding.btn2.setOnClickListener {
-        }
-
-        binding.btn3.setOnClickListener {
-        }
-        //----------------------------------------------------
+    }
+    private fun setTheme(){
+        binding.mainLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), Theme.theme.main200))
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -173,12 +162,11 @@ class MainFragment : Fragment() {
     private fun observeConnection() {
         stompManager.stompClient.lifecycle().subscribe { event ->
             when (event.type) {
-                LifecycleEvent.Type.CLOSED, LifecycleEvent.Type.ERROR -> {
+                LifecycleEvent.Type.CLOSED -> {
                     Log.d("MainFragment", "Connection lost. Attempting to reconnect...")
                     connectSocketWithDelay()
                 }
-
-                else -> { /* 다른 이벤트 처리 */
+                else -> {
                 }
             }
         }
@@ -186,7 +174,7 @@ class MainFragment : Fragment() {
 
     private fun connectSocketWithDelay() {
         lifecycleScope.launch {
-            delay(1000)  // 연결 재시도 전 지연 시간
+            delay(3000)  // 연결 재시도 전 지연 시간
             connectSocket()
         }
     }
@@ -264,20 +252,6 @@ class MainFragment : Fragment() {
                         talkViewModel.addTalk(chat)
                     }
                 }
-
-                MessageKind.EXCHANGEREQUEST.toString() -> {
-                    val questChat =
-                        Gson().fromJson(websocketDataResponse.data, QuestChat::class.java)
-                    if (eventListViewModel.selectedEvent.value?.eventId == questChat.eventId) {
-                        val chat = Talk(
-                            0,
-                            questChat.userId,
-                            questChat.message,
-                            questChat.userId.equals(mainViewModel.guid)
-                        )
-                        talkViewModel.addTalk(chat)
-                    }
-                }
             }
         }
     }
@@ -332,41 +306,16 @@ class MainFragment : Fragment() {
     }
 
     private fun handelNavigate(result: Boolean) {
+        Log.d("최애 아이돌 리스트 응답 결과", result.toString())
         if (result) {
             CoroutineScope(Dispatchers.Main).launch {
-                getBirthdayClosest()
-//                findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
+                favoriteSettingViewModel.getBirthdayClosest()
+                findNavController().navigate(R.id.action_mainFragment_to_mapFragment)
             }
         } else {
             CoroutineScope(Dispatchers.Main).launch {
-//                findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
+                findNavController().navigate(R.id.action_mainFragment_to_FavoriteSettingFragment)
             }
-        }
-    }
-
-    private fun getBirthdayClosest() {
-        val favoriteIdolList = favoriteSettingViewModel.favoriteIdolList.value
-        var closestBirthdayCelebrity: Celebrity? = null
-        var minDaysDifference = Int.MAX_VALUE
-        val today = LocalDate.now()
-        if (favoriteIdolList != null) {
-            for (celebrity in favoriteIdolList) {
-                // 달이 이전인 경우 || 달과 일이 이전인 경우
-                var year = celebrity.birthday.year
-                if (today.month < celebrity.birthday.month || (today.month <= celebrity.birthday.month && today.dayOfMonth < celebrity.birthday.dayOfMonth)) {
-                    year++
-                }
-                val celebrityBirthday = java.time.LocalDate.of(
-                    year,
-                    celebrity.birthday.month,
-                    celebrity.birthday.dayOfMonth
-                )
-                val dayDifference = ChronoUnit.DAYS.between(today, celebrityBirthday)
-                if (dayDifference < minDaysDifference) {
-                    closestBirthdayCelebrity = celebrity
-                }
-            }
-            favoriteSettingViewModel.setSelectedCelebrity(closestBirthdayCelebrity!!)
         }
     }
 
