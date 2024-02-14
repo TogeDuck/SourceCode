@@ -156,12 +156,10 @@ class FavoriteSettingViewModel @Inject constructor(
     fun completeBtnClicked() {
         if(!tempFavoriteIdolList.value.isNullOrEmpty()){
             _tempFavoriteIdolList.value = listOf()
-            favoriteIdol()
         }
-    }
-
-    fun favoriteIdol(){
-        _selectedCelebrity.postValue(tempFavoriteIdolList.value?.get(0))
+        if(selectedCelebrity.value == null){
+            getBirthdayClosest()
+        }
     }
 
     fun getBirthdayClosest() {
