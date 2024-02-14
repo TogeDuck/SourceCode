@@ -22,6 +22,8 @@ import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ActivityMainBinding
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.fcm.FCMData
+import com.idle.togeduck.fcm.FCMData.dealId
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.MapFragment
@@ -76,6 +78,12 @@ class MainActivity : AppCompatActivity() {
                 var ft = supportFragmentManager.beginTransaction()
                 val fragment = MapFragment()
                 ft.replace(R.id.nav_host_fragment, fragment).commit()
+            }
+        }
+
+        FCMData.dealId.observe(this) { dealId ->
+            if (dealId != null) {
+                receivedMessage(dealId)
             }
         }
     }

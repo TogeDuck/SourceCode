@@ -629,6 +629,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             binding.tourStart.background = tourStartCircle
             binding.tourStart.text = "투어\n시작"
             mapViewModel.setTourStatus(false)
+            val toast = Toast.makeText(requireContext(), "투어가 종료되었습니다.", Toast.LENGTH_SHORT)
+            toast.show()
             // 마지막 종료 지점 좌표 넣기
             if (ContextCompat.checkSelfPermission(
                     requireContext(),
@@ -659,6 +661,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             binding.tourStart.background = tourEndCircle
             binding.tourStart.text = "투어\n종료"
             mapViewModel.setTourStatus(true)
+            var toast = Toast.makeText(requireContext(), "투어가 시작되었습니다.", Toast.LENGTH_SHORT)
+            toast.show()
+            toast = Toast.makeText(requireContext(), "투어가 진행되는 동안 상대방에게 위치가 공유됩니다.", Toast.LENGTH_SHORT)
+            toast.show()
             // 기록된 투어 post 요청
             CoroutineScope(Dispatchers.IO).launch {
                 historyViewModel.createHistory(favoriteSettingViewModel.selectedCelebrity.value!!.id)

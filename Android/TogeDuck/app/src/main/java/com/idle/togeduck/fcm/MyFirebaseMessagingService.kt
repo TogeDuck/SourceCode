@@ -12,6 +12,9 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.idle.togeduck.MainActivity
 import com.idle.togeduck.R
+import com.idle.togeduck.di.MainApplication
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
@@ -25,18 +28,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // TODO. 수신한 메시지를 처리
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.notification!!.title}")
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.notification!!.body}")
+        Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.data["dealId"]}")
 
-        if (applicationContext is MainActivity) {
-            val activity = applicationContext as MainActivity
-            activity.receivedMessage(message.data["dealId"]?.toLong())
-        }
+        FCMData.dealId.postValue(message.data["dealId"]?.toLong())
     }
 
     private fun sendNotification(messageBody: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0 /* Request code */, intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val channelId = getString(R.string.app_name)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -48,7 +51,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val channel = NotificationChannel(
             channelId,
