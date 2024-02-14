@@ -250,6 +250,9 @@
             android:id="@+id/action_exchangeAcceptDialogFragment_pop"
             app:popUpTo="@id/exchangeAcceptDialogFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_exchangeAcceptDialogFragment_to_chatRoomFragment"
+            app:destination="@id/chatRoomFragment" />
     </dialog>
 
 </navigation>

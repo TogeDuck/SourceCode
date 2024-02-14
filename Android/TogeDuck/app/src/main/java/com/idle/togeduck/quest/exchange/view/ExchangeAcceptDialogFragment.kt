@@ -61,7 +61,7 @@ class ExchangeAcceptDialogFragment: DialogFragment() {
             talkViewModel.addTalkRoom(TalkRoom(FCMData.chatId.value!!, "교환 채팅방", mutableMapOf()))
             talkViewModel.currentChatRoomId.value = FCMData.chatId.value!!
 //            findNavController().navigate(R.id.action_eventCloseDialog_pop)
-            findNavController().navigate(R.id.action_mapFragment_to_chatRoomFragment)
+            findNavController().navigate(R.id.action_exchangeAcceptDialogFragment_to_chatRoomFragment)
         }
     }
 }
