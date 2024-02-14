@@ -90,11 +90,6 @@ class EventListFragment : Fragment(), EventInfo {
                 eventListViewModel.isDetailOpen.value = false
             }
         }
-
-        //todo.즐겨찾기 리스트 호출은 main화면에서 하는 걸로 변경 -> 새로고침은 여기서
-//        CoroutineScope(Dispatchers.IO).launch {
-//            eventListViewModel.getLikesList()
-//
     }
 
     override fun onResume() {
@@ -145,6 +140,7 @@ class EventListFragment : Fragment(), EventInfo {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setTheme() {
+        binding.tvTitle.setTextColor(ContextCompat.getColor(requireContext(),Theme.theme.main500))
         binding.today.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
         binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
@@ -206,5 +202,4 @@ class EventListFragment : Fragment(), EventInfo {
             }
         }
     }
-
 }

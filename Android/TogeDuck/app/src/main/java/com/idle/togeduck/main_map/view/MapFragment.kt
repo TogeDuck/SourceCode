@@ -291,6 +291,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.PAST) })
             Log.d("이벤트 리스트 변경","과거")
         }
+        eventListViewModel.likeListToday.observe(viewLifecycleOwner) { updatedMarkerList ->
+            todayClustering?.clearItems()
+            todayClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.TODAY) })
+            Log.d("이벤트 리스트 변경","오늘")
+        }
+        eventListViewModel.likeListUpcoming.observe(viewLifecycleOwner) { updatedMarkerList ->
+            upcomingClustering?.clearItems()
+            upcomingClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.LATER) })
+            Log.d("이벤트 리스트 변경","미래")
+        }
+        eventListViewModel.likeListPast.observe(viewLifecycleOwner) { updatedMarkerList ->
+            pastClustering?.clearItems()
+            pastClustering?.addItems(updatedMarkerList.map { it -> NaverItem(it.latitude, it.longitude, it, EventKind.PAST) })
+            Log.d("이벤트 리스트 변경","과거")
+        }
         historyViewModel.route.observe(viewLifecycleOwner) { list ->
             if (pathLine != null) pathLine!!.map = null
             setPathLine(list)
@@ -993,7 +1008,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
         textQuest.text = "Quest"
         textList.text = "List"
-        textChat.text = "MyQuest"
+        textChat.text = "Likes"
         textMyRecord.text = "History"
     }
 

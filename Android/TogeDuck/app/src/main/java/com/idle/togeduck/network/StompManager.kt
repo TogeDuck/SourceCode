@@ -31,7 +31,7 @@ class StompManager {
     }
 
     private fun configureStompClient(stompClient: StompClient) {
-        stompClient.withClientHeartbeat(100000).withServerHeartbeat(100000)
+        stompClient.withClientHeartbeat(30000).withServerHeartbeat(70000)
     }
 
     fun setHeader(accessToken: String){
