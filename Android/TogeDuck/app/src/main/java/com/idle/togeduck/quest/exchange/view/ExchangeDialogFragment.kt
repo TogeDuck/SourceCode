@@ -103,13 +103,14 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
                             eventListViewModel.selectedEvent.value!!.eventId,
                             exchangeViewModel.selectedExchange.value!!.id)
                     }
-
+                    findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
                 }
                 else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value != null) {
                         CoroutineScope(Dispatchers.IO).launch {
                             Log.d("로그", "ExchangeDialogFragment - 교환 신청 됨")
                             exchangeViewModel.sendExchangeRequest(eventListViewModel.selectedEvent.value!!.eventId)
                     }
+                    findNavController().navigate(R.id.action_exchangeDialogFragment_pop)
                 } else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value == null){
                     val toast = Toast.makeText(requireContext(), "교환할 아이템을 선택하세요", Toast.LENGTH_SHORT)
                     toast.show()

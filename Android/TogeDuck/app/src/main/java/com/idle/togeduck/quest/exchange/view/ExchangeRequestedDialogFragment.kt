@@ -84,14 +84,14 @@ class ExchangeRequestedDialogFragment: DialogFragment() {
         FCMData.dealId.observe(viewLifecycleOwner) { dealId ->
             binding.btnAccept.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                exchangeViewModel.acceptExchange(dealId)
+                    exchangeViewModel.acceptExchange(dealId)
                 }
                 findNavController().navigate(R.id.action_exchangeRequestedDialogFragment_pop)
             }
 
             binding.btnRefuse.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                exchangeViewModel.rejectExchange(dealId)
+                    exchangeViewModel.rejectExchange(dealId)
                 }
                 findNavController().navigate(R.id.action_exchangeRequestedDialogFragment_pop)
             }
