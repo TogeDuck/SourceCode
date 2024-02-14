@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.idle.togeduck.R
 import com.idle.togeduck.databinding.DialogQuestAcceptBinding
+import com.idle.togeduck.fcm.FCMData
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.quest.talk.model.TalkRoom
 
@@ -31,21 +32,24 @@ class ExchangeAcceptDialogFragment: DialogFragment() {
         dialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         return dialog
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.btnBack.setOnClickListener{
+            onClick()
+        }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     fun onClick(){
-
-        talkViewModel.addTalkRoom(TalkRoom(questRecruit.chatId, questRecruit.title, mutableMapOf()))
-        talkViewModel.currentChatRoomId.value = questRecruit.chatId
-        findNavController().navigate(R.id.action_mapFragment_to_chatRoomFragment)
+        FCMData.chatId
+        if(FCMData.chatId.value != null){
+            talkViewModel.addTalkRoom(TalkRoom(FCMData.chatId.value!!, "교환 채팅방", mutableMapOf()))
+            talkViewModel.currentChatRoomId.value = FCMData.chatId.value!!
+            findNavController().navigate(R.id.action_eventCloseDialog_pop)
+            findNavController().navigate(R.id.action_mapFragment_to_chatRoomFragment)
+        }
     }
 }

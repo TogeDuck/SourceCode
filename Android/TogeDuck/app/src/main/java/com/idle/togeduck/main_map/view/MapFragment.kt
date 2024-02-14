@@ -55,6 +55,7 @@ import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.fcm.FCMData
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.history.model.HistoryTour
 import com.idle.togeduck.history.model.Position
@@ -248,6 +249,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         /** LiveData Observe **/
+        FCMData.isAccept.observe(viewLifecycleOwner){
+            if(FCMData.isAccept.value != null && FCMData.isAccept.value!!){
+                findNavController().navigate(R.id.action_mapFragment_to_exchangeAcceptDialogFragment)
+                FCMData.isAccept.postValue(false)
+            }
+        }
         mapViewModel.bottomSheetState.observe(viewLifecycleOwner) { state ->
             when(state){
                 0 -> {

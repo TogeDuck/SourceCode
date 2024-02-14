@@ -98,6 +98,9 @@
         <action
             android:id="@+id/action_mapFragment_to_exchangeRequestedDialogFragment"
             app:destination="@id/exchangeRequestedDialogFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangeAcceptDialogFragment"
+            app:destination="@id/exchangeAcceptDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -237,6 +240,15 @@
         <action
             android:id="@+id/action_exchangeRequestedDialogFragment_pop"
             app:popUpTo="@id/exchangeRequestedDialogFragment"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/exchangeAcceptDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangeAcceptDialogFragment"
+        android:label="ExchangeAcceptDialogFragment" >
+        <action
+            android:id="@+id/action_exchangeAcceptDialogFragment_pop"
+            app:popUpTo="@id/exchangeAcceptDialogFragment"
             app:popUpToInclusive="true" />
     </dialog>
 
