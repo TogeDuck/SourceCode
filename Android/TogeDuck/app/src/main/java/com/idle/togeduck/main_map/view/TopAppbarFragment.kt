@@ -33,7 +33,9 @@ import com.idle.togeduck.util.toAlpha
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.toKotlinLocalDate
 import java.time.Instant
 import java.time.ZoneId
@@ -90,7 +92,14 @@ class TopAppbarFragment : Fragment() {
 
         favoriteSettingViewModel.selectedCelebrity.observe(viewLifecycleOwner) { celebrity ->
             CoroutineScope(Dispatchers.IO).launch {
-                preference.setSelectedCelebrity(celebrity)
+                val savedCelebrity = runBlocking {
+                    preference.getSelectedCelebrity.first()
+                }
+
+                if (savedCelebrity == null || (celebrity != null && savedCelebrity.id != celebrity.id)) {
+                    preference.setSelectedCelebrity(celebrity)
+                }
+
                 val celebrityId =
                     favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
                 val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
@@ -100,9 +109,11 @@ class TopAppbarFragment : Fragment() {
                     endDate.toKotlinLocalDate()
                 )
                 historyViewModel.getHistoryList(celebrityId)
-            }
 
-            setIdolProfile()
+                launch(Dispatchers.Main) {
+                    setIdolProfile()
+                }
+            }
         }
 
         topAppbarBinding.ivFavorite.setOnClickListener {
@@ -279,6 +290,5 @@ class TopAppbarFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         _topAppBarBinding = null
-//        _searchBarBinding = null
     }
 }
