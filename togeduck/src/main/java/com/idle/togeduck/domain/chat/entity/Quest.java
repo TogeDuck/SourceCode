@@ -23,6 +23,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+// @SQLDelete(sql = "UPDATE quest SET deleted_at = true WHERE quest_id = ?")
+// @SQLRestriction("where deleted_at = false")
 @DiscriminatorColumn
 public class Quest extends BaseEntity {
 
@@ -38,5 +40,7 @@ public class Quest extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	// private boolean deleted = Boolean.FALSE;
 
 }
