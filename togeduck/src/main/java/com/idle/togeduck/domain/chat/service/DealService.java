@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import com.idle.togeduck.domain.chat.dto.DealRequestDto;
+import com.idle.togeduck.domain.chat.dto.TradeDto;
 import com.idle.togeduck.domain.chat.entity.Chat;
 import com.idle.togeduck.domain.chat.entity.Deal;
 import com.idle.togeduck.domain.chat.entity.DealStatus;
@@ -117,5 +119,19 @@ public class DealService {
 		} catch (ExecutionException e) {
 			throw new BaseException(ErrorCode.FIREBASE_EXECUTION);
 		}
+	}
+
+	public DealRequestDto getDeal(Long dealId) {
+		Deal deal = dealRepository.findByIdWithTarget(dealId)
+			.orElseThrow(() -> new BaseException(ErrorCode.DEAL_NOT_FOUND));
+		Long targetId = deal.getTarget().getId();
+		Long myTradeId = deal.getMyTrade().getId();
+		Trade trade = tradeRepository.findById(targetId).get();
+		Trade myTrade = tradeRepository.findById(myTradeId).get();
+		return new DealRequestDto(
+			new TradeDto(trade.getId(), trade.getContent(), trade.getImage(), trade.getDuration(), trade.getCreatedAt(),
+				trade.getExpiredAt(), true),
+			new TradeDto(myTrade.getId(), myTrade.getContent(), myTrade.getImage(), myTrade.getDuration(),
+				myTrade.getCreatedAt(), myTrade.getExpiredAt(), false));
 	}
 }
