@@ -21,11 +21,16 @@ import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.util.MultiPartUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ExchangeRequestedDialogFragment: DialogFragment() {
     private var _binding: DialogQuestExchangeRequestedBinding? = null
     private val binding get() = _binding!!
+
+    private val exchangeViewModel: ExchangeViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +57,24 @@ class ExchangeRequestedDialogFragment: DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setTheme()
+
+        //todo. 상대방 굿즈 , 내 굿즈 이미지 띄우기
+
+
+
+
+        binding.btnAccept.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+
+            }
+        }
+
+        binding.btnRefuse.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+
+            }
+        }
+
 
 
 
