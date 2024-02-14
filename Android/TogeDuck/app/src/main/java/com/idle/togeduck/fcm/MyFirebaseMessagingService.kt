@@ -33,9 +33,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val type = message.data["type"]!!
 
         when (type) {
-            "request" -> FCMData.dealId.postValue(message.data["dealId"]?.toLong())
-            "accept" -> FCMData.isAccept.postValue(true)
-            "reject" -> FCMData.isReject.postValue(true)
+            "request" -> {
+                Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() request 호출됨")
+                FCMData.dealId.postValue(message.data["dealId"]?.toLong())
+            }
+            "accept" -> {
+                Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() accept 호출됨")
+                FCMData.isAccept.postValue(true)
+                FCMData.chatId.postValue(message.data["chatId"]?.toLong())
+            }
+            "reject" -> {
+                Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() reject 호출됨")
+                FCMData.isReject.postValue(true)
+            }
         }
     }
 
