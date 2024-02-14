@@ -94,6 +94,8 @@ public class DealService {
 		userChatRepository.save(myUserChat);
 
 		//거래 수락 성공 요청 전송
+		sendDealNotificationWithChatId(deal.getTarget().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨",
+			"accept", chat.getId());
 		sendDealNotificationWithChatId(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨",
 			"accept", chat.getId());
 	}
