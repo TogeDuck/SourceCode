@@ -298,6 +298,8 @@ class MainFragment : Fragment() {
             preference.getSelectedCelebrity.first()
         }
 
+        Log.d("로그", "MainFragment - loadSelectedCelebrity() ${savedCelebrity}")
+
         if (savedCelebrity != null) {
             favoriteSettingViewModel.setSelectedCelebrity(savedCelebrity)
         }
