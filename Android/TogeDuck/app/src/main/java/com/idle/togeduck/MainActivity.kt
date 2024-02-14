@@ -77,19 +77,6 @@ class MainActivity : AppCompatActivity() {
 
         loadMyThemeAndCake()
 
-
-        historyViewModel.isNeedRefresh.observe(this) { isNeed ->
-            if (isNeed) {
-                var ft = supportFragmentManager.beginTransaction()
-                val fragment = MapFragment()
-                ft.replace(R.id.nav_host_fragment, fragment).commit()
-
-                val navController = findNavController(R.id.nav_host_fragment)
-                val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-                navController.graph = navGraph
-            }
-        }
-
         FCMData.dealId.observe(this) { dealId ->
             if (dealId != null) {
                 receivedMessage(dealId)

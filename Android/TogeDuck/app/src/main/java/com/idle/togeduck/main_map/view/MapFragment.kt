@@ -359,12 +359,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 setHistoryMarker(list)
             }
         }
-        historyViewModel.isNeedRefresh.observe(viewLifecycleOwner) { isNeed ->
-            if (::naverMap.isInitialized && isNeed) {
-                mapViewModel.setBottomSheet(1)
-                componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
-            }
-        }
     }
 
     /** Init Functions **/

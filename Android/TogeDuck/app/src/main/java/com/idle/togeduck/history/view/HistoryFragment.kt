@@ -1,5 +1,7 @@
 package com.idle.togeduck.history.view
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +14,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
@@ -31,6 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
@@ -73,43 +77,57 @@ class HistoryFragment : Fragment(), IHistory {
         binding.tvMyThemeContent.text = Theme.theme.name
 
         binding.ivThemeDraw.setOnClickListener {
-            binding.ivThemeDraw.isClickable = false
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.ivThemeDraw.isClickable = true
-            }, 500L)
+            if (!mapViewModel.isTourStart) {
+                binding.ivThemeDraw.isClickable = false
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.ivThemeDraw.isClickable = true
+                }, 500L)
 
-            if (Theme.myCake > 0) {
-                Theme.myCake--
-                binding.tvMyCakeCnt.text = Theme.myCake.toString()
+                if (Theme.myCake > 0) {
+                    Theme.myCake--
+                    binding.tvMyCakeCnt.text = Theme.myCake.toString()
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    preference.setCakeCount(Theme.myCake)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        preference.setCakeCount(Theme.myCake)
+                    }
+
+                    var newTheme = Theme.themeList.random()
+
+                    while (Theme.theme == newTheme) {
+                        newTheme = Theme.themeList.random()
+                    }
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        preference.setTheme(newTheme)
+                    }
+                    Theme.theme = newTheme
+                    binding.tvMyThemeContent.text = newTheme.name
+
+                    Toast.makeText(
+                        requireContext(),
+                        "${Theme.theme.name} 테마를 뽑으셨습니다!\n테마 적용을 위해 앱을 재시작 합니다",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    restartApp()
+                } else {
+                    Toast.makeText(requireContext(), "케잌이 부족하여 테마를 뽑을 수 없습니다", Toast.LENGTH_SHORT)
+                        .show()
                 }
-
-                var newTheme = Theme.themeList.random()
-
-                while (Theme.theme == newTheme) {
-                    newTheme = Theme.themeList.random()
-                }
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    preference.setTheme(newTheme)
-                }
-                Theme.theme = newTheme
-                binding.tvMyThemeContent.text = newTheme.name
-
-                Toast.makeText(
-                    requireContext(),
-                    "${Theme.theme.name} 테마를 뽑으셨습니다!",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                historyViewModel.setNeedRefresh(true)
             } else {
-                Toast.makeText(requireContext(), "케잌이 부족하여 테마를 뽑을 수 없습니다", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "투어 중에는 테마를 뽑을 수 없습니다", Toast.LENGTH_SHORT)
                     .show()
             }
         }
+    }
+
+    private fun restartApp() {
+        val packageManager: PackageManager = requireContext().packageManager
+        val intent = packageManager.getLaunchIntentForPackage(requireContext().packageName)
+        val componentName = intent!!.component
+        val mainIntent = Intent.makeRestartActivityTask(componentName)
+        requireContext().startActivity(mainIntent)
+        exitProcess(0)
     }
 
     override fun onResume() {
