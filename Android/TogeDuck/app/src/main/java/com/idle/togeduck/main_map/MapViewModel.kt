@@ -101,7 +101,6 @@ class MapViewModel @Inject constructor(
         val marker = Marker()
         marker.position = LatLng(coordinate.latitude, coordinate.longitude)
         marker.icon = peopleMarkerOverlay!!
-        marker.alpha = 0.5f
         marker.map = naverMap
         marker.height = markerSize
         marker.width = markerSize
