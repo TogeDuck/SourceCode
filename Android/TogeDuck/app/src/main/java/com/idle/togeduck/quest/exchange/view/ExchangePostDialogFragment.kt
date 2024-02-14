@@ -107,6 +107,7 @@ class ExchangePostDialogFragment: DialogFragment() {
 
             val exchangeRequest = ExchangeRequest(content, duration)
             val exchangeRequestPart = exchangeRequest.toMultipartBody()
+            Log.d("로그", "ExchangePostDialogFragment - btnExchangePost.setOnClickListener 호출됨")
 
             if(content.isNotEmpty() && duration > 0 && duration < 61){
 

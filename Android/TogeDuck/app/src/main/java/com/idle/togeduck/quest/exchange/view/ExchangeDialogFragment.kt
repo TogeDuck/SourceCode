@@ -103,6 +103,7 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
                 }
                 else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value != null) {
                         CoroutineScope(Dispatchers.IO).launch {
+                            Log.d("로그", "ExchangeDialogFragment - 교환 신청 됨")
                             exchangeViewModel.sendExchangeRequest(eventListViewModel.selectedEvent.value!!.eventId)
                     }
                 } else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value == null){
