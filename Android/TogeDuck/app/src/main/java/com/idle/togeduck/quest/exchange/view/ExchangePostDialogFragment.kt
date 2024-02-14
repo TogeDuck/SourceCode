@@ -103,7 +103,7 @@ class ExchangePostDialogFragment: DialogFragment() {
             val exchangeRequestPart = exchangeRequest.toMultipartBody()
             Log.d("로그", "ExchangePostDialogFragment - btnExchangePost.setOnClickListener 호출됨")
 
-            if(content.isNotEmpty() && duration > 0 && duration < 61){
+            if(content.isNotEmpty() && duration > 0 && duration < 121){
 
                 if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null
                     && favoriteSettingViewModel.selectedCelebrity.value != null){
