@@ -15,7 +15,7 @@ interface EventRepository {
         endDate: LocalDate,
     ): Response<EventListResponse>
 
-    suspend fun getLikesList(): Response<EventDataResponse>
+    suspend fun getLikesList(): Response<EventListResponse>
 
     suspend fun getEventById(eventId: Long) : Response<SingleEventResponse>
 
@@ -52,7 +52,7 @@ class DefaultEventRepository @Inject constructor(
         return eventService.getEventList(celebrityId, startDate, endDate)
     }
 
-    override suspend fun getLikesList(): Response<EventDataResponse> {
+    override suspend fun getLikesList(): Response<EventListResponse> {
         return eventService.getLikesList()
     }
 
