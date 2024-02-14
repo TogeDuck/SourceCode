@@ -58,7 +58,6 @@ class EventDetailFragment : Fragment(), EventReview {
 
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val eventReviewViewModel: EventViewModel by activityViewModels()
-    private val historyViewModel: HistoryViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private val mapViewModel: MapViewModel by activityViewModels()
 
@@ -66,7 +65,6 @@ class EventDetailFragment : Fragment(), EventReview {
     private lateinit var eventPosterAdapter: EventPosterAdapter
     private lateinit var event: Event
     private var imgPath: String? = null
-
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -123,7 +121,6 @@ class EventDetailFragment : Fragment(), EventReview {
         }
 
         binding.bookmarkCheck.setOnClickListener { likeClick(event) }
-        binding.visitCheck.setOnClickListener { visitClick(event) }
 
         eventReviewInputBinding.cameraBtn.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -262,20 +259,6 @@ class EventDetailFragment : Fragment(), EventReview {
         }
     }
 
-    override fun visitClick(event: Event) {
-//        event.isVisited = !event.isVisited
-//        changeVisitImage(event)
-//        Log.d("로그", "EventDetailFragment - visitClick()호출됨 - ${historyViewModel.selectedHistory.value!!.historyId}")
-//        CoroutineScope(Dispatchers.IO).launch {
-//            if(event.isVisited){
-//                if(historyViewModel.selectedHistory.value != null){
-//                    historyViewModel.addHistory(event.eventId, historyViewModel.selectedHistory.value!!.historyId)
-//                } else{
-//                    Log.d("로그", "selectedHistory가 null")
-//                }
-//            }
-//        }
-    }
 
     private fun postReview(){
         val selectedEventId = event.eventId
@@ -287,7 +270,6 @@ class EventDetailFragment : Fragment(), EventReview {
 
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("리뷰 등록", "이미지 있는 리뷰 등록")
-                    Log.d("리뷰 등록 값", ": ${reviewText}")
                     eventReviewViewModel.postReview(selectedEventId, reviewImg, reviewText)
                     eventReviewViewModel.getReviewList(selectedEventId, 0, 1000)
 

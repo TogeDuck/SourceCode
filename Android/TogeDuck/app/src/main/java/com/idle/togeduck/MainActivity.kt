@@ -5,12 +5,14 @@ import android.content.Intent
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.provider.Settings
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.navigation.findNavController
 import com.idle.togeduck.common.ForcedFinishService
 import com.idle.togeduck.common.ScreenSize.heightDp
 import com.idle.togeduck.common.ScreenSize.heightPx
@@ -23,6 +25,7 @@ import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.MapFragment
+import com.idle.togeduck.quest.exchange.ExchangeViewModel
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.util.CalcNavigationBarSize.getNavigationBarHeightToPx
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private val mapViewModel: MapViewModel by viewModels()
     private val historyViewModel: HistoryViewModel by viewModels()
+    private val exchangeViewModel: ExchangeViewModel by viewModels()
 
     @Inject
     lateinit var preference: PreferenceModule
@@ -126,6 +130,15 @@ class MainActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 preference.setCakeCount(0)
             }
+        }
+    }
+
+    fun receivedMessage(dealId: Long?) {
+        if (dealId != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                exchangeViewModel.getQuestExchangeById(dealId)
+            }
+            binding.navHostFragment.findNavController().navigate(R.id.action_mapFragment_to_exchangeRequestedDialogFragment)
         }
     }
 

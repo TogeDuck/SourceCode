@@ -69,6 +69,7 @@ class HistoryFragment : Fragment(), IHistory {
             historyAdapter.submitList(historyList)
         }
 
+        binding.tvMyCakeCnt.text = Theme.myCake.toString()
         binding.tvMyThemeContent.text = Theme.theme.name
 
         binding.ivThemeDraw.setOnClickListener {
@@ -111,14 +112,9 @@ class HistoryFragment : Fragment(), IHistory {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        binding.tvMyCakeCnt.text = Theme.myCake.toString()
-    }
-
     override fun onResume() {
         super.onResume()
-        Log.d("로그", "HistoryFragment - onResume() 호출됨")
+        binding.tvMyCakeCnt.text = Theme.myCake.toString()
         getHistoryList()
     }
 

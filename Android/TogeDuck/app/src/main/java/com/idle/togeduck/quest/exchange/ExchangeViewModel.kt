@@ -105,6 +105,18 @@ class ExchangeViewModel @Inject constructor(
         }
     }
 
+    suspend fun deleteExchange(eventId: Long, tradeId: Long) {
+        val responseResult = exchangeRepository.deleteExchange(eventId, tradeId)
+        Log.d("로그", "ExchangeViewModel - deleteExchange() 호출됨")
+
+        if (!responseResult.isSuccessful) {
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - deleteExchange() 응답 실패 - $errorBody")
+        }
+    }
+
     fun removeItemFromList(questExchange: Exchange) {
         val currentList = _exchangeList.value?.toMutableList() ?: mutableListOf()
         currentList.remove(questExchange)
@@ -121,5 +133,47 @@ class ExchangeViewModel @Inject constructor(
 
     fun setNavigatjionEvent(){
         _navigationEvent.value = false
+    }
+
+    suspend fun getQuestExchangeById(dealId: Long) {
+        val responseResult = exchangeRepository.getExchangeQuestByDealId(dealId)
+
+        if(responseResult.isSuccessful){
+            val dealData = responseResult.body()?.data
+
+        } else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - getQuestExchangeById() 응답 실패 ${errorBody}")
+        }
+    }
+
+    suspend fun rejectExchange(dealId: Long) {
+        val responseResult = exchangeRepository.rejectExchange(dealId)
+
+        if(responseResult.isSuccessful){
+            val body = responseResult.body()
+
+        } else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - rejectExchange() 응답 실패 ${errorBody}")
+        }
+    }
+
+    suspend fun acceptExchange(dealId: Long) {
+        val responseResult = exchangeRepository.acceptExchange(dealId)
+
+        if(responseResult.isSuccessful){
+            val body = responseResult.body()
+
+        } else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+            Log.d("로그", "ExchangeViewModel - acceptExchange() 응답 실패 ${errorBody}")
+        }
     }
 }

@@ -79,6 +79,12 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
                 .into(binding.ivMainImg)
 
             setImgSize()
+
+            if(exchange.isMine){
+                binding.btnSend.text = "삭제하기"
+            }else {
+                binding.btnSend.text = "신청하기"
+            }
         }
 
         binding.questExchangeDialog.setOnClickListener {
@@ -86,14 +92,23 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
         }
 
         binding.btnSend.setOnClickListener {
-            if(exchangeViewModel.mySelectedExchange.value != null && exchangeViewModel.selectedExchange.value != null){
-                CoroutineScope(Dispatchers.IO).launch {
-                    exchangeViewModel.sendExchangeRequest(0L)
+            if(exchangeViewModel.selectedExchange.value != null){
+                if(binding.btnSend.text == "삭제하기") {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        exchangeViewModel.deleteExchange(
+                            eventListViewModel.selectedEvent.value!!.eventId,
+                            exchangeViewModel.selectedExchange.value!!.id)
+                    }
+
                 }
-            }
-            else {
-                val toast = Toast.makeText(requireContext(), "교환할 아이템을 선택하세요", Toast.LENGTH_SHORT)
-                toast.show()
+                else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            exchangeViewModel.sendExchangeRequest(eventListViewModel.selectedEvent.value!!.eventId)
+                    }
+                } else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value == null){
+                    val toast = Toast.makeText(requireContext(), "교환할 아이템을 선택하세요", Toast.LENGTH_SHORT)
+                    toast.show()
+                }
             }
         }
 
