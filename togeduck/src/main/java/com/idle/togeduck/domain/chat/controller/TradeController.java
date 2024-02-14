@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.idle.togeduck.domain.chat.dto.DealRequest;
+import com.idle.togeduck.domain.chat.dto.DealRequestDto;
 import com.idle.togeduck.domain.chat.dto.TradeRequestDto;
 import com.idle.togeduck.domain.chat.dto.TradeResponseDto;
 import com.idle.togeduck.domain.chat.service.DealService;
@@ -127,5 +128,13 @@ public class TradeController {
 		dealService.rejectDeal(dealId);
 
 		return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK.value(), "성공", null));
+	}
+
+	@GetMapping("/{eventId}/trades/{tradeId}/deals/{dealId}")
+	public ResponseEntity<BaseResponse<DealRequestDto>> getDeal(
+		@PathVariable Long dealId,
+		@AuthenticationPrincipal User user) {
+		return ResponseEntity.ok(
+			new BaseResponse<>(HttpStatus.OK.value(), "성공", dealService.getDeal(dealId)));
 	}
 }
