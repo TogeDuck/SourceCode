@@ -30,7 +30,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.notification!!.body}")
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.data["dealId"]}")
 
-        FCMData.dealId.postValue(message.data["dealId"]?.toLong())
+        val type = message.data["type"]!!
+
+        when (type) {
+            "request" -> FCMData.dealId.postValue(message.data["dealId"]?.toLong())
+            "accept" -> FCMData.isAccept.postValue(true)
+            "reject" -> FCMData.isReject.postValue(true)
+        }
     }
 
     private fun sendNotification(messageBody: String) {
