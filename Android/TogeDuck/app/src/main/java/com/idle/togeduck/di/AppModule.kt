@@ -61,6 +61,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 @InstallIn(SingletonComponent::class)
 object AppModule {
 //    private const val BASE_URL = "https://a1025c31-1b70-43fc-85ae-a9f7b81404ce.mock.pstmn.io"
+    var isServiceRunning = false
     private const val BASE_URL = "https://i10a301.p.ssafy.io"
 
     @Singleton

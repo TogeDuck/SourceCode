@@ -289,7 +289,7 @@ class MainFragment : Fragment() {
     private fun setDate() {
         val today = java.time.LocalDate.now()
         val sixMonthsAgo = today.minusMonths(6)
-        val sixMonthsLater = today.plusMonths(6)
+        val sixMonthsLater = today.plusMonths(6).minusDays(1)
         mapViewModel.setPickedDate(sixMonthsAgo, sixMonthsLater)
     }
 

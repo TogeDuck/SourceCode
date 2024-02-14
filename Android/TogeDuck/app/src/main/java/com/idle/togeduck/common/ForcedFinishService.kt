@@ -13,6 +13,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.idle.togeduck.MainActivity
 import com.idle.togeduck.R
+import com.idle.togeduck.di.AppModule
 import com.idle.togeduck.network.StompManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -51,7 +52,7 @@ class ForcedFinishService : Service() {
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setContentText("TogeDuck 앱이 실행 중입니다")
+            .setContentText("TogeDuck 투어가 진행 중입니다")
             .setContentIntent(pendingIntent)
             .build()
 
@@ -64,6 +65,7 @@ class ForcedFinishService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        AppModule.isServiceRunning = true
         id = intent.getLongExtra("id", 1L)
         guid = intent.getStringExtra("guid")
         return START_STICKY
@@ -97,5 +99,10 @@ class ForcedFinishService : Service() {
         val notificationManager = applicationContext
             .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppModule.isServiceRunning = false
     }
 }
