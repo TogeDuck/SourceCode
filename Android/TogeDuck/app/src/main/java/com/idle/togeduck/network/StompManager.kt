@@ -31,7 +31,7 @@ class StompManager {
     }
 
     private fun configureStompClient(stompClient: StompClient) {
-        stompClient.withClientHeartbeat(10000).withServerHeartbeat(10000)
+        stompClient.withClientHeartbeat(100000).withServerHeartbeat(100000)
     }
 
     fun setHeader(accessToken: String){
@@ -98,10 +98,6 @@ class StompManager {
         stompClient.send(destination,Gson().toJson(websocketResponse), headers).subscribe()
         Log.d("웹소켓 전송", destination+" : "+websocketResponse.content)
     }
-    fun sendExchangeRequest(eventId:Long, userId: String, celebrityId: Long, sender: Exchange, receiver: Exchange){
-
-    }
-
     fun subscribeTopic(topic: String, onMessageReceived: (String) -> Unit) {
         val disposable = stompClient.topic(topic)
             .subscribeOn(Schedulers.io())
