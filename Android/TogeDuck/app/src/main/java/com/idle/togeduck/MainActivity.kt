@@ -7,10 +7,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.provider.Settings
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
 import com.idle.togeduck.common.ForcedFinishService
@@ -20,6 +22,7 @@ import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.common.ScreenSize.widthPx
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ActivityMainBinding
+import com.idle.togeduck.di.AppModule
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.fcm.FCMData
@@ -33,6 +36,7 @@ import com.idle.togeduck.util.CalcNavigationBarSize.getNavigationBarHeightToPx
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -73,11 +77,16 @@ class MainActivity : AppCompatActivity() {
 
         loadMyThemeAndCake()
 
+
         historyViewModel.isNeedRefresh.observe(this) { isNeed ->
             if (isNeed) {
                 var ft = supportFragmentManager.beginTransaction()
                 val fragment = MapFragment()
                 ft.replace(R.id.nav_host_fragment, fragment).commit()
+
+                val navController = findNavController(R.id.nav_host_fragment)
+                val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+                navController.graph = navGraph
             }
         }
 
@@ -134,9 +143,9 @@ class MainActivity : AppCompatActivity() {
         if (myCake != null) {
             Theme.myCake = myCake
         } else {
-            Theme.myCake = 0
+            Theme.myCake = 100
             CoroutineScope(Dispatchers.IO).launch {
-                preference.setCakeCount(0)
+                preference.setCakeCount(100)
             }
         }
     }
@@ -150,11 +159,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        checkServiceRunning(0)
+    }
+
+    private fun checkServiceRunning(count: Int) {
+        if (count < 5) {
+            if (AppModule.isServiceRunning) {
+                this.stopService(Intent(this, ForcedFinishService::class.java))
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    delay(100)
+                    checkServiceRunning(count + 1)
+                }
+            }
+        }
+    }
     override fun onStop() {
         super.onStop()
         talkViewModel.setChatPreference()
 
-        if (mapViewModel.isTourStart != null && mapViewModel.isTourStart!!) {
+        if (mapViewModel.isTourStart) {
             val intent = Intent(this, ForcedFinishService::class.java)
             intent.putExtra("id", favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1)
             intent.putExtra("guid", mainViewModel.guid)
