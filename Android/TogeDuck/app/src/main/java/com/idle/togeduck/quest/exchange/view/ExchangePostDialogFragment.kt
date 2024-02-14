@@ -47,7 +47,6 @@ class ExchangePostDialogFragment: DialogFragment() {
     private val exchangeViewModel: ExchangeViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
-//    private lateinit var event: Event
     private var imgPath: String? = null
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -88,11 +87,6 @@ class ExchangePostDialogFragment: DialogFragment() {
 
         setTheme()
 
-        //todo. 퀘스트 등록할 때 eventId 현재 선택한 eventId로 수정 필요 (지금 임시로 1번으로 해놓음)
-//        eventListViewModel.selectedEvent.observe(viewLifecycleOwner) {event ->
-//            this.event = event
-//        }
-
         binding.llBackground.setOnClickListener{
             findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
         }
@@ -131,9 +125,6 @@ class ExchangePostDialogFragment: DialogFragment() {
                     }
                 }
             }
-
-            //todo. 퀘스트 리스트로 이동?
-            //등록되었습니다 알림?
             findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
         }
 
@@ -141,15 +132,13 @@ class ExchangePostDialogFragment: DialogFragment() {
             binding.exchangeImgBtn.visibility = View.GONE
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-
-
     }
 
 
     private fun setTheme() {
         binding.npExchangeDuration.apply {
             minValue = 1
-            maxValue = 60
+            maxValue = 120
         }
 
         val allRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_10) as GradientDrawable

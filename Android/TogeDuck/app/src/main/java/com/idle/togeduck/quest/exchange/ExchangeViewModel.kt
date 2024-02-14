@@ -64,6 +64,7 @@ class ExchangeViewModel @Inject constructor(
             val exchangeListResponse = response.body()
             val exchanges = exchangeListResponse?.data?.content ?: emptyList()
             _exchangeList.postValue(exchanges.map{it.toExchange()})
+            Log.d("교환 로그", exchanges.toString())
             Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 성공")
         } else {
             Log.d("교환 로그", "ExchangeViewModel -  getExchangeList 호출됨 - 응답 실패")

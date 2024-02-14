@@ -2,6 +2,7 @@ package com.idle.togeduck.quest.exchange.view
 
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -82,6 +83,9 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
 
             if(exchange.isMine){
                 binding.btnSend.text = "삭제하기"
+                binding.svExchange.visibility = View.GONE
+                binding.questExchangeMyText.visibility = View.GONE
+                binding.questExchangeDialogRv.visibility = View.GONE
             }else {
                 binding.btnSend.text = "신청하기"
             }

@@ -95,7 +95,7 @@ class QuestRecruitViewHolder(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun configurePassedTime(expiredAt: LocalDateTime) {
         val currentTime = java.time.LocalDateTime.now()
-        val durationInMillis = expiredAt.toJavaLocalDateTime().toInstant(ZoneOffset.UTC).toEpochMilli() - currentTime.toInstant(
+        val durationInMillis = expiredAt.toJavaLocalDateTime().plusHours(9).toInstant(ZoneOffset.UTC).toEpochMilli() - currentTime.toInstant(
             ZoneOffset.UTC).toEpochMilli()
         elapsedTimeInSeconds = (durationInMillis / 1000).toInt()
     }
