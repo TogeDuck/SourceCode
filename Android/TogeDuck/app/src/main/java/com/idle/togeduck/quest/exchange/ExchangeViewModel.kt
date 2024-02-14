@@ -10,6 +10,7 @@ import com.idle.togeduck.common.model.DefaultResponse
 import com.idle.togeduck.network.StompManager
 import com.idle.togeduck.quest.exchange.model.DefaultExchangeRepository
 import com.idle.togeduck.quest.exchange.model.Exchange
+import com.idle.togeduck.quest.exchange.model.ExchangeResponse
 import com.idle.togeduck.quest.exchange.model.toExchange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -46,6 +47,15 @@ class ExchangeViewModel @Inject constructor(
         get() = _navigationEvent
 
     var needUpdate: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    private val _yourExchangeData = MutableLiveData<Exchange>()
+    val yourExchangeData: LiveData<Exchange>
+        get() = _yourExchangeData
+
+    private val _myExchangeData = MutableLiveData<Exchange>()
+    val myExchangeData: LiveData<Exchange>
+        get() = _myExchangeData
+
 
     suspend fun getExchangeList(eventId: Long, page: Int, size: Int){
         val response = exchangeRepository.getExchangeList(eventId, page, size)
@@ -140,7 +150,8 @@ class ExchangeViewModel @Inject constructor(
 
         if(responseResult.isSuccessful){
             val dealData = responseResult.body()?.data
-
+            _yourExchangeData.postValue(dealData!!.trade.toExchange())
+            _myExchangeData.postValue(dealData!!.myTrade.toExchange())
         } else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
