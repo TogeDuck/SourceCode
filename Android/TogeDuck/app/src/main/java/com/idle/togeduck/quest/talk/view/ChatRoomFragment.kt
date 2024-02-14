@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -69,10 +71,6 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
         setTheme()
         setLayout()
 
-        componentChatInputBinding.talkSend.setOnClickListener {
-            sendChat()
-        }
-
         val filteredTalkList = MediatorLiveData<List<Talk>>()
         filteredTalkList.addSource(talkViewModel.currentChatRoomId) { chatRoomId ->
             talkViewModel.chatRoomTalkList.value?.let { chatRoomTalkMap ->
@@ -89,8 +87,14 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
             questTalkAdapter.submitList(talkList ?: emptyList())
 
             if (talkList.isNotEmpty()) {
-                binding.chatroomRecycle.scrollToPosition(talkList.lastIndex)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.chatroomRecycle.scrollToPosition(talkList.lastIndex)
+                },  100L)
             }
+        }
+
+        componentChatInputBinding.talkSend.setOnClickListener {
+            sendChat()
         }
     }
 
