@@ -150,13 +150,11 @@ class ExchangeViewModel @Inject constructor(
 
         if(responseResult.isSuccessful){
             val dealData = responseResult.body()?.data
-<<<<<<< HEAD
             Log.d("로그", "ExchangeViewModel - getQuestExchangeById() 호출됨 trade ${dealData!!.trade}")
             Log.d("로그", "ExchangeViewModel - getQuestExchangeById() 호출됨 myTrade ${dealData!!.myTrade}")
-=======
+
             _yourExchangeData.postValue(dealData!!.trade.toExchange())
             _myExchangeData.postValue(dealData!!.myTrade.toExchange())
->>>>>>> 2571da63dcadd0e0ab0cd141a91ad97cfc7bc515
         } else{
             val errorBody = Json.decodeFromString<DefaultResponse>(
                 responseResult.errorBody()?.string()!!
