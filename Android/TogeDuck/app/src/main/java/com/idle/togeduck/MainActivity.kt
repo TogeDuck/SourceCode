@@ -130,9 +130,9 @@ class MainActivity : AppCompatActivity() {
         if (myCake != null) {
             Theme.myCake = myCake
         } else {
-            Theme.myCake = 100
+            Theme.myCake = 0
             CoroutineScope(Dispatchers.IO).launch {
-                preference.setCakeCount(100)
+                preference.setCakeCount(0)
             }
         }
     }
