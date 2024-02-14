@@ -554,18 +554,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun initPeopleMarkerImage(): OverlayImage{
+    private fun initPeopleMarkerImage(): OverlayImage {
+        val sizeInPixels = dpToPx(50, requireContext())
+
         val imageView = ImageView(requireContext()).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                dpToPx(30, requireContext()),
-                dpToPx(30, requireContext())
-            )
+            layoutParams = ViewGroup.LayoutParams(sizeInPixels, sizeInPixels)
             setImageResource(R.drawable.common_duck)
         }
-        val bitmap = Bitmap.createBitmap(imageView.width, imageView.height, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(sizeInPixels, sizeInPixels, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        imageView.layout(0, 0, imageView.width, imageView.height)
+        imageView.layout(0, 0, sizeInPixels, sizeInPixels)
         imageView.draw(canvas)
+
         return OverlayImage.fromBitmap(bitmap)
     }
     private fun changeTourBtn() {
