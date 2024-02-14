@@ -6,26 +6,31 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.activityViewModels
 import com.idle.togeduck.common.ForcedFinishService
 import com.idle.togeduck.common.ScreenSize.heightDp
 import com.idle.togeduck.common.ScreenSize.heightPx
 import com.idle.togeduck.common.ScreenSize.widthDp
 import com.idle.togeduck.common.ScreenSize.widthPx
+import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.ActivityMainBinding
 import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
+import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
+import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.quest.talk.TalkViewModel
 import com.idle.togeduck.util.CalcNavigationBarSize.getNavigationBarHeightToPx
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private val favoriteSettingViewModel: FavoriteSettingViewModel by viewModels()
     private val mainViewModel: MainViewModel by viewModels()
     private val mapViewModel: MapViewModel by viewModels()
+    private val historyViewModel: HistoryViewModel by viewModels()
 
     @Inject
     lateinit var preference: PreferenceModule
@@ -58,6 +64,16 @@ class MainActivity : AppCompatActivity() {
         checkGPSSetting()
 
         talkViewModel.getChatPreference()
+
+        loadMyThemeAndCake()
+
+        historyViewModel.isNeedRefresh.observe(this) { isNeed ->
+            if (isNeed) {
+                var ft = supportFragmentManager.beginTransaction()
+                val fragment = MapFragment()
+                ft.replace(R.id.nav_host_fragment, fragment).commit()
+            }
+        }
     }
 
     private fun checkGPSSetting() {
@@ -84,6 +100,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadMyThemeAndCake() {
+        val myTheme = runBlocking {
+            preference.getTheme.first()
+        }
+
+        if (myTheme != null) {
+            Theme.theme = myTheme
+        } else {
+            val newTheme = Theme.themeList.random()
+            Theme.theme = newTheme
+            CoroutineScope(Dispatchers.IO).launch {
+                preference.setTheme(newTheme)
+            }
+        }
+
+        val myCake = runBlocking {
+            preference.getCakeCount.first()
+        }
+
+        if (myCake != null) {
+            Theme.myCake = myCake
+        } else {
+            Theme.myCake = 0
+            CoroutineScope(Dispatchers.IO).launch {
+                preference.setCakeCount(0)
+            }
+        }
+    }
+
     override fun onStop() {
         super.onStop()
         talkViewModel.setChatPreference()
@@ -97,6 +142,5 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-//        talkViewModel.setChatPreference()
     }
 }

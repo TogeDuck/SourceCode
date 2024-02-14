@@ -301,6 +301,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         historyViewModel.markerList.observe(viewLifecycleOwner) { list ->
             setHistoryMarker(list)
         }
+        historyViewModel.isNeedRefresh.observe(viewLifecycleOwner) { isNeed ->
+            if (isNeed) {
+                mapViewModel.setBottomSheet(1)
+                componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
+            }
+        }
     }
 
     /** Init Functions **/
