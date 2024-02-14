@@ -103,7 +103,7 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
                 }
                 else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value != null) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            exchangeViewModel.sendExchangeRequest(0L)
+                            exchangeViewModel.sendExchangeRequest(eventListViewModel.selectedEvent.value!!.eventId)
                     }
                 } else if(binding.btnSend.text == "신청하기" && exchangeViewModel.mySelectedExchange.value == null){
                     val toast = Toast.makeText(requireContext(), "교환할 아이템을 선택하세요", Toast.LENGTH_SHORT)
