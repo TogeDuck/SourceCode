@@ -70,7 +70,6 @@ class HistoryFragment : Fragment(), IHistory {
         }
 
         binding.tvMyThemeContent.text = Theme.theme.name
-        binding.tvMyCakeCnt.text = Theme.myCake.toString()
 
         binding.ivThemeDraw.setOnClickListener {
             binding.ivThemeDraw.isClickable = false
@@ -79,10 +78,11 @@ class HistoryFragment : Fragment(), IHistory {
             }, 500L)
 
             if (Theme.myCake > 0) {
+                Theme.myCake--
                 binding.tvMyCakeCnt.text = Theme.myCake.toString()
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    preference.setCakeCount(--Theme.myCake)
+                    preference.setCakeCount(Theme.myCake)
                 }
 
                 var newTheme = Theme.themeList.random()
@@ -109,6 +109,11 @@ class HistoryFragment : Fragment(), IHistory {
                     .show()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.tvMyCakeCnt.text = Theme.myCake.toString()
     }
 
     override fun onResume() {
