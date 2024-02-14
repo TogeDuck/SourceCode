@@ -95,6 +95,9 @@
         <action
             android:id="@+id/action_mapFragment_to_eventCloseDialog"
             app:destination="@id/eventCloseDialog" />
+        <action
+            android:id="@+id/action_mapFragment_to_exchangeRequestedDialogFragment"
+            app:destination="@id/exchangeRequestedDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/questShareFragment"
@@ -225,6 +228,15 @@
         <action
             android:id="@+id/action_eventCloseDialog_pop"
             app:popUpTo="@id/eventCloseDialog"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/exchangeRequestedDialogFragment"
+        android:name="com.idle.togeduck.quest.exchange.view.ExchangeRequestedDialogFragment"
+        android:label="ExchangeRequestedDialogFragment" >
+        <action
+            android:id="@+id/action_exchangeRequestedDialogFragment_pop"
+            app:popUpTo="@id/exchangeRequestedDialogFragment"
             app:popUpToInclusive="true" />
     </dialog>
 
