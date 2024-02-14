@@ -17,18 +17,22 @@ import com.idle.togeduck.R
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.databinding.DialogEventCloseBinding
 import com.idle.togeduck.databinding.DialogQuestSharePostBinding
+import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.view.list.list_rv.EventInfo
 import com.idle.togeduck.event.view.list.list_rv.EventInfoAdapter
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
 import com.idle.togeduck.main_map.MapViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.toKotlinLocalDate
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EventCloseDialog: DialogFragment(), EventInfo {
     private var _binding: DialogEventCloseBinding? = null
     private val binding get() = _binding!!
@@ -37,6 +41,9 @@ class EventCloseDialog: DialogFragment(), EventInfo {
     private val historyViewModel: HistoryViewModel by activityViewModels()
     private val eventListViewModel: EventListViewModel by activityViewModels()
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
+
+    @Inject
+    lateinit var preference: PreferenceModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +83,9 @@ class EventCloseDialog: DialogFragment(), EventInfo {
     }
 
     override fun eventClicked(position: Int, type: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            preference.setCakeCount(++Theme.myCake)
+        }
         sendEvent(position)
         getEventList()
         exit()

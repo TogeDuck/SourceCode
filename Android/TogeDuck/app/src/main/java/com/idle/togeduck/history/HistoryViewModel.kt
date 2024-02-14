@@ -46,6 +46,8 @@ class HistoryViewModel @Inject constructor(
     private val _historyId = MutableLiveData<Long>()
     val historyId: LiveData<Long> get() = _historyId
 
+    private val _isNeedRefresh = MutableLiveData<Boolean>(false)
+    val isNeedRefresh: LiveData<Boolean> get() = _isNeedRefresh
 
 
     init {
@@ -193,5 +195,9 @@ class HistoryViewModel @Inject constructor(
         }
 
         _markerList.value = newList
+    }
+
+    fun setNeedRefresh(b: Boolean) {
+        _isNeedRefresh.value = b
     }
 }

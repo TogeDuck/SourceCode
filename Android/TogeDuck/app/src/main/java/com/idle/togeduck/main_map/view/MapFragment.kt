@@ -56,6 +56,7 @@ import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
+import com.idle.togeduck.history.model.HistoryTour
 import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
@@ -76,6 +77,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
@@ -83,6 +85,7 @@ import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toKotlinLocalDate
 import ted.gun0912.clustering.clustering.algo.NonHierarchicalViewBasedAlgorithm
@@ -151,6 +154,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     @Inject
     lateinit var preference: PreferenceModule
+
+    private var isHistoryEvent = false
 
     /** Fragment Lifecycle Functions **/
     override fun onCreateView(
@@ -294,8 +299,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             historyViewModel.setMarkerList()
         }
         historyViewModel.markerList.observe(viewLifecycleOwner) { list ->
-            list.forEach {
-                it.map = naverMap
+            setHistoryMarker(list)
+        }
+        historyViewModel.isNeedRefresh.observe(viewLifecycleOwner) { isNeed ->
+            if (isNeed) {
+                mapViewModel.setBottomSheet(1)
+                componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
             }
         }
     }
@@ -310,17 +319,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         componentBottomSheetBinding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 ->  {
-
-                    }
+                if (position != 5 && position != 2) {
+                    isHistoryEvent = false
                 }
-            }
-        })
 
-        componentBottomSheetBinding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                if (position != 5) {
+                if (position != 5 && !isHistoryEvent) {
                     if (pathLine != null) {
                         pathLine!!.map = null
                         pathLine = null
@@ -589,7 +592,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         changeViewPagerPage(4)
                     }
                     componentBottomSheetBinding.viewPager.currentItem == 2 -> {
-                        changeViewPagerPage(1)
+                        if (isHistoryEvent) {
+                            changeViewPagerPage(5)
+                            mapViewModel.setBottomSheet(1)
+                            isHistoryEvent = false
+                        } else {
+                            changeViewPagerPage(1)
+                        }
                     }
                     sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
                         sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -1362,6 +1371,51 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (timer != null) {
             timer!!.cancel()
             timer = null
+        }
+    }
+
+    private fun setHistoryMarker(list: List<Marker>) {
+        list.forEach { marker ->
+            marker.apply {
+                icon = MarkerIcons.BLACK
+                iconTintColor = getClusterColor(EventKind.TODAY)
+                width = dpToPx(22, requireContext())
+                height = dpToPx(30, requireContext())
+                map = naverMap
+            }
+
+            var eventId: Long? = null
+
+            historyViewModel.historyEventList.value?.forEach { historyTour ->
+                if (marker.position.latitude == historyTour.latitude && marker.position.longitude == historyTour.longitude) {
+                    eventId = historyTour.eventId
+                }
+            }
+
+            if (eventId != null) {
+                val listener = Overlay.OnClickListener { overlay ->
+                    isHistoryEvent = true
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val deferred = async {
+                            eventListViewModel.getEventById(eventId!!)
+                        }
+
+                        val event = deferred.await()
+
+                        if (event != null) {
+                            launch(Dispatchers.Main) {
+                                eventListViewModel.setSelectedEvent(event)
+                                changeViewPagerPage(2)
+                                mapViewModel.setBottomSheet(2)
+                            }
+                        }
+                    }
+
+                    true
+                }
+
+                marker.onClickListener = listener
+            }
         }
     }
 }
