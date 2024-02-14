@@ -56,6 +56,7 @@ import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.event.model.Event
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.history.HistoryViewModel
+import com.idle.togeduck.history.model.HistoryTour
 import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.map_rv.MapPagerAdapter
@@ -151,6 +152,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     @Inject
     lateinit var preference: PreferenceModule
+
+    private var isHistoryEvent = false
 
     /** Fragment Lifecycle Functions **/
     override fun onCreateView(
@@ -294,8 +297,33 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             historyViewModel.setMarkerList()
         }
         historyViewModel.markerList.observe(viewLifecycleOwner) { list ->
-            list.forEach {
-                it.map = naverMap
+            list.forEach { marker ->
+                marker.map = naverMap
+
+                var eventId: Long? = null
+
+                historyViewModel.historyEventList.value?.forEach { historyTour ->
+                    if (marker.position.latitude == historyTour.latitude && marker.position.longitude == historyTour.latitude) {
+                        eventId = historyTour.eventId
+                    }
+                }
+
+                if (eventId != null) {
+                    marker.setOnClickListener { overlay ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            isHistoryEvent = true
+                            val event = eventListViewModel.getEventById(eventId!!)
+
+                            if (event != null) {
+                                eventListViewModel.setSelectedEvent(event)
+                                changeViewPagerPage(2)
+                                mapViewModel.setBottomSheet(2)
+                            }
+                        }
+
+                        true
+                    }
+                }
             }
         }
     }
@@ -320,7 +348,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         componentBottomSheetBinding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                if (position != 5) {
+                if (position != 5 && !isHistoryEvent) {
                     if (pathLine != null) {
                         pathLine!!.map = null
                         pathLine = null

@@ -47,7 +47,6 @@ class HistoryViewModel @Inject constructor(
     val historyId: LiveData<Long> get() = _historyId
 
 
-
     init {
         viewModelScope.launch {
             getHistoryList(2) // TODO. 실제 celebrityId 적용 필요

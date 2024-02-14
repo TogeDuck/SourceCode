@@ -84,6 +84,27 @@ class EventListViewModel @Inject constructor(
         }
     }
 
+    suspend fun getEventById(eventId: Long): Event? {
+        val responseResult = eventRepository.getEventById(eventId)
+
+        return if(responseResult.isSuccessful){
+            val body = responseResult.body()!!
+            val event = body.data.toEvent()
+
+            Log.d("로그", "EventListViewModel - getEventById() 응답 성공 $body" )
+
+            event
+        }else{
+            val errorBody = Json.decodeFromString<DefaultResponse>(
+                responseResult.errorBody()?.string()!!
+            )
+
+            Log.d("로그", "EventListViewModel - getEventById() 응답 실패 - $errorBody")
+
+            null
+        }
+    }
+
     suspend fun getLikesList(){
         val responseResult = eventRepository.getLikesList()
 
