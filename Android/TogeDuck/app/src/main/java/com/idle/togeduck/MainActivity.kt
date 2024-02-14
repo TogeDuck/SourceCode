@@ -5,12 +5,14 @@ import android.content.Intent
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.provider.Settings
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.navigation.findNavController
 import com.idle.togeduck.common.ForcedFinishService
 import com.idle.togeduck.common.ScreenSize.heightDp
 import com.idle.togeduck.common.ScreenSize.heightPx
@@ -126,6 +128,13 @@ class MainActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 preference.setCakeCount(0)
             }
+        }
+    }
+
+    fun receivedMessage(dealId: Long?) {
+        if (dealId != null) {
+            // TODO. 교환 데이터 요청 및 교환 화면 연결 필요
+            binding.navHostFragment.findNavController().navigate(R.id.action_mapFragment_to_exchangePostDialogFragment)
         }
     }
 

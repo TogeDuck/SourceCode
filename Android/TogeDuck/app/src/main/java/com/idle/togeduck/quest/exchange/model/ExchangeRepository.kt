@@ -5,6 +5,7 @@ import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -62,6 +63,12 @@ interface ExchangeRepository {
         eventId: Long,
         tradeId: Long,
     ) : Response<DefaultResponse>
+
+    suspend fun getExchangeQuestByDealId(dealId: Long) : Response<ExchangeRequestedResponse>
+
+    suspend fun rejectExchange(dealId: Long) : Response<DefaultResponse>
+
+    suspend fun acceptExchange(dealId: Long) : Response<DefaultResponse>
 }
 
 class DefaultExchangeRepository @Inject constructor(
@@ -126,5 +133,17 @@ class DefaultExchangeRepository @Inject constructor(
         tradeId: Long,
     ): Response<DefaultResponse> {
         return exchangeService.requestRejectExchange(eventId, tradeId)
+    }
+
+    override suspend fun getExchangeQuestByDealId(dealId: Long): Response<ExchangeRequestedResponse> {
+        return exchangeService.getExchangeQuestByDealId(dealId)
+    }
+
+    override suspend fun rejectExchange(dealId: Long): Response<DefaultResponse> {
+        return exchangeService.rejectExchange(dealId)
+    }
+
+    override suspend fun acceptExchange(dealId: Long): Response<DefaultResponse> {
+        return exchangeService.acceptExchange(dealId)
     }
 }

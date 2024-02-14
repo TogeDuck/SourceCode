@@ -25,6 +25,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // TODO. 수신한 메시지를 처리
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.notification!!.title}")
         Log.d("로그", "MyFirebaseMessagingService - onMessageReceived() ${message.notification!!.body}")
+
+        if (applicationContext is MainActivity) {
+            val activity = applicationContext as MainActivity
+            activity.receivedMessage(message.data["dealId"]?.toLong())
+        }
     }
 
     private fun sendNotification(messageBody: String) {

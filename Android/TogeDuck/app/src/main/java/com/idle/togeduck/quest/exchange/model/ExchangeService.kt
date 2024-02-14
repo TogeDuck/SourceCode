@@ -76,4 +76,19 @@ interface ExchangeService {
         @Path("event_id") eventId: Long,
         @Path("trade_id") tradeId: Long,
     ) : Response<DefaultResponse>
+
+    @GET("events/deals/{deal_id}")
+    suspend fun getExchangeQuestByDealId(
+        @Path("deal_id") dealId: Long
+    ) : Response<ExchangeRequestedResponse>
+
+    @POST("events/deals/{deal_id}/reject")
+    suspend fun rejectExchange(
+        @Path("deal_id") dealId: Long
+    ) : Response<DefaultResponse>
+
+    @POST("events/deals/{deal_id}/accept")
+    suspend fun acceptExchange(
+        @Path("deal_id") dealId: Long
+    ) : Response<DefaultResponse>
 }
