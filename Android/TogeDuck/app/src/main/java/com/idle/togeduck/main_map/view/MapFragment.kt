@@ -1358,8 +1358,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                         mapViewModel.isCloseDialogOpen = true
                                         figureCloseEvents(location.latitude, location.longitude)
                                     }
-                                    // Test
-                                    toast("lat: "+location.latitude.toString()+"lng: "+location.longitude.toString())
                                     // 웹소켓 전송 (추후 url, 전송 형식 백엔드에 맞춰 변경)
                                     stompManager.sendLocation(
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
