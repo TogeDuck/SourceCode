@@ -53,11 +53,6 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
         setTheme()
 
         recruitViewModel.recruitList.observe(viewLifecycleOwner){list ->
-            //TODO 내가 만든 모집인지 확인 후 채팅방 아이디 보관
-//            for(recruit in list){
-//                if(recruit.){
-//                }
-//            }
             questRecruitAdapter.submitList(list)
         }
         recruitViewModel.needUpdate.observe(viewLifecycleOwner){check ->

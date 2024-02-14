@@ -35,12 +35,6 @@ class TalkViewModel @Inject constructor(
     var currentChatRoomId: MutableLiveData<Long> = MutableLiveData(0L)
     var chatName = mutableMapOf<String,Int>()
 
-    init {
-        viewModelScope.launch {
-//            getTalkList(1)
-        }
-    }
-
     fun clearTalkList(){
         _talkList.postValue(mutableListOf())
     }
