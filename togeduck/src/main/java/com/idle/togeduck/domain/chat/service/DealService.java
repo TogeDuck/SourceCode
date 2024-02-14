@@ -68,6 +68,7 @@ public class DealService {
 			.orElseThrow(() -> new BaseException(ErrorCode.DEAL_NOT_FOUND));
 		deal.setStatus(DealStatus.ACCEPTED);
 
+		dealRepository.delete(deal);
 		tradeRepository.delete(deal.getMyTrade());
 		tradeRepository.delete(deal.getTarget());
 
