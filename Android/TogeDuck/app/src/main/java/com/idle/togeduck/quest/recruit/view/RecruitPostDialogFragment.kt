@@ -125,8 +125,7 @@ class RecruitPostDialogFragment: DialogFragment() {
 
     private fun setSpinner() {
         // 오늘의 이벤트 목록을 관찰하고 해당 목록을 spinner에 설정
-        //todo. 지금은 오늘 이벤트 없어서 listPast로 해놓음 (추후 listToday로 수정)
-        eventListViewModel.listPast.observe(viewLifecycleOwner) { event ->
+        eventListViewModel.listToday.observe(viewLifecycleOwner) { event ->
             val eventPairs = event.map { it.eventId to it.name }
             eventIds = eventPairs.map { it.first }
             eventNames = eventPairs.map { it.second }
@@ -144,7 +143,7 @@ class RecruitPostDialogFragment: DialogFragment() {
 
         binding.npRecruitDuration.apply {
             minValue = 1
-            maxValue = 60
+            maxValue = 120
         }
 
 

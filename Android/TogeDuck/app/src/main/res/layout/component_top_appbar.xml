@@ -136,15 +136,6 @@
                     android:background="@drawable/shape_circle" />
 
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/iv_favorite"
-                android:layout_width="@dimen/circle_xxsmall"
-                android:layout_height="@dimen/circle_xxsmall"
-                android:padding="5dp"
-                android:background="@drawable/shape_circle"
-                android:src="@drawable/common_cupcake8"/>
-
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
