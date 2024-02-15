@@ -74,6 +74,7 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
         }
 
         getExchangeList()
+        setEmptyTheme()
     }
     override fun onDestroyView() {
         super.onDestroyView()
