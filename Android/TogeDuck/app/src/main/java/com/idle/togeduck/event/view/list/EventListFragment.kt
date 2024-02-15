@@ -172,7 +172,7 @@ class EventListFragment : Fragment(), EventInfo {
     fun toDetailPage() {
         Log.d("디테일 페이지로","실행")
         CoroutineScope(Dispatchers.Main).launch {
-            (parentFragment as MapFragment).changeViewPagerPage(2)
+            (parentFragment as MapFragment).changeViewPagerPage(2, false)
             delay(100L)
             mapViewModel.setBottomSheet(2)
         }
