@@ -53,7 +53,7 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
         val recycleView = binding.questShareRecycle
         val questShareAdapter = QuestShareListAdapter(this, requireContext())
         recycleView.adapter = questShareAdapter
-        recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true).apply { stackFromEnd = true }
+        recycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.tvCurrentShare.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         // 간격 설정
         recycleView.addItemDecoration(TogeDuckItemDecoration(15,0))
