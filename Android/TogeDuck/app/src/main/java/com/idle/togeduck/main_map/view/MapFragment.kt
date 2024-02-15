@@ -753,11 +753,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         uiSettings.isCompassEnabled = false
 
         // 마커 사이즈 변경 로직
-//        naverMap.addOnCameraChangeListener{ reason, animated ->
-//            val zoom = naverMap.cameraPosition.zoom
-//            getMarkerSize(zoom)
-//            mapViewModel.updateMarkerSize()
-//        }
+        naverMap.addOnCameraChangeListener{ reason, animated ->
+            val zoom = naverMap.cameraPosition.zoom
+            getMarkerSize(zoom)
+            mapViewModel.updateMarkerSize()
+        }
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
