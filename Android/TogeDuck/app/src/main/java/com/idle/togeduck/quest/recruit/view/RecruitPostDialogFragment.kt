@@ -126,7 +126,9 @@ class RecruitPostDialogFragment: DialogFragment() {
     private fun setSpinner() {
         // 오늘의 이벤트 목록을 관찰하고 해당 목록을 spinner에 설정
         eventListViewModel.listToday.observe(viewLifecycleOwner) { event ->
-            val eventPairs = event.map { it.eventId to it.name }
+            val eventPairs = event.filter {
+                it.eventId != (eventListViewModel.selectedEvent.value?.eventId ?: -1)
+            }.map { it.eventId to it.name }
             eventIds = eventPairs.map { it.first }
             eventNames = eventPairs.map { it.second }
             spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, eventNames)
