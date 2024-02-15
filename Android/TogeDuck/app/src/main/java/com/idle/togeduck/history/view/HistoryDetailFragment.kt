@@ -48,9 +48,11 @@ class HistoryDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val toast = Toast.makeText(requireContext(), "지도에서 나의 투어 경로를 확인해 보세요.", Toast.LENGTH_SHORT)
+        toast.show()
+
         historyViewModel.selectedHistory.observe(viewLifecycleOwner) { historyData ->
             historyDetailCardBinding.tvDate.text = historyData.date.toString()
-            historyDetailCardBinding.tvMyRecord.text = historyData.historyName
             historyDetailCardBinding.ivMyRecordMainImg.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),

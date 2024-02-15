@@ -19,7 +19,6 @@ class HistoryViewHolder(
     private val mainLayout = binding.llMainLayout
     private val ivMyRecordMainImg = binding.ivMyRecordMainImg
     private val tvDate = binding.tvDate
-    private val tvMyRecord = binding.tvMyRecord
 
     init {
         mainLayout.setOnClickListener(this)
@@ -29,7 +28,6 @@ class HistoryViewHolder(
         setTheme(context)
 
         tvDate.text = historyData.date.toString()
-        tvMyRecord.text = historyData.historyId.toString()
         ivMyRecordMainImg.setImageDrawable(ContextCompat.getDrawable(context, RandomCupcake.getImage()))
     }
 
@@ -39,7 +37,6 @@ class HistoryViewHolder(
         ivMyRecordMainImg.background = strokeCircleDrawable
 
         tvDate.setTextColor(getColor(context, Theme.theme.main500))
-        tvMyRecord.setTextColor(getColor(context, R.color.black))
 
         val squareCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable
         squareCircleDrawable.setColor(getColor(context, Theme.theme.sub200))
