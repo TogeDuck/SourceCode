@@ -118,7 +118,7 @@ class MyQuestFragment : Fragment(), EventInfo {
         pastEmptyEventDrawable.setColor(getColor(requireContext(), R.color.gray_bg))
         pastEmptyEventDrawable.setStroke(0, getColor(requireContext(), R.color.gray_bg))
         binding.tvPastEmptyEvent.background = pastEmptyEventDrawable
-        binding.tvPastEmptyEvent.setTextColor(getColor(requireContext(), R.color.black))
+        binding.tvPastEmptyEvent.setTextColor(getColor(requireContext(), R.color.gray_text))
     }
     private fun setRecyclerview() {
         todayEventInfoAdapter = EventInfoAdapter(this, requireContext(), 0)
