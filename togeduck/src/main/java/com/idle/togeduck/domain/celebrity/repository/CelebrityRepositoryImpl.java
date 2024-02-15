@@ -24,7 +24,9 @@ public class CelebrityRepositoryImpl implements CelebrityRepositoryCustom {
 
 		return jpaQueryFactory
 			.selectFrom(celebrity)
-			.where(celebrity.name.eq(keyword).or(celebrity.nickname.eq(keyword)).or(celebrity.team.name.eq(keyword)))
+			.where(celebrity.name.contains(keyword)
+				.or(celebrity.nickname.contains(keyword))
+				.or(celebrity.team.name.contains(keyword)))
 			.join(celebrity.team, team).fetchJoin()
 			.fetch();
 	}
