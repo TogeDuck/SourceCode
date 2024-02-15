@@ -47,10 +47,8 @@ class ExchangeDialogFragment: DialogFragment(), IMyExchangeDetail {
         isCancelable = true
     }
 
-    // 들어오고 나갈때 애니메이션 설정
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-//        dialog.window!!.attributes.windowAnimations = R.style.dialog_animation
         dialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         return dialog
     }

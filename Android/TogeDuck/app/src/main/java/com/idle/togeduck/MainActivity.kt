@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
         checkGPSSetting()
 
-        talkViewModel.getChatPreference()
+//        talkViewModel.getChatPreference()
 
         loadMyThemeAndCake()
 
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onStop() {
         super.onStop()
-        talkViewModel.setChatPreference()
+//        talkViewModel.setChatPreference()
 
         if (mapViewModel.isTourStart) {
             val intent = Intent(this, ForcedFinishService::class.java)

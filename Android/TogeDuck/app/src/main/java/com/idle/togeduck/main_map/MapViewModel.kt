@@ -39,6 +39,8 @@ class MapViewModel @Inject constructor(
     private val _closeEvents = MutableLiveData<List<Event>>()
     val closeEvents: LiveData<List<Event>> get() = _closeEvents
 
+    var  coordinateUpdate = mutableMapOf<String, Position>()
+
     var peopleMarkerOverlay: OverlayImage? = null
     var markerSize: Int = 20
 
@@ -49,8 +51,9 @@ class MapViewModel @Inject constructor(
     var bottomSheetState: MutableLiveData<Int> = MutableLiveData(0)
     var isQuestAlert = MutableLiveData<QuestAlert>()
     var eventList = mutableListOf<Event>()
-    var isCloseDialogOpen = false
+    var isCloseDialogOpen = MutableLiveData(false)
     var isTourStart = false
+    var visitedEvent = mutableListOf<Long>()
 
     fun initPeopleMarkerImage(image: OverlayImage){
         this.peopleMarkerOverlay = image
@@ -73,17 +76,19 @@ class MapViewModel @Inject constructor(
         if(currentList.isEmpty()){
             currentList.add(newPosition)
             hasChanged = true
+            Log.d("투어 기록 리스트 업데이트", tourList.toString())
         } else {
             val lastPosition = currentList[currentList.size - 1]
             val disFromLastCoor = CalcDistance.getDistance(lastPosition.latitude, lastPosition.longitude, lat, lng)
             // 일정 거리 내인지 판별하는 메서드, 슷자는 조절 필요
-            if(disFromLastCoor in 5..30){
+            Log.d("이벤트", "거리차이 / ${disFromLastCoor}")
+            if(disFromLastCoor in 5..200){
                 currentList.add(newPosition)
                 hasChanged = true
+                Log.d("투어 기록 리스트 업데이트", tourList.toString())
             }
         }
         tourList = currentList
-        Log.d("투어 기록 리스트 업데이트", tourList.toString())
         return hasChanged
     }
 

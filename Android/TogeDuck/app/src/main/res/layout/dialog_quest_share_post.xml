@@ -106,7 +106,7 @@
                     android:id="@+id/et_share_content"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:hint="내용을 입력하세요"
+                    android:hint="나눔 장소 등의 내용을 입력하세요"
                     android:inputType="textMultiLine"
                     android:maxLines="5"
                     android:maxLength="100"

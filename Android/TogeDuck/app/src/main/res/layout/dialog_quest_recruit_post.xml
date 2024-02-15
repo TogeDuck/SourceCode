@@ -70,12 +70,20 @@
                 android:textSize="@dimen/text_large" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다음에 갈 카페를 선택해주세요"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            />
+
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:spinnerMode="dropdown"
             android:dropDownWidth="200dp"
              />

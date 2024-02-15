@@ -38,7 +38,7 @@ object SnackBarFactory {
 
         val snackBarLayout = snackBar.view as SnackbarLayout
 
-        snackBarLayout.setPadding(0, 0, 0, dpToPx(130, context))
+        snackBarLayout.setPadding(0, 0, 0, dpToPx(110, context))
 
         val snackBarMainLayout = customSnackView.findViewById<LinearLayout>(R.id.map_quest_alert)
         val snackBarIcon = customSnackView.findViewById<ImageView>(R.id.map_quest_alert_icon)

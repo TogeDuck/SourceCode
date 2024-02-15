@@ -1,5 +1,6 @@
 package com.idle.togeduck.myquest.view
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ import com.idle.togeduck.myquest.model.MyQuest
 import com.idle.togeduck.myquest.view.myquest_rv.IMyQuestDetail
 import com.idle.togeduck.myquest.view.myquest_rv.MyQuestAdapter
 import com.idle.togeduck.util.TogeDuckItemDecoration
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,17 +55,35 @@ class MyQuestFragment : Fragment(), EventInfo {
         super.onViewCreated(view, savedInstanceState)
         setTheme()
         setRecyclerview()
-        getLikeList()
+//        getLikeList()
         eventListViewModel.likeListToday.observe(viewLifecycleOwner){ list ->
             todayEventInfoAdapter.submitList(list)
+
+            if (list.isEmpty()) {
+                binding.tvTodayEmptyEvent.visibility = View.VISIBLE
+            } else {
+                binding.tvTodayEmptyEvent.visibility = View.GONE
+            }
         }
 
         eventListViewModel.likeListUpcoming.observe(viewLifecycleOwner){ list ->
             upcomingEventInfoAdapter.submitList(list)
+
+            if (list.isEmpty()) {
+                binding.tvUpcomingEmptyEvent.visibility = View.VISIBLE
+            } else {
+                binding.tvUpcomingEmptyEvent.visibility = View.GONE
+            }
         }
 
         eventListViewModel.likeListPast.observe(viewLifecycleOwner){list ->
             pastEventInfoAdapter.submitList(list)
+
+            if (list.isEmpty()) {
+                binding.tvPastEmptyEvent.visibility = View.VISIBLE
+            } else {
+                binding.tvPastEmptyEvent.visibility = View.GONE
+            }
         }
     }
 
@@ -81,6 +101,24 @@ class MyQuestFragment : Fragment(), EventInfo {
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
         binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
         binding.tvTitle.setTextColor(ContextCompat.getColor(requireContext(),Theme.theme.main500))
+
+        val todayEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        todayEmptyEventDrawable.setColor(getColor(requireContext(), Theme.theme.sub400))
+        todayEmptyEventDrawable.setStroke(0, getColor(requireContext(), Theme.theme.sub400))
+        binding.tvTodayEmptyEvent.background = todayEmptyEventDrawable
+        binding.tvTodayEmptyEvent.setTextColor(getColor(requireContext(), R.color.white))
+
+        val upcomingEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        upcomingEmptyEventDrawable.setColor(getColor(requireContext(), Theme.theme.sub100))
+        upcomingEmptyEventDrawable.setStroke(0, getColor(requireContext(), Theme.theme.sub100))
+        binding.tvUpcomingEmptyEvent.background = upcomingEmptyEventDrawable
+        binding.tvUpcomingEmptyEvent.setTextColor(getColor(requireContext(), Theme.theme.main500))
+
+        val pastEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        pastEmptyEventDrawable.setColor(getColor(requireContext(), R.color.gray_bg))
+        pastEmptyEventDrawable.setStroke(0, getColor(requireContext(), R.color.gray_bg))
+        binding.tvPastEmptyEvent.background = pastEmptyEventDrawable
+        binding.tvPastEmptyEvent.setTextColor(getColor(requireContext(), R.color.gray_text))
     }
     private fun setRecyclerview() {
         todayEventInfoAdapter = EventInfoAdapter(this, requireContext(), 0)

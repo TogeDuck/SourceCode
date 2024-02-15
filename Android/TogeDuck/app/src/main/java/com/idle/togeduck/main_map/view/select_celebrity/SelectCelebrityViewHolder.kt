@@ -42,6 +42,7 @@ class SelectCelebrityViewHolder(
 //        tvTeamName.setTextColor(getColor(context, Theme.theme.main500))
 
         tvName.text = celebrity.nickname
+        tvTeamName.text = celebrity.teamName
     }
 
     private fun setTheme(celebrity: Celebrity, context: Context) {

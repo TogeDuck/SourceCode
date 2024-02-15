@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/quest_exchange_fragment"
     android:layout_width="match_parent"
@@ -8,6 +8,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:background="@color/blackpink_main300"
     tools:context=".quest.exchange.view.QuestExchangeFragment">
@@ -21,6 +22,26 @@
         android:text="현재 진행 중인 교환"
         />
 
+    <TextView
+        android:id="@+id/tv_today_empty_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="현재 진행 중인 교환 퀘스트가 없습니다"
+        android:gravity="center"
+        android:paddingVertical="25dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_marginTop="5dp"
+        />
+    <TextView
+        android:id="@+id/quest_share_empty"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:background="@color/gray_bg"
+        android:text="교환하고 싶은 굿즈를 등록해주세요"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/quest_exchange_recycle"
         android:layout_width="match_parent"
@@ -33,4 +54,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:background="@color/yellow"
         />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

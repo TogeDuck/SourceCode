@@ -1,6 +1,7 @@
 package com.idle.togeduck.event.view
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -79,7 +80,7 @@ class EventCloseDialog: DialogFragment(), EventInfo {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        mapViewModel.isCloseDialogOpen = false
+        mapViewModel.isCloseDialogOpen.postValue(false)
     }
 
     override fun eventClicked(position: Int, type: Int) {
@@ -88,6 +89,9 @@ class EventCloseDialog: DialogFragment(), EventInfo {
         }
         sendEvent(position)
         getEventList()
+        if(mapViewModel.eventList.getOrNull(position) != null){
+            mapViewModel.visitedEvent.add(mapViewModel.eventList.getOrNull(position)!!.eventId)
+        }
         exit()
     }
     fun sendEvent(position: Int){
@@ -112,8 +116,22 @@ class EventCloseDialog: DialogFragment(), EventInfo {
             }
         }
     }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        Log.d("로그", "EventCloseDialog - onDismiss() 호출됨")
+        super.onDismiss(dialog)
+        mapViewModel.isCloseDialogOpen.postValue(false)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        Log.d("로그", "EventCloseDialog - onCancel() 호출됨")
+        super.onCancel(dialog)
+        mapViewModel.isCloseDialogOpen.postValue(false)
+    }
+
     fun exit(){
         findNavController().navigate(R.id.action_eventCloseDialog_pop)
+        mapViewModel.isCloseDialogOpen.postValue(false)
     }
 
     override fun likeClick(position: Int, type: Int) {

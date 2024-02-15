@@ -32,6 +32,7 @@ class QuestRecruitViewHolder(
     private val tvPersonCnt = binding.tvPersonCnt
     private val tvEnter = binding.tvEnter
     private val tvTimer = binding.tvTimer
+    private val tvDestination = binding.tvDestination
 
     private var questRecruit: Recruit? = null
 
@@ -42,7 +43,6 @@ class QuestRecruitViewHolder(
         tvEnter.setOnClickListener(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun bind(recruit: Recruit, context: Context) {
         this.questRecruit = recruit
         configurePassedTime(recruit.expiredAt)
@@ -50,7 +50,9 @@ class QuestRecruitViewHolder(
         setTheme(recruit, context)
         timerTask(recruit,context)
         tvTitle.text = recruit.title
-        tvPersonCnt.text = "${recruit.current} / ${recruit.maximum}"
+//        tvPersonCnt.text = "${recruit.current} / ${recruit.maximum}"
+        tvDestination.text = "다음 장소: "+recruit.destination
+        tvPersonCnt.text = " 최대 ${recruit.maximum}명"
     }
 
     private fun setIcon(context: Context){
@@ -92,7 +94,6 @@ class QuestRecruitViewHolder(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun configurePassedTime(expiredAt: LocalDateTime) {
         val currentTime = java.time.LocalDateTime.now()
         val durationInMillis = expiredAt.toJavaLocalDateTime().plusHours(9).toInstant(ZoneOffset.UTC).toEpochMilli() - currentTime.toInstant(
@@ -100,7 +101,6 @@ class QuestRecruitViewHolder(
         elapsedTimeInSeconds = (durationInMillis / 1000).toInt()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun timerTask(questRecruit: Recruit, context: Context) {
         val name = "ExchangeTimer"
@@ -116,7 +116,6 @@ class QuestRecruitViewHolder(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setThemeOnUiThread(questRecruit: Recruit, context: Context) {
         mainLayout.post {
             setTheme(questRecruit, context)

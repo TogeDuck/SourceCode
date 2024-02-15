@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.toKotlinLocalDate
 import kotlin.math.min
 
-class RecruitPostDialogFragment: DialogFragment() {
+class RecruitPostDialogFragment : DialogFragment() {
     private var _binding: DialogQuestRecruitPostBinding? = null
     private val binding get() = _binding!!
 
@@ -54,6 +54,7 @@ class RecruitPostDialogFragment: DialogFragment() {
     private lateinit var spinnerAdapter: ArrayAdapter<String>
     private lateinit var eventNames: List<String>
     private lateinit var eventIds: List<Long>
+    private lateinit var eventIdsRecruit: List<Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,13 +84,21 @@ class RecruitPostDialogFragment: DialogFragment() {
         setTheme()
         setSpinner()
 
+        eventListViewModel.listToday.observe(viewLifecycleOwner) {event ->
+            eventIdsRecruit = event.map { it.eventId }
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             val celebrityId = favoriteSettingViewModel.selectedCelebrity.value?.id ?: return@launch
             val (startDate, endDate) = mapViewModel.pickedDate.value ?: return@launch
-            eventListViewModel.getEventList(celebrityId, startDate.toKotlinLocalDate(), endDate.toKotlinLocalDate())
+            eventListViewModel.getEventList(
+                celebrityId,
+                startDate.toKotlinLocalDate(),
+                endDate.toKotlinLocalDate()
+            )
         }
 
-        binding.llBackground.setOnClickListener{
+        binding.llBackground.setOnClickListener {
             findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
         }
 
@@ -98,38 +107,66 @@ class RecruitPostDialogFragment: DialogFragment() {
         }
 
         binding.btnRecruitPost.setOnClickListener {
-            val title = binding.etRecruitTitle.text.toString()
-            val maximum = binding.npRecruitPeopleNum.value
-            val duration = binding.npRecruitDuration.value
+            if(eventListViewModel.selectedEvent.value == null) {
+                var toast = Toast.makeText(requireContext(), "이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다.", Toast.LENGTH_SHORT)
+                toast.show()
+                toast = Toast.makeText(requireContext(), "이벤트를 선택 후 모집글을 작성해주세요", Toast.LENGTH_SHORT)
+                toast.show()
+            } else{
+                val eventId = eventListViewModel.selectedEvent.value!!.eventId
+                if (eventId !in eventIdsRecruit) {
+                    var toast = Toast.makeText(
+                        requireContext(),
+                        "현재 진행중인 이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다",
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                    toast = Toast.makeText(
+                        requireContext(),
+                        "선택한 이벤트가 과거 혹은 예정된 생일카페인지 확인해 주세요",
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                } else {
+                    val title = binding.etRecruitTitle.text.toString()
+                    val maximum = binding.npRecruitPeopleNum.value
+                    val duration = binding.npRecruitDuration.value
 
-            val selectedPosition = binding.spinner.selectedItemPosition
-            val destinationName = eventNames[selectedPosition]
-            val destinationId = eventIds[selectedPosition]
+                    val selectedPosition = binding.spinner.selectedItemPosition
+                    val destinationName = eventNames[selectedPosition]
+                    val destinationId = eventIds[selectedPosition]
 
-            val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
-            if(title.isNotEmpty() && destinationName.isNotEmpty()
-                && maximum > 0 && maximum <= 10
-                && duration > 0 && duration <= 120
-                && eventListViewModel.selectedEvent.value != null) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    Log.d("모집 등록", "모집 등록 호출됨")
-                    recruitViewModel.createRecruit(
-                        eventListViewModel.selectedEvent.value!!.eventId,
-                        recruitRequest,
-                        favoriteSettingViewModel.selectedCelebrity.value!!.id)
+                    val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
+                    if (title.isNotEmpty() && destinationName.isNotEmpty()
+                        && maximum > 0 && maximum <= 10
+                        && duration > 0 && duration <= 120
+                        && eventListViewModel.selectedEvent.value != null
+                    ) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d("모집 등록", "모집 등록 호출됨")
+                            recruitViewModel.createRecruit(
+                                eventId,
+                                recruitRequest,
+                                favoriteSettingViewModel.selectedCelebrity.value!!.id
+                            )
+                        }
+                    }
+                    findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
                 }
             }
-            findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
         }
     }
 
     private fun setSpinner() {
         // 오늘의 이벤트 목록을 관찰하고 해당 목록을 spinner에 설정
         eventListViewModel.listToday.observe(viewLifecycleOwner) { event ->
-            val eventPairs = event.map { it.eventId to it.name }
+            val eventPairs = event.filter {
+                it.eventId != (eventListViewModel.selectedEvent.value?.eventId ?: -1)
+            }.map { it.eventId to it.name }
             eventIds = eventPairs.map { it.first }
             eventNames = eventPairs.map { it.second }
-            spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, eventNames)
+            spinnerAdapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, eventNames)
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinner.adapter = spinnerAdapter
         }
@@ -147,14 +184,23 @@ class RecruitPostDialogFragment: DialogFragment() {
         }
 
 
-        val allRoundDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_10) as GradientDrawable
+        val allRoundDrawable = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_all_round_10
+        ) as GradientDrawable
         allRoundDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.main200))
         allRoundDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.llDialogLayout.background = allRoundDrawable
 
-        val squareCircleDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        val squareCircleDrawable = ContextCompat.getDrawable(
+            requireContext(),
+            R.drawable.shape_square_circle
+        ) as GradientDrawable
         squareCircleDrawable.setColor(ContextCompat.getColor(requireContext(), Theme.theme.sub400))
-        squareCircleDrawable.setStroke(0, ContextCompat.getColor(requireContext(), Theme.theme.main500))
+        squareCircleDrawable.setStroke(
+            0,
+            ContextCompat.getColor(requireContext(), Theme.theme.main500)
+        )
 
         binding.btnRecruitCancel.background = squareCircleDrawable
         binding.btnRecruitPost.background = squareCircleDrawable

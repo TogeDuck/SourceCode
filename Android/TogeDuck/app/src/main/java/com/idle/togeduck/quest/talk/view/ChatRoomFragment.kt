@@ -1,5 +1,6 @@
 package com.idle.togeduck.quest.talk.view
 
+import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -12,13 +13,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MediatorLiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.idle.togeduck.MainViewModel
 import com.idle.togeduck.R
 import com.idle.togeduck.common.RandomCupcake
@@ -40,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatRoomFragment : Fragment(), IQuestTalkDetail {
+class ChatRoomFragment : DialogFragment(), IQuestTalkDetail {
     private var _binding: FragmentChatRoomBinding? = null
     private val binding get() = _binding!!
 
@@ -55,6 +61,21 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
     private lateinit var questTalkAdapter: QuestTalkAdapter
 
+    private lateinit var backPressedCallback: OnBackPressedCallback
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.fullscreen_dialog)
+        isCancelable = true
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        return dialog
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,6 +83,7 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
     ): View {
         _binding = FragmentChatRoomBinding.inflate(inflater, container, false)
         _componentChatInputBinding = binding.compChatInput
+        addBackPressedCallback()
         return binding.root
     }
 
@@ -98,6 +120,20 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
         }
     }
 
+    private fun addBackPressedCallback() {
+        // OnBackPressedCallback (익명 클래스) 객체 생성
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+               findNavController().navigateUp()
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
+    }
+
     fun sendChat() {
         val message = componentChatInputBinding.etTalkInput.text.toString()
         if (message.isNotEmpty()
@@ -118,6 +154,7 @@ class ChatRoomFragment : Fragment(), IQuestTalkDetail {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        backPressedCallback.remove()
     }
 
     override fun myQuestItemClicked(position: Int) {

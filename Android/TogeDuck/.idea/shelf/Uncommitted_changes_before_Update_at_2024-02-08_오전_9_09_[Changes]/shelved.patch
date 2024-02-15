@@ -1,0 +1,35 @@
+Index: .idea/deploymentTargetDropDown.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"deploymentTargetDropDown\">\r\n    <value>\r\n      <entry key=\"app\">\r\n        <State>\r\n          <runningDeviceTargetSelectedWithDropDown>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"SERIAL_NUMBER\" />\r\n                  <value value=\"adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp.\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n          </runningDeviceTargetSelectedWithDropDown>\r\n          <timeTargetWasSelectedWithDropDown value=\"2024-02-07T17:33:05.044485Z\" />\r\n          <runningDeviceTargetsSelectedWithDialog>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"SERIAL_NUMBER\" />\r\n                  <value value=\"adb-R39M20CCJKD-ZEtQsP._adb-tls-connect._tcp.\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"SERIAL_NUMBER\" />\r\n                  <value value=\"adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp.\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n          </runningDeviceTargetsSelectedWithDialog>\r\n        </State>\r\n      </entry>\r\n    </value>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+--- a/.idea/deploymentTargetDropDown.xml	(revision 053f5ffe579babdd361472074680779496587f0d)
++++ b/.idea/deploymentTargetDropDown.xml	(date 1707350824457)
+@@ -4,18 +4,18 @@
+     <value>
+       <entry key="app">
+         <State>
+-          <runningDeviceTargetSelectedWithDropDown>
++          <targetSelectedWithDropDown>
+             <Target>
+-              <type value="RUNNING_DEVICE_TARGET" />
++              <type value="QUICK_BOOT_TARGET" />
+               <deviceKey>
+                 <Key>
+-                  <type value="SERIAL_NUMBER" />
+-                  <value value="adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp." />
++                  <type value="VIRTUAL_DEVICE_PATH" />
++                  <value value="C:\Users\SSAFY\.android\avd\Pixel_3a_API_34_extension_level_7_x86_64.avd" />
+                 </Key>
+               </deviceKey>
+             </Target>
+-          </runningDeviceTargetSelectedWithDropDown>
+-          <timeTargetWasSelectedWithDropDown value="2024-02-07T17:33:05.044485Z" />
++          </targetSelectedWithDropDown>
++          <timeTargetWasSelectedWithDropDown value="2024-02-08T00:05:22.594587100Z" />
+           <runningDeviceTargetsSelectedWithDialog>
+             <Target>
+               <type value="RUNNING_DEVICE_TARGET" />
