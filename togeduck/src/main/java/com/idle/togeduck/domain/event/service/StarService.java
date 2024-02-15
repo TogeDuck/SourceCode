@@ -2,6 +2,8 @@ package com.idle.togeduck.domain.event.service;
 
 import static com.idle.togeduck.global.response.ErrorCode.*;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,15 +38,21 @@ public class StarService {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 		Event event = eventRepository.findById(eventId).orElseThrow(() -> new BaseException(EVENT_NOT_FOUND));
 
-		starRepository.save(Star.builder()
-			.user(user)
-			.event(event)
-			.build());
+		Optional<Star> star = starRepository.findByUserIdAndEventId(userId, eventId);
+		if (star.isEmpty()) {
+			starRepository.save(Star.builder()
+				.user(user)
+				.event(event)
+				.build());
+		} else {
+			throw new BaseException(STAR_DUPLICATED);
+		}
+
 	}
 
 	@Transactional
-	public void deleteStar(Long eventId) {
-		Star star = starRepository.findByEventId(eventId)
+	public void deleteStar(Long eventId, Long userId) {
+		Star star = starRepository.findByUserIdAndEventId(userId, eventId)
 			.orElseThrow(() -> new BaseException(STAR_NOT_FOUND));
 
 		starRepository.delete(star);

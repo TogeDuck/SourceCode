@@ -7,6 +7,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.idle.togeduck.global.response.BaseException;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,11 +39,16 @@ public class JwtFilter extends OncePerRequestFilter {
 		log.info("토큰 권한 Security 저장 : " + jwt);
 
 		// 2. validateToken 으로 토큰 유효성 검사
-		if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
-			// 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
-			Authentication authentication = jwtProvider.getAuthentication(jwt);
-
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+		try {
+			if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
+				// 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
+				Authentication authentication = jwtProvider.getAuthentication(jwt);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
+		} catch (BaseException e) {
+			request.setAttribute("exception", e.getCode());
+		} catch (Exception e) {
+			request.setAttribute("exception", "COMMON-002");
 		}
 		filterChain.doFilter(request, response);
 	}

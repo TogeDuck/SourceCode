@@ -11,9 +11,10 @@ public enum ErrorCode {
 
 	DUPLICATE_LOGIN_ID(400, "USER-001", "계정명이 중복된 경우"),
 	UNAUTHORIZED(401, "USER-002", "인증에 실패한 경우"),
-	USER_NOT_FOUND(404, "USER-003", "유저를 찾을 수 없는 경우"),
-	TOKEN_NOT_EXISTS(404, "USER-004", "토큰이 존재하지 않는 경우"),
-	USER_UNAUTHENTICATED(409, "USER-005", "유저 권한이 없는 경우 "),
+	UNAUTHORIZED_USER(403, "USER-003", "유저 권한이 없는 경우"),
+	USER_NOT_FOUND(404, "USER-004", "유저를 찾을 수 없는 경우"),
+	TOKEN_NOT_EXISTS(404, "USER-005", "토큰이 존재하지 않는 경우"),
+	TOKEN_EXPIRED(403, "USER-006", "토큰이 만료된 경우"),
 
 	EVENT_NOT_FOUND(404, "EVENT-001", "이벤트를 찾을 수 없는 경우"),
 
@@ -34,6 +35,7 @@ public enum ErrorCode {
 	CHAT_NOT_FOUND(404, "CHAT-001", "퀘스트을 찾을 수 없는 경우"),
 
 	STAR_NOT_FOUND(404, "STAR-001", "해당 즐겨찾기가 없습니다"),
+	STAR_DUPLICATED(404, "STAR-002", "이미 등록된 즐겨찾기 입니다"),
 
 	HISTORY_NOT_FOUND(404, "HISTORY-001", "방문 기록을 찾을 수 없는 경우"),
 
@@ -41,7 +43,7 @@ public enum ErrorCode {
 
 	FIREBASE_INTERRUPTED(500, "FIREBASE-001", "파이어베이스 메시지 전송 중단"),
 	FIREBASE_EXECUTION(500, "FIREBASE-002", "파이어베이스 메시지 전송 중단"),
-	;
+	CELEBRITY_USER_NOT_FOUND(404, "CELEBRITY-USER-001", "유저가 참여하지 않았을 경우");
 
 	private final int status;
 	private final String code;

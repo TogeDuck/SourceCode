@@ -1,6 +1,6 @@
 package com.idle.togeduck.domain.chat.dto;
 
-public record MessageDto(
+public record MessageRequestDto(
 	Long chatId,
 	String content
 ) {

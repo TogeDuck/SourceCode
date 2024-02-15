@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import com.idle.togeduck.domain.chat.dto.DealRequestDto;
+import com.idle.togeduck.domain.chat.dto.TradeDto;
 import com.idle.togeduck.domain.chat.entity.Chat;
 import com.idle.togeduck.domain.chat.entity.Deal;
 import com.idle.togeduck.domain.chat.entity.DealStatus;
@@ -24,7 +26,9 @@ import com.idle.togeduck.global.response.BaseException;
 import com.idle.togeduck.global.response.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -52,8 +56,9 @@ public class DealService {
 			.build();
 
 		dealRepository.save(deal);
-
-		// sendDealNotification(target.getUser().getDeviceToken(), deal.getId(), "거래 요청 도착");
+		log.info("dealId: {}", deal.getId());
+		log.info("target.getUser().getDeviceToken() : {}", target.getUser().getDeviceToken());
+		sendDealNotification(target.getUser().getDeviceToken(), deal.getId(), "거래 요청 도착", "request");
 	}
 
 	//거래 수락
@@ -62,6 +67,10 @@ public class DealService {
 		Deal deal = dealRepository.findByIdWithTarget(dealId)
 			.orElseThrow(() -> new BaseException(ErrorCode.DEAL_NOT_FOUND));
 		deal.setStatus(DealStatus.ACCEPTED);
+
+		dealRepository.delete(deal);
+		tradeRepository.delete(deal.getMyTrade());
+		tradeRepository.delete(deal.getTarget());
 
 		//채팅방 생성
 		Chat chat = Chat.builder()
@@ -85,7 +94,10 @@ public class DealService {
 		userChatRepository.save(myUserChat);
 
 		//거래 수락 성공 요청 전송
-		// sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨");
+		sendDealNotificationWithChatId(deal.getTarget().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨",
+			"accept", chat.getId());
+		sendDealNotificationWithChatId(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 수락됨",
+			"accept", chat.getId());
 	}
 
 	//거래 거절
@@ -93,12 +105,11 @@ public class DealService {
 		Deal deal = dealRepository.findByIdWithTarget(dealId)
 			.orElseThrow(() -> new BaseException(ErrorCode.DEAL_NOT_FOUND));
 		deal.setStatus(DealStatus.REJECTED);
-
 		//거래 수락 성공 요청 전송
-		// sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 거절됨");
+		sendDealNotification(deal.getMyTrade().getUser().getDeviceToken(), deal.getId(), "거래 요청 거절됨", "reject");
 	}
 
-	private void sendDealNotification(String deviceToken, Long dealId, String body) {
+	private void sendDealNotification(String deviceToken, Long dealId, String body, String type) {
 		Message fcmMessage = Message.builder()
 			.setToken(deviceToken)
 			.setNotification(
@@ -108,6 +119,7 @@ public class DealService {
 					.build()
 			)
 			.putData("dealId", dealId.toString())
+			.putData("type", type)
 			.build();
 
 		try {
@@ -117,5 +129,43 @@ public class DealService {
 		} catch (ExecutionException e) {
 			throw new BaseException(ErrorCode.FIREBASE_EXECUTION);
 		}
+	}
+
+	private void sendDealNotificationWithChatId(String deviceToken, Long dealId, String body, String type,
+		Long chatId) {
+		Message fcmMessage = Message.builder()
+			.setToken(deviceToken)
+			.setNotification(
+				Notification.builder()
+					.setTitle("Togeduck")
+					.setBody(body)
+					.build()
+			)
+			.putData("dealId", dealId.toString())
+			.putData("type", type)
+			.putData("chatId", chatId.toString())
+			.build();
+
+		try {
+			String response = firebaseMessaging.sendAsync(fcmMessage).get();
+		} catch (InterruptedException e) {
+			throw new BaseException(ErrorCode.FIREBASE_INTERRUPTED);
+		} catch (ExecutionException e) {
+			throw new BaseException(ErrorCode.FIREBASE_EXECUTION);
+		}
+	}
+
+	public DealRequestDto getDeal(Long dealId) {
+		Deal deal = dealRepository.findByIdWithTarget(dealId)
+			.orElseThrow(() -> new BaseException(ErrorCode.DEAL_NOT_FOUND));
+		Long targetId = deal.getTarget().getId();
+		Long myTradeId = deal.getMyTrade().getId();
+		Trade trade = tradeRepository.findById(targetId).get();
+		Trade myTrade = tradeRepository.findById(myTradeId).get();
+		return new DealRequestDto(
+			new TradeDto(trade.getId(), trade.getContent(), trade.getImage(), trade.getDuration(), trade.getCreatedAt(),
+				trade.getExpiredAt(), true),
+			new TradeDto(myTrade.getId(), myTrade.getContent(), myTrade.getImage(), myTrade.getDuration(),
+				myTrade.getCreatedAt(), myTrade.getExpiredAt(), false));
 	}
 }

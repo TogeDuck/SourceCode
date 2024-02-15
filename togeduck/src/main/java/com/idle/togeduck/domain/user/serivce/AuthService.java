@@ -52,6 +52,7 @@ public class AuthService {
 				.socialId(userRequestDto.socialId()) // 소셜 아이디
 				.socialType(userRequestDto.socialType()) // 소셜 타입
 				.authority(Authority.ROLE_USER) // 권한
+				.deviceToken(userRequestDto.deviceToken())
 				.build()
 		);
 	}
@@ -77,18 +78,19 @@ public class AuthService {
 
 		if (userRepository.findBySocialId(socialId) == 0) { // DB 에 정보 없으면 회원가입
 			/*
-			 GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
+			 	GUEST 인 경우에 재로그인 시 에러 보낼 코드 작성 필요
 			 */
 			join(
 				UserRequestDto.builder()
 					.socialId(socialId)
 					.socialType(loginRequestDto.socialType())
+					.deviceToken(loginRequestDto.deviceToken())
 					.build()
 			);
 		}
 
 		User user = userRepository.findUserBySocialId(socialId); // 유저 정보
-		
+
 		// 1. Login 정보를 기반으로 AuthenticationToken 생성
 		UsernamePasswordAuthenticationToken authenticationToken =
 			new UsernamePasswordAuthenticationToken(user.getSocialId(), "", user.getAuthorities());
@@ -97,12 +99,10 @@ public class AuthService {
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
 		// 3. 인증 정보를 기반으로 JWT 토큰 생성
-		TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
+		TokenDto tokenDto = jwtProvider.createTokenDtoWithUserId(user.getId(), authentication);
 
 		// 4. RefreshToken redis 저장
 		String refreshToken = tokenDto.getRefreshToken();
-		String accessToken = tokenDto.getAccessToken();
-		// Long refreshTokenExpired = tokenDto.getAccessTokenExpireDate();
 
 		redisService.setValues(String.valueOf(user.getSocialId()), refreshToken);
 

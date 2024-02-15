@@ -7,6 +7,7 @@ import lombok.Builder;
 @Builder
 public record UserRequestDto(
 	String socialId,
-	SocialType socialType
+	SocialType socialType,
+	String deviceToken
 ) {
 }
