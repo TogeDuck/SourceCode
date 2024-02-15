@@ -107,45 +107,52 @@ class RecruitPostDialogFragment : DialogFragment() {
         }
 
         binding.btnRecruitPost.setOnClickListener {
-            val eventId = eventListViewModel.selectedEvent.value!!.eventId
-            if (eventId !in eventIdsRecruit) {
-                var toast = Toast.makeText(
-                    requireContext(),
-                    "현재 진행중인 이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다",
-                    Toast.LENGTH_SHORT
-                )
+            if(eventListViewModel.selectedEvent.value == null) {
+                var toast = Toast.makeText(requireContext(), "이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다.", Toast.LENGTH_SHORT)
                 toast.show()
-                toast = Toast.makeText(
-                    requireContext(),
-                    "선택한 이벤트가 과거 혹은 예정된 생일카페인지 확인해 주세요",
-                    Toast.LENGTH_SHORT
-                )
+                toast = Toast.makeText(requireContext(), "이벤트를 선택 후 모집글을 작성해주세요", Toast.LENGTH_SHORT)
                 toast.show()
-            } else {
-                val title = binding.etRecruitTitle.text.toString()
-                val maximum = binding.npRecruitPeopleNum.value
-                val duration = binding.npRecruitDuration.value
+            } else{
+                val eventId = eventListViewModel.selectedEvent.value!!.eventId
+                if (eventId !in eventIdsRecruit) {
+                    var toast = Toast.makeText(
+                        requireContext(),
+                        "현재 진행중인 이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다",
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                    toast = Toast.makeText(
+                        requireContext(),
+                        "선택한 이벤트가 과거 혹은 예정된 생일카페인지 확인해 주세요",
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                } else {
+                    val title = binding.etRecruitTitle.text.toString()
+                    val maximum = binding.npRecruitPeopleNum.value
+                    val duration = binding.npRecruitDuration.value
 
-                val selectedPosition = binding.spinner.selectedItemPosition
-                val destinationName = eventNames[selectedPosition]
-                val destinationId = eventIds[selectedPosition]
+                    val selectedPosition = binding.spinner.selectedItemPosition
+                    val destinationName = eventNames[selectedPosition]
+                    val destinationId = eventIds[selectedPosition]
 
-                val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
-                if (title.isNotEmpty() && destinationName.isNotEmpty()
-                    && maximum > 0 && maximum <= 10
-                    && duration > 0 && duration <= 120
-                    && eventListViewModel.selectedEvent.value != null
-                ) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        Log.d("모집 등록", "모집 등록 호출됨")
-                        recruitViewModel.createRecruit(
-                            eventId,
-                            recruitRequest,
-                            favoriteSettingViewModel.selectedCelebrity.value!!.id
-                        )
+                    val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
+                    if (title.isNotEmpty() && destinationName.isNotEmpty()
+                        && maximum > 0 && maximum <= 10
+                        && duration > 0 && duration <= 120
+                        && eventListViewModel.selectedEvent.value != null
+                    ) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d("모집 등록", "모집 등록 호출됨")
+                            recruitViewModel.createRecruit(
+                                eventId,
+                                recruitRequest,
+                                favoriteSettingViewModel.selectedCelebrity.value!!.id
+                            )
+                        }
                     }
+                    findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
                 }
-                findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
             }
         }
     }

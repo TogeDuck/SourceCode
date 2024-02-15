@@ -103,43 +103,50 @@ class ExchangePostDialogFragment: DialogFragment() {
         }
 
         binding.btnExchangePost.setOnClickListener {
-            val eventId = eventListViewModel.selectedEvent.value!!.eventId
-            if(eventId !in eventIds) {
-                var toast = Toast.makeText(requireContext(), "현재 진행중인 이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다", Toast.LENGTH_SHORT)
+            if(eventListViewModel.selectedEvent.value == null) {
+                var toast = Toast.makeText(requireContext(), "이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다.", Toast.LENGTH_SHORT)
                 toast.show()
-                toast = Toast.makeText(requireContext(), "선택한 이벤트가 과거 혹은 예정된 생일카페인지 확인해 주세요", Toast.LENGTH_SHORT)
+                toast = Toast.makeText(requireContext(), "이벤트를 선택 후 교환글을 작성해주세요", Toast.LENGTH_SHORT)
                 toast.show()
             } else {
-                val content = binding.etExchangeInput.text.toString()
-                val duration = binding.npExchangeDuration.value
+                val eventId = eventListViewModel.selectedEvent.value!!.eventId
+                if(eventId !in eventIds) {
+                    var toast = Toast.makeText(requireContext(), "현재 진행중인 이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다", Toast.LENGTH_SHORT)
+                    toast.show()
+                    toast = Toast.makeText(requireContext(), "선택한 이벤트가 과거 혹은 예정된 생일카페인지 확인해 주세요", Toast.LENGTH_SHORT)
+                    toast.show()
+                }  else {
+                    val content = binding.etExchangeInput.text.toString()
+                    val duration = binding.npExchangeDuration.value
 
-                val exchangeRequest = ExchangeRequest(content, duration)
-                val exchangeRequestPart = exchangeRequest.toMultipartBody()
-                Log.d("로그", "ExchangePostDialogFragment - btnExchangePost.setOnClickListener 호출됨")
+                    val exchangeRequest = ExchangeRequest(content, duration)
+                    val exchangeRequestPart = exchangeRequest.toMultipartBody()
+                    Log.d("로그", "ExchangePostDialogFragment - btnExchangePost.setOnClickListener 호출됨")
 
-                if(content.isNotEmpty() && duration > 0 && duration < 121){
+                    if(content.isNotEmpty() && duration > 0 && duration < 121){
 
-                    if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null
-                        && favoriteSettingViewModel.selectedCelebrity.value != null){
-                        val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
+                        if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null
+                            && favoriteSettingViewModel.selectedCelebrity.value != null){
+                            val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
 
-                        CoroutineScope(Dispatchers.IO).launch {
-                            Log.d("교환 등록", "교환 등록 호출됨")
-                            Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
-                            exchangeViewModel.postExchange(
-                                eventId,
-                                exchaneImg,
-                                exchangeRequestPart,
-                                favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                            CoroutineScope(Dispatchers.IO).launch {
+                                Log.d("교환 등록", "교환 등록 호출됨")
+                                Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
+                                exchangeViewModel.postExchange(
+                                    eventId,
+                                    exchaneImg,
+                                    exchangeRequestPart,
+                                    favoriteSettingViewModel.selectedCelebrity.value!!.id,
 
-                                )
-                            launch(Dispatchers.Main) {
-                                imgPath = null
+                                    )
+                                launch(Dispatchers.Main) {
+                                    imgPath = null
+                                }
                             }
                         }
                     }
+                    findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
                 }
-                findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
             }
         }
 
