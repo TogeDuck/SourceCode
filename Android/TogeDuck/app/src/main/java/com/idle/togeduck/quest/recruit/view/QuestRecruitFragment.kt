@@ -1,9 +1,11 @@
 package com.idle.togeduck.quest.recruit.view
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -54,6 +56,7 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
 
         recruitViewModel.recruitList.observe(viewLifecycleOwner){list ->
             questRecruitAdapter.submitList(list)
+            setEmptyTheme()
         }
         recruitViewModel.needUpdate.observe(viewLifecycleOwner){check ->
             if(check){
@@ -62,6 +65,7 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
             }
         }
         getRecruitList()
+        setEmptyTheme()
     }
 
     override fun onResume() {
@@ -73,6 +77,30 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
             CoroutineScope(Dispatchers.IO).launch{
                 recruitViewModel.getRecruitList(selectedEvent.eventId, 0, 1000)
             }
+        }
+    }
+
+    private fun setEmptyTheme(){
+        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        drawable.setColor(ContextCompat.getColor(requireContext(), R.color.white))
+        drawable.setStroke(1, ContextCompat.getColor(requireContext(), R.color.gray_bg))
+        binding.questShareEmpty.background = drawable
+        binding.questShareEmpty.setTextColor(getColor(requireContext(), R.color.gray_text))
+
+        val pastEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        pastEmptyEventDrawable.setColor(getColor(requireContext(), R.color.gray_bg))
+        pastEmptyEventDrawable.setStroke(0, getColor(requireContext(), R.color.gray_bg))
+        binding.tvTodayEmptyEvent.background = pastEmptyEventDrawable
+        binding.tvTodayEmptyEvent.setTextColor(getColor(requireContext(), R.color.gray_text))
+
+        if(recruitViewModel.recruitList.value == null ||
+            recruitViewModel.recruitList.value!!.isEmpty()){
+            binding.questShareEmpty.visibility = View.VISIBLE
+            binding.tvTodayEmptyEvent.visibility = View.VISIBLE
+        }
+        else{
+            binding.questShareEmpty.visibility = View.GONE
+            binding.tvTodayEmptyEvent.visibility = View.GONE
         }
     }
 

@@ -721,7 +721,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         // 줌 레벨 변화에 따른 크기 조정
         val sizeChange = (zoom - baseZoomLevel)*7
         var size = baseSize + sizeChange
-        size = size.coerceAtMost(50.0).coerceAtLeast(1.0)
+        size = size.coerceAtMost(50.0).coerceAtLeast(20.0)
         mapViewModel.markerSize = dpToPx(size.toInt(), requireContext())
     }
 

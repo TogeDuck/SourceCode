@@ -51,7 +51,7 @@ class QuestRecruitViewHolder(
         timerTask(recruit,context)
         tvTitle.text = recruit.title
 //        tvPersonCnt.text = "${recruit.current} / ${recruit.maximum}"
-        tvDestination.text = recruit.destination
+        tvDestination.text = "다음 장소: "+recruit.destination
         tvPersonCnt.text = " 최대 ${recruit.maximum}명"
     }
 

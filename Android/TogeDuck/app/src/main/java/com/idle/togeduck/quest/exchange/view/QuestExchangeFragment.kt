@@ -1,5 +1,6 @@
 package com.idle.togeduck.quest.exchange.view
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import com.idle.togeduck.quest.exchange.model.Exchange
 import com.idle.togeduck.quest.exchange.view.exchange_rv.GirdLayoutItemDecoration
 import com.idle.togeduck.quest.exchange.view.exchange_rv.IQuestExchangeDetail
 import com.idle.togeduck.quest.exchange.view.exchange_rv.QuestExchangeAdapter
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,16 +62,19 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
 
         exchangeViewModel.exchangeList.observe(viewLifecycleOwner) {list ->
             questExchangeAdapter.submitList(list)
+            setEmptyTheme()
         }
         exchangeViewModel.needUpdate.observe(viewLifecycleOwner){check ->
             if(check){
                 Log.d("교환 업데이트 요청","요청 수신")
                 getExchangeList()
+                setEmptyTheme()
                 exchangeViewModel.needUpdate.value = false
             }
         }
 
         getExchangeList()
+        setEmptyTheme()
     }
     override fun onDestroyView() {
         super.onDestroyView()
@@ -99,5 +104,29 @@ class QuestExchangeFragment : Fragment(), IQuestExchangeDetail {
     fun showQuestExchangeDetailDialog(questExchange: Exchange){
         exchangeViewModel.setSelectedExchange(questExchange)
         findNavController().navigate(R.id.action_mapFragment_to_exchangeDialogFragment)
+    }
+
+    private fun setEmptyTheme(){
+        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        drawable.setColor(ContextCompat.getColor(requireContext(), R.color.white))
+        drawable.setStroke(1, ContextCompat.getColor(requireContext(), R.color.gray_bg))
+        binding.questShareEmpty.background = drawable
+        binding.questShareEmpty.setTextColor(getColor(requireContext(), R.color.gray_text))
+
+        val pastEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        pastEmptyEventDrawable.setColor(getColor(requireContext(), R.color.gray_bg))
+        pastEmptyEventDrawable.setStroke(0, getColor(requireContext(), R.color.gray_bg))
+        binding.tvTodayEmptyEvent.background = pastEmptyEventDrawable
+        binding.tvTodayEmptyEvent.setTextColor(getColor(requireContext(), R.color.gray_text))
+
+        if(exchangeViewModel.exchangeList.value == null ||
+            exchangeViewModel.exchangeList.value!!.isEmpty()){
+            binding.questShareEmpty.visibility = View.VISIBLE
+            binding.tvTodayEmptyEvent.visibility = View.VISIBLE
+        }
+        else{
+            binding.questShareEmpty.visibility = View.GONE
+            binding.tvTodayEmptyEvent.visibility = View.GONE
+        }
     }
 }

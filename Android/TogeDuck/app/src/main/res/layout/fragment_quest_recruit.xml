@@ -16,10 +16,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="현재 진행 중인 모집"
-            android:layout_marginBottom="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_today_empty_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="현재 진행 중인 모집 퀘스트가 없습니다"
+            android:gravity="center"
+            android:paddingVertical="25dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="5dp"
+            />
+        <TextView
+            android:id="@+id/quest_share_empty"
+            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:background="@color/gray_bg"
+            android:text="다음 카페로 함께 이동할 사람을 모집해주세요"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
             />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="5dp"
             android:id="@+id/rv_current_recruit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
