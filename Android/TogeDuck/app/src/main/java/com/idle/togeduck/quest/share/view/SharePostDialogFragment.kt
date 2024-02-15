@@ -49,6 +49,7 @@ class SharePostDialogFragment: DialogFragment() {
 
         } else {
             Log.d("로그", "SharePostDialogFragment - pickMedia - 이미지 선택 실패")
+            binding.shareImgBtn.visibility = View.VISIBLE
         }
     }
 

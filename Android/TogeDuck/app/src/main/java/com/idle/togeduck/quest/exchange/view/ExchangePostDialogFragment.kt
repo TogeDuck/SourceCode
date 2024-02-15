@@ -57,6 +57,7 @@ class ExchangePostDialogFragment: DialogFragment() {
 
         } else {
             Log.d("로그", "ExchangePostDialogFragment - pickMedia - 이미지 선택 실패")
+            binding.exchangeImgBtn.visibility = View.VISIBLE
         }
     }
 
