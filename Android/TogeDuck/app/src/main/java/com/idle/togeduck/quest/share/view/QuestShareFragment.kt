@@ -1,6 +1,7 @@
 package com.idle.togeduck.quest.share.view
 
 import android.app.Dialog
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ import com.idle.togeduck.util.TogeDuckItemDecoration
 import com.idle.togeduck.quest.share.view.share_rv.IQuestShareDetail
 import com.idle.togeduck.quest.share.view.share_rv.QuestShareListAdapter
 import com.idle.togeduck.util.DpPxUtil
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +50,7 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setTheme()
 
         // Adapter 인스턴스 생성 (OnClick 인터페이스 구현체, Context 제공 필요)
         val recycleView = binding.questShareRecycle
@@ -60,14 +63,40 @@ class QuestShareFragment : Fragment(), IQuestShareDetail {
 
         shareViewModel.shareList.observe(viewLifecycleOwner) {list ->
             questShareAdapter.submitList(list)
+            setTheme()
         }
         shareViewModel.needUpdate.observe(viewLifecycleOwner){check ->
             if(check){
                 getShareList()
                 shareViewModel.needUpdate.value = false
             }
+            setTheme()
         }
         getShareList()
+    }
+
+    private fun setTheme(){
+        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_square_circle) as GradientDrawable
+        drawable.setColor(ContextCompat.getColor(requireContext(), R.color.white))
+        drawable.setStroke(1,ContextCompat.getColor(requireContext(), R.color.gray_bg))
+        binding.questShareEmpty.background = drawable
+        binding.questShareEmpty.setTextColor(getColor(requireContext(), R.color.gray_text))
+
+        val pastEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        pastEmptyEventDrawable.setColor(getColor(requireContext(), R.color.gray_bg))
+        pastEmptyEventDrawable.setStroke(0, getColor(requireContext(), R.color.gray_bg))
+        binding.tvTodayEmptyEvent.background = pastEmptyEventDrawable
+        binding.tvTodayEmptyEvent.setTextColor(getColor(requireContext(), R.color.gray_text))
+
+        if(shareViewModel.shareList.value == null ||
+            shareViewModel.shareList.value!!.isEmpty()){
+            binding.questShareEmpty.visibility = View.VISIBLE
+            binding.tvTodayEmptyEvent.visibility = View.VISIBLE
+        }
+        else{
+            binding.questShareEmpty.visibility = View.GONE
+            binding.tvTodayEmptyEvent.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
