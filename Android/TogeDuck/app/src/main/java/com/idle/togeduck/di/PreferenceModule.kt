@@ -134,57 +134,57 @@ class PreferenceModule @Inject constructor(
         }
     }
 
-    val getChatRoomList = dataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            }
-        }.map { preferences ->
-            val gson = GsonBuilder().create()
-            Log.d("로그", "PreferenceModule - getChatRoomList() 호출됨 ${preferences[KEY_CHAT_ROOM_LIST]}")
-            gson.fromJson(preferences[KEY_CHAT_ROOM_LIST], mutableMapOf<Long, TalkRoom>().javaClass)
-        }
-
-    suspend fun setChatRoomList(chatRoomList: MutableMap<Long, TalkRoom>) {
-        val gson = GsonBuilder().create()
-        val json = gson.toJson(chatRoomList)
-
-        dataStore.edit { preferences ->
-            preferences[KEY_CHAT_ROOM_LIST] = json
-        }
-    }
-
-    suspend fun removeChatRoomList() {
-        dataStore.edit { preferences ->
-            preferences.remove(KEY_CHAT_ROOM_LIST)
-        }
-    }
-
-    val getChatRoomTalkList = dataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            }
-        }.map { preferences ->
-            val gson = GsonBuilder().create()
-            Log.d("로그", "PreferenceModule - getChatRoomTalkList() 호출됨 ${preferences[KEY_CHAT_ROOM_TALK_LIST]}")
-            gson.fromJson(preferences[KEY_CHAT_ROOM_TALK_LIST], mutableMapOf<Long, MutableList<Talk>>().javaClass)
-        }
-
-    suspend fun setChatRoomTalkList(chatRoomList: MutableMap<Long, MutableList<Talk>>) {
-        val gson = GsonBuilder().create()
-        val json = gson.toJson(chatRoomList)
-
-        dataStore.edit { preferences ->
-            preferences[KEY_CHAT_ROOM_TALK_LIST] = json
-        }
-    }
-
-    suspend fun removeChatRoomTalkList() {
-        dataStore.edit { preferences ->
-            preferences.remove(KEY_CHAT_ROOM_TALK_LIST)
-        }
-    }
+//    val getChatRoomList = dataStore.data
+//        .catch { exception ->
+//            if (exception is IOException) {
+//                emit(emptyPreferences())
+//            }
+//        }.map { preferences ->
+//            val gson = GsonBuilder().create()
+//            Log.d("로그", "PreferenceModule - getChatRoomList() 호출됨 ${preferences[KEY_CHAT_ROOM_LIST]}")
+//            gson.fromJson(preferences[KEY_CHAT_ROOM_LIST], mutableMapOf<Long, TalkRoom>().javaClass)
+//        }
+//
+//    suspend fun setChatRoomList(chatRoomList: MutableMap<Long, TalkRoom>) {
+//        val gson = GsonBuilder().create()
+//        val json = gson.toJson(chatRoomList)
+//
+//        dataStore.edit { preferences ->
+//            preferences[KEY_CHAT_ROOM_LIST] = json
+//        }
+//    }
+//
+//    suspend fun removeChatRoomList() {
+//        dataStore.edit { preferences ->
+//            preferences.remove(KEY_CHAT_ROOM_LIST)
+//        }
+//    }
+//
+//    val getChatRoomTalkList = dataStore.data
+//        .catch { exception ->
+//            if (exception is IOException) {
+//                emit(emptyPreferences())
+//            }
+//        }.map { preferences ->
+//            val gson = GsonBuilder().create()
+//            Log.d("로그", "PreferenceModule - getChatRoomTalkList() 호출됨 ${preferences[KEY_CHAT_ROOM_TALK_LIST]}")
+//            gson.fromJson(preferences[KEY_CHAT_ROOM_TALK_LIST], mutableMapOf<Long, MutableList<Talk>>().javaClass)
+//        }
+//
+//    suspend fun setChatRoomTalkList(chatRoomList: MutableMap<Long, MutableList<Talk>>) {
+//        val gson = GsonBuilder().create()
+//        val json = gson.toJson(chatRoomList)
+//
+//        dataStore.edit { preferences ->
+//            preferences[KEY_CHAT_ROOM_TALK_LIST] = json
+//        }
+//    }
+//
+//    suspend fun removeChatRoomTalkList() {
+//        dataStore.edit { preferences ->
+//            preferences.remove(KEY_CHAT_ROOM_TALK_LIST)
+//        }
+//    }
 
     val getCakeCount = dataStore.data
         .catch { exception ->

@@ -272,8 +272,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
         mapViewModel.isQuestAlert.observe(viewLifecycleOwner) { questAlert ->
-            if(mainViewModel.isRealTimeOn) {
+            if(questAlert != null && mainViewModel.isRealTimeOn) {
                 SnackBarFactory.show(this, binding, questAlert.questType)
+                mapViewModel.isQuestAlert.postValue(null)
             }
         }
 
@@ -1201,9 +1202,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             handleButtonClick(fabChat, listOf(fabQuest, fabList, fabMyrecord))
         }
         componentBottomAppbarBinding.buttonMyrecord.setOnClickListener {
-            componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
-            mapViewModel.setBottomSheet(1)
-            handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat))
+            if (!mapViewModel.isTourStart && !mainViewModel.isRealTimeOn) {
+                componentBottomSheetBinding.viewPager.setCurrentItem(4, false)
+                mapViewModel.setBottomSheet(1)
+                handleButtonClick(fabMyrecord, listOf(fabQuest, fabList, fabChat))
+            } else {
+                toast("실시간 정보와 투어를 종료해주세요")
+            }
         }
     }
 
@@ -1567,6 +1572,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (mapViewModel.isTourStart == true && timer == null) sendPosition()
         if(mainViewModel.isRealTimeOn == true && locationTimer == null) updateLocation()
         if (workManager != null) cancelWorkWithPeriodic()
+
+        if (mapViewModel.isTourStart) {
+            binding.tourStart.background = tourEndCircle
+            binding.tourStart.text = "투어\n종료"
+        } else {
+            binding.tourStart.background = tourStartCircle
+            binding.tourStart.text = "투어\n시작"
+        }
     }
 
     override fun onStop() {

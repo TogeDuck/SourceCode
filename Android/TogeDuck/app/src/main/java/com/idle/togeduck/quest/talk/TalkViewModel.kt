@@ -84,35 +84,35 @@ class TalkViewModel @Inject constructor(
     suspend fun getChatRoomTalkList(chatRoomId: Long){
     }
 
-    fun getChatPreference() {
-        Log.d("로그", "TalkViewModel - getChatPreference() 호출됨")
-        val chatRoomListPreference = runBlocking {
-            preference.getChatRoomList.first()
-        }
+//    fun getChatPreference() {
+//        Log.d("로그", "TalkViewModel - getChatPreference() 호출됨")
+//        val chatRoomListPreference = runBlocking {
+//            preference.getChatRoomList.first()
+//        }
+//
+//        val chatRoomTalkListPreference = runBlocking {
+//            preference.getChatRoomTalkList.first()
+//        }
+//
+//        if (chatRoomListPreference != null) {
+//            _chatRoomList.postValue(chatRoomListPreference)
+//        }
+//
+//        if (chatRoomTalkListPreference != null) {
+//            _chatRoomTalkList.postValue(chatRoomTalkListPreference)
+//        }
+//    }
 
-        val chatRoomTalkListPreference = runBlocking {
-            preference.getChatRoomTalkList.first()
-        }
-
-        if (chatRoomListPreference != null) {
-            _chatRoomList.postValue(chatRoomListPreference)
-        }
-
-        if (chatRoomTalkListPreference != null) {
-            _chatRoomTalkList.postValue(chatRoomTalkListPreference)
-        }
-    }
-
-    fun setChatPreference() {
-        Log.d("로그", "TalkViewModel - setChatPreference() 호출됨")
-        viewModelScope.launch {
-            if (_chatRoomList.value != null) {
-                preference.setChatRoomList(_chatRoomList.value!!)
-            }
-
-            if (_chatRoomTalkList.value != null) {
-                preference.setChatRoomTalkList(_chatRoomTalkList.value!!)
-            }
-        }
-    }
+//    fun setChatPreference() {
+//        Log.d("로그", "TalkViewModel - setChatPreference() 호출됨")
+//        viewModelScope.launch {
+//            if (_chatRoomList.value != null) {
+//                preference.setChatRoomList(_chatRoomList.value!!)
+//            }
+//
+//            if (_chatRoomTalkList.value != null) {
+//                preference.setChatRoomTalkList(_chatRoomTalkList.value!!)
+//            }
+//        }
+//    }
 }
