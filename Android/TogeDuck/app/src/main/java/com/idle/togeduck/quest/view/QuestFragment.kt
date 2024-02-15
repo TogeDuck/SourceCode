@@ -15,6 +15,8 @@ import com.idle.togeduck.R
 import com.idle.togeduck.databinding.FragmentQuestBinding
 import com.idle.togeduck.common.Theme
 import com.idle.togeduck.event.EventListViewModel
+import com.idle.togeduck.main_map.MapViewModel
+import com.idle.togeduck.main_map.view.MapFragment
 import com.idle.togeduck.util.getColor
 import com.idle.togeduck.quest.view.quest_rv.QuestPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +28,7 @@ class QuestFragment : Fragment() {
 
     private lateinit var questPagerAdapter: QuestPagerAdapter
     private val eventListViewModel: EventListViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by activityViewModels()
 
     lateinit var yellowPickDrawable: GradientDrawable
     lateinit var yellowUnPickDrawable: GradientDrawable
@@ -54,8 +57,13 @@ class QuestFragment : Fragment() {
         setEvent()
         changeEvent()
 
-        eventListViewModel.selectedEvent.observe(viewLifecycleOwner){event ->
+        eventListViewModel.selectedEvent.observe(viewLifecycleOwner){ event ->
             changeEvent()
+        }
+
+        binding.questEventContainer.setOnClickListener {
+            (parentFragment as MapFragment).changeViewPagerPage(2, false)
+            mapViewModel.setBottomSheet(2)
         }
     }
 
