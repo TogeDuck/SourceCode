@@ -1417,6 +1417,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onStart()
         Log.d("로그", "MapFragment - onStart() 호출됨")
 
+        realTimeBtnOnClick()
+
         if (mapViewModel.isTourStart == true && timer == null) sendPosition()
         if (workManager != null) cancelWorkWithPeriodic()
     }

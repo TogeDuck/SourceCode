@@ -1,0 +1,64 @@
+Index: app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view\r\n\r\nimport android.os.Bundle\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.Fragment\r\nimport com.google.android.material.bottomsheet.BottomSheetBehavior\r\nimport com.idle.togeduck.databinding.ComponentBottomSheetBinding\r\nimport com.idle.togeduck.databinding.FragmentBottomSheetBinding\r\nimport com.idle.togeduck.util.CalcStatusBarSize\r\nimport com.idle.togeduck.util.DpPxUtil.dpToPx\r\nimport dagger.hilt.android.AndroidEntryPoint\r\n\r\n@AndroidEntryPoint\r\nclass BottomSheetFragment : Fragment() {\r\n    private var _binding: FragmentBottomSheetBinding? = null\r\n    private val binding get() = _binding!!\r\n    private var _componentBinding: ComponentBottomSheetBinding? = null\r\n    private val componentBinding get() = _componentBinding!!\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)\r\n        _componentBinding = binding.bsFragment\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n        val statusDp = CalcStatusBarSize.getStatusBarHeightToDp(requireContext())\r\n\r\n        val sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)\r\n\r\n        sheetBehavior.expandedOffset = dpToPx(statusDp + 5, requireContext())\r\n\r\n        // TODO. BottomSheetBehavior state에 따른 이벤트 추후 추가\r\n        sheetBehavior.addBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){\r\n            override fun onStateChanged(bottomSheet: View, newState: Int) {\r\n                when (newState) {\r\n                    BottomSheetBehavior.STATE_HIDDEN -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_EXPANDED -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_COLLAPSED -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_DRAGGING -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_SETTLING -> {\r\n                    }\r\n                }\r\n            }\r\n\r\n            override fun onSlide(bottomSheet: View, slideOffset: Float) {\r\n            }\r\n        })\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        _binding = null\r\n        _componentBinding = null\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt b/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt
+--- a/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt	
+@@ -1,16 +1,22 @@
+ package com.idle.togeduck.view
+ 
++import android.animation.ObjectAnimator
+ import android.os.Bundle
++import android.util.Log
+ import android.view.LayoutInflater
+ import android.view.View
+ import android.view.ViewGroup
++import android.widget.FrameLayout
++import androidx.coordinatorlayout.widget.CoordinatorLayout
+ import androidx.fragment.app.Fragment
+ import com.google.android.material.bottomsheet.BottomSheetBehavior
+ import com.idle.togeduck.databinding.ComponentBottomSheetBinding
+ import com.idle.togeduck.databinding.FragmentBottomSheetBinding
+ import com.idle.togeduck.util.CalcStatusBarSize
++import com.idle.togeduck.util.Common
+ import com.idle.togeduck.util.DpPxUtil.dpToPx
+ import dagger.hilt.android.AndroidEntryPoint
++import kotlinx.coroutines.NonCancellable.start
+ 
+ @AndroidEntryPoint
+ class BottomSheetFragment : Fragment() {
+@@ -43,6 +49,8 @@
+                 when (newState) {
+                     BottomSheetBehavior.STATE_HIDDEN -> {
+                     }
++                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
++                    }
+                     BottomSheetBehavior.STATE_EXPANDED -> {
+                     }
+                     BottomSheetBehavior.STATE_COLLAPSED -> {
+@@ -55,6 +63,7 @@
+             }
+ 
+             override fun onSlide(bottomSheet: View, slideOffset: Float) {
++                Log.d("로그", "${slideOffset}")
+             }
+         })
+     }
+Index: app/src/main/res/layout/fragment_bottom_sheet.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".view.BottomSheetFragment\">\r\n\r\n    <androidx.coordinatorlayout.widget.CoordinatorLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\">\r\n\r\n        <include\r\n            android:id=\"@+id/bs_fragment\"\r\n            layout=\"@layout/component_bottom_sheet\" />\r\n    </androidx.coordinatorlayout.widget.CoordinatorLayout>\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_bottom_sheet.xml b/app/src/main/res/layout/fragment_bottom_sheet.xml
+--- a/app/src/main/res/layout/fragment_bottom_sheet.xml	
++++ b/app/src/main/res/layout/fragment_bottom_sheet.xml	
+@@ -13,5 +13,6 @@
+         <include
+             android:id="@+id/bs_fragment"
+             layout="@layout/component_bottom_sheet" />
++
+     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
