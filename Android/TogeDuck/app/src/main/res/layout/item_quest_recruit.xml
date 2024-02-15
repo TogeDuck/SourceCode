@@ -62,7 +62,7 @@
                 android:id="@+id/tv_person_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="O2/05"
+                android:text=" 최대 5명"
                 android:textSize="@dimen/text_large"
                 android:textColor="@color/gray_text"
 

@@ -42,16 +42,6 @@
             android:maxLines="1"
             />
 
-        <TextView
-            android:id="@+id/tv_my_record"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="방탄소년단 뷔의 생일카페를 투어했어요!"
-            android:textSize="@dimen/text_large"
-            android:textColor="@color/gray_text"
-            android:maxLines="1"
-            />
-
     </LinearLayout>
 
 </LinearLayout>

@@ -50,7 +50,8 @@ class QuestRecruitViewHolder(
         setTheme(recruit, context)
         timerTask(recruit,context)
         tvTitle.text = recruit.title
-        tvPersonCnt.text = "${recruit.current} / ${recruit.maximum}"
+//        tvPersonCnt.text = "${recruit.current} / ${recruit.maximum}"
+        tvPersonCnt.text = " 최대 ${recruit.maximum}명"
     }
 
     private fun setIcon(context: Context){

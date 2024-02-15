@@ -42,15 +42,15 @@ class EventListViewModel @Inject constructor(
     private val _selectedEvent = MutableLiveData<Event>()
     val selectedEvent: LiveData<Event>
         get() = _selectedEvent
-    private val _likeListToday= MutableLiveData<List<Event>>()
+    private val _likeListToday= MutableLiveData<List<Event>>(listOf())
     val likeListToday: LiveData<List<Event>>
         get() = _likeListToday
 
-    private val _likeListUpcoming= MutableLiveData<List<Event>>()
+    private val _likeListUpcoming= MutableLiveData<List<Event>>(listOf())
     val likeListUpcoming: LiveData<List<Event>>
         get() = _likeListUpcoming
 
-    private val _likeListPast = MutableLiveData<List<Event>>()
+    private val _likeListPast = MutableLiveData<List<Event>>(listOf())
     val likeListPast: LiveData<List<Event>>
         get() = _likeListPast
 
@@ -59,9 +59,9 @@ class EventListViewModel @Inject constructor(
     var isDetailOpen: MutableLiveData<Boolean> = MutableLiveData(false)
 
     init {
-        _listToday.value = listOf()
-        _listPast.value = listOf()
-        _listUpcoming.value = listOf()
+//        _listToday.value = listOf()
+//        _listPast.value = listOf()
+//        _listUpcoming.value = listOf()
     }
 
     fun initClostEvents(){

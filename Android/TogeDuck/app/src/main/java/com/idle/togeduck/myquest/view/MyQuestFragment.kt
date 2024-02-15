@@ -53,7 +53,7 @@ class MyQuestFragment : Fragment(), EventInfo {
         super.onViewCreated(view, savedInstanceState)
         setTheme()
         setRecyclerview()
-        getLikeList()
+//        getLikeList()
         eventListViewModel.likeListToday.observe(viewLifecycleOwner){ list ->
             todayEventInfoAdapter.submitList(list)
         }
