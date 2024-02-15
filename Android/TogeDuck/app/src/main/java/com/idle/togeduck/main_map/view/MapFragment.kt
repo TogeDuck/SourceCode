@@ -554,6 +554,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
         else{
             deleteAllMarkers()
+            mapViewModel.peopleNum.postValue(0)
             mainViewModel.isRealTimeOn = false
             binding.mapPeoplecntContainer.visibility = View.GONE
         }
@@ -1460,6 +1461,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         timer?.scheduleAtFixedRate(object : TimerTask() {
             val favorite = favoriteSettingViewModel.selectedCelebrity.value?.id
             override fun run() {
+                updatePeopleMarker()
                 if (TedPermissionUtil.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
@@ -1498,7 +1500,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun figureCloseEvents(lat:Double, lng:Double) {
-        mapViewModel.eventList = mutableListOf()
+        mapViewModel.visitedEvent = mutableListOf()
         eventListViewModel.listToday.value?.let { list ->
             Log.d("오늘 이벤트", list.toString())
             Log.d("방문 이벤트 리스트", mapViewModel.visitedEvent.toString())
@@ -1535,6 +1537,27 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if (timer != null) {
             timer!!.cancel()
             timer = null
+        }
+    }
+
+    fun updatePeopleMarker(){
+        if(mainViewModel.isRealTimeOn){
+            activity?.runOnUiThread{
+                deleteAllMarkers()
+                val updateMap = mutableMapOf<String, Marker>()
+                mapViewModel.coordinateUpdate.forEach{ (key, position) ->
+                    val marker = Marker()
+                    marker.position = LatLng(position.latitude, position.longitude)
+                    marker.icon = mapViewModel.peopleMarkerOverlay!!
+                    marker.map = mapViewModel.naverMap
+                    marker.height = mapViewModel.markerSize
+                    marker.width = mapViewModel.markerSize
+                    updateMap[key] = marker
+                }
+                mapViewModel.peopleMarkerList.postValue(updateMap)
+                mapViewModel.updatePeopleNum(updateMap.size)
+                mapViewModel.coordinateUpdate = mutableMapOf()
+            }
         }
     }
 

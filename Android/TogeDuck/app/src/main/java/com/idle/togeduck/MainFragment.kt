@@ -28,6 +28,7 @@ import com.idle.togeduck.di.PreferenceModule
 import com.idle.togeduck.event.EventListViewModel
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.favorite.model.Celebrity
+import com.idle.togeduck.history.model.Position
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.network.Chat
 import com.idle.togeduck.network.Coordinate
@@ -125,7 +126,6 @@ class MainFragment : Fragment() {
             override fun onPermissionGranted() {
                 Log.d("로그", "MainFragment - onPermissionGranted() 호출됨")
             }
-
             override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
                 Toast.makeText(
                     requireContext(),
@@ -186,7 +186,6 @@ class MainFragment : Fragment() {
             connectSocket()
         }
     }
-
     /** 웹소켓 수신 메세지 한번에 처리 **/
     private fun socketCallback(message: String) {
         val response = Gson().fromJson(message, WebSocketResponse::class.java)
@@ -199,19 +198,7 @@ class MainFragment : Fragment() {
                     val coordinate =
                         Gson().fromJson(websocketDataResponse.data, Coordinate::class.java)
                     if (mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)) {
-                        activity?.runOnUiThread {
-                            val updateMap = mapViewModel.peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
-                            updateMap[coordinate.userId]?.map = null
-                            val marker = Marker()
-                            marker.position = LatLng(coordinate.latitude, coordinate.longitude)
-                            marker.icon = mapViewModel.peopleMarkerOverlay!!
-                            marker.map = mapViewModel.naverMap
-                            marker.height = mapViewModel.markerSize
-                            marker.width = mapViewModel.markerSize
-                            updateMap[coordinate.userId] = marker
-                            mapViewModel.peopleMarkerList.postValue(updateMap)
-                            mapViewModel.updatePeopleNum(updateMap.size)
-                        }
+                        mapViewModel.coordinateUpdate[coordinate.userId] = Position(coordinate.latitude, coordinate.longitude)
                     }
                 }
                 // 다른 사람의 투어 종료 수신
