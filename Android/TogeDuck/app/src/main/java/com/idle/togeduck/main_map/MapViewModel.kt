@@ -51,6 +51,7 @@ class MapViewModel @Inject constructor(
     var eventList = mutableListOf<Event>()
     var isCloseDialogOpen = false
     var isTourStart = false
+    var visitedEvent = mutableListOf<Long>()
 
     fun initPeopleMarkerImage(image: OverlayImage){
         this.peopleMarkerOverlay = image
@@ -73,6 +74,7 @@ class MapViewModel @Inject constructor(
         if(currentList.isEmpty()){
             currentList.add(newPosition)
             hasChanged = true
+            Log.d("투어 기록 리스트 업데이트", tourList.toString())
         } else {
             val lastPosition = currentList[currentList.size - 1]
             val disFromLastCoor = CalcDistance.getDistance(lastPosition.latitude, lastPosition.longitude, lat, lng)
@@ -80,10 +82,10 @@ class MapViewModel @Inject constructor(
             if(disFromLastCoor in 5..30){
                 currentList.add(newPosition)
                 hasChanged = true
+                Log.d("투어 기록 리스트 업데이트", tourList.toString())
             }
         }
         tourList = currentList
-        Log.d("투어 기록 리스트 업데이트", tourList.toString())
         return hasChanged
     }
 

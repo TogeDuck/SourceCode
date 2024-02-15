@@ -88,6 +88,9 @@ class EventCloseDialog: DialogFragment(), EventInfo {
         }
         sendEvent(position)
         getEventList()
+        if(mapViewModel.eventList.getOrNull(position) != null){
+            mapViewModel.visitedEvent.add(mapViewModel.eventList.getOrNull(position)!!.eventId)
+        }
         exit()
     }
     fun sendEvent(position: Int){
@@ -114,6 +117,7 @@ class EventCloseDialog: DialogFragment(), EventInfo {
     }
     fun exit(){
         findNavController().navigate(R.id.action_eventCloseDialog_pop)
+        mapViewModel.isCloseDialogOpen = false
     }
 
     override fun likeClick(position: Int, type: Int) {

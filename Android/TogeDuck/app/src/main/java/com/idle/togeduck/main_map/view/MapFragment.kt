@@ -158,6 +158,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var isHistoryEvent = false
 
+
     /** Fragment Lifecycle Functions **/
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -195,6 +196,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         initQuestAlert()
 
         bottomAppBarClick(1)
+        mapViewModel.visitedEvent = mutableListOf()
 
         mapViewModel.initPeopleMarkerImage(initPeopleMarkerImage())
 
@@ -619,6 +621,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 historyViewModel.getHistoryList(favoriteSettingViewModel.selectedCelebrity.value!!.id)
                 mapViewModel.initTourList()
             }
+            mapViewModel.visitedEvent = mutableListOf()
         } else if (binding.tourStart.text == "투어\n시작") {
             binding.tourStart.background = tourEndCircle
             binding.tourStart.text = "투어\n종료"
@@ -1370,6 +1373,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     // 이벤트 리스트 확인, 가까운 리스트 갱신
                                     if(!mapViewModel.isCloseDialogOpen){
                                         mapViewModel.isCloseDialogOpen = true
+                                        // 이벤트 등록
                                         figureCloseEvents(location.latitude, location.longitude)
                                     }
                                     // 웹소켓 전송 (추후 url, 전송 형식 백엔드에 맞춰 변경)
@@ -1400,9 +1404,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapViewModel.eventList = mutableListOf()
         eventListViewModel.listToday.value?.let { list ->
             Log.d("오늘 이벤트", list.toString())
+            Log.d("방문 이벤트 리스트", mapViewModel.visitedEvent.toString())
             for (event in list) {
-                if(!event.isVisited && CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
+                if(!mapViewModel.visitedEvent.contains(event.eventId) && !event.isVisited && CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
                     mapViewModel.eventList.add(event)
+                }
+                else{
+                    Log.d("가까운 이벤트 탐색","이미 방문한 이벤트: "+event.toString())
                 }
             }
         }
