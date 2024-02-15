@@ -71,24 +71,25 @@ class MapViewModel @Inject constructor(
         val currentList = tourList.toMutableList()
         val newPosition = Position(lat, lng)
 
-        var hasChanged = false
-
         if(currentList.isEmpty()){
             currentList.add(newPosition)
-            hasChanged = true
             Log.d("투어 기록 리스트 업데이트", tourList.toString())
+            tourList = currentList
+            return true
         } else {
             val lastPosition = currentList[currentList.size - 1]
             val disFromLastCoor = CalcDistance.getDistance(lastPosition.latitude, lastPosition.longitude, lat, lng)
             // 일정 거리 내인지 판별하는 메서드, 슷자는 조절 필요
-            if(disFromLastCoor in 5..50){
+            if(disFromLastCoor in 2..50){
                 currentList.add(newPosition)
-                hasChanged = true
                 Log.d("투어 기록 리스트 업데이트", tourList.toString())
+                tourList = currentList
+                return true
+            }
+            else{
+                return false
             }
         }
-        tourList = currentList
-        return hasChanged
     }
 
     fun setBottomSheet(state:Int){

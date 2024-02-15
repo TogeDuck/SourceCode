@@ -208,7 +208,10 @@ class MainFragment : Fragment() {
                     if (mainViewModel.isRealTimeOn && !coordinate.userId.equals(mainViewModel.guid)) {
                         activity?.runOnUiThread {
                             val updateMap = mapViewModel.peopleMarkerList.value?.toMutableMap() ?: mutableMapOf()
-                            updateMap[coordinate.userId]!!.map = null
+                            updateMap[coordinate.userId]?.let {
+                                it.map = null
+                                updateMap.remove(coordinate.userId)
+                            }
                             updateMap.remove(coordinate.userId)
                             mapViewModel.peopleMarkerList.postValue(updateMap)
                             mapViewModel.updatePeopleNum(updateMap.size)
