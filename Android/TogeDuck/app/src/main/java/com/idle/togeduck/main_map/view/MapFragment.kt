@@ -277,6 +277,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
+        mapViewModel.isCloseDialogOpen.observe(viewLifecycleOwner) { isCloseDialogOpen ->
+            if (isCloseDialogOpen && mapViewModel.eventList.isNotEmpty()) {
+                if (findNavController().currentDestination?.label != "EventCloseDialog") {
+                    findNavController().navigate(R.id.action_mapFragment_to_eventCloseDialog)
+                }
+            }
+        }
+
         // TODO. 아래 코드 onMapReady로 이동
 //        eventListViewModel.listToday.observe(viewLifecycleOwner) { updatedMarkerList ->
 //            if(::naverMap.isInitialized){
@@ -1470,16 +1478,26 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if (TedPermissionUtil.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
-                            Log.d("로그", "lastLocation : ${location?.latitude} ${location?.longitude}")
+                            Log.d("이벤트", "lastLocation : ${location?.latitude} ${location?.longitude}")
                             if(location!= null){
                                 // 좌표 리스트에 등록
+//                                Log.d("이벤트", "mapViewModel.isCloseDialogOpen : ${mapViewModel.isCloseDialogOpen}")
+//                                if(!mapViewModel.isCloseDialogOpen){
+//                                    Log.d("이벤트", "!mapViewModel.isCloseDialogOpen")
+//                                    // 이벤트 등록
+//                                    figureCloseEvents(location.latitude, location.longitude)
+//                                    mapViewModel.isCloseDialogOpen = true
+//                                }
+
                                 if(mapViewModel.addTourRecord(location.latitude, location.longitude)){
+                                    Log.d("이벤트", "mapViewModel.addTourRecord(location.latitude, location.longitude)")
                                     // 이벤트 리스트 확인, 가까운 리스트 갱신
-                                    if(!mapViewModel.isCloseDialogOpen){
-                                        mapViewModel.isCloseDialogOpen = true
+//                                    if(!mapViewModel.isCloseDialogOpen.value!!){
+                                        Log.d("로그", "!mapViewModel.isCloseDialogOpen")
                                         // 이벤트 등록
                                         figureCloseEvents(location.latitude, location.longitude)
-                                    }
+                                        mapViewModel.isCloseDialogOpen.postValue(true)
+//                                    }
                                     // 웹소켓 전송 (추후 url, 전송 형식 백엔드에 맞춰 변경)
                                     stompManager.sendLocation(
                                         favoriteSettingViewModel.selectedCelebrity.value?.id ?: 1,
@@ -1517,6 +1535,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun figureCloseEvents(lat:Double, lng:Double) {
 //        toast("이벤트 찾기 시작")
         mapViewModel.eventList = mutableListOf()
+        Log.d("이벤트", "eventListViewModel.listToday.value : ${eventListViewModel.listToday.value}")
         eventListViewModel.listToday.value?.let { list ->
             Log.d("오늘 이벤트", list.toString())
             Log.d("방문 이벤트 리스트", mapViewModel.visitedEvent.toString())
@@ -1525,16 +1544,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if(!mapViewModel.visitedEvent.contains(event.eventId) && !event.isVisited && CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
                     mapViewModel.eventList.add(event)
                 }
-                else{
-                    Log.d("가까운 이벤트 탐색","이미 방문한 이벤트: "+event.toString())
+                else if (!CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)) {
+                    Log.d("가까운 이벤트 탐색","거리 부족 : ${CalcDistance.getDistance(lat, lng, event.latitude, event.longitude)} / " + event.toString())
+                } else {
+                    Log.d("가까운 이벤트 탐색","이미 방문한 이벤트 : " + event.toString())
                 }
             }
         }
         eventListViewModel.closeEvents.value = mapViewModel.eventList
         Log.d("가까운 이벤트 탐색 결과", mapViewModel.eventList.toString())
-        if(!mapViewModel.eventList.isEmpty()){
-            findNavController().navigate(R.id.action_mapFragment_to_eventCloseDialog)
-        }
+//        if(!mapViewModel.eventList.isEmpty()){
+//            findNavController().navigate(R.id.action_mapFragment_to_eventCloseDialog)
+//        }
     }
 
     override fun onStart() {
