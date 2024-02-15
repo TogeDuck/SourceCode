@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".quest.recruit.view.QuestRecruitFragment">
-
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".quest.recruit.view.QuestRecruitFragment"
         android:orientation="vertical">
 
         <TextView
@@ -16,6 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="현재 진행 중인 모집"
+
             />
         <TextView
             android:id="@+id/tv_today_empty_event"
@@ -39,15 +36,11 @@
             />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="5dp"
             android:id="@+id/rv_current_recruit"
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:nestedScrollingEnabled="false"
+            android:layout_height="match_parent"
             />
 
     </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
 
