@@ -379,7 +379,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         componentBottomSheetBinding.viewPager.adapter = mapPagerAdapter
         componentBottomSheetBinding.viewPager.isUserInputEnabled = false
 
-        setHalfExpandedPadding()
+        setBottomSheet()
 
         componentBottomSheetBinding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
