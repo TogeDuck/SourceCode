@@ -143,6 +143,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var sheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private var timer: Timer? = null
+    private var locationTimer: Timer? = null
     private lateinit var workRequest: PeriodicWorkRequest
     private var workManager: WorkManager? = null
 
@@ -551,12 +552,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         if(realTimeOnOffBtn.isChecked){
             mainViewModel.isRealTimeOn = true
             binding.mapPeoplecntContainer.visibility = View.VISIBLE
+            if(locationTimer == null){
+                updateLocation()
+            }
         }
         else{
             deleteAllMarkers()
             mapViewModel.peopleNum.postValue(0)
             mainViewModel.isRealTimeOn = false
             binding.mapPeoplecntContainer.visibility = View.GONE
+            locationTimer?.cancel()
+            locationTimer = null
         }
     }
 
@@ -1461,7 +1467,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         timer?.scheduleAtFixedRate(object : TimerTask() {
             val favorite = favoriteSettingViewModel.selectedCelebrity.value?.id
             override fun run() {
-                updatePeopleMarker()
                 if (TedPermissionUtil.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
@@ -1499,6 +1504,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }, 0 , 5 * 1000)
     }
 
+    @SuppressLint("MissingPermission")
+    private fun updateLocation() {
+        locationTimer = Timer()
+        locationTimer?.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                updatePeopleMarker()
+            }
+        }, 0 , 5 * 1000)
+    }
+
     private fun figureCloseEvents(lat:Double, lng:Double) {
         mapViewModel.visitedEvent = mutableListOf()
         eventListViewModel.listToday.value?.let { list ->
@@ -1527,6 +1542,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         realTimeBtnOnClick()
 
         if (mapViewModel.isTourStart == true && timer == null) sendPosition()
+        if(mainViewModel.isRealTimeOn == true && locationTimer == null) updateLocation()
         if (workManager != null) cancelWorkWithPeriodic()
     }
 
@@ -1538,9 +1554,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             timer!!.cancel()
             timer = null
         }
+        if(locationTimer != null){
+            locationTimer!!.cancel()
+            locationTimer = null
+        }
     }
 
     fun updatePeopleMarker(){
+        Log.d("좌표 업데이트", mapViewModel.coordinateUpdate.toString())
         if(mainViewModel.isRealTimeOn){
             activity?.runOnUiThread{
                 deleteAllMarkers()
