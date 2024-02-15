@@ -29,6 +29,7 @@ import com.idle.togeduck.event.view.detail.EventDetailFragment
 import com.idle.togeduck.favorite.FavoriteSettingViewModel
 import com.idle.togeduck.main_map.MapViewModel
 import com.idle.togeduck.main_map.view.MapFragment
+import com.idle.togeduck.util.getColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,14 +74,32 @@ class EventListFragment : Fragment(), EventInfo {
 
         eventListViewModel.listToday.observe(viewLifecycleOwner){ list ->
              todayEventInfoAdapter.submitList(list)
+
+            if (list.isEmpty()) {
+                binding.tvTodayEmptyEvent.visibility = View.VISIBLE
+            } else {
+                binding.tvTodayEmptyEvent.visibility = View.GONE
+            }
         }
 
         eventListViewModel.listUpcoming.observe(viewLifecycleOwner){ list ->
             upcomingEventInfoAdapter.submitList(list)
+
+            if (list.isEmpty()) {
+                binding.tvUpcomingEmptyEvent.visibility = View.VISIBLE
+            } else {
+                binding.tvUpcomingEmptyEvent.visibility = View.GONE
+            }
         }
 
         eventListViewModel.listPast.observe(viewLifecycleOwner){list ->
             pastEventInfoAdapter.submitList(list)
+
+            if (list.isEmpty()) {
+                binding.tvPastEmptyEvent.visibility = View.VISIBLE
+            } else {
+                binding.tvPastEmptyEvent.visibility = View.GONE
+            }
         }
 
         eventListViewModel.isDetailOpen.observe(viewLifecycleOwner){check ->
@@ -138,12 +157,29 @@ class EventListFragment : Fragment(), EventInfo {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setTheme() {
         binding.tvTitle.setTextColor(ContextCompat.getColor(requireContext(),Theme.theme.main500))
         binding.today.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main500))
         binding.upcoming.setTextColor(ContextCompat.getColor(requireContext(), Theme.theme.main300))
         binding.past.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_bg))
+
+        val todayEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        todayEmptyEventDrawable.setColor(getColor(requireContext(), Theme.theme.sub400))
+        todayEmptyEventDrawable.setStroke(0, getColor(requireContext(), Theme.theme.sub400))
+        binding.tvTodayEmptyEvent.background = todayEmptyEventDrawable
+        binding.tvTodayEmptyEvent.setTextColor(getColor(requireContext(), R.color.white))
+
+        val upcomingEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        upcomingEmptyEventDrawable.setColor(getColor(requireContext(), Theme.theme.sub100))
+        upcomingEmptyEventDrawable.setStroke(0, getColor(requireContext(), Theme.theme.sub100))
+        binding.tvUpcomingEmptyEvent.background = upcomingEmptyEventDrawable
+        binding.tvUpcomingEmptyEvent.setTextColor(getColor(requireContext(), Theme.theme.main500))
+
+        val pastEmptyEventDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shape_all_round_20) as GradientDrawable
+        pastEmptyEventDrawable.setColor(getColor(requireContext(), R.color.gray_bg))
+        pastEmptyEventDrawable.setStroke(0, getColor(requireContext(), R.color.gray_bg))
+        binding.tvPastEmptyEvent.background = pastEmptyEventDrawable
+        binding.tvPastEmptyEvent.setTextColor(getColor(requireContext(), R.color.black))
     }
 
     override fun onDestroyView() {

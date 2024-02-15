@@ -39,6 +39,18 @@
                 android:textSize="@dimen/text_extra_large"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tv_today_empty_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="현재 진행 중인 생일 카페가 없습니다"
+                android:gravity="center"
+                android:paddingVertical="25dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_event_today"
                 android:layout_width="match_parent"
@@ -60,6 +72,18 @@
                 android:text="UPCOMING"
                 android:textSize="@dimen/text_extra_large"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_upcoming_empty_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="진행 예정인 생일 카페가 없습니다"
+                android:gravity="center"
+                android:paddingVertical="25dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_event_upcoming"
@@ -83,6 +107,19 @@
                 android:textColor="@color/gray_text"
                 android:textSize="@dimen/text_extra_large"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_past_empty_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="과거에 진행된 생일 카페가 없습니다"
+                android:gravity="center"
+                android:paddingVertical="25dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_event_past"
