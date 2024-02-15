@@ -670,11 +670,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         if (System.currentTimeMillis() - backWait >= 2000) {
                             backWait = System.currentTimeMillis()
                             Toast.makeText(
-                                context, "뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다",
+                                context, "로가기 버튼을 한번 더 누르면 앱이 종료됩니다",
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            findNavController().navigate(R.id.mainFragment)
+                            activity?.finish()
                         }
                     }
                 }
@@ -753,11 +753,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         uiSettings.isCompassEnabled = false
 
         // 마커 사이즈 변경 로직
-//        naverMap.addOnCameraChangeListener{ reason, animated ->
-//            val zoom = naverMap.cameraPosition.zoom
-//            getMarkerSize(zoom)
-//            mapViewModel.updateMarkerSize()
-//        }
+        naverMap.addOnCameraChangeListener{ reason, animated ->
+            val zoom = naverMap.cameraPosition.zoom
+            getMarkerSize(zoom)
+            mapViewModel.updateMarkerSize()
+        }
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),

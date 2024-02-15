@@ -53,8 +53,8 @@ class EventInfoViewHolder(
             eventPeriod.setTextColor(ContextCompat.getColor(context, Theme.theme.main500))
         }else {
             eventDrawable.setColor(ContextCompat.getColor(context, R.color.gray_bg))
-            cafeName.setTextColor(ContextCompat.getColor(context, R.color.black))
-            eventPeriod.setTextColor(ContextCompat.getColor(context, R.color.black))
+            cafeName.setTextColor(ContextCompat.getColor(context, R.color.gray_text))
+            eventPeriod.setTextColor(ContextCompat.getColor(context, R.color.gray_text))
         }
 
         eventLinearLayout.background = eventDrawable

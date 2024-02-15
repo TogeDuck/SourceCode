@@ -83,8 +83,7 @@ class QuestRecruitFragment : Fragment(), IQuestRecruit {
             addItemDecoration(TogeDuckItemDecoration(10, 0))
             adapter = questRecruitAdapter
             layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
-                    .apply { stackFromEnd = true }
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
     }
 
