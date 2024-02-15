@@ -106,19 +106,25 @@ class RecruitPostDialogFragment: DialogFragment() {
             val destinationName = eventNames[selectedPosition]
             val destinationId = eventIds[selectedPosition]
 
+            val eventId = eventListViewModel.selectedEvent.value!!.eventId
             val recruitRequest = RecruitRequest(title, destinationId, maximum, duration)
             if(title.isNotEmpty() && destinationName.isNotEmpty()
                 && maximum > 0 && maximum <= 10
                 && duration > 0 && duration <= 120
-                && eventListViewModel.selectedEvent.value != null) {
+                && eventListViewModel.selectedEvent.value != null
+                && eventId in eventIds) {
                 CoroutineScope(Dispatchers.IO).launch {
                     Log.d("모집 등록", "모집 등록 호출됨")
                     recruitViewModel.createRecruit(
-                        eventListViewModel.selectedEvent.value!!.eventId,
+                        eventId,
                         recruitRequest,
                         favoriteSettingViewModel.selectedCelebrity.value!!.id)
                 }
             }
+//            else {
+//                val toast = Toast.makeText(requireContext(), "현재 진행중인 이벤트를 선택하세요", Toast.LENGTH_SHORT)
+//                toast.show()
+//            }
             findNavController().navigate(R.id.action_recruitPostDialogFragment_pop)
         }
     }
