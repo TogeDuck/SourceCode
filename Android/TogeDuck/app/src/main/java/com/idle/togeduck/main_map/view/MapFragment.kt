@@ -1515,11 +1515,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun figureCloseEvents(lat:Double, lng:Double) {
+        toast("이벤트 찾기 시작")
         mapViewModel.visitedEvent = mutableListOf()
         eventListViewModel.listToday.value?.let { list ->
             Log.d("오늘 이벤트", list.toString())
             Log.d("방문 이벤트 리스트", mapViewModel.visitedEvent.toString())
             for (event in list) {
+                toast("이벤트"+CalcDistance.getDistance(lat,lng,event.latitude,event.longitude))
                 if(!mapViewModel.visitedEvent.contains(event.eventId) && !event.isVisited && CalcDistance.isDistanceOk(lat, lng, event.latitude, event.longitude)){
                     mapViewModel.eventList.add(event)
                 }
