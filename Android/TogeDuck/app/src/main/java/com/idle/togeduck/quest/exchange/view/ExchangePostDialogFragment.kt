@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -48,6 +49,7 @@ class ExchangePostDialogFragment: DialogFragment() {
     private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()
 
     private var imgPath: String? = null
+    private lateinit var eventIds: List<Long>
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -88,6 +90,10 @@ class ExchangePostDialogFragment: DialogFragment() {
 
         setTheme()
 
+        eventListViewModel.listToday.observe(viewLifecycleOwner) {event ->
+            eventIds = event.map { it.eventId }
+        }
+
         binding.llBackground.setOnClickListener{
             findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
         }
@@ -97,36 +103,44 @@ class ExchangePostDialogFragment: DialogFragment() {
         }
 
         binding.btnExchangePost.setOnClickListener {
-            val content = binding.etExchangeInput.text.toString()
-            val duration = binding.npExchangeDuration.value
+            val eventId = eventListViewModel.selectedEvent.value!!.eventId
+            if(eventId !in eventIds) {
+                var toast = Toast.makeText(requireContext(), "현재 진행중인 이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다", Toast.LENGTH_SHORT)
+                toast.show()
+                toast = Toast.makeText(requireContext(), "선택한 이벤트가 과거 혹은 예정된 생일카페인지 확인해 주세요", Toast.LENGTH_SHORT)
+                toast.show()
+            } else {
+                val content = binding.etExchangeInput.text.toString()
+                val duration = binding.npExchangeDuration.value
 
-            val exchangeRequest = ExchangeRequest(content, duration)
-            val exchangeRequestPart = exchangeRequest.toMultipartBody()
-            Log.d("로그", "ExchangePostDialogFragment - btnExchangePost.setOnClickListener 호출됨")
+                val exchangeRequest = ExchangeRequest(content, duration)
+                val exchangeRequestPart = exchangeRequest.toMultipartBody()
+                Log.d("로그", "ExchangePostDialogFragment - btnExchangePost.setOnClickListener 호출됨")
 
-            if(content.isNotEmpty() && duration > 0 && duration < 121){
+                if(content.isNotEmpty() && duration > 0 && duration < 121){
 
-                if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null
-                    && favoriteSettingViewModel.selectedCelebrity.value != null){
-                    val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
+                    if(imgPath?.isNotEmpty() == true && eventListViewModel.selectedEvent.value != null
+                        && favoriteSettingViewModel.selectedCelebrity.value != null){
+                        val exchaneImg = MultiPartUtil.createImagePart(imgPath!!)
 
-                    CoroutineScope(Dispatchers.IO).launch {
-                        Log.d("교환 등록", "교환 등록 호출됨")
-                        Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
-                        exchangeViewModel.postExchange(
-                            eventListViewModel.selectedEvent.value!!.eventId,
-                            exchaneImg,
-                            exchangeRequestPart,
-                            favoriteSettingViewModel.selectedCelebrity.value!!.id,
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d("교환 등록", "교환 등록 호출됨")
+                            Log.d("tradeRequest", "exchangeRequest : ${exchangeRequestPart}")
+                            exchangeViewModel.postExchange(
+                                eventId,
+                                exchaneImg,
+                                exchangeRequestPart,
+                                favoriteSettingViewModel.selectedCelebrity.value!!.id,
 
-                            )
-                        launch(Dispatchers.Main) {
-                            imgPath = null
+                                )
+                            launch(Dispatchers.Main) {
+                                imgPath = null
+                            }
                         }
                     }
                 }
+                findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
             }
-            findNavController().navigate(R.id.action_exchangePostDialogFragment_pop)
         }
 
         binding.exchangeImgBtn.setOnClickListener{

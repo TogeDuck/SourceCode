@@ -40,6 +40,7 @@ class SharePostDialogFragment: DialogFragment() {
     val eventListViewModel: EventListViewModel by activityViewModels()
 
     private var imgPath: String? = null
+    private lateinit var eventIds: List<Long>
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -80,10 +81,9 @@ class SharePostDialogFragment: DialogFragment() {
 
         setTheme()
 
-        //todo. 퀘스트 등록할 때 eventId 현재 선택한 eventId로 수정 필요 (지금 임시로 1번으로 해놓음)
-//        eventListViewModel.selectedEvent.observe(viewLifecycleOwner) {event ->
-//            this.event = event
-//        }
+        eventListViewModel.listToday.observe(viewLifecycleOwner) {event ->
+            eventIds = event.map { it.eventId }
+        }
 
         binding.llBackground.setOnClickListener{
             findNavController().navigate(R.id.action_sharePostDialogFragment_pop)
@@ -95,42 +95,47 @@ class SharePostDialogFragment: DialogFragment() {
 
         //todo. ShareViewModel - createShare() 응답 실패 - DefaultResponse(code=404, message=EVENT-001)
         binding.btnSharePost.setOnClickListener {
-//            val eventId = event.eventId
-            val title = binding.etShareTitle.text.toString()
-            val content = binding.etShareContent.text.toString()
-            val duration = 120
-            // todo. => 임시로 120분 지정
+            val eventId = eventListViewModel.selectedEvent.value!!.eventId
+            if(eventId !in eventIds) {
+                var toast = Toast.makeText(requireContext(), "현재 진행중인 이벤트를 선택한 경우에만 퀘스트를 등록할 수 있습니다", Toast.LENGTH_SHORT)
+                toast.show()
+                toast = Toast.makeText(requireContext(), "선택한 이벤트가 과거 혹은 예정된 생일카페인지 확인해 주세요", Toast.LENGTH_SHORT)
+                toast.show()
+            } else {
+                val title = binding.etShareTitle.text.toString()
+                val content = binding.etShareContent.text.toString()
+                val duration = 120
 
-            val shareRequest = ShareRequest(title, content, duration)
-            val shareRequestPart = shareRequest.toMultipartBody()
+                val shareRequest = ShareRequest(title, content, duration)
+                val shareRequestPart = shareRequest.toMultipartBody()
 
-            if(title.isNotEmpty() && content.isNotEmpty() && imgPath?.isNotEmpty() == true
-                && favoriteSettingViewModel.selectedCelebrity.value != null
-                && eventListViewModel.selectedEvent.value != null){
-                val shareImg = MultiPartUtil.createImagePart(imgPath!!)
+                if(title.isNotEmpty() && content.isNotEmpty() && imgPath?.isNotEmpty() == true
+                    && favoriteSettingViewModel.selectedCelebrity.value != null
+                    && eventListViewModel.selectedEvent.value != null){
+                    val shareImg = MultiPartUtil.createImagePart(imgPath!!)
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    Log.d("나눔 등록", "나눔 등록 호출됨")
-                    Log.d("shareRequest", "shareRequest : ${shareRequestPart}")
-                    shareViewModel.createShare(
-                        eventListViewModel.selectedEvent.value!!.eventId,
-                        shareImg,
-                        shareRequestPart,
-                        favoriteSettingViewModel.selectedCelebrity.value!!.id)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        Log.d("나눔 등록", "나눔 등록 호출됨")
+                        Log.d("shareRequest", "shareRequest : ${shareRequestPart}")
+                        shareViewModel.createShare(
+                            eventId,
+                            shareImg,
+                            shareRequestPart,
+                            favoriteSettingViewModel.selectedCelebrity.value!!.id)
 
-                    launch(Dispatchers.Main){
-                        imgPath = null
+                        launch(Dispatchers.Main){
+                            imgPath = null
+                        }
                     }
                 }
+                findNavController().navigate(R.id.action_sharePostDialogFragment_pop)
             }
-            findNavController().navigate(R.id.action_sharePostDialogFragment_pop)
         }
 
         binding.shareImgBtn.setOnClickListener{
             binding.shareImgBtn.visibility = View.GONE
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-
     }
 
 
