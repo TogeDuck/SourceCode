@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<<< HEAD:Android/TogeDuck/app/src/main/res/drawable/rounded.xml
     xmlns:tools="http://schemas.android.com/tools"
     android:shape="rectangle"
     tools:ignore="MissingDefaultResource">
@@ -10,3 +11,13 @@
         android:topRightRadius="40dp" />
 </shape>
 
+========
+    android:shape="rectangle">
+
+    <solid android:color="@color/bs_main" />
+    <corners
+        android:topLeftRadius="40dp"
+        android:topRightRadius="40dp" />
+
+</shape>
+>>>>>>>> develop-android:Android/TogeDuck/app/src/main/res/drawable/shape_upper_round_40.xml

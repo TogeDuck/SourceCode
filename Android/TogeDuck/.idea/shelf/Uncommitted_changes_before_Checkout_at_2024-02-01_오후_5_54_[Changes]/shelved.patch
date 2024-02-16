@@ -1,0 +1,360 @@
+Index: app/src/main/java/com/idle/togeduck/model/dto/EventList.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.model.dto\r\n\r\nimport kotlinx.serialization.Serializable\r\n\r\n@Serializable\r\ndata class EventList(\r\n    val status: Int,\r\n    val message: String,\r\n    val today: List<Event>,\r\n    val later: List<Event>\r\n)\r\n
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/model/dto/EventList.kt b/app/src/main/java/com/idle/togeduck/model/dto/EventList.kt
+--- a/app/src/main/java/com/idle/togeduck/model/dto/EventList.kt	
++++ b/app/src/main/java/com/idle/togeduck/model/dto/EventList.kt	
+@@ -6,6 +6,6 @@
+ data class EventList(
+     val status: Int,
+     val message: String,
+-    val today: List<Event>,
+-    val later: List<Event>
++    val today: List<Event2>,
++    val later: List<Event2>
+ )
+Index: app/src/main/java/com/idle/togeduck/model/dto/Event.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.model.dto\r\n\r\nimport kotlinx.datetime.LocalDate\r\nimport kotlinx.datetime.serializers.LocalDateIso8601Serializer\r\nimport kotlinx.serialization.SerialName\r\nimport kotlinx.serialization.Serializable\r\n\r\n@Serializable\r\ndata class Event(\r\n    @SerialName(\"event_id\") val eventId: Long,\r\n    @SerialName(\"url\") val imgUrl: String,\r\n    val name: String,\r\n    val description: String,\r\n    @Serializable(with = LocalDateIso8601Serializer::class)\r\n    val startDate: LocalDate,\r\n    @Serializable(with = LocalDateIso8601Serializer::class)\r\n    val endDate: LocalDate,\r\n    val latitude: Double,\r\n    val longitude: Double,\r\n    var isStar: Boolean,\r\n    var isVisited: Boolean\r\n)\r\n
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/model/dto/Event.kt b/app/src/main/java/com/idle/togeduck/model/dto/Event.kt
+--- a/app/src/main/java/com/idle/togeduck/model/dto/Event.kt	
++++ b/app/src/main/java/com/idle/togeduck/model/dto/Event.kt	
+@@ -1,22 +1,10 @@
+-package com.idle.togeduck.model.dto
++package com.idle.togeduck.model
+ 
+-import kotlinx.datetime.LocalDate
+-import kotlinx.datetime.serializers.LocalDateIso8601Serializer
+-import kotlinx.serialization.SerialName
+-import kotlinx.serialization.Serializable
+-
+-@Serializable
+ data class Event(
+-    @SerialName("event_id") val eventId: Long,
+-    @SerialName("url") val imgUrl: String,
+-    val name: String,
+-    val description: String,
+-    @Serializable(with = LocalDateIso8601Serializer::class)
+-    val startDate: LocalDate,
+-    @Serializable(with = LocalDateIso8601Serializer::class)
+-    val endDate: LocalDate,
+-    val latitude: Double,
+-    val longitude: Double,
+-    var isStar: Boolean,
+-    var isVisited: Boolean
++    val posterImgUrl: String,
++    val cafeName: String,
++    val eventName: String,
++    val eventPeriod: String,
++    var bookmarkBtn: Boolean,
++    var visited: Boolean
+ )
+Index: app/src/main/java/com/idle/togeduck/view/event_list/EventInfoViewHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.event_list\r\n\r\nimport android.content.Context\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.os.Build\r\nimport android.view.View\r\nimport androidx.annotation.RequiresApi\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ItemEventInfoBinding\r\n\r\nclass EventInfoViewHolder(\r\n    binding: ItemEventInfoBinding,\r\n    private var eventInfo: EventInfo,\r\n) : RecyclerView.ViewHolder(binding.root),\r\n    View.OnClickListener {\r\n\r\n    private val EventLinearLayout = binding.itemEventOne\r\n    private val posterImg = binding.posterImg\r\n    private val cafeName = binding.cafeName\r\n    private val eventName = binding.eventName\r\n    private val eventPeriod = binding.eventPeriod\r\n\r\n    init {\r\n        EventLinearLayout.setOnClickListener(this)\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    fun bind(event: Event, context: Context){\r\n\r\n        val eventDrawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable\r\n\r\n        EventLinearLayout.background = eventDrawable\r\n        cafeName.text = event.cafeName\r\n        eventName.text = event.eventName\r\n        eventPeriod.text = event.eventPeriod\r\n\r\n\r\n        //Todo.이미지 추후 처리\r\n    }\r\n\r\n\r\n    override fun onClick(v: View?) {\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoViewHolder.kt b/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoViewHolder.kt
+--- a/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoViewHolder.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoViewHolder.kt	
+@@ -9,6 +9,7 @@
+ import androidx.recyclerview.widget.RecyclerView
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ItemEventInfoBinding
++import com.idle.togeduck.model.Event
+ 
+ class EventInfoViewHolder(
+     binding: ItemEventInfoBinding,
+Index: app/src/main/java/com/idle/togeduck/view/QuestExchangeFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view\r\n\r\nimport android.os.Bundle\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.GridLayoutManager\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport com.idle.togeduck.databinding.FragmentQuestExchangeBinding\r\nimport com.idle.togeduck.util.ScreenSize.widthDp\r\nimport com.idle.togeduck.view.quest_exchange.GirdLayoutItemDecoration\r\nimport com.idle.togeduck.view.quest_exchange.IQuestExchangeDetail\r\nimport com.idle.togeduck.view.quest_exchange.QuestExchangeAdapter\r\nimport com.idle.togeduck.view.quest_share.QuestShareDialog\r\nimport dagger.hilt.android.AndroidEntryPoint\r\n\r\n@AndroidEntryPoint\r\nclass QuestExchangeFragment : Fragment(), IQuestExchangeDetail {\r\n    private var _binding: FragmentQuestExchangeBinding? = null\r\n    private val binding get() = _binding!!\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        _binding = FragmentQuestExchangeBinding.inflate(inflater, container, false)\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n        questExchangeRecycleView()\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        _binding = null\r\n    }\r\n\r\n    private fun questExchangeRecycleView(){\r\n        var spanCount = 1\r\n\r\n        while (widthDp / (spanCount + 1) >= 110) {\r\n            spanCount++\r\n        }\r\n\r\n        val questExchangeRecycleView = binding.questExchangeRecycle\r\n        val questExchangeAdapter = QuestExchangeAdapter(this, requireContext(), spanCount)\r\n        questExchangeRecycleView.adapter = questExchangeAdapter\r\n        questExchangeRecycleView.layoutManager = GridLayoutManager(requireContext(), spanCount, LinearLayoutManager.VERTICAL, false)\r\n        // 간격 설정\r\n        questExchangeRecycleView.addItemDecoration(GirdLayoutItemDecoration(20))\r\n        // Dummy Data\r\n//        questExchangeAdapter.submitList(questExchangeDummyData())\r\n    }\r\n\r\n    override fun myQuestExchangeClicked(position: Int) {\r\n//        showQuestExchangeDetailDialog(questExchangeDummyData().get(position))\r\n    }\r\n\r\n    fun showQuestExchangeDetailDialog(questExchange: QuestExchange){\r\n        val dialog = QuestShareDialog(QuestShare(\"title\", \"content\",\"\",100))\r\n        val fragmentManager = childFragmentManager\r\n        dialog.show(fragmentManager, \"QuestShareDialog\")\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/QuestExchangeFragment.kt b/app/src/main/java/com/idle/togeduck/view/QuestExchangeFragment.kt
+--- a/app/src/main/java/com/idle/togeduck/view/QuestExchangeFragment.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/QuestExchangeFragment.kt	
+@@ -8,6 +8,8 @@
+ import androidx.recyclerview.widget.GridLayoutManager
+ import androidx.recyclerview.widget.LinearLayoutManager
+ import com.idle.togeduck.databinding.FragmentQuestExchangeBinding
++import com.idle.togeduck.model.QuestExchange
++import com.idle.togeduck.model.QuestShare
+ import com.idle.togeduck.util.ScreenSize.widthDp
+ import com.idle.togeduck.view.quest_exchange.GirdLayoutItemDecoration
+ import com.idle.togeduck.view.quest_exchange.IQuestExchangeDetail
+Index: app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_exchange\r\n\r\nimport android.content.Context\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.ListAdapter\r\nimport com.idle.togeduck.databinding.ItemQuestExchangeBinding\r\nimport com.idle.togeduck.util.TogeDuckDiffUtil\r\n\r\nclass QuestExchangeAdapter (\r\n    private val iQuestExchangeDetail: IQuestExchangeDetail,\r\n    private val context: Context,\r\n    private val spanCount: Int\r\n) :ListAdapter<QuestExchange, QuestExchangeViewHolder>(TogeDuckDiffUtil.questExchangeDiffUtilCallback){\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestExchangeViewHolder {\r\n        val binding = ItemQuestExchangeBinding.inflate(LayoutInflater.from(parent.context), parent, false)\r\n        return QuestExchangeViewHolder(binding, iQuestExchangeDetail)\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: QuestExchangeViewHolder, position: Int) {\r\n        holder.binding(getItem(position), context, spanCount)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeAdapter.kt b/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeAdapter.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeAdapter.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeAdapter.kt	
+@@ -5,6 +5,7 @@
+ import android.view.ViewGroup
+ import androidx.recyclerview.widget.ListAdapter
+ import com.idle.togeduck.databinding.ItemQuestExchangeBinding
++import com.idle.togeduck.model.QuestExchange
+ import com.idle.togeduck.util.TogeDuckDiffUtil
+ 
+ class QuestExchangeAdapter (
+Index: app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitViewHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_recruit\r\n\r\nimport android.content.Context\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.view.View\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ItemQuestRecruitBinding\r\nimport com.idle.togeduck.util.Theme\r\nimport com.idle.togeduck.util.getColor\r\n\r\nclass QuestRecruitViewHolder(\r\n    binding: ItemQuestRecruitBinding,\r\n    private val iQuestRecruit: IQuestRecruit\r\n) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {\r\n    private val mainLayout = binding.llMainLayout\r\n    private val ivMainIcon = binding.ivMainIcon\r\n    private val tvTitle = binding.tvTitle\r\n    private val ivPersonIcon = binding.ivPersonIcon\r\n    private val tvPersonCnt = binding.tvPersonCnt\r\n    private val tvEnter = binding.tvEnter\r\n    private val tvTimer = binding.tvTimer\r\n\r\n    val list = listOf(\r\n        R.drawable.common_cupcake1,\r\n        R.drawable.common_cupcake2,\r\n        R.drawable.common_cupcake3,\r\n        R.drawable.common_cupcake4,\r\n        R.drawable.common_cupcake5,\r\n        R.drawable.common_cupcake6,\r\n        R.drawable.common_cupcake7,\r\n        R.drawable.common_cupcake8,\r\n        R.drawable.common_cupcake9,\r\n    )\r\n\r\n    init {\r\n        tvEnter.setOnClickListener(this)\r\n    }\r\n\r\n    fun bind(questRecruit: QuestShare, context: Context) {\r\n        setTheme(context)\r\n\r\n        tvTitle.text = questRecruit.title\r\n        tvPersonCnt.text = questRecruit.content\r\n    }\r\n\r\n    private fun setTheme(context: Context) {\r\n        val whiteCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable\r\n        whiteCircleDrawable.setColor(getColor(context, R.color.white))\r\n        whiteCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))\r\n        ivMainIcon.background = whiteCircleDrawable\r\n        ivMainIcon.setImageDrawable(ContextCompat.getDrawable(context, list.random()))\r\n\r\n        val greenCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable\r\n        greenCircleDrawable.setColor(getColor(context, R.color.green))\r\n        greenCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))\r\n        tvEnter.background = greenCircleDrawable\r\n        tvEnter.setTextColor(getColor(context, R.color.white))\r\n\r\n        val squareCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable\r\n        squareCircleDrawable.setColor(getColor(context, Theme.theme.sub200))\r\n        squareCircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))\r\n        mainLayout.background = squareCircleDrawable\r\n\r\n        val main500CircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable\r\n        main500CircleDrawable.setColor(getColor(context, Theme.theme.sub500))\r\n        main500CircleDrawable.setStroke(0, getColor(context, Theme.theme.main500))\r\n        tvTimer.background = main500CircleDrawable\r\n        tvTimer.setTextColor(getColor(context, R.color.white))\r\n    }\r\n\r\n    override fun onClick(view: View?) {\r\n        when (view) {\r\n            tvEnter -> iQuestRecruit.joinBtnClicked(bindingAdapterPosition)\r\n        }\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitViewHolder.kt b/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitViewHolder.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitViewHolder.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitViewHolder.kt	
+@@ -7,6 +7,7 @@
+ import androidx.recyclerview.widget.RecyclerView
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ItemQuestRecruitBinding
++import com.idle.togeduck.model.QuestShare
+ import com.idle.togeduck.util.Theme
+ import com.idle.togeduck.util.getColor
+ 
+Index: app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_recruit\r\n\r\nimport android.content.Context\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.ListAdapter\r\nimport com.idle.togeduck.databinding.ItemQuestRecruitBinding\r\nimport com.idle.togeduck.util.TogeDuckDiffUtil\r\n\r\nclass QuestRecruitAdapter(\r\n    private var iQuestRecruit: IQuestRecruit,\r\n    private val context: Context\r\n) : ListAdapter<QuestShare, QuestRecruitViewHolder>(TogeDuckDiffUtil.questShareDiffUtilCallback) {\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestRecruitViewHolder {\r\n        val binding = ItemQuestRecruitBinding.inflate(LayoutInflater.from(parent.context), parent, false)\r\n        return QuestRecruitViewHolder(binding, iQuestRecruit)\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: QuestRecruitViewHolder, position: Int) {\r\n        holder.bind(getItem(position), context)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitAdapter.kt b/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitAdapter.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitAdapter.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_recruit/QuestRecruitAdapter.kt	
+@@ -5,6 +5,7 @@
+ import android.view.ViewGroup
+ import androidx.recyclerview.widget.ListAdapter
+ import com.idle.togeduck.databinding.ItemQuestRecruitBinding
++import com.idle.togeduck.model.QuestShare
+ import com.idle.togeduck.util.TogeDuckDiffUtil
+ 
+ class QuestRecruitAdapter(
+Index: app/src/main/java/com/idle/togeduck/view/my_record/MyRecordViewHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.my_record\r\n\r\nimport android.content.Context\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.view.View\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.bumptech.glide.Glide\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ItemMyRecordBinding\r\nimport com.idle.togeduck.util.Theme\r\nimport com.idle.togeduck.util.getColor\r\n\r\nclass MyRecordViewHolder(\r\n    binding: ItemMyRecordBinding,\r\n    private val iMyRecord: IMyRecord\r\n) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {\r\n    private val mainLayout = binding.llMainLayout\r\n    private val ivMyRecordMainImg = binding.ivMyRecordMainImg\r\n    private val tvDate = binding.tvDate\r\n    private val tvMyRecord = binding.tvMyRecord\r\n\r\n    init {\r\n        mainLayout.setOnClickListener(this)\r\n    }\r\n\r\n    fun bind(questRecruit: QuestShare, context: Context) {\r\n        setTheme(context)\r\n\r\n        tvDate.text = questRecruit.title\r\n        tvMyRecord.text = questRecruit.content\r\n\r\n        Glide\r\n            .with(ivMyRecordMainImg)\r\n            .load(questRecruit.imgUrl)\r\n            .thumbnail(\r\n                Glide.with(ivMyRecordMainImg).load(questRecruit.imgUrl).override(50, 50)\r\n            )\r\n            .circleCrop()\r\n            .override(500, 500)\r\n            .into(ivMyRecordMainImg)\r\n    }\r\n\r\n    private fun setTheme(context: Context) {\r\n        val strokeCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable\r\n        strokeCircleDrawable.setStroke(4, getColor(context, Theme.theme.sub500))\r\n        ivMyRecordMainImg.background = strokeCircleDrawable\r\n\r\n        tvDate.setTextColor(getColor(context, Theme.theme.main500))\r\n        tvMyRecord.setTextColor(getColor(context, R.color.black))\r\n\r\n        val squareCircleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable\r\n        squareCircleDrawable.setColor(getColor(context, Theme.theme.sub200))\r\n        squareCircleDrawable.setStroke(0, Theme.theme.main500)\r\n\r\n        mainLayout.background = squareCircleDrawable\r\n    }\r\n\r\n    override fun onClick(view: View?) {\r\n        when (view) {\r\n            mainLayout -> iMyRecord.recordClicked(bindingAdapterPosition)\r\n        }\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordViewHolder.kt b/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordViewHolder.kt
+--- a/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordViewHolder.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordViewHolder.kt	
+@@ -8,6 +8,7 @@
+ import com.bumptech.glide.Glide
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ItemMyRecordBinding
++import com.idle.togeduck.model.QuestShare
+ import com.idle.togeduck.util.Theme
+ import com.idle.togeduck.util.getColor
+ 
+Index: app/src/main/java/com/idle/togeduck/view/my_record/MyRecordAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.my_record\r\n\r\nimport android.content.Context\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.ListAdapter\r\nimport com.idle.togeduck.databinding.ItemMyRecordBinding\r\nimport com.idle.togeduck.util.TogeDuckDiffUtil\r\n\r\nclass MyRecordAdapter(\r\n    private var iMyRecord: IMyRecord,\r\n    private val context: Context\r\n) : ListAdapter<QuestShare, MyRecordViewHolder>(TogeDuckDiffUtil.questShareDiffUtilCallback) {\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyRecordViewHolder {\r\n        val binding = ItemMyRecordBinding.inflate(LayoutInflater.from(parent.context), parent, false)\r\n        return  MyRecordViewHolder(binding, iMyRecord)\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: MyRecordViewHolder, position: Int) {\r\n        holder.bind(getItem(position), context)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordAdapter.kt b/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordAdapter.kt
+--- a/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordAdapter.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/my_record/MyRecordAdapter.kt	
+@@ -5,6 +5,7 @@
+ import android.view.ViewGroup
+ import androidx.recyclerview.widget.ListAdapter
+ import com.idle.togeduck.databinding.ItemMyRecordBinding
++import com.idle.togeduck.model.QuestShare
+ import com.idle.togeduck.util.TogeDuckDiffUtil
+ 
+ class MyRecordAdapter(
+Index: app/src/main/java/com/idle/togeduck/view/event_list/EventInfoAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.event_list\r\n\r\nimport android.content.Context\r\nimport android.os.Build\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.annotation.RequiresApi\r\nimport androidx.recyclerview.widget.ListAdapter\r\nimport com.idle.togeduck.databinding.ItemEventInfoBinding\r\nimport com.idle.togeduck.util.TogeDuckDiffUtil\r\n\r\nclass EventInfoAdapter(\r\n    private var eventInfo: EventInfo,\r\n    private val context: Context\r\n) : ListAdapter<Event, EventInfoViewHolder>(TogeDuckDiffUtil.eventUtilItemCallback) {\r\n\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventInfoViewHolder {\r\n        val binding = ItemEventInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false)\r\n        return EventInfoViewHolder(binding,eventInfo)\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override fun onBindViewHolder(holder: EventInfoViewHolder, position: Int) {\r\n        holder.bind(getItem(position),context)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoAdapter.kt b/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoAdapter.kt
+--- a/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoAdapter.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/event_list/EventInfoAdapter.kt	
+@@ -7,6 +7,7 @@
+ import androidx.annotation.RequiresApi
+ import androidx.recyclerview.widget.ListAdapter
+ import com.idle.togeduck.databinding.ItemEventInfoBinding
++import com.idle.togeduck.model.Event
+ import com.idle.togeduck.util.TogeDuckDiffUtil
+ 
+ class EventInfoAdapter(
+Index: app/src/main/java/com/idle/togeduck/viewmodel/EventListViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.viewmodel\r\n\r\nimport androidx.lifecycle.LiveData\r\nimport androidx.lifecycle.MutableLiveData\r\nimport androidx.lifecycle.ViewModel\r\nimport dagger.hilt.android.lifecycle.HiltViewModel\r\nimport javax.inject.Inject\r\n\r\n@HiltViewModel\r\nclass EventListViewModel @Inject constructor() : ViewModel() {\r\n    private val _eventList = MutableLiveData<MutableList<Event>>()\r\n    val eventList: LiveData<MutableList<Event>>\r\n        get() = _eventList\r\n\r\n    init {\r\n\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/viewmodel/EventListViewModel.kt b/app/src/main/java/com/idle/togeduck/viewmodel/EventListViewModel.kt
+--- a/app/src/main/java/com/idle/togeduck/viewmodel/EventListViewModel.kt	
++++ b/app/src/main/java/com/idle/togeduck/viewmodel/EventListViewModel.kt	
+@@ -3,6 +3,7 @@
+ import androidx.lifecycle.LiveData
+ import androidx.lifecycle.MutableLiveData
+ import androidx.lifecycle.ViewModel
++import com.idle.togeduck.model.Event
+ import dagger.hilt.android.lifecycle.HiltViewModel
+ import javax.inject.Inject
+ 
+Index: app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_talk\r\n\r\nimport android.content.Context\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.ListAdapter\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport androidx.recyclerview.widget.RecyclerView.ViewHolder\r\nimport com.idle.togeduck.databinding.ItemQuestTalkBinding\r\nimport com.idle.togeduck.databinding.ItemQuestTalkMyBinding\r\nimport com.idle.togeduck.util.TogeDuckDiffUtil\r\n\r\nclass QuestTalkAdapter (\r\n    private val iQuestTalkDetail: IQuestTalkDetail,\r\n    private val context: Context,\r\n) :ListAdapter<QuestTalk, RecyclerView.ViewHolder>(TogeDuckDiffUtil.questTalkDiffUtilCallback) {\r\n    companion object {\r\n        private const val VIEW_TYPE_NORMAL = 1\r\n        private const val VIEW_TYPE_MY = 2\r\n    }\r\n    override fun getItemViewType(position: Int): Int {\r\n        val questTalkItem = getItem(position)\r\n        if (questTalkItem != null) {\r\n            if (questTalkItem.user == \"익명의 오리너구리\") {\r\n                return VIEW_TYPE_MY\r\n            } else {\r\n                return VIEW_TYPE_NORMAL\r\n            }\r\n        }\r\n        return super.getItemViewType(position)\r\n    }\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {\r\n        val inflater = LayoutInflater.from(parent.context)\r\n\r\n        if (viewType == VIEW_TYPE_NORMAL) {\r\n            val binding = ItemQuestTalkBinding.inflate(inflater, parent, false)\r\n            return QuestTalkViewHolder(binding, iQuestTalkDetail)\r\n        } else if (viewType == VIEW_TYPE_MY) {\r\n            val bindingMy = ItemQuestTalkMyBinding.inflate(inflater, parent, false)\r\n            return QuestTalkMyViewHolder(bindingMy, iQuestTalkDetail)\r\n        } else {\r\n            val binding = ItemQuestTalkBinding.inflate(inflater, parent, false)\r\n            return QuestTalkViewHolder(binding, iQuestTalkDetail)\r\n        }\r\n    }\r\n    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {\r\n        if (holder is QuestTalkViewHolder ) {\r\n            holder.binding(getItem(position), context)\r\n        } else if (holder is QuestTalkMyViewHolder) {\r\n            holder.binding(getItem(position), context)\r\n        }\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkAdapter.kt b/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkAdapter.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkAdapter.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkAdapter.kt	
+@@ -8,6 +8,7 @@
+ import androidx.recyclerview.widget.RecyclerView.ViewHolder
+ import com.idle.togeduck.databinding.ItemQuestTalkBinding
+ import com.idle.togeduck.databinding.ItemQuestTalkMyBinding
++import com.idle.togeduck.model.QuestTalk
+ import com.idle.togeduck.util.TogeDuckDiffUtil
+ 
+ class QuestTalkAdapter (
+Index: app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkMyViewHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_talk\r\n\r\nimport android.content.Context\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.view.View\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ItemQuestTalkMyBinding\r\nimport com.idle.togeduck.util.Theme\r\n\r\nclass QuestTalkMyViewHolder (\r\n    binding: ItemQuestTalkMyBinding,\r\n    private var questTalkDetail: IQuestTalkDetail\r\n) : RecyclerView.ViewHolder(binding.root), View.OnClickListener{\r\n    private val questTalkLayout = binding.itemQuestTalkMy\r\n    private val questTalkIconContainer = binding.questTalkMyIconContainer\r\n    private val questTalkContent = binding.questTalkMyContent\r\n\r\n    init {\r\n        questTalkLayout.setOnClickListener(this)\r\n    }\r\n\r\n    fun binding(questTalk: QuestTalk, context: Context) {\r\n        setTheme(questTalk, context)\r\n    }\r\n\r\n    override fun onClick(v: View?) {\r\n        when(v){\r\n            questTalkLayout -> {\r\n                questTalkDetail.myQuestItemClicked(bindingAdapterPosition)\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun setTheme(questTalk: QuestTalk, context: Context) {\r\n        val roundSquare = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable\r\n        val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable\r\n        roundSquare.setColor(ContextCompat.getColor(context, Theme.theme.main200))\r\n        roundSquare.setStroke(0,0)\r\n        circle.setColor(ContextCompat.getColor(context, Theme.theme.main500))\r\n        circle.setStroke(0,0)\r\n        questTalkContent.background = roundSquare\r\n        questTalkIconContainer.background = circle\r\n        questTalkContent.setText(questTalk.content)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkMyViewHolder.kt b/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkMyViewHolder.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkMyViewHolder.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkMyViewHolder.kt	
+@@ -7,6 +7,7 @@
+ import androidx.recyclerview.widget.RecyclerView
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ItemQuestTalkMyBinding
++import com.idle.togeduck.model.QuestTalk
+ import com.idle.togeduck.util.Theme
+ 
+ class QuestTalkMyViewHolder (
+Index: app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkViewHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_talk\r\n\r\nimport android.content.Context\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.view.View\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ItemQuestTalkBinding\r\nimport com.idle.togeduck.util.Theme\r\n\r\nclass QuestTalkViewHolder (\r\n    binding: ItemQuestTalkBinding,\r\n    private var questTalkDetail: IQuestTalkDetail\r\n) : RecyclerView.ViewHolder(binding.root), View.OnClickListener{\r\n    private val questTalkLayout = binding.itemQuestTalk\r\n    private val questTalkIconContainer = binding.questTalkIconContainer\r\n    private val questTalkUser = binding.questTalkUser\r\n    private val questTalkContent = binding.questTalkContent\r\n\r\n    init {\r\n        questTalkLayout.setOnClickListener(this)\r\n    }\r\n\r\n    fun binding(questTalk: QuestTalk, context: Context) {\r\n        setTheme(questTalk, context)\r\n    }\r\n\r\n    override fun onClick(v: View?) {\r\n        when(v){\r\n            questTalkLayout -> {\r\n                questTalkDetail.myQuestItemClicked(bindingAdapterPosition)\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun setTheme(questTalk: QuestTalk, context: Context) {\r\n        val roundSquare = ContextCompat.getDrawable(context, R.drawable.shape_all_round_20) as GradientDrawable\r\n        val circle = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable\r\n        roundSquare.setColor(ContextCompat.getColor(context, Theme.theme.sub200))\r\n        roundSquare.setStroke(0,0)\r\n        circle.setColor(ContextCompat.getColor(context, Theme.theme.sub500))\r\n        circle.setStroke(0,0)\r\n        questTalkIconContainer.background = circle\r\n        questTalkUser.setText(questTalk.user)\r\n        questTalkContent.background = roundSquare\r\n        questTalkContent.setText(questTalk.content)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkViewHolder.kt b/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkViewHolder.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkViewHolder.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_talk/QuestTalkViewHolder.kt	
+@@ -7,6 +7,7 @@
+ import androidx.recyclerview.widget.RecyclerView
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ItemQuestTalkBinding
++import com.idle.togeduck.model.QuestTalk
+ import com.idle.togeduck.util.Theme
+ 
+ class QuestTalkViewHolder (
+Index: app/src/main/java/com/idle/togeduck/view/quest_share/QuestShareDialog.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_share\r\n\r\nimport android.graphics.Color\r\nimport android.graphics.drawable.ColorDrawable\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.os.Bundle\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.fragment.app.DialogFragment\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.DialogQuestShareBinding\r\nimport com.idle.togeduck.util.Theme\r\n\r\n\r\nclass QuestShareDialog(questShare: QuestShare) : DialogFragment() {\r\n\r\n    private var _binding: DialogQuestShareBinding? = null\r\n    private val binding get() = _binding!!\r\n    private val questShare = questShare\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        _binding = DialogQuestShareBinding.inflate(inflater, container, false)\r\n        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))\r\n        return binding.root\r\n    }\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        // Shape Setup\r\n        // ConstraintLayout Background\r\n        val roundCorner = ContextCompat.getDrawable(requireContext(),R.drawable.shape_all_round_10) as GradientDrawable\r\n        roundCorner.setColor(ContextCompat.getColor(requireContext(), Theme.theme.sub100))\r\n        binding.dialogQuestShare.background = roundCorner\r\n\r\n        // questShare 데이터 설정\r\n        binding.dialogQuestShareTitle.text = questShare?.title\r\n        binding.dialogQuestShareContent.text = questShare?.content\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        _binding = null\r\n    }\r\n\r\n\r\n    /*private lateinit var binding: DialogQuestShareBinding\r\n    private val dialog = Dialog(context)\r\n\r\n    fun show( questShare: QuestShare ){\r\n        // Dialog Settings\r\n        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)\r\n        dialog.setContentView(R.layout.dialog_quest_share)\r\n        dialog.window?.setLayout(\r\n            ViewGroup.LayoutParams.MATCH_PARENT,\r\n            ViewGroup.LayoutParams.MATCH_PARENT)\r\n        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)\r\n\r\n        // Layout Settings\r\n        val questShareView = dialog.findViewById<ConstraintLayout>(R.id.dialog_quest_share)\r\n        val titleContainer = dialog.findViewById<ImageView>(R.id.dialog_quest_share_title_container)\r\n        val title = dialog.findViewById<TextView>(R.id.dialog_quest_share_title)\r\n        val image = dialog.findViewById<ImageView>(R.id.dialog_quest_share_image)\r\n        val content = dialog.findViewById<TextView>(R.id.dialog_quest_share_content)\r\n\r\n        // Shape Setup\r\n        // ConstraintLayout Background\r\n        val roundCorner = ContextCompat.getDrawable(context,R.drawable.shape_all_round_10) as GradientDrawable\r\n        roundCorner.setColor(ContextCompat.getColor(context, Theme.theme.sub100))\r\n        questShareView.background = roundCorner\r\n        // TitleContainer Background\r\n        val roundCornerSmall = ContextCompat.getDrawable(context,R.drawable.shape_upper_round_10) as GradientDrawable\r\n        roundCornerSmall.setColor(ContextCompat.getColor(context, Theme.theme.main300))\r\n        titleContainer.background = roundCornerSmall\r\n        // Image Setop\r\n        image.setBackgroundColor(ContextCompat.getColor(context, Theme.theme.main500))\r\n\r\n        // Data Insert\r\n        title.setText(questShare.title)\r\n        content.setText(questShare.content)\r\n\r\n        dialog.show()\r\n    }*/\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_share/QuestShareDialog.kt b/app/src/main/java/com/idle/togeduck/view/quest_share/QuestShareDialog.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_share/QuestShareDialog.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_share/QuestShareDialog.kt	
+@@ -11,6 +11,7 @@
+ import androidx.fragment.app.DialogFragment
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.DialogQuestShareBinding
++import com.idle.togeduck.model.QuestShare
+ import com.idle.togeduck.util.Theme
+ 
+ 
+Index: app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeViewHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.quest_exchange\r\n\r\nimport android.content.Context\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ItemQuestExchangeBinding\r\nimport com.idle.togeduck.util.DpPxUtil\r\nimport com.idle.togeduck.util.ScreenSize\r\nimport com.idle.togeduck.util.Theme\r\n\r\nclass QuestExchangeViewHolder(\r\n    binding: ItemQuestExchangeBinding,\r\n    private var questExchangeDetail: IQuestExchangeDetail,\r\n) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {\r\n\r\n    private val questExchangeLayout = binding.questExchangeItem\r\n    private val image = binding.questExchangeImage\r\n    private val titleContainer = binding.questExchangeTitleContainer\r\n    private val title = binding.questExchangeTitle\r\n    private val timerContainer = binding.questExchangeTimerContainer\r\n    private val timerText = binding.questExchangeTimerText\r\n\r\n    init {\r\n        questExchangeLayout.setOnClickListener(this)\r\n    }\r\n\r\n    fun binding(questExchange: QuestExchange, context: Context, spanCount: Int) {\r\n        setTheme(questExchange, context)\r\n        setWidth(context, spanCount)\r\n    }\r\n\r\n    private fun setWidth(context: Context, spanCount: Int) {\r\n        val newSize = DpPxUtil.dpToPx(ScreenSize.widthDp - 50 - (spanCount - 1) * 10, context) / spanCount\r\n        val layoutParams = questExchangeLayout.layoutParams as ViewGroup.LayoutParams\r\n        layoutParams.width = newSize\r\n        layoutParams.height = newSize\r\n        questExchangeLayout.layoutParams = layoutParams\r\n    }\r\n\r\n    override fun onClick(v: View?) {\r\n//        when(v){\r\n//            questExchangeLayout -> {\r\n//                questExchangeDetail.myQuestExchangeClicked(bindingAdapterPosition)\r\n//            }\r\n//        }\r\n    }\r\n\r\n    private fun setTheme(questExchange: QuestExchange, context: Context) {\r\n        val roundSmall =\r\n            ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable\r\n        val rectangleCircle =\r\n            ContextCompat.getDrawable(context, R.drawable.shape_square_circle) as GradientDrawable\r\n        val upperRound =\r\n            ContextCompat.getDrawable(context, R.drawable.shape_upper_round_10) as GradientDrawable\r\n        roundSmall.setStroke(0, 0)\r\n        rectangleCircle.setStroke(0, 0)\r\n        rectangleCircle.setColor(ContextCompat.getColor(context, Theme.theme.sub500))\r\n        upperRound.setStroke(0, 0)\r\n        upperRound.setColor(ContextCompat.getColor(context, Theme.theme.sub200))\r\n\r\n        questExchangeLayout.background = roundSmall\r\n        image.background = roundSmall\r\n        image.setBackgroundColor(ContextCompat.getColor(context, Theme.theme.sub200))\r\n        titleContainer.background = upperRound\r\n        timerContainer.background = rectangleCircle\r\n\r\n        title.setText(questExchange.title)\r\n        timerText.setText(questExchange.time.toString())\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeViewHolder.kt b/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeViewHolder.kt
+--- a/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeViewHolder.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/quest_exchange/QuestExchangeViewHolder.kt	
+@@ -8,6 +8,7 @@
+ import androidx.recyclerview.widget.RecyclerView
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ItemQuestExchangeBinding
++import com.idle.togeduck.model.QuestExchange
+ import com.idle.togeduck.util.DpPxUtil
+ import com.idle.togeduck.util.ScreenSize
+ import com.idle.togeduck.util.Theme
+Index: app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewViewHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.event_detail\r\n\r\nimport android.content.Context\r\nimport android.graphics.drawable.GradientDrawable\r\nimport android.view.View\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ItemEventReviewBinding\r\nimport com.idle.togeduck.util.Theme\r\n\r\nclass EventReviewViewHolder (\r\n    binding: ItemEventReviewBinding,\r\n    private var eventReview: EventReview\r\n): RecyclerView.ViewHolder(binding.root), View.OnClickListener{\r\n\r\n    private val eventReviewLayout = binding.eventReviewLayout\r\n    private val reviewUserImg = binding.reviewUserImg\r\n    private val reviewText = binding.reviewText\r\n    private val reviewImg = binding.reviewImg\r\n\r\n    init {\r\n        eventReviewLayout.setOnClickListener(this)\r\n    }\r\n\r\n    fun bind(review: Review, context: Context){\r\n        val drawable = ContextCompat.getDrawable(context, R.drawable.shape_all_round_10) as GradientDrawable\r\n        drawable.setColor(ContextCompat.getColor(context, Theme.theme.sub200))\r\n        drawable.setStroke(0,Theme.theme.sub200)\r\n        eventReviewLayout.background = drawable\r\n\r\n        val circleDrawable = ContextCompat.getDrawable(context, R.drawable.shape_circle) as GradientDrawable\r\n        circleDrawable.setColor(ContextCompat.getColor(context, Theme.theme.sub300))\r\n        drawable.setStroke(0,Theme.theme.sub300)\r\n        reviewUserImg.background = circleDrawable\r\n\r\n        reviewText.text = review.content\r\n        reviewText.setTextColor(ContextCompat.getColor(context, R.color.black))\r\n\r\n        //todo.이미지 추가 (Glide) - reviewImg 처리\r\n        //todo. 이미지 null이 아니면 visibility = visible null이면 반대\r\n    }\r\n\r\n    override fun onClick(v: View?) {\r\n        TODO(\"Not yet implemented\")\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewViewHolder.kt b/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewViewHolder.kt
+--- a/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewViewHolder.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewViewHolder.kt	
+@@ -7,6 +7,7 @@
+ import androidx.recyclerview.widget.RecyclerView
+ import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ItemEventReviewBinding
++import com.idle.togeduck.model.Review
+ import com.idle.togeduck.util.Theme
+ 
+ class EventReviewViewHolder (
+Index: app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view.event_detail\r\n\r\nimport android.content.Context\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.ListAdapter\r\nimport com.idle.togeduck.databinding.ItemEventReviewBinding\r\nimport com.idle.togeduck.util.TogeDuckDiffUtil\r\n\r\nclass EventReviewAdapter(\r\n    private var eventReview: EventReview,\r\n    private val context: Context\r\n) : ListAdapter<Review, EventReviewViewHolder> (TogeDuckDiffUtil.reviewDiffUtilCallback){\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventReviewViewHolder {\r\n        val binding = ItemEventReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)\r\n        return EventReviewViewHolder(binding, eventReview)\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: EventReviewViewHolder, position: Int) {\r\n        holder.bind(getItem(position), context)\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewAdapter.kt b/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewAdapter.kt
+--- a/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewAdapter.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/event_detail/EventReviewAdapter.kt	
+@@ -5,6 +5,7 @@
+ import android.view.ViewGroup
+ import androidx.recyclerview.widget.ListAdapter
+ import com.idle.togeduck.databinding.ItemEventReviewBinding
++import com.idle.togeduck.model.Review
+ import com.idle.togeduck.util.TogeDuckDiffUtil
+ 
+ class EventReviewAdapter(
+Index: app/src/main/java/com/idle/togeduck/viewmodel/EventViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.viewmodel\r\n\r\nimport android.os.Build\r\nimport androidx.annotation.RequiresApi\r\nimport androidx.lifecycle.ViewModel\r\nimport androidx.lifecycle.viewModelScope\r\nimport com.idle.togeduck.model.dto.event.EventRepository\r\nimport dagger.hilt.android.lifecycle.HiltViewModel\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.launch\r\nimport kotlinx.datetime.toKotlinLocalDate\r\nimport javax.inject.Inject\r\n\r\n@HiltViewModel\r\nclass EventViewModel @Inject constructor(\r\n    private val eventRepository: EventRepository\r\n) : ViewModel() {\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    private fun getEventList() {\r\n        viewModelScope.launch(Dispatchers.IO) {\r\n            eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())\r\n        }\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    private suspend fun getEventList2() {\r\n        eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/viewmodel/EventViewModel.kt b/app/src/main/java/com/idle/togeduck/viewmodel/EventViewModel.kt
+--- a/app/src/main/java/com/idle/togeduck/viewmodel/EventViewModel.kt	
++++ b/app/src/main/java/com/idle/togeduck/viewmodel/EventViewModel.kt	
+@@ -1,6 +1,7 @@
+ package com.idle.togeduck.viewmodel
+ 
+ import android.os.Build
++import android.util.Log
+ import androidx.annotation.RequiresApi
+ import androidx.lifecycle.ViewModel
+ import androidx.lifecycle.viewModelScope
+@@ -17,14 +18,26 @@
+ ) : ViewModel() {
+ 
+     @RequiresApi(Build.VERSION_CODES.O)
+-    private fun getEventList() {
++    fun getEventList() {
+         viewModelScope.launch(Dispatchers.IO) {
+-            eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())
++            val result = eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())
++
++            if (result.isSuccessful) {
++                Log.d("로그", "${result.body()!!}")
++            } else {
++                Log.d("로그", "응답 실패")
++            }
+         }
+     }
+ 
+     @RequiresApi(Build.VERSION_CODES.O)
+-    private suspend fun getEventList2() {
+-        eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())
++    suspend fun getEventList2() {
++        val result = eventRepository.getEventList(1, java.time.LocalDate.now().toKotlinLocalDate(), java.time.LocalDate.now().toKotlinLocalDate())
++
++        if (result.isSuccessful) {
++            Log.d("로그", "${result.body()!!}")
++        } else {
++            Log.d("로그", "응답 실패")
++        }
+     }
+ }
+\ No newline at end of file

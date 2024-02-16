@@ -1,0 +1,86 @@
+Index: app/src/main/java/com/idle/togeduck/view/MapFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view\r\n\r\nimport android.Manifest\r\nimport android.content.pm.PackageManager\r\nimport android.location.Location\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.Gravity\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.FrameLayout\r\nimport android.widget.Toast\r\nimport androidx.activity.OnBackPressedCallback\r\nimport androidx.core.app.ActivityCompat\r\nimport androidx.core.view.marginBottom\r\nimport androidx.fragment.app.Fragment\r\nimport androidx.navigation.fragment.findNavController\r\nimport com.google.android.gms.location.FusedLocationProviderClient\r\nimport com.google.android.gms.location.LocationServices\r\nimport com.gun0912.tedpermission.PermissionListener\r\nimport com.gun0912.tedpermission.normal.TedPermission\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.FragmentMapBinding\r\nimport com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp\r\nimport com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx\r\nimport com.idle.togeduck.util.DpPxUtil.dpToPx\r\nimport com.naver.maps.geometry.LatLng\r\nimport com.naver.maps.map.CameraUpdate\r\nimport com.naver.maps.map.LocationTrackingMode\r\nimport com.naver.maps.map.MapFragment\r\nimport com.naver.maps.map.NaverMap\r\nimport com.naver.maps.map.OnMapReadyCallback\r\nimport com.naver.maps.map.util.FusedLocationSource\r\nimport com.naver.maps.map.widget.ZoomControlView\r\nimport dagger.hilt.android.AndroidEntryPoint\r\n\r\n@AndroidEntryPoint\r\nclass MapFragment : Fragment(), OnMapReadyCallback {\r\n    private var _binding: FragmentMapBinding? = null\r\n    private val binding get() = _binding!!\r\n\r\n    private lateinit var naverMap: NaverMap\r\n\r\n    // 최적의 위치를 반환하는 구현체\r\n    private lateinit var locationSource: FusedLocationSource\r\n\r\n    // 현재 위치 가져오기 위한 객체\r\n    private lateinit var fusedLocationClient: FusedLocationProviderClient\r\n\r\n    // OnBackPressedCallback (뒤로가기 기능) 객체 선언\r\n    private lateinit var backPressedCallback: OnBackPressedCallback\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?,\r\n    ): View {\r\n        _binding = FragmentMapBinding.inflate(inflater, container, false)\r\n\r\n        // OnBackPressedCallback (익명 클래스) 객체 생성\r\n        backPressedCallback = object : OnBackPressedCallback(true) {\r\n            // 뒤로가기 했을 때 실행되는 기능\r\n            var backWait: Long = 0\r\n            override fun handleOnBackPressed() {\r\n                if (System.currentTimeMillis() - backWait >= 2000) {\r\n                    backWait = System.currentTimeMillis()\r\n                    Toast.makeText(\r\n                        context, \"뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다\",\r\n                        Toast.LENGTH_SHORT\r\n                    ).show()\r\n                } else {\r\n                    findNavController().navigate(R.id.mainFragment)\r\n                }\r\n            }\r\n        }\r\n\r\n        // 액티비티의 BackPressedDispatcher에 여기서 만든 callback 객체를 등록\r\n        requireActivity().onBackPressedDispatcher.addCallback(\r\n            viewLifecycleOwner,\r\n            backPressedCallback\r\n        )\r\n\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        initFragment()\r\n\r\n        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())\r\n\r\n        val permissionListener = object : PermissionListener {\r\n            override fun onPermissionGranted() {\r\n                Log.d(\"로그\", \"MainFragment - onPermissionGranted() 호출됨\")\r\n            }\r\n\r\n            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {\r\n                Toast.makeText(\r\n                    requireContext(),\r\n                    \"권한 거부\\n${deniedPermissions.toString()}\",\r\n                    Toast.LENGTH_SHORT\r\n                ).show()\r\n            }\r\n        }\r\n\r\n        requestPermission(permissionListener)\r\n        initMapView()\r\n    }\r\n\r\n    private fun initFragment() {\r\n        childFragmentManager.beginTransaction()\r\n            .add(R.id.fragment_top_appbar, TopAppbarFragment())\r\n            .setReorderingAllowed(true)\r\n            .addToBackStack(null)\r\n            .commit()\r\n\r\n        childFragmentManager.beginTransaction()\r\n            .add(R.id.fragment_bottom_sheet, BottomSheetFragment())\r\n            .setReorderingAllowed(true)\r\n            .addToBackStack(null)\r\n            .commit()\r\n\r\n        childFragmentManager.beginTransaction()\r\n            .add(R.id.fragment_bottom_appbar, BottomAppbarFragment())\r\n            .setReorderingAllowed(true)\r\n            .addToBackStack(null)\r\n            .commit()\r\n    }\r\n\r\n    override fun onMapReady(naverMap: NaverMap) {\r\n        val statusBarDp = getStatusBarHeightToDp(requireContext())\r\n\r\n        this.naverMap = naverMap\r\n        naverMap.locationSource = locationSource\r\n        naverMap.locationTrackingMode = LocationTrackingMode.Follow\r\n        // 현재 위치 버튼 표시\r\n        naverMap.uiSettings.isLocationButtonEnabled = true\r\n\r\n        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)\r\n        naverMap.isIndoorEnabled = true\r\n\r\n        val uiSettings = naverMap.uiSettings\r\n\r\n        uiSettings.logoGravity = Gravity.TOP\r\n        uiSettings.setLogoMargin(dpToPx(10, requireContext()), dpToPx(115 + statusBarDp, requireContext()), 0, 0)\r\n\r\n        uiSettings.isZoomControlEnabled = false\r\n        uiSettings.isCompassEnabled = false\r\n\r\n        if (ActivityCompat.checkSelfPermission(\r\n                requireContext(),\r\n                Manifest.permission.ACCESS_FINE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(\r\n                requireContext(),\r\n                Manifest.permission.ACCESS_COARSE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED\r\n        ) {\r\n            return\r\n        }\r\n\r\n        var currentLocation: Location?\r\n\r\n        fusedLocationClient.lastLocation\r\n            .addOnSuccessListener { location: Location? ->\r\n                currentLocation = location\r\n                // 현재 위치 아이콘 표시\r\n                naverMap.locationOverlay.run {\r\n                    isVisible = true\r\n                    position = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)\r\n                }\r\n\r\n                // 지도 중심 카메라 이동\r\n                naverMap.moveCamera(\r\n                    CameraUpdate.scrollTo(\r\n                        LatLng(currentLocation!!.latitude, currentLocation!!.longitude)\r\n                    )\r\n                )\r\n            }\r\n    }\r\n\r\n    // 권한 설정 알림\r\n    private fun requestPermission(permissionListener: PermissionListener) {\r\n        TedPermission.create()\r\n            .setPermissionListener(permissionListener)\r\n            .setRationaleMessage(\"위치 정보 제공이 필요한 서비스입니다.\")\r\n            .setDeniedMessage(\"[설정] -> [권한]에서 권한 변경이 가능합니다.\")\r\n            .setDeniedCloseButtonText(\"닫기\")\r\n            .setGotoSettingButtonText(\"설정\")\r\n            .setPermissions(\r\n                Manifest.permission.ACCESS_COARSE_LOCATION,\r\n                Manifest.permission.ACCESS_FINE_LOCATION\r\n            )\r\n            .check()\r\n    }\r\n\r\n    // 네이버 지도 초기화\r\n    private fun initMapView() {\r\n        val fm = childFragmentManager\r\n        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?\r\n            ?: MapFragment.newInstance().also {\r\n                fm.beginTransaction().add(R.id.map, it).commit()\r\n            }\r\n\r\n        mapFragment.getMapAsync(this)\r\n        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)\r\n\r\n        mapFragment.getMapAsync {\r\n            val statusBarDp = getStatusBarHeightToDp(requireContext())\r\n\r\n            val locationBtn = binding.locationBtn\r\n            val layoutParams = locationBtn.layoutParams as FrameLayout.LayoutParams\r\n\r\n            layoutParams.marginStart = dpToPx(8, requireContext())\r\n            layoutParams.topMargin = dpToPx(135 + statusBarDp, requireContext())\r\n\r\n            locationBtn.layoutParams = layoutParams\r\n            locationBtn.map = naverMap\r\n        }\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        _binding = null\r\n        backPressedCallback.remove()\r\n    }\r\n\r\n    companion object {\r\n        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/MapFragment.kt b/app/src/main/java/com/idle/togeduck/view/MapFragment.kt
+--- a/app/src/main/java/com/idle/togeduck/view/MapFragment.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/MapFragment.kt	
+@@ -3,6 +3,7 @@
+ import android.Manifest
+ import android.content.pm.PackageManager
+ import android.location.Location
++import android.opengl.Visibility
+ import android.os.Bundle
+ import android.util.Log
+ import android.view.Gravity
+@@ -25,6 +26,7 @@
+ import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
+ import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx
+ import com.idle.togeduck.util.DpPxUtil.dpToPx
++import com.idle.togeduck.util.ITest
+ import com.naver.maps.geometry.LatLng
+ import com.naver.maps.map.CameraUpdate
+ import com.naver.maps.map.LocationTrackingMode
+@@ -36,7 +38,7 @@
+ import dagger.hilt.android.AndroidEntryPoint
+ 
+ @AndroidEntryPoint
+-class MapFragment : Fragment(), OnMapReadyCallback {
++class MapFragment : Fragment(), OnMapReadyCallback, ITest {
+     private var _binding: FragmentMapBinding? = null
+     private val binding get() = _binding!!
+ 
+@@ -117,7 +119,7 @@
+             .commit()
+ 
+         childFragmentManager.beginTransaction()
+-            .add(R.id.fragment_bottom_sheet, BottomSheetFragment())
++            .add(R.id.fragment_bottom_sheet, BottomSheetFragment(this))
+             .setReorderingAllowed(true)
+             .addToBackStack(null)
+             .commit()
+@@ -229,4 +231,17 @@
+     companion object {
+         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+     }
++
++    override fun collapsed() {
++        binding.tv.visibility = View.VISIBLE
++        Common.
++    }
++
++    override fun halfExpanded() {
++        binding.tv.visibility = View.VISIBLE
++    }
++
++    override fun expanded() {
++        binding.tv.visibility = View.GONE
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_map.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n\r\n<FrameLayout\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:id=\"@+id/main_layout\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".view.MapFragment\">\r\n\r\n    <androidx.fragment.app.FragmentContainerView\r\n        android:id=\"@+id/map\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:name=\"com.naver.maps.map.MapFragment\" />\r\n\r\n    <com.naver.maps.map.widget.LocationButtonView\r\n        android:id=\"@+id/location_btn\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_gravity=\"start|top\"\r\n        />\r\n\r\n\r\n    <androidx.fragment.app.FragmentContainerView\r\n        android:id=\"@+id/fragment_top_appbar\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:name=\"com.idle.togeduck.view.TopAppbarFragment\"\r\n        />\r\n\r\n    <androidx.fragment.app.FragmentContainerView\r\n        android:id=\"@+id/fragment_bottom_sheet\"\r\n        android:name=\"com.idle.togeduck.view.BottomSheetFragment\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:layout_gravity=\"bottom\"\r\n        />\r\n\r\n    <androidx.fragment.app.FragmentContainerView\r\n        android:id=\"@+id/fragment_bottom_appbar\"\r\n        android:name=\"com.idle.togeduck.view.BottomAppbarFragment\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_gravity=\"bottom\"\r\n        />\r\n\r\n</FrameLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_map.xml b/app/src/main/res/layout/fragment_map.xml
+--- a/app/src/main/res/layout/fragment_map.xml	
++++ b/app/src/main/res/layout/fragment_map.xml	
+@@ -37,6 +37,16 @@
+         android:layout_gravity="bottom"
+         />
+ 
++    <TextView
++        android:id="@+id/tv"
++        android:layout_width="50dp"
++        android:layout_height="50dp"
++        android:text="+"
++        android:textSize="30sp"
++        android:gravity="center"
++        android:background="@color/green"
++        />
++
+     <androidx.fragment.app.FragmentContainerView
+         android:id="@+id/fragment_bottom_appbar"
+         android:name="com.idle.togeduck.view.BottomAppbarFragment"
