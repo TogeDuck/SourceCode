@@ -3,7 +3,7 @@
 # 🐥TOGEDUCK **- 생일 카페 올인원 플랫폼**
 
 <p align="center">
-    <img src="/docs/images/로고.png">
+    <img width="300px" src="./docs/images/로고.png">
 </p>
 
 
@@ -23,7 +23,7 @@ SSAFY 10기 2학기 공통 프로젝트 : TOGEDUCK
 
 생일 카페를 알아보고 방문하고 기록하는 과정 속에서 겪은 불편함은 없으셨나요?
 
-`**‘TOGEDUCK’**` 을 통해서 생일 카페를 더 간단하게 즐겨보세요!
+`‘TOGEDUCK’` 을 통해서 생일 카페를 더 간단하게 즐겨보세요!
 
 ## 📄 **TOGEDUCK 개요**
 
@@ -230,65 +230,34 @@ TOGEDUCK 을 통해서 내 최애 아이돌의 생일 카페 정보를 지도로
 
 ---
 
-![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%201.png)
+<p align="center">
+    <img src="./docs/images/팀원.png">
+</p>
+
 
 ## ✅ **프로젝트 산출물**
 
 ---
 
-- WBS
+- [**요구사항 명세서**]()
     
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%202.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%203.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%204.png)
     
 - [**요구사항 명세서**](https://www.notion.so/eac1925d076c455bb5798a5dd6a72b7e?pvs=21)
     
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%205.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%206.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%207.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%208.png)
     
 - [**API 명세서**](https://www.notion.so/7fc8586400724899bdca039a4bf5215b?pvs=21)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%209.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2010.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2011.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2012.png)
-    
+
 - **[디자인&컨셉기획](https://www.notion.so/7a7894714d804835afdded38eb62d03e?pvs=21)**
 - **시스템구성도**
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2013.png)
-    
+
 - **[와이어프레임](https://www.figma.com/file/ZzDzVc6nyHHVERPOGAeBQt/MockUp?type=whiteboard&node-id=0-1&t=Z9CUIHGOsyeUJ24h-0)**
     
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2014.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2015.png)
     
 - **컨벤션**
 - **[ERD](https://www.erdcloud.com/d/naSLT2ey5L87QN7KJ)**
     
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2016.png)
-    
 - JIRA
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2017.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2018.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2019.png)
-    
-    ![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled%2020.png)
+
     
 
 ---
@@ -308,31 +277,45 @@ TOGEDUCK 을 통해서 내 최애 아이돌의 생일 카페 정보를 지도로
 - 앱 처음 실행 시 
 로딩 하는동안 뜨는 스플래쉬 화면
 
-![1000002159.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/1000002159.gif)
+<p align="center">
+    <img src="./docs/images/스플래시.gif">
+</p>
 
 ### 관심 연예인 검색 화면
 
-![1000002176.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/1000002176.gif)
+<p align="center">
+    <img src="./docs/images/검색1.gif">
+</p>
 
-![1000002179.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/1000002179.gif)
 
-![1000002180.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/1000002180.gif)
+<p align="center">
+    <img src="./docs/images/검색2.gif">
+</p>
+
+
+<p align="center">
+    <img src="./docs/images/검색3.gif">
+</p>
 
 ### 생일카페 이벤트 화면
 
 - 이벤트 정보
+
+<p align="center">
+    <img src="./docs/images/이벤트_클러스터링.gif">
+</p>
     
-    
+<p align="center">
+    <img src="./docs/images/이벤트1_정보.gif">
+</p>
 
-![이벤트움짤1.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EC%259D%25B4%25EB%25B2%25A4%25ED%258A%25B8%25EC%259B%2580%25EC%25A7%25A41.gif)
+<p align="center">
+    <img src="./docs/images/이벤트2_즐겨찾기.gif">
+</p>
 
-- 이벤트 즐겨 찾기
-
-![이벤트움짤2_즐겨찾기.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EC%259D%25B4%25EB%25B2%25A4%25ED%258A%25B8%25EC%259B%2580%25EC%25A7%25A42_%25EC%25A6%2590%25EA%25B2%25A8%25EC%25B0%25BE%25EA%25B8%25B0.gif)
-
-- 리뷰 작성
-
-![이벤트움짤3_리뷰.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EC%259D%25B4%25EB%25B2%25A4%25ED%258A%25B8%25EC%259B%2580%25EC%25A7%25A43_%25EB%25A6%25AC%25EB%25B7%25B0.gif)
+<p align="center">
+    <img src="./docs/images/이벤트3_리뷰.gif">
+</p>
 
 ### 투어화면
 
@@ -350,42 +333,58 @@ TOGEDUCK 을 통해서 내 최애 아이돌의 생일 카페 정보를 지도로
 
 - 나눔 글 확인
 
-![나눔1.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EB%2582%2598%25EB%2588%25941.gif)
+<p align="center">
+    <img src="./docs/images/나눔1.gif">
+</p>
 
-- 나눔 등록
-
-![나눔2.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EB%2582%2598%25EB%2588%25942.gif)
+<p align="center">
+    <img src="./docs/images/나눔2.gif">
+</p>
 
 ### 교환 화면
 
 - 교환 굿즈 등록
 
-![교환1.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EA%25B5%2590%25ED%2599%25981.gif)
+<p align="center">
+    <img src="./docs/images/교환1.gif">
+</p>
 
 - 교환 신청
 
 - 교환 거래 또는 수락
 
-![교환2.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EA%25B5%2590%25ED%2599%25982.gif)
+<p align="center">
+    <img src="./docs/images/교환2.gif">
+</p>
 
 - 교환 채팅
 
-![교환3.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EA%25B5%2590%25ED%2599%25983.gif)
+<p align="center">
+    <img src="./docs/images/교환3.gif">
+</p>
 
 ### 모집 화면
 
 - 모집 글 작성
 
-![모집3_등록.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EB%25AA%25A8%25EC%25A7%25913_%25EB%2593%25B1%25EB%25A1%259D.gif)
+<p align="center">
+    <img src="./docs/images/모집3_등록.gif">
+</p>
 
 - 모집 신청
 
-![모집1_참여.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EB%25AA%25A8%25EC%25A7%25911_%25EC%25B0%25B8%25EC%2597%25AC.gif)
+<p align="center">
+    <img src="./docs/images/모집1_참여.gif">
+</p>
 
-![모집2_채팅.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/%25EB%25AA%25A8%25EC%25A7%25912_%25EC%25B1%2584%25ED%258C%2585.gif)
+<p align="center">
+    <img src="./docs/images/모집2_채팅.gif">
+</p>
 
 ### FCM 알림
 
 - 교환 수락, 거절 시 알림
 
-![ezgif.com-video-to-gif-converter.gif](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/ezgif.com-video-to-gif-converter.gif)
+<p align="center">
+    <img src="./docs/images/푸쉬알림.gif">
+</p>
