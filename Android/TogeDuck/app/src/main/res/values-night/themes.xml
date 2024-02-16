@@ -1,17 +1,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.TogeDuck" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Base.Theme.TogeDuck" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-
-        <item name="android:textColorHighlight">@color/bts_main_100</item>
-        <item name="colorAccent">@color/bts_main_200</item>
-        <item name="colorControlActivated">@color/bts_main_200</item>
 
         <!--    상태바 투명하게 하는 설정    -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <item name="android:textViewStyle">@style/m_text_view_font_style</item>
+        <item name="android:editTextStyle">@style/m_edit_text_font_style</item>
+    </style>
+
+    <style name="fullscreen_dialog" parent="Theme.Material3.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/white</item>
+    </style>
+
+    <style name="MyMaterialDatePickerTheme" parent="@style/ThemeOverlay.Material3.MaterialCalendar">
+        <item name="colorPrimary">@color/yellow</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/yellow_trans</item>
     </style>
 </resources>

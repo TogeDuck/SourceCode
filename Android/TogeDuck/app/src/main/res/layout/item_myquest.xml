@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/myquest_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/shape_square_circle"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="10dp"
+    tools:backgroundTint="@color/red"
+    android:elevation="2dp"
+    >
+
+    <ImageView
+        android:id="@+id/myquest_main_icon"
+        android:layout_width="@dimen/circle_xsmall"
+        android:layout_height="@dimen/circle_xsmall"
+        android:src="@drawable/common_cupcake1"
+        android:background="@drawable/shape_circle"
+        android:padding="5dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="10dp"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginEnd="10dp"
+        >
+
+        <TextView
+            android:id="@+id/myquest_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OO 카페 가실 분~"
+            android:textSize="@dimen/text_title_small"
+            android:textColor="@color/gray_text"
+            android:layout_marginBottom="5dp"
+            />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/myquest_kind"
+        android:layout_width="@dimen/circle_xsmall"
+        android:layout_height="@dimen/circle_xsmall"
+        android:text="나눔"
+        android:textSize="@dimen/text_large"
+        android:gravity="center"
+        android:background="@drawable/shape_circle"
+        android:layout_marginEnd="6dp"
+        android:elevation="2dp"
+        />
+</LinearLayout>

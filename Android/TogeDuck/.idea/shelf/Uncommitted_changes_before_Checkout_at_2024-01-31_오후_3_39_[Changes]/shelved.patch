@@ -1,0 +1,165 @@
+Index: app/src/main/java/com/idle/togeduck/view/MapFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view\r\n\r\nimport android.Manifest\r\nimport android.content.pm.PackageManager\r\nimport android.location.Location\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.Gravity\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.FrameLayout\r\nimport android.widget.Toast\r\nimport androidx.activity.OnBackPressedCallback\r\nimport androidx.core.app.ActivityCompat\r\nimport androidx.core.view.marginBottom\r\nimport androidx.fragment.app.Fragment\r\nimport androidx.navigation.fragment.findNavController\r\nimport com.google.android.gms.location.FusedLocationProviderClient\r\nimport com.google.android.gms.location.LocationServices\r\nimport com.gun0912.tedpermission.PermissionListener\r\nimport com.gun0912.tedpermission.normal.TedPermission\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.FragmentMapBinding\r\nimport com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp\r\nimport com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx\r\nimport com.idle.togeduck.util.DpPxUtil.dpToPx\r\nimport com.naver.maps.geometry.LatLng\r\nimport com.naver.maps.map.CameraUpdate\r\nimport com.naver.maps.map.LocationTrackingMode\r\nimport com.naver.maps.map.MapFragment\r\nimport com.naver.maps.map.NaverMap\r\nimport com.naver.maps.map.OnMapReadyCallback\r\nimport com.naver.maps.map.util.FusedLocationSource\r\nimport com.naver.maps.map.widget.ZoomControlView\r\nimport dagger.hilt.android.AndroidEntryPoint\r\n\r\n@AndroidEntryPoint\r\nclass MapFragment : Fragment(), OnMapReadyCallback {\r\n    private var _binding: FragmentMapBinding? = null\r\n    private val binding get() = _binding!!\r\n\r\n    private lateinit var naverMap: NaverMap\r\n\r\n    // 최적의 위치를 반환하는 구현체\r\n    private lateinit var locationSource: FusedLocationSource\r\n\r\n    // 현재 위치 가져오기 위한 객체\r\n    private lateinit var fusedLocationClient: FusedLocationProviderClient\r\n\r\n    // OnBackPressedCallback (뒤로가기 기능) 객체 선언\r\n    private lateinit var backPressedCallback: OnBackPressedCallback\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?,\r\n    ): View {\r\n        _binding = FragmentMapBinding.inflate(inflater, container, false)\r\n\r\n        // OnBackPressedCallback (익명 클래스) 객체 생성\r\n        backPressedCallback = object : OnBackPressedCallback(true) {\r\n            // 뒤로가기 했을 때 실행되는 기능\r\n            var backWait: Long = 0\r\n            override fun handleOnBackPressed() {\r\n                if (System.currentTimeMillis() - backWait >= 2000) {\r\n                    backWait = System.currentTimeMillis()\r\n                    Toast.makeText(\r\n                        context, \"뒤로가기 버튼을 한번 더 누르면 이전 페이지로 이동합니다\",\r\n                        Toast.LENGTH_SHORT\r\n                    ).show()\r\n                } else {\r\n                    findNavController().navigate(R.id.mainFragment)\r\n                }\r\n            }\r\n        }\r\n\r\n        // 액티비티의 BackPressedDispatcher에 여기서 만든 callback 객체를 등록\r\n        requireActivity().onBackPressedDispatcher.addCallback(\r\n            viewLifecycleOwner,\r\n            backPressedCallback\r\n        )\r\n\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        initFragment()\r\n\r\n        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())\r\n\r\n        val permissionListener = object : PermissionListener {\r\n            override fun onPermissionGranted() {\r\n                Log.d(\"로그\", \"MainFragment - onPermissionGranted() 호출됨\")\r\n            }\r\n\r\n            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {\r\n                Toast.makeText(\r\n                    requireContext(),\r\n                    \"권한 거부\\n${deniedPermissions.toString()}\",\r\n                    Toast.LENGTH_SHORT\r\n                ).show()\r\n            }\r\n        }\r\n\r\n        requestPermission(permissionListener)\r\n        initMapView()\r\n    }\r\n\r\n    private fun initFragment() {\r\n        childFragmentManager.beginTransaction()\r\n            .add(R.id.fragment_top_appbar, TopAppbarFragment())\r\n            .setReorderingAllowed(true)\r\n            .addToBackStack(null)\r\n            .commit()\r\n\r\n        childFragmentManager.beginTransaction()\r\n            .add(R.id.fragment_bottom_sheet, BottomSheetFragment())\r\n            .setReorderingAllowed(true)\r\n            .addToBackStack(null)\r\n            .commit()\r\n\r\n        childFragmentManager.beginTransaction()\r\n            .add(R.id.fragment_bottom_appbar, BottomAppbarFragment())\r\n            .setReorderingAllowed(true)\r\n            .addToBackStack(null)\r\n            .commit()\r\n    }\r\n\r\n    override fun onMapReady(naverMap: NaverMap) {\r\n        val statusBarDp = getStatusBarHeightToDp(requireContext())\r\n\r\n        this.naverMap = naverMap\r\n        naverMap.locationSource = locationSource\r\n        naverMap.locationTrackingMode = LocationTrackingMode.Follow\r\n        // 현재 위치 버튼 표시\r\n        naverMap.uiSettings.isLocationButtonEnabled = true\r\n\r\n        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)\r\n        naverMap.isIndoorEnabled = true\r\n\r\n        val uiSettings = naverMap.uiSettings\r\n\r\n        uiSettings.logoGravity = Gravity.TOP\r\n        uiSettings.setLogoMargin(dpToPx(10, requireContext()), dpToPx(115 + statusBarDp, requireContext()), 0, 0)\r\n\r\n        uiSettings.isZoomControlEnabled = false\r\n        uiSettings.isCompassEnabled = false\r\n\r\n        if (ActivityCompat.checkSelfPermission(\r\n                requireContext(),\r\n                Manifest.permission.ACCESS_FINE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(\r\n                requireContext(),\r\n                Manifest.permission.ACCESS_COARSE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED\r\n        ) {\r\n            return\r\n        }\r\n\r\n        var currentLocation: Location?\r\n\r\n        fusedLocationClient.lastLocation\r\n            .addOnSuccessListener { location: Location? ->\r\n                currentLocation = location\r\n                // 현재 위치 아이콘 표시\r\n                naverMap.locationOverlay.run {\r\n                    isVisible = true\r\n                    position = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)\r\n                }\r\n\r\n                // 지도 중심 카메라 이동\r\n                naverMap.moveCamera(\r\n                    CameraUpdate.scrollTo(\r\n                        LatLng(currentLocation!!.latitude, currentLocation!!.longitude)\r\n                    )\r\n                )\r\n            }\r\n    }\r\n\r\n    // 권한 설정 알림\r\n    private fun requestPermission(permissionListener: PermissionListener) {\r\n        TedPermission.create()\r\n            .setPermissionListener(permissionListener)\r\n            .setRationaleMessage(\"위치 정보 제공이 필요한 서비스입니다.\")\r\n            .setDeniedMessage(\"[설정] -> [권한]에서 권한 변경이 가능합니다.\")\r\n            .setDeniedCloseButtonText(\"닫기\")\r\n            .setGotoSettingButtonText(\"설정\")\r\n            .setPermissions(\r\n                Manifest.permission.ACCESS_COARSE_LOCATION,\r\n                Manifest.permission.ACCESS_FINE_LOCATION\r\n            )\r\n            .check()\r\n    }\r\n\r\n    // 네이버 지도 초기화\r\n    private fun initMapView() {\r\n        val fm = childFragmentManager\r\n        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?\r\n            ?: MapFragment.newInstance().also {\r\n                fm.beginTransaction().add(R.id.map, it).commit()\r\n            }\r\n\r\n        mapFragment.getMapAsync(this)\r\n        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)\r\n\r\n        mapFragment.getMapAsync {\r\n            val statusBarDp = getStatusBarHeightToDp(requireContext())\r\n\r\n            val locationBtn = binding.locationBtn\r\n            val layoutParams = locationBtn.layoutParams as FrameLayout.LayoutParams\r\n\r\n            layoutParams.marginStart = dpToPx(8, requireContext())\r\n            layoutParams.topMargin = dpToPx(135 + statusBarDp, requireContext())\r\n\r\n            locationBtn.layoutParams = layoutParams\r\n            locationBtn.map = naverMap\r\n        }\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        _binding = null\r\n        backPressedCallback.remove()\r\n    }\r\n\r\n    companion object {\r\n        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/MapFragment.kt b/app/src/main/java/com/idle/togeduck/view/MapFragment.kt
+--- a/app/src/main/java/com/idle/togeduck/view/MapFragment.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/MapFragment.kt	
+@@ -15,6 +15,7 @@
+ import androidx.core.app.ActivityCompat
+ import androidx.core.view.marginBottom
+ import androidx.fragment.app.Fragment
++import androidx.fragment.app.activityViewModels
+ import androidx.navigation.fragment.findNavController
+ import com.google.android.gms.location.FusedLocationProviderClient
+ import com.google.android.gms.location.LocationServices
+@@ -25,6 +26,7 @@
+ import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToDp
+ import com.idle.togeduck.util.CalcStatusBarSize.getStatusBarHeightToPx
+ import com.idle.togeduck.util.DpPxUtil.dpToPx
++import com.idle.togeduck.viewmodel.MainViewModel
+ import com.naver.maps.geometry.LatLng
+ import com.naver.maps.map.CameraUpdate
+ import com.naver.maps.map.LocationTrackingMode
+@@ -40,6 +42,8 @@
+     private var _binding: FragmentMapBinding? = null
+     private val binding get() = _binding!!
+ 
++    private val viewModel: MainViewModel by activityViewModels()
++
+     private lateinit var naverMap: NaverMap
+ 
+     // 최적의 위치를 반환하는 구현체
+Index: app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view\r\n\r\nimport android.os.Bundle\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.Fragment\r\nimport com.google.android.material.bottomsheet.BottomSheetBehavior\r\nimport com.idle.togeduck.databinding.ComponentBottomSheetBinding\r\nimport com.idle.togeduck.databinding.FragmentBottomSheetBinding\r\nimport com.idle.togeduck.util.CalcStatusBarSize\r\nimport com.idle.togeduck.util.DpPxUtil.dpToPx\r\nimport dagger.hilt.android.AndroidEntryPoint\r\n\r\n@AndroidEntryPoint\r\nclass BottomSheetFragment : Fragment() {\r\n    private var _binding: FragmentBottomSheetBinding? = null\r\n    private val binding get() = _binding!!\r\n    private var _componentBinding: ComponentBottomSheetBinding? = null\r\n    private val componentBinding get() = _componentBinding!!\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)\r\n        _componentBinding = binding.bsFragment\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n        val statusDp = CalcStatusBarSize.getStatusBarHeightToDp(requireContext())\r\n\r\n        val sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)\r\n\r\n        sheetBehavior.expandedOffset = dpToPx(statusDp + 5, requireContext())\r\n\r\n        // TODO. BottomSheetBehavior state에 따른 이벤트 추후 추가\r\n        sheetBehavior.addBottomSheetCallback(object  : BottomSheetBehavior.BottomSheetCallback(){\r\n            override fun onStateChanged(bottomSheet: View, newState: Int) {\r\n                when (newState) {\r\n                    BottomSheetBehavior.STATE_HIDDEN -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_EXPANDED -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_COLLAPSED -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_DRAGGING -> {\r\n                    }\r\n                    BottomSheetBehavior.STATE_SETTLING -> {\r\n                    }\r\n                }\r\n            }\r\n\r\n            override fun onSlide(bottomSheet: View, slideOffset: Float) {\r\n            }\r\n        })\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        _binding = null\r\n        _componentBinding = null\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt b/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt
+--- a/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/BottomSheetFragment.kt	
+@@ -1,29 +1,39 @@
+ package com.idle.togeduck.view
+ 
+ import android.os.Bundle
++import android.util.Log
+ import android.view.LayoutInflater
+ import android.view.View
+ import android.view.ViewGroup
+ import androidx.fragment.app.Fragment
++import androidx.fragment.app.activityViewModels
+ import com.google.android.material.bottomsheet.BottomSheetBehavior
++import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ComponentBottomSheetBinding
+ import com.idle.togeduck.databinding.FragmentBottomSheetBinding
++import com.idle.togeduck.model.MenuType
+ import com.idle.togeduck.util.CalcStatusBarSize
++import com.idle.togeduck.util.Common
+ import com.idle.togeduck.util.DpPxUtil.dpToPx
++import com.idle.togeduck.util.OnBottomAppbarClickedListener
++import com.idle.togeduck.viewmodel.MainViewModel
+ import dagger.hilt.android.AndroidEntryPoint
+ 
+ @AndroidEntryPoint
+-class BottomSheetFragment : Fragment() {
++class BottomSheetFragment : Fragment(), OnBottomAppbarClickedListener {
+     private var _binding: FragmentBottomSheetBinding? = null
+     private val binding get() = _binding!!
+     private var _componentBinding: ComponentBottomSheetBinding? = null
+     private val componentBinding get() = _componentBinding!!
+ 
++    private lateinit var eventListFragment: EventListFragment
++    private lateinit var myRecordFragment: MyRecordFragment
++
+     override fun onCreateView(
+         inflater: LayoutInflater,
+         container: ViewGroup?,
+         savedInstanceState: Bundle?
+-    ): View? {
++    ): View {
+         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
+         _componentBinding = binding.bsFragment
+         return binding.root
+@@ -31,6 +41,14 @@
+ 
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+         super.onViewCreated(view, savedInstanceState)
++        Common.callback = this
++        eventListFragment = EventListFragment()
++        myRecordFragment = MyRecordFragment()
++
++        setBottomSheet()
++    }
++
++    private fun setBottomSheet() {
+         val statusDp = CalcStatusBarSize.getStatusBarHeightToDp(requireContext())
+ 
+         val sheetBehavior = BottomSheetBehavior.from(componentBinding.bottomSheet)
+@@ -64,4 +82,32 @@
+         _binding = null
+         _componentBinding = null
+     }
++
++    override fun onBottomAppbarClicked(menuType: MenuType) {
++        when (menuType) {
++            MenuType.DEFAULT -> {
++                childFragmentManager.beginTransaction()
++                    .replace(R.id.fcv, eventListFragment)
++                    .setReorderingAllowed(true)
++                    .addToBackStack(null)
++                    .commit()
++            }
++            MenuType.QUEST -> {}
++            MenuType.LIST -> {
++                childFragmentManager.beginTransaction()
++                    .replace(R.id.fcv, eventListFragment)
++                    .setReorderingAllowed(true)
++                    .addToBackStack(null)
++                    .commit()
++            }
++            MenuType.MY_QUEST -> {}
++            MenuType.MY_RECORD -> {
++                childFragmentManager.beginTransaction()
++                    .replace(R.id.fcv, myRecordFragment)
++                    .setReorderingAllowed(true)
++                    .addToBackStack(null)
++                    .commit()
++            }
++        }
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_my_record.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<ScrollView xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    tools:background=\"@color/green\"\r\n    tools:context=\".view.MyRecordFragment\"\r\n    >\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\"\r\n            android:layout_marginBottom=\"10dp\"\r\n            android:gravity=\"center_vertical\">\r\n\r\n            <ImageView\r\n                android:id=\"@+id/iv_cup_cake\"\r\n                android:layout_width=\"@dimen/circle_small\"\r\n                android:layout_height=\"@dimen/circle_small\"\r\n                android:src=\"@drawable/common_cupcake8\"\r\n                android:padding=\"5dp\"\r\n                />\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"0dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_weight=\"1\"\r\n                android:orientation=\"vertical\"\r\n                >\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_my_cake_title\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"나의 케잌\"\r\n                    android:textSize=\"@dimen/text_large\"\r\n                    android:textColor=\"@color/gray_text\"\r\n                    android:layout_marginBottom=\"5dp\"\r\n                    />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_my_cake_cnt\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"01개\"\r\n                    android:textSize=\"@dimen/text_title_large\"\r\n                    android:textStyle=\"bold\"\r\n                    />\r\n\r\n            </LinearLayout>\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"vertical\"\r\n                android:gravity=\"center_horizontal\"\r\n                android:layout_marginEnd=\"10dp\"\r\n                >\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_my_theme_content\"\r\n                    android:layout_width=\"50dp\"\r\n                    android:layout_height=\"50dp\"\r\n                    android:background=\"@drawable/shape_circle\"\r\n                    android:text=\"엑스디너리 히어로즈\"\r\n                    android:textColor=\"@color/white\"\r\n                    android:gravity=\"center\"\r\n                    android:padding=\"5dp\"\r\n                    android:autoSizeTextType=\"uniform\"\r\n                    android:autoSizeMinTextSize=\"1sp\"\r\n                    android:maxLines=\"1\"\r\n                    android:layout_marginBottom=\"5dp\"\r\n                    tools:targetApi=\"o\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_my_theme_title\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"나의 테마\"\r\n                    android:textSize=\"@dimen/text_large\" />\r\n\r\n            </LinearLayout>\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"vertical\"\r\n                android:gravity=\"center_horizontal\"\r\n                >\r\n\r\n                <ImageView\r\n                    android:id=\"@+id/iv_theme_draw\"\r\n                    android:layout_width=\"50dp\"\r\n                    android:layout_height=\"50dp\"\r\n                    android:src=\"@drawable/common_duck\"\r\n                    android:background=\"@drawable/shape_circle\"\r\n                    android:padding=\"5dp\"\r\n                    android:layout_marginBottom=\"5dp\"\r\n                    />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_theme_draw_title\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"테마 뽑기\"\r\n                    android:textSize=\"@dimen/text_large\" />\r\n\r\n            </LinearLayout>\r\n\r\n        </LinearLayout>\r\n\r\n        <TextView\r\n            android:id=\"@+id/tv_visited\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"지금까지 방문한 카페\"\r\n            android:layout_marginBottom=\"5dp\"\r\n            />\r\n\r\n        <androidx.recyclerview.widget.RecyclerView\r\n            android:id=\"@+id/rv_my_record\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            tools:listitem=\"@layout/item_my_record\"\r\n            />\r\n\r\n    </LinearLayout>\r\n\r\n</ScrollView>\r\n\r\n
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_my_record.xml b/app/src/main/res/layout/fragment_my_record.xml
+--- a/app/src/main/res/layout/fragment_my_record.xml	
++++ b/app/src/main/res/layout/fragment_my_record.xml	
+@@ -1,8 +1,9 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
++<androidx.core.widget.NestedScrollView
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    xmlns:tools="http://schemas.android.com/tools"
+     tools:background="@color/green"
+     tools:context=".view.MyRecordFragment"
+     >
+@@ -128,9 +129,11 @@
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             tools:listitem="@layout/item_my_record"
++            android:overScrollMode="never"
++            android:nestedScrollingEnabled="false"
+             />
+ 
+     </LinearLayout>
+ 
+-</ScrollView>
++</androidx.core.widget.NestedScrollView>
+ 

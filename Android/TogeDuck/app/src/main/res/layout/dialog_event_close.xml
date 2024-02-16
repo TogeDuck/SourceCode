@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog_event_close_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:paddingHorizontal="30dp"
+    android:paddingVertical="180dp"
+    android:gravity="center"
+    tools:context=".quest.share.view.ShareDialogFragment">
+
+    <LinearLayout
+        android:id="@+id/dialog_event_close_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_all_round_20"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        >
+        <TextView
+            android:id="@+id/dialog_event_close_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가까운 이벤트"
+            android:textSize="@dimen/text_title_small"
+            android:layout_marginBottom="20dp"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dialog_event_close_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:overScrollMode="never"
+            android:nestedScrollingEnabled="false"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_event_info" />
+    </LinearLayout>
+</LinearLayout>

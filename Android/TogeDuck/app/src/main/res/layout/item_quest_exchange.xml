@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quest_exchange_item"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_width="110dp"
+    android:layout_height="110dp"
+    android:elevation="2dp"
+    android:layout_marginStart="5dp"
+    tools:background="@drawable/shape_all_round_10">
+
+    <ImageView
+        android:id="@+id/quest_exchange_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:background="@color/seventeen_sub300"
+        />
+
+    <TextView
+        android:id="@+id/quest_exchange_timer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        app:layout_constraintStart_toStartOf="@+id/quest_exchange_image"
+        app:layout_constraintBottom_toBottomOf="@id/quest_exchange_image"
+        android:textSize="@dimen/text_medium"
+        android:textColor="@color/white"
+        tools:text="05:00"
+        tools:background="@color/yellow"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

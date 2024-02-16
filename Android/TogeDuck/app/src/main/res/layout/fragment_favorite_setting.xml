@@ -3,36 +3,34 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_favorite_setting"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bts_main_100">
+    android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="110dp"
         android:layout_height="200dp"
-        android:src="@drawable/cake"
-        android:scaleType="fitCenter"
-        android:alpha="0.5"
         android:layout_gravity="end"
+        android:alpha="0.5"
         android:paddingTop="50dp"
-        />
+        android:scaleType="fitCenter"
+        android:src="@drawable/common_main_cake" />
 
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/cake2"
-        android:scaleType="fitCenter"
-        android:alpha="0.5"
         android:layout_gravity="bottom|start"
-        />
+        android:alpha="0.5"
+        android:scaleType="fitCenter"
+        android:src="@drawable/common_main_cake" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="@dimen/padding_large"
-        android:paddingVertical="@dimen/padding_xlarge"
-        tools:context=".view.FavoriteSettingFragment">
+        android:paddingHorizontal="50dp"
+        android:paddingVertical="150dp"
+        tools:context=".favorite.view.FavoriteSettingFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,8 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title"
                 android:textAlignment="center"
-                android:textColor="@color/bts_main_200"
-                android:textSize="@dimen/title_medium"
+                android:textSize="@dimen/text_title_medium"
                 android:textStyle="bold" />
 
             <include
@@ -58,42 +55,44 @@
                 layout="@layout/component_search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_medium" />
+                android:layout_marginTop="30dp" />
+
+            <TextView
+                android:id="@+id/tv_my_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/my_favorite"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold"
+                android:layout_marginTop="15dp"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_my_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_my_favorite" />
 
             <LinearLayout
                 android:id="@+id/ll_search_result"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_medium"
                 android:orientation="vertical"
                 android:visibility="gone"
                 tools:visibility="visible">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_xsmall"
-                    android:text="@string/my_favorite"
-                    android:textColor="@color/bts_main_200"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_my_favorite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/item_my_favorite" />
-
-                <TextView
                     android:id="@+id/tv_idol_search_result"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:layout_marginBottom="@dimen/margin_xsmall"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@string/search_result"
-                    android:textColor="@color/bts_main_200"
+                    android:textSize="@dimen/text_large"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -102,12 +101,24 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    tools:itemCount="100"
+                    tools:itemCount="10"
                     tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     tools:listitem="@layout/item_idol_search_result"
                     tools:spanCount="4" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/btn_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="완료"
+                android:textSize="@dimen/text_title_small"
+                android:paddingHorizontal="25dp"
+                android:paddingVertical="5dp"
+                android:layout_marginTop="20dp"
+                />
 
         </LinearLayout>
 

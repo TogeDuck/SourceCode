@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.22'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -17,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId "com.idle.togeduck"
-        minSdk 24
+        minSdk 26
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -100,6 +101,25 @@ dependencies {
 
     // 네이버지도용 클러스터링 라이브러리
     implementation 'io.github.ParkSangGwon:tedclustering-naver:1.0.2'
+
+    // ViewPager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // StompProtocolAndroid 라이브러리
+    implementation "com.github.NaikSoftware:StompProtocolAndroid:1.6.6"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.5"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+
+    // work manager
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
+
+    // viewpager2 indicator
+    implementation("com.tbuonomo:dotsindicator:5.0")
+
+    // FCM
+    implementation platform('com.google.firebase:firebase-bom:32.7.2')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 }
 
 // Allow references to generated code

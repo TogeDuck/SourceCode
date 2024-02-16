@@ -1,0 +1,87 @@
+Index: app/src/main/java/com/idle/togeduck/view/FavoriteSettingFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.view\r\n\r\nimport android.content.Context\r\nimport android.graphics.Color\r\nimport android.os.Bundle\r\nimport android.os.Handler\r\nimport android.os.Looper\r\nimport android.view.KeyEvent\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.view.inputmethod.InputMethodManager\r\nimport android.widget.LinearLayout\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.fragment.app.Fragment\r\nimport androidx.fragment.app.activityViewModels\r\nimport androidx.recyclerview.widget.GridLayoutManager\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport com.google.android.material.internal.ViewUtils.hideKeyboard\r\nimport com.idle.togeduck.R\r\nimport com.idle.togeduck.databinding.ComponentSearchBarBinding\r\nimport com.idle.togeduck.databinding.FragmentFavoriteSettingBinding\r\nimport com.idle.togeduck.util.TogeDuckItemDecoration\r\nimport com.idle.togeduck.view.recyclerview.favorite_setting.IIdolSearchResult\r\nimport com.idle.togeduck.view.recyclerview.favorite_setting.IMyFavorite\r\nimport com.idle.togeduck.view.recyclerview.favorite_setting.IdolSearchResultAdapter\r\nimport com.idle.togeduck.view.recyclerview.favorite_setting.MyFavoriteAdapter\r\nimport com.idle.togeduck.viewmodel.FavoriteSettingViewModel\r\nimport dagger.hilt.android.AndroidEntryPoint\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.FlowPreview\r\nimport kotlinx.coroutines.Job\r\nimport kotlinx.coroutines.flow.debounce\r\nimport kotlinx.coroutines.flow.launchIn\r\nimport kotlinx.coroutines.flow.onEach\r\nimport kotlinx.coroutines.launch\r\n\r\n@AndroidEntryPoint\r\nclass FavoriteSettingFragment : Fragment(), IMyFavorite, IIdolSearchResult {\r\n    private var _binding: FragmentFavoriteSettingBinding? = null\r\n    private val binding get() = _binding!!\r\n    private var _searchBarBinding: ComponentSearchBarBinding? = null\r\n    private val searchBarBinding get() = _searchBarBinding!!\r\n\r\n    private val favoriteSettingViewModel: FavoriteSettingViewModel by activityViewModels()\r\n\r\n    private val myJob = Job()\r\n    private val myContext get() = Dispatchers.Main + myJob\r\n\r\n    private val myFavoriteAdapter = MyFavoriteAdapter(this)\r\n    private val idolSearchResultAdapter = IdolSearchResultAdapter(this)\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?,\r\n    ): View {\r\n        _binding = FragmentFavoriteSettingBinding.inflate(inflater, container, false)\r\n        _searchBarBinding = binding.csb\r\n        return binding.root\r\n    }\r\n\r\n    @OptIn(FlowPreview::class)\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        setRecyclerview()\r\n\r\n        searchBarBinding.etSearch.setOnKeyListener { view, keyCode, _ ->\r\n            hideKeyboard(view, keyCode)\r\n        }\r\n\r\n        favoriteSettingViewModel.favoriteIdolList.observe(viewLifecycleOwner) { list ->\r\n            myFavoriteAdapter.submitList(list.toList())\r\n\r\n            // 추가하면 맨 앞으로 이동\r\n            if (favoriteSettingViewModel.favoriteIdolList.value!!.isNotEmpty()) {\r\n                Handler(Looper.getMainLooper()).postDelayed({\r\n                    binding.rvMyFavorite.smoothScrollToPosition(favoriteSettingViewModel.favoriteIdolList.value!!.lastIndex)\r\n                }, 35)\r\n            }\r\n        }\r\n\r\n        favoriteSettingViewModel.searchIdolList.observe(viewLifecycleOwner) { list ->\r\n            idolSearchResultAdapter.submitList(list.toList())\r\n        }\r\n\r\n        CoroutineScope(myContext).launch {\r\n            // 메모 검색시 검색어 변경이 0.35초 동안 없을시 검색 실행\r\n            launch {\r\n                val editTextFlow = searchBarBinding.etSearch.textChangesToFlow()\r\n                editTextFlow\r\n                    .onEach { text ->\r\n                        // 클리어버튼 및 검색결과 없음 뷰 visibility 설정\r\n                        if (text.isNullOrBlank()) {\r\n                            binding.llSearchResult.visibility = View.GONE\r\n                        } else {\r\n                            binding.llSearchResult.visibility = View.VISIBLE\r\n                        }\r\n                    }\r\n                    .debounce(350)\r\n                    .onEach { text ->\r\n                        // api 호출\r\n                    }\r\n                    .launchIn(this)\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun setRecyclerview() {\r\n        binding.rvMyFavorite.apply {\r\n            addItemDecoration(TogeDuckItemDecoration(5, 15))\r\n            adapter = myFavoriteAdapter\r\n            layoutManager =\r\n                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true)\r\n                    .apply { stackFromEnd = true }\r\n        }\r\n\r\n        binding.rvIdolSearchResult.apply {\r\n            addItemDecoration(TogeDuckItemDecoration(5, 5))\r\n            adapter = idolSearchResultAdapter\r\n            layoutManager =\r\n                GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)\r\n        }\r\n    }\r\n\r\n    override fun myFavoriteRemoveBtnClicked(position: Int) {\r\n        favoriteSettingViewModel.removeMyFavoriteIdol(favoriteSettingViewModel.favoriteIdolList.value!![position])\r\n    }\r\n\r\n    override fun idolClicked(position: Int) {\r\n        if (favoriteSettingViewModel.favoriteIdolList.value!!.contains(favoriteSettingViewModel.searchIdolList.value!![position])) {\r\n            favoriteSettingViewModel.removeMyFavoriteIdol(favoriteSettingViewModel.searchIdolList.value!![position])\r\n        } else {\r\n            favoriteSettingViewModel.addFavoriteIdol(favoriteSettingViewModel.searchIdolList.value!![position])\r\n        }\r\n    }\r\n\r\n    // 엔터누르면 키보드 내려가고 포커스 사라지는 기능\r\n    private fun hideKeyboard(view: View, keyCode: Int): Boolean {\r\n        if (keyCode == KeyEvent.KEYCODE_ENTER) {\r\n            val inputManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE)\r\n                    as InputMethodManager\r\n            inputManager.hideSoftInputFromWindow(view.windowToken, 0)\r\n            searchBarBinding.etSearch.clearFocus()\r\n            return true\r\n        }\r\n        return false\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        _binding = null\r\n        _searchBarBinding = null\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/view/FavoriteSettingFragment.kt b/app/src/main/java/com/idle/togeduck/view/FavoriteSettingFragment.kt
+--- a/app/src/main/java/com/idle/togeduck/view/FavoriteSettingFragment.kt	
++++ b/app/src/main/java/com/idle/togeduck/view/FavoriteSettingFragment.kt	
+@@ -1,23 +1,21 @@
+ package com.idle.togeduck.view
+ 
++import android.animation.Animator
++import android.animation.AnimatorListenerAdapter
+ import android.content.Context
+-import android.graphics.Color
+ import android.os.Bundle
+ import android.os.Handler
+ import android.os.Looper
++import android.util.Log
+ import android.view.KeyEvent
+ import android.view.LayoutInflater
+ import android.view.View
+ import android.view.ViewGroup
+ import android.view.inputmethod.InputMethodManager
+-import android.widget.LinearLayout
+-import androidx.core.content.ContextCompat
+ import androidx.fragment.app.Fragment
+ import androidx.fragment.app.activityViewModels
+ import androidx.recyclerview.widget.GridLayoutManager
+ import androidx.recyclerview.widget.LinearLayoutManager
+-import com.google.android.material.internal.ViewUtils.hideKeyboard
+-import com.idle.togeduck.R
+ import com.idle.togeduck.databinding.ComponentSearchBarBinding
+ import com.idle.togeduck.databinding.FragmentFavoriteSettingBinding
+ import com.idle.togeduck.util.TogeDuckItemDecoration
+@@ -67,8 +65,8 @@
+ 
+         setRecyclerview()
+ 
+-        searchBarBinding.etSearch.setOnKeyListener { view, keyCode, _ ->
+-            hideKeyboard(view, keyCode)
++        searchBarBinding.etSearch.setOnKeyListener { mView, keyCode, _ ->
++            hideKeyboard(mView, keyCode)
+         }
+ 
+         favoriteSettingViewModel.favoriteIdolList.observe(viewLifecycleOwner) { list ->
+@@ -94,14 +92,29 @@
+                     .onEach { text ->
+                         // 클리어버튼 및 검색결과 없음 뷰 visibility 설정
+                         if (text.isNullOrBlank()) {
+-                            binding.llSearchResult.visibility = View.GONE
+-                        } else {
+-                            binding.llSearchResult.visibility = View.VISIBLE
++                            binding.llSearchResult.animate()
++                                .alpha(0f)
++                                .setDuration(300L)
++                                .setListener(object : AnimatorListenerAdapter() {
++                                    override fun onAnimationEnd(animation: Animator) {
++                                        binding.llSearchResult.visibility = View.GONE
++                                    }
++                                })
+                         }
+                     }
+                     .debounce(350)
+                     .onEach { text ->
+-                        // api 호출
++                        // TODO. api 호출 기능 추가 필요
++                        if (!text.isNullOrBlank()) {
++                            binding.llSearchResult.apply {
++                                alpha = 0f
++                                visibility = View.VISIBLE
++                                animate()
++                                    .alpha(1f)
++                                    .setDuration(300L)
++                                    .setListener(null)
++                            }
++                        }
+                     }
+                     .launchIn(this)
+             }
+@@ -154,5 +167,4 @@
+         _binding = null
+         _searchBarBinding = null
+     }
+-
+ }
+\ No newline at end of file

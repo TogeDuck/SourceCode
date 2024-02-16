@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_review_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_all_round_10"
+    android:elevation="2dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="7dp"
+    tools:backgroundTint="@color/bts_main300">
+
+    <ImageView
+        android:id="@+id/review_user_img"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/shape_circle"
+        android:scaleType="center"
+        android:src="@drawable/ic_person"
+        tools:backgroundTint="@color/black" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/review_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginEnd="5dp"
+            android:text="포스터도 많고 굿즈도 예뻐요sdfsfsfdssdfsfsf !!"
+            android:textSize="@dimen/text_large" />
+
+        <!-- 이미지 있으면 visible -->
+        <ImageView
+            android:id="@+id/review_img"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:visibility="visible"
+            android:layout_marginStart="11dp"
+            android:src="@drawable/ic_event_poster" />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,90 @@
+Index: app/src/main/java/com/idle/togeduck/util/CalcDistance.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.idle.togeduck.util\r\n\r\nimport kotlin.math.asin\r\nimport kotlin.math.cos\r\nimport kotlin.math.pow\r\nimport kotlin.math.sin\r\nimport kotlin.math.sqrt\r\n\r\nobject CalcDistance {\r\n    private const val R = 6372.8 * 1000\r\n\r\n    fun isDistanceOk(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Boolean {\r\n        return getDistance(lat1, lng1, lat2, lng2) <= 100\r\n    }\r\n    fun getDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Int{\r\n        val dLat = Math.toRadians(lat2 - lat1)\r\n        val dLng = Math.toRadians(lng1 - lng2)\r\n        val a = sin(dLat / 2).pow(2.0) + sin(dLng / 2).pow(2.0) * cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2))\r\n        val c = 2 * asin(sqrt(a))\r\n        return (R * c).toInt()\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/idle/togeduck/util/CalcDistance.kt b/app/src/main/java/com/idle/togeduck/util/CalcDistance.kt
+--- a/app/src/main/java/com/idle/togeduck/util/CalcDistance.kt	(revision 8ac3c80242ebb21907135768f7d4f1d435838e70)
++++ b/app/src/main/java/com/idle/togeduck/util/CalcDistance.kt	(date 1707987187901)
+@@ -10,7 +10,7 @@
+     private const val R = 6372.8 * 1000
+ 
+     fun isDistanceOk(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Boolean {
+-        return getDistance(lat1, lng1, lat2, lng2) <= 100
++        return getDistance(lat1, lng1, lat2, lng2) <= 50
+     }
+     fun getDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Int{
+         val dLat = Math.toRadians(lat2 - lat1)
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_2024-02-08_오전_9_09_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_2024-02-08_오전_9_09_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_2024-02-08_오전_9_09_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_2024-02-08_오전_9_09_[Changes]/shelved.patch	(revision 8ac3c80242ebb21907135768f7d4f1d435838e70)
++++ /dev/null	(revision 8ac3c80242ebb21907135768f7d4f1d435838e70)
+@@ -1,35 +0,0 @@
+-Index: .idea/deploymentTargetDropDown.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"deploymentTargetDropDown\">\r\n    <value>\r\n      <entry key=\"app\">\r\n        <State>\r\n          <runningDeviceTargetSelectedWithDropDown>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"SERIAL_NUMBER\" />\r\n                  <value value=\"adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp.\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n          </runningDeviceTargetSelectedWithDropDown>\r\n          <timeTargetWasSelectedWithDropDown value=\"2024-02-07T17:33:05.044485Z\" />\r\n          <runningDeviceTargetsSelectedWithDialog>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"SERIAL_NUMBER\" />\r\n                  <value value=\"adb-R39M20CCJKD-ZEtQsP._adb-tls-connect._tcp.\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"SERIAL_NUMBER\" />\r\n                  <value value=\"adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp.\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n          </runningDeviceTargetsSelectedWithDialog>\r\n        </State>\r\n      </entry>\r\n    </value>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+---- a/.idea/deploymentTargetDropDown.xml	(revision 053f5ffe579babdd361472074680779496587f0d)
+-+++ b/.idea/deploymentTargetDropDown.xml	(date 1707350824457)
+-@@ -4,18 +4,18 @@
+-     <value>
+-       <entry key="app">
+-         <State>
+--          <runningDeviceTargetSelectedWithDropDown>
+-+          <targetSelectedWithDropDown>
+-             <Target>
+--              <type value="RUNNING_DEVICE_TARGET" />
+-+              <type value="QUICK_BOOT_TARGET" />
+-               <deviceKey>
+-                 <Key>
+--                  <type value="SERIAL_NUMBER" />
+--                  <value value="adb-R59N309LHJK-fYE4bu._adb-tls-connect._tcp." />
+-+                  <type value="VIRTUAL_DEVICE_PATH" />
+-+                  <value value="C:\Users\SSAFY\.android\avd\Pixel_3a_API_34_extension_level_7_x86_64.avd" />
+-                 </Key>
+-               </deviceKey>
+-             </Target>
+--          </runningDeviceTargetSelectedWithDropDown>
+--          <timeTargetWasSelectedWithDropDown value="2024-02-07T17:33:05.044485Z" />
+-+          </targetSelectedWithDropDown>
+-+          <timeTargetWasSelectedWithDropDown value="2024-02-08T00:05:22.594587100Z" />
+-           <runningDeviceTargetsSelectedWithDialog>
+-             <Target>
+-               <type value="RUNNING_DEVICE_TARGET" />
+Index: .idea/deploymentTargetDropDown.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"deploymentTargetDropDown\">\r\n    <value>\r\n      <entry key=\"app\">\r\n        <State>\r\n          <runningDeviceTargetSelectedWithDropDown>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n                  <value value=\"C:\\Users\\SSAFY\\.android\\avd\\7.6_Fold-in_with_outer_display_API_34.avd\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n          </runningDeviceTargetSelectedWithDropDown>\r\n          <timeTargetWasSelectedWithDropDown value=\"2024-02-15T07:36:01.215664800Z\" />\r\n          <runningDeviceTargetsSelectedWithDialog>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n                  <value value=\"C:\\Users\\SSAFY\\.android\\avd\\Pixel_7_Pro_API_29.avd\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n                  <value value=\"C:\\Users\\SSAFY\\.android\\avd\\7.6_Fold-in_with_outer_display_API_34.avd\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n            <Target>\r\n              <type value=\"RUNNING_DEVICE_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n                  <value value=\"C:\\Users\\SSAFY\\.android\\avd\\Pixel_7_Pro_API_30.avd\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n          </runningDeviceTargetsSelectedWithDialog>\r\n          <targetsSelectedWithDialog>\r\n            <Target>\r\n              <type value=\"QUICK_BOOT_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n                  <value value=\"C:\\Users\\SSAFY\\.android\\avd\\Pixel_7_Pro_API_29.avd\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n            <Target>\r\n              <type value=\"QUICK_BOOT_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n                  <value value=\"C:\\Users\\SSAFY\\.android\\avd\\7.6_Fold-in_with_outer_display_API_34.avd\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n            <Target>\r\n              <type value=\"QUICK_BOOT_TARGET\" />\r\n              <deviceKey>\r\n                <Key>\r\n                  <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n                  <value value=\"C:\\Users\\SSAFY\\.android\\avd\\Pixel_7_Pro_API_30.avd\" />\r\n                </Key>\r\n              </deviceKey>\r\n            </Target>\r\n          </targetsSelectedWithDialog>\r\n        </State>\r\n      </entry>\r\n    </value>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+--- a/.idea/deploymentTargetDropDown.xml	(revision 8ac3c80242ebb21907135768f7d4f1d435838e70)
++++ b/.idea/deploymentTargetDropDown.xml	(date 1707986803359)
+@@ -4,18 +4,6 @@
+     <value>
+       <entry key="app">
+         <State>
+-          <runningDeviceTargetSelectedWithDropDown>
+-            <Target>
+-              <type value="RUNNING_DEVICE_TARGET" />
+-              <deviceKey>
+-                <Key>
+-                  <type value="VIRTUAL_DEVICE_PATH" />
+-                  <value value="C:\Users\SSAFY\.android\avd\7.6_Fold-in_with_outer_display_API_34.avd" />
+-                </Key>
+-              </deviceKey>
+-            </Target>
+-          </runningDeviceTargetSelectedWithDropDown>
+-          <timeTargetWasSelectedWithDropDown value="2024-02-15T07:36:01.215664800Z" />
+           <runningDeviceTargetsSelectedWithDialog>
+             <Target>
+               <type value="RUNNING_DEVICE_TARGET" />
