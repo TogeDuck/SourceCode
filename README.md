@@ -2,7 +2,8 @@
 
 # 🐥TOGEDUCK **- 생일 카페 올인원 플랫폼**
 
-![Untitled](%E1%84%8B%E1%85%B1%E1%84%8F%E1%85%B5%20997bd17026cf44efba953124e99585ab/Untitled.png)
+<p align="center"><img src="/docs/images/API명세서1.png"></p>
+
 
 ## **TOGEDUCK 링크 : 앱스토어 링크 추후**
 
