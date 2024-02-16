@@ -38,6 +38,6 @@ public class Celebrity extends BaseEntity {
 	private LocalDate birthday;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "group_id")
-	private Team group;
+	@JoinColumn(name = "team_id")
+	private Team team;
 }

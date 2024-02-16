@@ -1,7 +1,13 @@
 package com.idle.togeduck.domain.user.dto;
 
+import com.idle.togeduck.domain.user.entity.SocialType;
+
+import lombok.Builder;
+
+@Builder
 public record UserRequestDto(
-	String username,
-	String password
+	String socialId,
+	SocialType socialType,
+	String deviceToken
 ) {
 }
