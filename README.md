@@ -3,7 +3,7 @@
 # 🐥TOGEDUCK **- 생일 카페 올인원 플랫폼**
 
 <p align="center">
-    <img width="300px" src="./docs/images/로고.png">
+    <img width="300px" src="./docs/images/TOGEDUCK.png">
 </p>
 
 
@@ -88,7 +88,10 @@ TOGEDUCK 을 통해서 내 최애 아이돌의 생일 카페 정보를 지도로
 
 **Android**
 
-- 
+- Kotlin - 1.12.0
+- MVVM
+- ViewBinding
+- MDC
 
 **Infra**
 
@@ -98,6 +101,31 @@ TOGEDUCK 을 통해서 내 최애 아이돌의 생일 카페 정보를 지도로
 - NGINX
 - SSL
 - Docker
+
+
+## ✅ **라이브러리**
+
+---
+
+**Android**
+
+- Gms:play-services-location - 21.0.1
+- Navigation - 2.7.6
+- Hilt - 2.48
+- Glide - 4.16.0
+- Okhttp3 - 4.12.0
+- Retrofit2 - 2.9.0
+- Kotlinx-serialization - 1.6.0
+- Preferences Datastore - 1.0.0
+- Tedpermission - 3.3.0
+- Tedclustering - 1.0.2
+- StompProtocolAndroid - 1.6.6
+- Rxjava - 2.2.5
+- Rxandroid- 2.1.0
+- Work manager - 2.9.0
+- Tbuonomo dotsindicator - 5.0
+
+
 
 ## ✅ **프로젝트 파일 구조**
 
@@ -238,25 +266,22 @@ TOGEDUCK 을 통해서 내 최애 아이돌의 생일 카페 정보를 지도로
 ## ✅ **프로젝트 산출물**
 
 ---
+    
+- [**요구사항 명세서**](./docs/요구사항명세서.md)
+    
+- [**API 명세서**](./docs/API명세서.md)
 
-- [**요구사항 명세서**]()
-    
-    
-- [**요구사항 명세서**](https://www.notion.so/eac1925d076c455bb5798a5dd6a72b7e?pvs=21)
-    
-    
-- [**API 명세서**](https://www.notion.so/7fc8586400724899bdca039a4bf5215b?pvs=21)
+- [**디자인&컨셉기획**](https://www.notion.so/7a7894714d804835afdded38eb62d03e?pvs=21)
 
-- **[디자인&컨셉기획](https://www.notion.so/7a7894714d804835afdded38eb62d03e?pvs=21)**
-- **시스템구성도**
+- [**시스템구성도**](./docs/시스템구성도.md)
 
-- **[와이어프레임](https://www.figma.com/file/ZzDzVc6nyHHVERPOGAeBQt/MockUp?type=whiteboard&node-id=0-1&t=Z9CUIHGOsyeUJ24h-0)**
+- [**와이어프레임**](./docs/와이어프레임.md)
     
+- [**목업**](./docs/목업.md)
+
+- [**ERD**](./docs/ERD.md)
     
-- **컨벤션**
-- **[ERD](https://www.erdcloud.com/d/naSLT2ey5L87QN7KJ)**
-    
-- JIRA
+- [**JIRA**](./docs/JIRA.md)
 
     
 
