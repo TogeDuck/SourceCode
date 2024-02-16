@@ -6,13 +6,13 @@
 ## Swagger UI : [Link](https://i10a301.p.ssafy.io/swagger-ui/index.html) 
 
 
-![API명세서1](/uploads/37b5ecfdb9d9de8980b05d23ba19fa0e/API명세서1.png)
+![API명세서1](./images/API명세서1.png)
 
-![API명세서2](/uploads/4f44287677b6d69001af6e4db655a5ae/API명세서2.png)
+![API명세서2](./images/API명세서2.png)
 
-![API명세서3](/uploads/4e96e178a12aceb21e4a1dfc7a724cb3/API명세서3.png)
+![API명세서3](./images/API명세서3.png)
 
-![API명세서4](/uploads/788da2a84e9992ed89cddbd24fffe7e0/API명세서4.png)
+![API명세서4](./images/API명세서4.png)
 
 
 
